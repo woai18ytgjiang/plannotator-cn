@@ -14,7 +14,7 @@
     "@plannotator/shared": "workspace:*",
     "@plannotator/ui": "workspace:*",
     "@plannotator/webtui": "0.1.0",
-    "diff": "^8.0.3",
+    "diff": "^9.0.0",
     "lucide-react": "^1.59.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
