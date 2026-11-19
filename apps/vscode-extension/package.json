@@ -572,6 +572,6 @@
     "react-dom": "^19.3.1",
     "tailwindcss": "^4.1.18",
     "typescript": "^5.0.0",
-    "vite": "^6.2.0"
+    "vite": "^8.3.8"
   }
 }
