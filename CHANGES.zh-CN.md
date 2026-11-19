@@ -12,6 +12,7 @@
 - 修改 **669** 个已跟踪文件，**新增 4 个文件/条目**（`docs/zh-CN/`、`packages/review-editor/components/treeLabels.ts`、`ATTRIBUTION.md`、`CHANGES.zh-CN.md`，以及 `docs/zh-CN/screenshots/` 下的截图）。
 - 代码行变化（不含新增文件）：**+8,457 / −8,208**。
 - 绝大多数改动是**面向用户界面文案的替换**（英文 → 简体中文），不改变功能逻辑。
+- `README.md` 按上游 README 的章节结构整篇翻译为中文，并新增「中文化说明（本分支）」章节（中文化范围、已知问题/风险、特定用法）；顶部保留非官方分支声明。
 
 按目录统计（已修改的已跟踪文件）：
 
@@ -37,6 +38,7 @@
 4. `apps/hook/index.html`、`apps/review/index.html`、`apps/inbox/index.html`、`apps/inbox/surface.html`、`apps/inbox/shape.html`：`<html lang>` 改为 `zh-CN`；`<title>` 中文化。
 5. 新增 `docs/zh-CN/`：本地部署与汉化说明、术语表、翻译规范、界面截图。
 6. `packages/core/` 与 `packages/ui/` 中每个被修改的文件顶部新增一行 `Modified 2026-11-19 ... see ATTRIBUTION.md` 提示（Apache-2.0 §4(b) 要求；不改变代码行为）。
+7. `README.md`：保持上游章节结构的前提下整篇译为中文（产品名、命令、环境变量、URL、代码块保持原样），并新增「中文化说明（本分支）」章节。
 
 ## 3. 未包含在提交中的内容
 

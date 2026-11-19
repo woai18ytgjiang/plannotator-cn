@@ -1,6 +1,6 @@
 # 来源、版权与许可声明 / Attribution, Copyright & Licensing
 
-本仓库（下称“本分支”）是开源项目 **Plannotator** 的**非官方简体中文分支（fork）**，仅用于界面中文化，与上游项目及其作者无隶属或背书关系。
+本仓库（下称“本分支”）是开源项目 **Plannotator** 的**非官方简体中文分支（fork）**，仅用于界面与文档中文化，与上游项目及其作者无隶属或背书关系。
 
 This repository is an **unofficial Simplified Chinese localization fork** of the open-source project **Plannotator**. It is not affiliated with, endorsed by, or sponsored by the upstream project or its authors.
 
@@ -31,6 +31,7 @@ git diff a931eec265677682aaa33adf5b673ed69fa2f209..HEAD --name-only
 摘要：
 
 - **界面简体中文化**：把面向用户的英文界面文案就地改为简体中文（计划评审、文档批注、代码审查、收件箱、设置、通知/弹窗、CLI 提示等），不改变功能逻辑。
+- **README 中文翻译**：`README.md` 按上游 README 的章节结构整篇译为中文，并新增「中文化说明（本分支）」章节（中文化范围、已知问题/风险、特定用法）。
 - **少量非文案改动**（均为中文化所需）：
   - `packages/core/product-feedback.ts` 新增导出常量 `FEEDBACK_MESSAGE_REQUIRED`，供 CLI 与服务端复用同一条中文提示（消除重复字符串）。
   - `packages/review-editor/components/treeLabels.ts` 新增文件：为第三方文件树组件 `@pierre/trees` 传入中文标签。
