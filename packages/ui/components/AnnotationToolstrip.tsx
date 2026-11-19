@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useEffect } from 'react';
 import type { EditorMode, InputMethod } from '../types';
 import { TaterPullupSlot } from './TaterSpriteSlots';
@@ -83,7 +84,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
           <ToolstripButton
             active={inputMethod === 'drag'}
             onClick={() => onInputMethodChange('drag')}
-            label="Select"
+            label="选择"
             color="primary"
             mounted={mounted}
             compact={compact}
@@ -101,7 +102,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
           <ToolstripButton
             active={inputMethod === 'pinpoint'}
             onClick={() => onInputMethodChange('pinpoint')}
-            label="Pinpoint"
+            label="精确定位"
             color="primary"
             mounted={mounted}
             compact={compact}
@@ -126,7 +127,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
           <ToolstripButton
             active={mode === 'selection'}
             onClick={() => onModeChange('selection')}
-            label="Markup"
+            label="标注"
             color="secondary"
             mounted={mounted}
             compact={compact}
@@ -140,7 +141,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
           <ToolstripButton
             active={mode === 'comment'}
             onClick={() => onModeChange('comment')}
-            label="Comment"
+            label="评论"
             color="accent"
             mounted={mounted}
             compact={compact}
@@ -155,7 +156,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
           <ToolstripButton
             active={mode === 'redline'}
             onClick={() => onModeChange('redline')}
-            label="Redline"
+            label="删改"
             color="destructive"
             mounted={mounted}
             compact={compact}
@@ -171,7 +172,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
             <ToolstripButton
               active={mode === 'quickLabel'}
               onClick={() => onModeChange('quickLabel')}
-              label="Label"
+              label="标签"
               color="warning"
               mounted={mounted}
               compact={compact}
@@ -192,7 +193,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
             onClick={() => setShowHelp(true)}
             className="ml-2 text-[10px] text-muted-foreground/60 hover:text-muted-foreground transition-colors hidden sm:block"
           >
-            how does this work?
+            这是怎么用的？
           </button>
         )}
       </div>
@@ -218,7 +219,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  Selection Modes
+                  选择模式
                 </button>
                 <button
                   onClick={() => setHelpTab('plannotator')}
@@ -228,7 +229,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  How Plannotator Works
+                  Plannotator 如何工作
                 </button>
               </div>
               <button
@@ -249,7 +250,7 @@ export const AnnotationToolstrip: React.FC<AnnotationToolstripProps> = ({
                   ? 'https://www.youtube-nocookie.com/embed/ZNt9jtfx9TY?autoplay=1'
                   : 'https://www.youtube-nocookie.com/embed/a_AT7cEN_9I?autoplay=1'
                 }
-                title={helpTab === 'selection' ? 'How Selection Modes Work' : 'How Plannotator Works'}
+                title={helpTab === 'selection' ? '选择模式如何运作' : 'Plannotator 如何工作'}
                 frameBorder="0"
                 allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                 allowFullScreen

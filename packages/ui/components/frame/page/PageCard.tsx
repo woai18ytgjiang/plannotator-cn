@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { ReactNode } from "react";
 
 import { cn } from "../lib/utils";
@@ -18,7 +19,7 @@ export function PageHeader({
       </div>
       <div
         role="group"
-        aria-label="Page actions"
+        aria-label="页面操作"
         data-document-actions=""
         className={cn(
           "flex shrink-0 items-center gap-1 [&_a]:text-frame-xs [&_button]:text-frame-xs",

@@ -80,7 +80,7 @@ export function GrillMeTip({ phone, onClose, copy = GRILL_ME_TIP_COPY }: { phone
               <span className="cap">
                 <span className="dot" />
                 {choice.label}
-                {i === GRILL_ME_TIP_ART.recommended && <span className="tag">Recommended</span>}
+                {i === GRILL_ME_TIP_ART.recommended && <span className="tag">推荐</span>}
               </span>
             </div>
           ))}

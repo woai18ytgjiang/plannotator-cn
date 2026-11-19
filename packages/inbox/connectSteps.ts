@@ -68,7 +68,7 @@ export function connectRowOf(row: InboxAgentRow, live = false): ConnectRow | nul
     // choice, never a step. An MCP entry the person added by hand still reaches the Inbox, so it counts as connected.
     if (row.plugin?.disabled || row.tool?.mod_off) {
       if (row.reach.kind === 'mcp' && row.reach.on) return { ...base, state: 'mcp' };
-      const offNote = row.plugin?.disabled ? (row.plugin.managed ? 'plugin turned off by managed settings' : 'plugin turned off') : 'Plannotator mod turned off';
+      const offNote = row.plugin?.disabled ? (row.plugin.managed ? '插件已由托管设置关闭' : '插件已关闭') : 'Plannotator 模组已关闭';
       return { ...base, state: 'tool-off', locked: row.reach.locked, chosenOff: true, offNote };
     }
     // The plugin is installed exactly when the agent reaches the Inbox through its tool (`plugin` says so too, on a newer Inbox).
@@ -157,23 +157,23 @@ export function connectPlan(model: InboxAgentsModel, skipped: readonly string[] 
 
 /** The eyebrow over the next step: "Next step" (drawn in capitals) and where it stands. */
 export function stepEyebrow(plan: ConnectPlan): { label: string; count: string } {
-  return { label: 'Next step', count: plan.steps.length > 1 ? `1 of ${plan.steps.length}` : 'last one' };
+  return { label: '下一步', count: plan.steps.length > 1 ? `第 1 步，共 ${plan.steps.length} 步` : '最后一步' };
 }
 
 /** The next step's title. */
 export function stepTitle(row: ConnectRow): string {
-  const word = isPluginHost(row.id) ? PLUGIN_WORD[row.id] : 'plugin';
+  const word = isPluginHost(row.id) ? PLUGIN_WORD[row.id] : '插件';
   switch (row.state) {
     case 'tool-off':
-      return `Turn on ${row.label}'s Inbox tool`;
+      return `开启 ${row.label} 的收件箱工具`;
     case 'mcp-only':
-      return `Give ${row.label} Plannotator's ${word}`;
+      return `为 ${row.label} 安装 Plannotator 的${word}`;
     case 'missing':
-      return `Connect ${row.label} with Plannotator's ${word}`;
+      return `用 Plannotator 的${word}连接 ${row.label}`;
     case 'connect':
-      return `Connect ${row.label}`;
+      return `连接 ${row.label}`;
     case 'manual':
-      return `Connect ${row.label} yourself`;
+      return `你自行连接 ${row.label}`;
     default:
       return row.label;
   }
@@ -181,31 +181,31 @@ export function stepTitle(row: ConnectRow): string {
 
 /** The next step's sentence, in parts so the cost can be bold. */
 export function stepText(row: ConnectRow): { text: string; cost?: string } {
-  const word = isPluginHost(row.id) ? PLUGIN_WORD[row.id] : 'plugin';
+  const word = isPluginHost(row.id) ? PLUGIN_WORD[row.id] : '插件';
   switch (row.state) {
     case 'tool-off':
-      if (row.id === 'claude-code') return { text: 'Turn it on so Claude Code can send you messages and get your replies in the session.' };
+      if (row.id === 'claude-code') return { text: '开启它，让 Claude Code 能向你发送消息，并在会话中收到你的回复。' };
       return {
-        text: `Plannotator's ${word} is installed. Turn its Inbox tool on so ${row.label} can send you messages and get your replies in the session. It adds the tool to every ${row.label} request: `,
+        text: `Plannotator 的${word}已安装。开启其收件箱工具，让 ${row.label} 能向你发送消息并在会话中收到你的回复。这会把该工具添加到每次 ${row.label} 请求中：`,
         cost: inboxToolCostText(row.id as 'pi' | 'opencode'),
       };
     case 'mcp-only':
-      return { text: `${row.label} sees your replies only when it checks the Inbox. With Plannotator's ${word}, they arrive as a new turn on their own, and you can message a running session.` };
+      return { text: `${row.label} 只有在检查收件箱时才能看到你的回复。使用 Plannotator 的${word}后，回复会作为新轮次自动送达，你也可以向正在运行的会话发送消息。` };
     case 'missing':
-      if (row.id === 'claude-code') return { text: "Plannotator's plugin connects it: your replies arrive as a new turn on their own." };
+      if (row.id === 'claude-code') return { text: 'Plannotator 的插件负责连接它：你的回复会作为新轮次自动送达。' };
       if (row.id === 'opencode' && row.generation === '1') {
-        return { text: "Plannotator's plugin connects it. OpenCode 1 sees your replies when it checks the Inbox; on OpenCode 2 they arrive as a new turn on their own." };
+        return { text: 'Plannotator 的插件负责连接它。OpenCode 1 在检查收件箱时看到你的回复；在 OpenCode 2 中，回复会作为新轮次自动送达。' };
       }
-      if (row.id === 'opencode') return { text: "Plannotator's plugin connects it: on OpenCode 2 your replies arrive as a new turn on their own." };
-      return { text: `Plannotator's ${word} connects it.` };
+      if (row.id === 'opencode') return { text: 'Plannotator 的插件负责连接它：在 OpenCode 2 中，你的回复会作为新轮次自动送达。' };
+      return { text: `Plannotator 的${word}负责连接它。` };
     case 'connect':
       // Codex: the Inbox wakes it itself through `codex queue` (INBOX_MCP_WAKING_HOSTS), from the version that has it.
       if (INBOX_MCP_WAKING_HOSTS.includes(row.id)) {
-        return { text: `Adds the Inbox's MCP server to ${row.label}. ${mcpWakeName(row.id)}: your replies arrive as a new turn on their own.` };
+        return { text: `将收件箱的 MCP 服务器添加到 ${row.label}。${mcpWakeName(row.id)}：你的回复会作为新轮次自动送达。` };
       }
-      return { text: `Adds the Inbox's MCP server to ${row.label}. ${row.label} sees your replies when it checks the Inbox; it can't be woken.` };
+      return { text: `将收件箱的 MCP 服务器添加到 ${row.label}。${row.label} 在检查收件箱时看到你的回复；无法被唤醒。` };
     case 'manual':
-      return { text: row.reason ? `Only you can add it here: ${row.reason}.` : 'Only you can add it here.' };
+      return { text: row.reason ? `只有你能在此添加它：${row.reason}。` : '只有你能在此添加它。' };
     default:
       return { text: '' };
   }
@@ -219,21 +219,21 @@ export function stepText(row: ConnectRow): { text: string; cost?: string } {
 export function blockedText(plan: ConnectPlan, opts: { skipped: readonly string[]; toolEnv: boolean | null }): { text: string; settings: boolean } {
   const names = (rows: readonly ConnectRow[]) => {
     const labels = rows.map((row) => row.label);
-    return labels.length <= 1 ? labels.join('') : `${labels.slice(0, -1).join(', ')} and ${labels[labels.length - 1]}`;
+    return labels.length <= 1 ? labels.join('') : `${labels.slice(0, -1).join('、')} 和 ${labels[labels.length - 1]}`;
   };
   const off = plan.found.filter((row) => row.state === 'tool-off' && (row.chosenOff || row.offNote));
   const locked = plan.found.filter((row) => row.state === 'tool-off' && row.locked && !off.includes(row));
   const putOff = plan.found.filter((row) => opts.skipped.includes(row.id));
   const parts: string[] = [];
-  if (locked.length) parts.push(`PLANNOTATOR_INBOX_TOOL=${opts.toolEnv ? '1' : '0'} keeps the Inbox tool off for ${names(locked)}.`);
+  if (locked.length) parts.push(`PLANNOTATOR_INBOX_TOOL=${opts.toolEnv ? '1' : '0'} 使 ${names(locked)} 的收件箱工具保持关闭。`);
   for (const row of off) {
-    if (row.offNote === 'plugin turned off') parts.push(`Plannotator's plugin is turned off in ${row.label} (claude plugin enable plannotator@plannotator turns it back on).`);
-    else if (row.offNote === 'plugin turned off by managed settings') parts.push(`Your organization's managed settings turn Plannotator's plugin off in ${row.label}.`);
-    else if (row.offNote) parts.push(`Plannotator's ${row.label} mod is turned off (PLANNOTATOR_CLAUDE_MOD or claudeCodeMod), so ${row.label} has no Inbox tool.`);
+    if (row.offNote === '插件已关闭') parts.push(`Plannotator 的插件在 ${row.label} 中已关闭（运行 claude plugin enable plannotator@plannotator 可重新开启）。`);
+    else if (row.offNote === '插件已由托管设置关闭') parts.push(`你所在组织的托管设置关闭了 ${row.label} 中 Plannotator 的插件。`);
+    else if (row.offNote) parts.push(`Plannotator 的 ${row.label} 模组已关闭（PLANNOTATOR_CLAUDE_MOD 或 claudeCodeMod），因此 ${row.label} 没有收件箱工具。`);
   }
   const toolOff = off.filter((row) => !row.offNote);
-  if (toolOff.length) parts.push(`You turned the Inbox tool off for ${names(toolOff)}.`);
-  if (putOff.length) parts.push(`You put ${names(putOff)} off for later.`);
+  if (toolOff.length) parts.push(`你关闭了 ${names(toolOff)} 的收件箱工具。`);
+  if (putOff.length) parts.push(`你将 ${names(putOff)} 推迟到了以后。`);
   return { text: parts.join(' '), settings: toolOff.length > 0 };
 }
 
@@ -250,7 +250,7 @@ const wakeName = (host: string) => (host === 'opencode' ? 'OpenCode 2' : (INBOX_
 /** An agent MCP alone wakes, from the version that can be: "Codex 0.149 or later", "Qwen Code 0.24 or later". */
 export function mcpWakeName(host: string): string {
   const min = INBOX_MCP_WAKE_MIN_VERSIONS[host];
-  return min ? `${INBOX_HOST_NAMES[host] ?? host} ${min.replace(/\.0$/, '')} or later` : (INBOX_HOST_NAMES[host] ?? host);
+  return min ? `${INBOX_HOST_NAMES[host] ?? host} ${min.replace(/\.0$/, '')} 或更高版本` : (INBOX_HOST_NAMES[host] ?? host);
 }
 // The first-run line names no DeepSeek Harness (the owner, #2529): it keeps its words whether DSH is here or not,
 // though a reply does wake a DSH session through Plannotator's plugin. Cline likewise (its plugin; words unchanged).
@@ -264,16 +264,16 @@ const BRIDGE_HOSTS = INBOX_WAKING_HOSTS.filter((host) => !INBOX_MCP_WAKING_HOSTS
  */
 export function wakeLine(mcpHosts: readonly string[] = []): string {
   const mcp = INBOX_MCP_WAKING_HOSTS.filter((host) => mcpHosts.includes(host));
-  const through = mcp.length > 0 ? `, and in ${andList(mcp.map(mcpWakeName))} through MCP` : '';
-  return `With Plannotator's connection, your replies arrive as a new turn on their own in ${andList(BRIDGE_HOSTS.map(wakeName))}${through}. Other agents see your reply the next time they check the Inbox.`;
+  const through = mcp.length > 0 ? `，以及通过 MCP 接入的 ${andList(mcp.map(mcpWakeName))}` : '';
+  return `通过 Plannotator 的连接，你的回复会在 ${andList(BRIDGE_HOSTS.map(wakeName))} 中作为新轮次自动送达${through}。其他智能体在下次检查收件箱时会看到你的回复。`;
 }
 
 /** Over the "Another agent or editor" picker: every agent there reaches the Inbox through MCP; only an MCP-waking agent present (Codex) is woken. */
 export function mcpWakeLine(mcpHosts: readonly string[] = []): string {
   const mcp = INBOX_MCP_WAKING_HOSTS.filter((host) => mcpHosts.includes(host));
-  if (mcp.length === 0) return "These reach the Inbox through MCP: they see your reply the next time they check it, and can't be woken.";
-  const gets = mcp.length === 1 ? 'gets your reply as a new turn on its own' : 'get your reply as a new turn on their own';
-  return `These reach the Inbox through MCP: ${andList(mcp.map(mcpWakeName))} ${gets}; the others see it the next time they check the Inbox, and can't be woken.`;
+  if (mcp.length === 0) return '这些通过 MCP 接入收件箱：它们在下次检查时会看到你的回复，且无法被唤醒。';
+  const gets = '会作为新轮次收到你的回复';
+  return `这些通过 MCP 接入收件箱：${andList(mcp.map(mcpWakeName))} ${gets}；其他智能体在下次检查收件箱时才能看到你的回复，且无法被唤醒。`;
 }
 
 /** The agents MCP alone wakes whose row is on this computer (detected): the wake lines name only those. */
@@ -287,21 +287,21 @@ export const WAKE_LINE = wakeLine();
 export const MCP_WAKE_LINE = mcpWakeLine();
 
 /** "Already connected" for an agent reached through MCP. */
-export const MCP_DONE_NOTE = 'MCP · sees replies when it checks';
+export const MCP_DONE_NOTE = 'MCP · 检查时看到回复';
 /** "Already connected" for an agent reached through MCP that the Inbox wakes (Codex 0.149+). */
-export const MCP_WAKES_DONE_NOTE = 'MCP · replies arrive as a new turn';
+export const MCP_WAKES_DONE_NOTE = 'MCP · 回复作为新轮次送达';
 
 /** The MCP fold under a Plannotator host's install step. */
 export function mcpFoldHint(label: string): string {
-  return `Works, but ${label} sees your replies only when it checks the Inbox; they don't arrive as a new turn.`;
+  return `可用，但 ${label} 只有在检查收件箱时才能看到你的回复；回复不会作为新轮次送达。`;
 }
 
 /** What the "Already connected" line says after the name. */
 export function doneNote(row: ConnectRow, opts: { live: boolean; turnedOn: boolean }): string {
   if (row.state === 'ready') {
-    if (opts.turnedOn) return row.id === 'dsh' ? 'when DeepSeek Harness next starts' : row.id === 'openclaw' ? 'next message' : 'next session';
-    const word = isPluginHost(row.id) ? PLUGIN_WORD[row.id] : 'plugin';
-    return opts.live ? `${word} · running now` : word;
+    if (opts.turnedOn) return row.id === 'dsh' ? '在 DeepSeek Harness 下次启动时' : row.id === 'openclaw' ? '下一条消息' : '下次会话';
+    const word = isPluginHost(row.id) ? PLUGIN_WORD[row.id] : '插件';
+    return opts.live ? `${word} · 正在运行` : word;
   }
   // Codex over MCP, with a Codex the Inbox can wake: the reply arrives as a turn.
   if (row.state === 'mcp' && row.wakes === true) return MCP_WAKES_DONE_NOTE;
@@ -312,13 +312,13 @@ export function doneNote(row: ConnectRow, opts: { live: boolean; turnedOn: boole
 /** What the "Left to do" line says after the name. */
 export function laterNote(row: ConnectRow, opts: { skipped: boolean; toolEnv: boolean | null }): string {
   if (row.state === 'tool-off' && row.offNote) return row.offNote;
-  if (row.state === 'tool-off' && row.locked) return `locked by PLANNOTATOR_INBOX_TOOL=${opts.toolEnv ? '1' : '0'}`;
-  if (row.state === 'tool-off' && row.chosenOff) return 'off';
-  if (opts.skipped) return 'later';
-  if (row.state === 'tool-off') return 'turn on';
-  if (row.state === 'connect') return 'connect';
-  if (row.state === 'manual') return 'yourself';
-  return 'install';
+  if (row.state === 'tool-off' && row.locked) return `由 PLANNOTATOR_INBOX_TOOL=${opts.toolEnv ? '1' : '0'} 锁定`;
+  if (row.state === 'tool-off' && row.chosenOff) return '已关闭';
+  if (opts.skipped) return '稍后';
+  if (row.state === 'tool-off') return '开启';
+  if (row.state === 'connect') return '连接';
+  if (row.state === 'manual') return '自行连接';
+  return '安装';
 }
 
 /** The picker tab whose command connects an agent by hand. */
@@ -337,8 +337,8 @@ export const OPENCODE_CONFIG_PATH = '~/.config/opencode/opencode.json';
 
 /** "In a new Claude Code or Codex session, ask:" — the first two agents that reach the Inbox. */
 export function tryWho(names: readonly string[]): string {
-  return names.length ? `In a new ${names.slice(0, 2).join(' or ')} session, ask:` : 'Once an agent is connected, ask it in a new session:';
+  return names.length ? `在新的 ${names.slice(0, 2).join(' 或 ')} 会话中，问：` : '智能体连接后，在新的会话中问它：';
 }
 
 /** The sentence an agent is given to try the Inbox. */
-export const TRY_PROMPT = 'Send me a test message in my Plannotator Inbox.';
+export const TRY_PROMPT = '在我的 Plannotator 收件箱中给我发一条测试消息。';

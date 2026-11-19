@@ -29,7 +29,7 @@ function Times({ now, lit, pointer }: { now: Date; lit: string; pointer: boolean
     <>
       <div className="ib-pmi ib-zb">
         <Icon name="chevL" size={14} />
-        Snooze until
+        稍后提醒至
       </div>
       {choices.map((choice) => (
         <div key={choice.id} className="ib-pmi ib-zi" data-highlighted={choice.id === lit ? '' : undefined} data-snooze-intro-choice={choice.id}>
@@ -39,7 +39,7 @@ function Times({ now, lit, pointer }: { now: Date; lit: string; pointer: boolean
         </div>
       ))}
       <div className="ib-pm-sep" />
-      <div className="ib-pmi">Pick a time…</div>
+      <div className="ib-pmi">选择时间…</div>
     </>
   );
 }
@@ -59,12 +59,12 @@ function Toast({ when }: { when: string }) {
     <div className="ib-toast ib-toast-closable ib-zx-toast">
       <Icon name="clock" size={16} />
       <span className="ib-tsay">
-        <span className="ib-tlead">Snoozed</span>
+        <span className="ib-tlead">已稍后提醒</span>
         <span className="ib-tdetail">{when}</span>
       </span>
       <span className="ib-tacts">
         <span className="ib-tundo">
-          Undo
+          撤销
           <ShortcutHint scope={inboxThreadShortcuts} action="undo" className="" />
         </span>
         <span className="ib-tclose">
@@ -115,10 +115,10 @@ export function SnoozeIntro({ rows, projectNames, phone, onTry, onClose }: Snooz
   const tomorrow = choices.find((choice) => choice.id === 'tomorrow') ?? choices[0]!;
   const hint: ReactNode = phone ? (
     <>
-      In a thread, tap ⋯ and pick <b>Snooze</b>.
+      In a thread, tap ⋯ and pick <b>稍后提醒</b>。
     </>
   ) : (
-    'Right-click a thread, or click the clock at the top of an open thread.'
+    '右键点击话题，或点击打开的话题顶部的时钟图标。'
   );
   return (
     <Modal labelledBy="ib-zx-title" describedBy="ib-zx-desc" testId="snooze-intro" onClose={onClose} ownKeys className={`ib-lo ib-zx${phone ? ' ib-lo-phone' : ''}`}>
@@ -148,9 +148,9 @@ export function SnoozeIntro({ rows, projectNames, phone, onTry, onClose }: Snooz
         )}
       </div>
       <div className="ib-lo-text">
-        <div className="ib-zx-new">New</div>
-        <h2 id="ib-zx-title">Snooze a thread until later</h2>
-        <p id="ib-zx-desc">Pick later today, tomorrow, in 3 days, next week, or a time you choose. The thread waits in Snoozed and comes back on its own. Undo puts it back at once.</p>
+        <div className="ib-zx-new">新功能</div>
+        <h2 id="ib-zx-title">稍后提醒话题</h2>
+        <p id="ib-zx-desc">可选择今天晚些时候、明天、3 天后、下周，或你指定的时间。话题会留在「稍后提醒」中，到点自动回来。撤销可立即把它放回。</p>
         <p className="ib-zx-hint">
           <span className="ib-zx-chip" aria-hidden="true">
             <Icon name={phone ? 'dots' : 'clock'} size={phone ? 16 : 14} />
@@ -160,11 +160,11 @@ export function SnoozeIntro({ rows, projectNames, phone, onTry, onClose }: Snooz
       </div>
       <div className="ib-lo-acts">
         <button type="button" className="ib-btn ib-ghost" onClick={onClose} data-snooze-intro-close="">
-          Got it
+          知道了
         </button>
         <span className="ib-bsp" />
         <button type="button" className="ib-btn ib-pri" onClick={onTry} data-snooze-intro-try="">
-          Try it
+          试试
         </button>
       </div>
     </Modal>

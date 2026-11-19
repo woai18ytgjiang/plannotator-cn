@@ -26,7 +26,7 @@ export function LiveBody({ body, quiet }: { body: string; quiet: string }) {
       </div>
       {long ? (
         <button type="button" className={`${quiet} -ml-1`} data-live-more data-pn-touch-target aria-expanded={open} onClick={() => setOpen(!open)}>
-          {open ? 'Show less' : 'Show more'}
+          {open ? '收起' : '显示更多'}
         </button>
       ) : null}
     </>

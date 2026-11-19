@@ -17,7 +17,7 @@ function RenameField({ initial, onDone }: { initial: string; onDone: (title: str
       autoFocus
       value={value}
       maxLength={200}
-      aria-label="Guide title"
+      aria-label="引导标题"
       onChange={(e) => setValue(e.target.value)}
       onFocus={(e) => e.currentTarget.select()}
       onClick={(e) => e.stopPropagation()}
@@ -110,14 +110,14 @@ export function GuidesList({
   if (guides === null) return null;
 
   return (
-    <section aria-label="Guided Reviews" className="mt-2 border-t border-border/60" data-guides-list="">
+    <section aria-label="引导式审查" className="mt-2 border-t border-border/60" data-guides-list="">
       <div className="flex items-center justify-between gap-2 px-4 pb-1 pt-3">
-        <h3 className="text-[12px] font-medium text-muted-foreground">Guided Reviews</h3>
+        <h3 className="text-[12px] font-medium text-muted-foreground">引导式审查</h3>
         {guides.length > 0 && <span className="text-[12px] tabular-nums text-muted-foreground">{guides.length}</span>}
       </div>
       {guides.length === 0 ? (
         <p className="px-4 pb-2 text-[12px] leading-5 text-muted-foreground" data-guides-empty="">
-          No guided reviews yet. Start one above: it orders this change into short chapters, the core first, and is kept here.
+          还没有引导式审查。在上方启动一个：它会把本次更改整理成若干短章节，核心在前，并保存在这里。
         </p>
       ) : (
         <>
@@ -128,8 +128,8 @@ export function GuidesList({
                 type="search"
                 value={query}
                 onChange={(e) => setQuery(e.target.value)}
-                placeholder="Search guides"
-                aria-label="Search guides"
+                placeholder="搜索引导"
+                aria-label="搜索引导"
                 className="min-w-0 flex-1 bg-transparent text-[12px] text-foreground outline-none placeholder:text-muted-foreground"
               />
             </label>

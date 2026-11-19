@@ -46,7 +46,7 @@ async function control(entry: InboxRegistryEntry, method: "GET" | "POST", path: 
   });
   const answer = (await response.json().catch(() => ({}))) as Json;
   if (response.status === 404 && answer.code === "not_found" && path === "") {
-    throw new Error("The running Inbox is an older version that cannot link machines; run plannotator inbox restart.");
+    throw new Error("正在运行的收件箱是旧版本，无法关联设备；请运行 plannotator inbox restart。");
   }
   return { status: response.status, body: answer };
 }
@@ -99,7 +99,7 @@ export async function runInboxLinkCommand(args: readonly string[], ensureRunning
       if (positional.length !== 1) return fail("Usage: plannotator inbox unlink <machine name or id>");
       const answer = await control(entry, "POST", "/unlink", { machine: positional[0] });
       if (answer.status !== 200) return fail(answer.body.error ?? `The Inbox answered ${answer.status}.`);
-      process.stdout.write(`Unlinked ${answer.body.unlinked.name}.\n`);
+      process.stdout.write(`已取消关联 ${answer.body.unlinked.name}。\n`);
       if (!answer.body.told) process.stderr.write(`${answer.body.unlinked.name} could not be reached; it removes its side the next time it reaches this computer. This computer stays reachable on your tailnet for it for up to 7 days, until it hears.\n`);
       return 0;
     }
@@ -121,7 +121,7 @@ export async function runInboxLinkCommand(args: readonly string[], ensureRunning
             : "This code carries no tailnet address: run this again with --tailscale to publish this Inbox's door on your tailnet.\n",
         );
       }
-      process.stderr.write(`On the other machine, within 10 minutes, run:\n  plannotator inbox link '<the code below>'\nSix digits, for typing it in Settings: ${answer.body.code}\n`);
+      process.stderr.write(`在另一台机器上，10 分钟内运行：\n  plannotator inbox link '<下面的代码>'\n六位数字，用于在设置中手动输入：${answer.body.code}\n`);
       process.stdout.write(`${answer.body.link}\n`);
       return 0;
     }
@@ -129,7 +129,7 @@ export async function runInboxLinkCommand(args: readonly string[], ensureRunning
     const answer = await control(entry, "POST", "/link", { link: positional[0], address, back, one_way: oneWay });
     if (answer.status !== 201) return fail(answer.body.error ?? `The Inbox answered ${answer.status}.`);
     const machine = answer.body.machine as Json;
-    process.stdout.write(`Linked ${machine.name} (${machine.id})${machine.both_ways ? ", both ways" : ", one way"}.\n`);
+    process.stdout.write(`已关联 ${machine.name}（${machine.id}）${machine.both_ways ? "，双向" : "，单向"}。\n`);
     return 0;
   } catch (error) {
     return fail(`Could not reach the running Inbox: ${error instanceof Error ? error.message : String(error)}`);

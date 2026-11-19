@@ -19,7 +19,7 @@ export const PaneDivider: React.FC<{
     <div
       role="separator"
       aria-orientation="vertical"
-      aria-label="Resize the two panes"
+      aria-label="调整两个窗格的大小"
       aria-valuemin={20}
       aria-valuemax={80}
       aria-valuenow={Math.round(ratio * 100)}

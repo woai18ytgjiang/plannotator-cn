@@ -147,7 +147,7 @@ export { PLANNOTATOR_LIVE_PROXY_HEADER } from "./plannotator-server-marker";
 
 /** Body of the proxy's refusal when the upstream answers as Plannotator. */
 export const LIVE_PROXY_PLANNOTATOR_UPSTREAM_MESSAGE =
-  "Live app proxy: the upstream is a Plannotator server, which live annotation never proxies.";
+  "实时应用代理：上游是一个 Plannotator 服务器，实时批注从不会代理它。";
 
 /** True when an upstream response came from a Plannotator server. */
 export function isPlannotatorUpstreamResponse(headers: HeaderReader): boolean {

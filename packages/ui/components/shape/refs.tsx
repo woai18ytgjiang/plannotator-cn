@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 // A board's numbered references: small bubbles beside the words they source,
 // and the same numbers in the panel's References list. Hovering a bubble
 // lights its row; a row flashes its bubble; Open shows it in the real viewer.
@@ -78,12 +79,12 @@ export const KindIcon = ({ kind }: { kind: ShapeRefKind }) => (
 /** The References tab: the board's references, by number. */
 export function RefList({ onShow, canOpen, fileAction }: { onShow: (n: number) => void; canOpen: (ref: ShapeRef) => boolean; fileAction?: (ref: ShapeRef) => React.ReactNode }) {
   const r = useContext(RefsCtx);
-  if (!r.refs.length) return <p className="shp-empty-note">This board cites nothing yet.</p>;
+  if (!r.refs.length) return <p className="shp-empty-note">此板面还没有引用。</p>;
   return (
     <ol className="shp-ref-list">
       {r.refs.map((ref) => (
         <li key={ref.n} className={r.hover === ref.n ? 'lit' : ''} onPointerEnter={() => r.onHover(ref.n)} onPointerLeave={() => r.onHover(null)}>
-          <button type="button" className="shp-ref-row" onClick={() => onShow(ref.n)} title="Show it on the board">
+          <button type="button" className="shp-ref-row" onClick={() => onShow(ref.n)} title="在板面上显示">
             <span className="shp-rb static">{ref.n}</span>
             <span className="shp-ref-kind"><KindIcon kind={ref.kind} /></span>
             <span className="shp-ref-txt">

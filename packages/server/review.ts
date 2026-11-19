@@ -2000,7 +2000,7 @@ export async function startReviewServer(
   });
 
   const reviewAlreadyDecided = () =>
-    Response.json({ error: "This review session has already been decided.", code: "already_decided" }, { status: 409 });
+    Response.json({ error: "此次审查会话已有结论。", code: "already_decided" }, { status: 409 });
 
   // Host-only session control (packages/shared/host-control.ts). Closing is
   // the reviewer's Close, marked closedBy "agent", WITHOUT settling the draft
@@ -2097,7 +2097,7 @@ export async function startReviewServer(
       return { oldContent, newContent };
     }
 
-    return { error: "No file access available" };
+    return { error: "没有可用的文件访问权限" };
   };
 
   // Where the current mode reads one side of a repository path, as
@@ -2284,11 +2284,11 @@ export async function startReviewServer(
             if (jobId === null) return Response.json({ error: MALFORMED_PATH_ERROR }, { status: 400 });
             if (jobId.startsWith(SAVED_GUIDE_ID_PREFIX)) {
               const saved = await guideStore.getSavedGuideData(jobId.slice(SAVED_GUIDE_ID_PREFIX.length));
-              if (!saved) return Response.json({ error: "Guide not found" }, { status: 404 });
+              if (!saved) return Response.json({ error: "未找到引导" }, { status: 404 });
               return Response.json(saved);
             }
             const result = guide.getGuide(jobId);
-            if (!result) return Response.json({ error: "Guide not found" }, { status: 404 });
+            if (!result) return Response.json({ error: "未找到引导" }, { status: 404 });
             return Response.json({ ...result, ...(guideStore.isJobSaved(jobId) ? { saved: true } : {}) });
           }
 
@@ -2303,7 +2303,7 @@ export async function startReviewServer(
               if (Array.isArray(body.reviewed)) {
                 if (jobId.startsWith(SAVED_GUIDE_ID_PREFIX)) {
                   const ok = await guideStore.updateSavedReviewed(jobId.slice(SAVED_GUIDE_ID_PREFIX.length), body.reviewed);
-                  if (!ok) return Response.json({ error: "Guide not found" }, { status: 404 });
+                  if (!ok) return Response.json({ error: "未找到引导" }, { status: 404 });
                 } else {
                   guide.saveReviewed(jobId, body.reviewed);
                   await guideStore.writeThroughReviewed(jobId, body.reviewed);
@@ -2311,7 +2311,7 @@ export async function startReviewServer(
               }
               return Response.json({ ok: true });
             } catch {
-              return Response.json({ error: "Invalid JSON" }, { status: 400 });
+              return Response.json({ error: "JSON 无效" }, { status: 400 });
             }
           }
 
@@ -2325,7 +2325,7 @@ export async function startReviewServer(
             if (jobId === null) return Response.json({ error: MALFORMED_PATH_ERROR }, { status: 400 });
             const snapshot = await resolveGuideSnapshotForExport(jobId);
             if (!snapshot) {
-              return Response.json({ error: "This guide cannot be exported: its diff was not retained." }, { status: 404 });
+              return Response.json({ error: "此引导无法导出：其差异未被保留。" }, { status: 404 });
             }
             const viewer = resolveGuideViewerAssets(GUIDE_VIEWER_MANIFEST, { baseUrl: process.env.PLANNOTATOR_GUIDE_VIEWER_URL });
             const html = createGuideHtml(snapshot, { viewer });
@@ -2368,14 +2368,14 @@ export async function startReviewServer(
           }
           if (guideShareMatch && guideShareMatch[2] === "share" && (req.method === "POST" || req.method === "DELETE")) {
             if (!callFlowInstallOriginAllowed(req.headers.get("origin"), url.host, req.headers.get("sec-fetch-site"))) {
-              return Response.json({ error: "Cross-origin share requests are not allowed" }, { status: 403 });
+              return Response.json({ error: "不允许跨源分享请求" }, { status: 403 });
             }
             const jobId = decodePathSegment(guideShareMatch[1]);
             if (jobId === null) return Response.json({ error: MALFORMED_PATH_ERROR }, { status: 400 });
             const config = loadConfig();
             const serviceUrl = resolveGuideShareUrl(config);
             if (req.method === "POST") {
-              if (!resolveSharingEnabled(config)) return Response.json({ error: "sharing disabled" }, { status: 403 });
+              if (!resolveSharingEnabled(config)) return Response.json({ error: "分享已停用" }, { status: 403 });
               // Every body field is optional, so no body at all means the defaults.
               let body: { public?: unknown; ttlSeconds?: unknown };
               try {
@@ -2384,11 +2384,11 @@ export async function startReviewServer(
                 if (!parsed || typeof parsed !== "object" || Array.isArray(parsed)) throw new Error("not an object");
                 body = parsed as { public?: unknown; ttlSeconds?: unknown };
               } catch {
-                return Response.json({ error: "Invalid JSON" }, { status: 400 });
+                return Response.json({ error: "JSON 无效" }, { status: 400 });
               }
-              if (body.public !== undefined && typeof body.public !== "boolean") return Response.json({ error: "public must be a boolean" }, { status: 400 });
+              if (body.public !== undefined && typeof body.public !== "boolean") return Response.json({ error: "public 必须是布尔值" }, { status: 400 });
               if (body.ttlSeconds !== undefined && (typeof body.ttlSeconds !== "number" || !Number.isSafeInteger(body.ttlSeconds) || body.ttlSeconds <= 0)) {
-                return Response.json({ error: "ttlSeconds must be a positive integer" }, { status: 400 });
+                return Response.json({ error: "ttlSeconds 必须是正整数" }, { status: 400 });
               }
               // One link per guide: the envelope is the only place the delete
               // token lives, so a second upload would orphan the first on the
@@ -2396,11 +2396,11 @@ export async function startReviewServer(
               const located = await guideStore.locateEnvelope(jobId);
               const existing = located?.envelope.share;
               if (existing) {
-                return Response.json({ error: "This guide already has a share link. Remove it before creating another.", url: existing.url }, { status: 409 });
+                return Response.json({ error: "此引导已有分享链接。请先移除再创建新的。", url: existing.url }, { status: 409 });
               }
               const snapshot = await resolveGuideSnapshotForExport(jobId);
               if (!snapshot) {
-                return Response.json({ error: "This guide cannot be shared: its diff was not retained." }, { status: 404 });
+                return Response.json({ error: "此引导无法分享：其差异未被保留。" }, { status: 404 });
               }
               try {
                 const shared = await shareGuide(snapshot, {
@@ -2435,7 +2435,7 @@ export async function startReviewServer(
             // link that is still live.
             const located = await guideStore.locateEnvelope(jobId);
             const record = located?.envelope.share;
-            if (!located || !record) return Response.json({ error: "No share link for this guide" }, { status: 404 });
+            if (!located || !record) return Response.json({ error: "此引导没有分享链接" }, { status: 404 });
             try {
               await unshareGuide(record.id, record.deleteToken, { serviceUrl: record.serviceUrl });
             } catch (e) {
@@ -2463,7 +2463,7 @@ export async function startReviewServer(
             if (savedId === null) return Response.json({ error: MALFORMED_PATH_ERROR }, { status: 400 });
             await unshareBeforeDelete((await guideStore.locateEnvelope(`${SAVED_GUIDE_ID_PREFIX}${savedId}`))?.envelope.share);
             const ok = await guideStore.deleteSaved(savedId);
-            if (!ok) return Response.json({ error: "Guide not found" }, { status: 404 });
+            if (!ok) return Response.json({ error: "未找到引导" }, { status: 404 });
             return Response.json({ ok: true });
           }
 
@@ -2473,11 +2473,11 @@ export async function startReviewServer(
             try {
               body = (await req.json()) as { title?: unknown };
             } catch {
-              return Response.json({ error: "Invalid JSON" }, { status: 400 });
+              return Response.json({ error: "JSON 无效" }, { status: 400 });
             }
-            if (!normalizeGuideTitle(body?.title)) return Response.json({ error: "A title is 1 to 200 characters." }, { status: 400 });
+            if (!normalizeGuideTitle(body?.title)) return Response.json({ error: "标题长度为 1 到 200 个字符。" }, { status: 400 });
             const ok = await guideStore.renameSaved(savedId, body.title as string);
-            if (!ok) return Response.json({ error: "Guide not found" }, { status: 404 });
+            if (!ok) return Response.json({ error: "未找到引导" }, { status: 404 });
             return Response.json({ ok: true });
           }
 
@@ -2486,7 +2486,7 @@ export async function startReviewServer(
           if (guideOutputMatch && req.method === "GET") {
             const jobId = guideOutputMatch[1];
             const payload = guide.getFailedPayload(jobId);
-            if (payload === null) return Response.json({ error: "No captured output" }, { status: 404 });
+            if (payload === null) return Response.json({ error: "没有捕获的输出" }, { status: 404 });
             return Response.json({ payload });
           }
 
@@ -2495,9 +2495,9 @@ export async function startReviewServer(
           if (guideSubmitMatch && req.method === "POST") {
             const jobId = guideSubmitMatch[1];
             const existingJob = agentJobs.getJob(jobId);
-            if (!existingJob) return Response.json({ error: "Job not found" }, { status: 404 });
+            if (!existingJob) return Response.json({ error: "未找到任务" }, { status: 404 });
             if (existingJob.status !== "failed" && existingJob.status !== "killed") {
-              return Response.json({ error: "This job already has a guide" }, { status: 409 });
+              return Response.json({ error: "此任务已有引导" }, { status: 409 });
             }
             try {
               const body = await req.json() as { payload?: string };
@@ -2521,7 +2521,7 @@ export async function startReviewServer(
               if (repaired) await guideStore.saveForJob(guideSaveJob(existingJob), repaired, existingJob.guideContext, guide.getLaunchReview(jobId) ?? undefined);
               return Response.json({ ok: true, sections, files });
             } catch {
-              return Response.json({ error: "Invalid JSON" }, { status: 400 });
+              return Response.json({ error: "JSON 无效" }, { status: 400 });
             }
           }
 
@@ -2637,7 +2637,7 @@ export async function startReviewServer(
           if (url.pathname === "/api/open-in" && req.method === "POST") {
             if (isGitButlerCommittedView()) {
               return Response.json(
-                { error: "Open in app is unavailable for committed GitButler views" },
+                { error: "已提交的 GitButler 视图无法使用「在应用中打开」" },
                 { status: 400 },
               );
             }
@@ -2647,7 +2647,7 @@ export async function startReviewServer(
             // same name. Refuse instead of guessing.
             if (isStaticPatchMode) {
               return Response.json(
-                { error: "Open in app is unavailable for a static patch review" },
+                { error: "静态补丁审查无法使用「在应用中打开」" },
                 { status: 400 },
               );
             }
@@ -2718,13 +2718,13 @@ export async function startReviewServer(
           // up with GitHub. Client re-runs /api/diff/switch afterwards.
           if (url.pathname === "/api/fetch-base" && req.method === "POST") {
             if (!gitRemoteSessionApplies()) {
-              return Response.json({ error: "Not available in this mode" }, { status: 400 });
+              return Response.json({ error: "此模式下不可用" }, { status: 400 });
             }
             const branchRef =
               remoteDefaultInfo?.branch ??
               (currentBase.startsWith("origin/") ? currentBase : null);
             if (!branchRef) {
-              return Response.json({ error: "No remote-tracking base to fetch" }, { status: 400 });
+              return Response.json({ error: "没有可获取的远程跟踪基线" }, { status: 400 });
             }
             const branchName = branchRef.replace(/^origin\//, "");
             const result = await gitRuntime.runGit(
@@ -2776,7 +2776,7 @@ export async function startReviewServer(
           // endpoint starts a native runtime download and build.
           if (url.pathname === "/api/call-flow/install" && req.method === "POST") {
             if (!callFlowInstallOriginAllowed(req.headers.get("origin"), url.host, req.headers.get("sec-fetch-site"))) {
-              return Response.json({ error: "Cross-origin install requests are not allowed" }, { status: 403 });
+              return Response.json({ error: "不允许跨源安装请求" }, { status: 403 });
             }
             let request: ReturnType<typeof parseCallFlowInstallRequest>;
             try {
@@ -2784,7 +2784,7 @@ export async function startReviewServer(
             } catch {
               request = null;
             }
-            if (!request) return Response.json({ error: "Invalid call-flow install request" }, { status: 400 });
+            if (!request) return Response.json({ error: "call-flow 安装请求无效" }, { status: 400 });
             const advert = await getCallFlowAdvert(currentDiffType as DiffType, true);
             const languageIds = resolveCallFlowInstallTargets(
               request.languageIds,
@@ -2792,7 +2792,7 @@ export async function startReviewServer(
               advert.available,
             );
             if (!advert.installable || languageIds.length === 0) {
-              return Response.json({ error: advert.message ?? "No call-flow language support needs installation." }, { status: 409 });
+              return Response.json({ error: advert.message ?? "没有需要安装的 call-flow 语言支持。" }, { status: 409 });
             }
             const status = await callFlowInstall.start(languageIds);
             return Response.json(status, { headers: { "Cache-Control": "no-store" } });
@@ -2838,7 +2838,7 @@ export async function startReviewServer(
             try {
               const reviewAnalysis = parseReviewAnalysisConfig(await req.json());
               if (!reviewAnalysis) {
-                return Response.json({ error: "Invalid analysis settings" }, { status: 400 });
+                return Response.json({ error: "分析设置无效" }, { status: 400 });
               }
               if (analysisEpoch !== reviewAnalysisEpoch) {
                 return Response.json({ superseded: true });
@@ -2852,11 +2852,11 @@ export async function startReviewServer(
               ) {
                 return Response.json({ superseded: true });
               }
-              if (!saveConfig({ reviewAnalysis })) return Response.json({ error: "config.json could not be saved; nothing changed. A config.json that is not valid JSON is never written over: fix or remove it." }, { status: 500 });
+              if (!saveConfig({ reviewAnalysis })) return Response.json({ error: "config.json 无法保存；未做任何更改。内容不是有效 JSON 的 config.json 绝不会被覆盖：请修复或删除它。" }, { status: 500 });
               if (!nextCallFlowEnabled) callFlowService.cancelAll();
               return Response.json({ callFlow });
             } catch {
-              return Response.json({ error: "Invalid request" }, { status: 400 });
+              return Response.json({ error: "请求无效" }, { status: 400 });
             } finally {
               // A read-only advert refresh that began during this mutation
               // must not publish capabilities computed from the old config
@@ -2878,7 +2878,7 @@ export async function startReviewServer(
             const commitsVcs = sessionVcsType ?? "git";
             if (!gitContext || isPRMode || workspace || (commitsVcs !== "git" && commitsVcs !== "jj")) {
               return Response.json(
-                { error: "Commit history is only available for local git and jj reviews" },
+                { error: "提交历史仅适用于本地 git 和 jj 审查" },
                 { status: 400 },
               );
             }
@@ -2907,7 +2907,7 @@ export async function startReviewServer(
               );
             }
             if (!page) {
-              return Response.json({ error: "Could not read commit history" }, { status: 500 });
+              return Response.json({ error: "无法读取提交历史" }, { status: 500 });
             }
             // Best-effort author avatars from the origin forge (memoized per
             // session; misses just render the initials fallback client-side).
@@ -2939,7 +2939,7 @@ export async function startReviewServer(
             maybeRefreshRemoteBaseInfo();
             if (!hasLocalAccess && !workspace) {
               return Response.json(
-                { error: "Not available without local file access" },
+                { error: "没有本地文件访问权限时不可用" },
                 { status: 400 },
               );
             }
@@ -2949,7 +2949,7 @@ export async function startReviewServer(
 
               if (typeof newDiffType !== "string" || !newDiffType) {
                 return Response.json(
-                  { error: "Missing diffType" },
+                  { error: "缺少 diffType" },
                   { status: 400 }
                 );
               }
@@ -3213,13 +3213,13 @@ export async function startReviewServer(
           // API: Switch PR diff scope between the platform layer diff and a local full-stack diff.
           if (url.pathname === "/api/pr-diff-scope" && req.method === "POST") {
             if (!isPRMode || !prMetadata) {
-              return Response.json({ error: "Not in PR mode" }, { status: 400 });
+              return Response.json({ error: "当前不在 PR 模式" }, { status: 400 });
             }
 
             try {
               const body = (await req.json()) as { scope?: PRDiffScope };
               if (body.scope !== "layer" && body.scope !== "full-stack") {
-                return Response.json({ error: "Invalid PR diff scope" }, { status: 400 });
+                return Response.json({ error: "PR 差异范围无效" }, { status: 400 });
               }
 
               const scopeEpoch = ++prScopeEpoch;
@@ -3317,7 +3317,7 @@ export async function startReviewServer(
               const fullStackOption = prDiffScopeOptions.find((option) => option.id === "full-stack");
               if (!fullStackOption?.enabled || !(options.worktreePool || options.agentCwd)) {
                 return Response.json(
-                  { error: "Full stack diff requires a stacked PR and a local checkout" },
+                  { error: "全栈差异需要堆叠 PR 和本地检出" },
                   { status: 400 },
                 );
               }
@@ -3326,7 +3326,7 @@ export async function startReviewServer(
               const fullStackCwd = await ensurePRLocalCwd();
               if (!fullStackCwd) {
                 return Response.json(
-                  { error: "Local checkout is unavailable — full stack diff cannot run" },
+                  { error: "本地检出不可用——全栈差异无法运行" },
                   { status: 400 },
                 );
               }
@@ -3376,7 +3376,7 @@ export async function startReviewServer(
           // API: List PRs for the current repo (cached for 30s)
           if (url.pathname === "/api/pr-list" && req.method === "GET") {
             if (!isPRMode || !prRef) {
-              return Response.json({ error: "Not in PR mode" }, { status: 400 });
+              return Response.json({ error: "当前不在 PR 模式" }, { status: 400 });
             }
             try {
               const now = Date.now();
@@ -3388,28 +3388,28 @@ export async function startReviewServer(
               prListCacheTime = now;
               return Response.json({ prs });
             } catch (err) {
-              return Response.json({ error: "Failed to fetch PR list" }, { status: 500 });
+              return Response.json({ error: "获取 PR 列表失败" }, { status: 500 });
             }
           }
 
           // API: Switch to a different PR in the stack (in-place navigation)
           if (url.pathname === "/api/pr-switch" && req.method === "POST") {
             if (!isPRMode || !prRef) {
-              return Response.json({ error: "Not in PR mode" }, { status: 400 });
+              return Response.json({ error: "当前不在 PR 模式" }, { status: 400 });
             }
 
             try {
               const body = (await req.json()) as { url?: string };
               if (!body.url) {
-                return Response.json({ error: "Missing PR URL" }, { status: 400 });
+                return Response.json({ error: "缺少 PR URL" }, { status: 400 });
               }
 
               const newRef = parsePRUrl(body.url);
               if (!newRef) {
-                return Response.json({ error: "Invalid PR URL" }, { status: 400 });
+                return Response.json({ error: "PR URL 无效" }, { status: 400 });
               }
               if (!isSameProject(newRef, prRef!)) {
-                return Response.json({ error: "Cannot switch to a PR in a different repository" }, { status: 400 });
+                return Response.json({ error: "无法切换到其他仓库的 PR" }, { status: 400 });
               }
 
               const cached = prSwitchCache.get(body.url);
@@ -3524,7 +3524,7 @@ export async function startReviewServer(
           if (url.pathname === "/api/pr-context" && req.method === "GET") {
             if (!isPRMode || !prRef || !prMetadata) {
               return Response.json(
-                { error: "Not in PR mode" },
+                { error: "当前不在 PR 模式" },
                 { status: 400 },
               );
             }
@@ -3543,11 +3543,11 @@ export async function startReviewServer(
           // redirect validation so this never becomes an open proxy.
           if (url.pathname === "/api/pr-artifact-document" && req.method === "GET") {
             if (!isPRMode || !prRef || !prMetadata) {
-              return Response.json({ error: "Not in PR mode" }, { status: 400 });
+              return Response.json({ error: "当前不在 PR 模式" }, { status: 400 });
             }
             const artifactUrl = url.searchParams.get("url");
             if (!artifactUrl) {
-              return Response.json({ error: "Missing artifact URL" }, { status: 400 });
+              return Response.json({ error: "缺少构造产物 URL" }, { status: 400 });
             }
             try {
               const context = await prContextLive.getContext(prMetadata.url, prRef);
@@ -3577,11 +3577,11 @@ export async function startReviewServer(
           // and target URL before forwarding provider credentials.
           if (url.pathname === "/api/pr-artifact-content" && req.method === "GET") {
             if (!isPRMode || !prRef || !prMetadata) {
-              return Response.json({ error: "Not in PR mode" }, { status: 400 });
+              return Response.json({ error: "当前不在 PR 模式" }, { status: 400 });
             }
             const artifactUrl = url.searchParams.get("url");
             if (!artifactUrl) {
-              return Response.json({ error: "Missing artifact URL" }, { status: 400 });
+              return Response.json({ error: "缺少构造产物 URL" }, { status: 400 });
             }
             try {
               const context = await prContextLive.getContext(prMetadata.url, prRef);
@@ -3763,13 +3763,13 @@ export async function startReviewServer(
           // API: Live updates for a working-tree listing (one event per settled burst of writes).
           if (url.pathname === REPO_FILES_STREAM_ENDPOINT && req.method === "GET") {
             const snapshot = url.searchParams.get("snapshot");
-            if (!snapshot) return Response.json({ error: "Missing snapshot", reason: "bad-request" }, { status: 400 });
+            if (!snapshot) return Response.json({ error: "缺少快照", reason: "bad-request" }, { status: 400 });
             const unavailable = repoFilesUnavailable();
             if (unavailable) return Response.json({ error: unavailable.message, reason: unavailable.reason }, { status: 400 });
-            if (snapshot !== currentSnapshotId()) return Response.json({ error: "Diff snapshot is stale; refresh first", reason: "stale" }, { status: 409 });
+            if (snapshot !== currentSnapshotId()) return Response.json({ error: "差异快照已过期；请先刷新", reason: "stale" }, { status: 409 });
             const listing = await loadRepoListing();
             if (!listing?.live || !listing.root) {
-              return Response.json({ error: "This listing does not change while the review is open", reason: "not-live" }, { status: 400 });
+              return Response.json({ error: "审查打开期间此列表不会变化", reason: "not-live" }, { status: 400 });
             }
             const root = listing.root;
             const liveWorkspace = workspace;
@@ -3804,21 +3804,21 @@ export async function startReviewServer(
             // content of the session, so there is nothing to expand into.
             if (isStaticPatchMode) {
               return Response.json(
-                { error: "File content is unavailable for a static patch review" },
+                { error: "静态补丁审查无法获取文件内容" },
                 { status: 400 },
               );
             }
             const filePath = url.searchParams.get("path");
             if (!filePath) {
-              return Response.json({ error: "Missing path" }, { status: 400 });
+              return Response.json({ error: "缺少路径" }, { status: 400 });
             }
             try { validateFilePath(filePath); } catch {
-              return Response.json({ error: "Invalid path" }, { status: 400 });
+              return Response.json({ error: "路径无效" }, { status: 400 });
             }
             const oldPath = url.searchParams.get("oldPath") || undefined;
             if (oldPath) {
               try { validateFilePath(oldPath); } catch {
-                return Response.json({ error: "Invalid path" }, { status: 400 });
+                return Response.json({ error: "路径无效" }, { status: 400 });
               }
             }
 
@@ -3828,7 +3828,7 @@ export async function startReviewServer(
             const requestedSnapshot = url.searchParams.get("snapshot");
             if (requestedSnapshot) {
               if (requestedSnapshot !== currentSnapshotId()) {
-                return Response.json({ error: "Diff snapshot is stale; refresh before expanding context" }, { status: 409 });
+                return Response.json({ error: "差异快照已过期；请刷新后再展开上下文" }, { status: 409 });
               }
               const baselineGeneration = fingerprintGeneration;
               let baseline = currentFingerprint;
@@ -3840,7 +3840,7 @@ export async function startReviewServer(
                 requestedSnapshot !== currentSnapshotId() ||
                 baselineGeneration !== fingerprintGeneration
               ) {
-                return Response.json({ error: "Diff snapshot is stale; refresh before expanding context" }, { status: 409 });
+                return Response.json({ error: "差异快照已过期；请刷新后再展开上下文" }, { status: 409 });
               }
               if (baseline != null) {
                 const probe = await fileContentFingerprintProbes.run(
@@ -3852,7 +3852,7 @@ export async function startReviewServer(
                   currentFingerprint !== baseline ||
                   (probe != null && probe !== baseline)
                 ) {
-                  return Response.json({ error: "Diff snapshot is stale; refresh before expanding context" }, { status: 409 });
+                  return Response.json({ error: "差异快照已过期；请刷新后再展开上下文" }, { status: 409 });
                 }
               }
             }
@@ -3866,7 +3866,7 @@ export async function startReviewServer(
           // only: the lookup below is the one route that reaches npm.
           if (url.pathname === "/api/package-changes" && req.method === "GET") {
             if (isStaticPatchMode) {
-              return Response.json({ error: "Package changes need the files behind the diff" }, { status: 400 });
+              return Response.json({ error: "包变更需要差异所对应的文件" }, { status: 400 });
             }
             const out = await packageChanges.get({
               snapshot: url.searchParams.get("snapshot"),
@@ -3880,10 +3880,10 @@ export async function startReviewServer(
           // reviewer turned the lookup on.
           if (url.pathname === "/api/package-changes/lookup" && req.method === "POST") {
             if (isStaticPatchMode) {
-              return Response.json({ error: "Package changes need the files behind the diff" }, { status: 400 });
+              return Response.json({ error: "包变更需要差异所对应的文件" }, { status: 400 });
             }
             let body: unknown;
-            try { body = await req.json(); } catch { return Response.json({ error: "Invalid JSON" }, { status: 400 }); }
+            try { body = await req.json(); } catch { return Response.json({ error: "JSON 无效" }, { status: 400 }); }
             const out = await packageChanges.lookup(body);
             return Response.json(out.body, { status: out.status, headers: { "Cache-Control": "no-store" } });
           }
@@ -3892,14 +3892,14 @@ export async function startReviewServer(
           if (url.pathname === "/api/code-nav/resolve" && req.method === "POST") {
             if (isGitButlerCommittedView()) {
               return Response.json(
-                { error: "Code navigation is unavailable for committed GitButler views" },
+                { error: "已提交的 GitButler 视图无法使用代码导航" },
                 { status: 400 },
               );
             }
             const hasCodeNavAccess = !!workspace || !!gitContext || !!options.agentCwd || !!options.worktreePool;
             if (!hasCodeNavAccess) {
               return Response.json(
-                { error: "Code navigation requires local access" },
+                { error: "代码导航需要本地访问权限" },
                 { status: 400 },
               );
             }
@@ -3909,7 +3909,7 @@ export async function startReviewServer(
               ? await ensurePRLocalCwd()
               : await resolveAgentCwdReady();
             if (!navCwd) {
-              return Response.json({ error: "Local checkout unavailable" }, { status: 400 });
+              return Response.json({ error: "本地检出不可用" }, { status: 400 });
             }
             const changedFiles = extractChangedFiles(currentPatch);
             return handleCodeNavResolve(req, navCwd, changedFiles);
@@ -3920,14 +3920,14 @@ export async function startReviewServer(
           if (url.pathname === "/api/code-nav/hover" && req.method === "POST") {
             if (isGitButlerCommittedView()) {
               return Response.json(
-                { error: "Code navigation is unavailable for committed GitButler views" },
+                { error: "已提交的 GitButler 视图无法使用代码导航" },
                 { status: 400 },
               );
             }
             const hasCodeNavAccess = !!workspace || !!gitContext || !!options.agentCwd || !!options.worktreePool;
             if (!hasCodeNavAccess) {
               return Response.json(
-                { error: "Code navigation requires local access" },
+                { error: "代码导航需要本地访问权限" },
                 { status: 400 },
               );
             }
@@ -3937,7 +3937,7 @@ export async function startReviewServer(
               ? await ensurePRLocalCwd()
               : await resolveAgentCwdReady();
             if (!navCwd) {
-              return Response.json({ error: "Local checkout unavailable" }, { status: 400 });
+              return Response.json({ error: "本地检出不可用" }, { status: 400 });
             }
             const changedFiles = extractChangedFiles(currentPatch);
             return handleCodeNavHover(req, navCwd, changedFiles);
@@ -3947,19 +3947,19 @@ export async function startReviewServer(
           if (url.pathname === "/api/code-nav/file" && req.method === "GET") {
             if (isGitButlerCommittedView()) {
               return Response.json(
-                { error: "Code navigation is unavailable for committed GitButler views" },
+                { error: "已提交的 GitButler 视图无法使用代码导航" },
                 { status: 400 },
               );
             }
             const hasCodeNavAccess = !!workspace || !!gitContext || !!options.agentCwd || !!options.worktreePool;
             if (!hasCodeNavAccess) {
-              return Response.json({ error: "Code navigation requires local access" }, { status: 400 });
+              return Response.json({ error: "代码导航需要本地访问权限" }, { status: 400 });
             }
             const navCwd = options.worktreePool && prMetadata
               ? await ensurePRLocalCwd()
               : await resolveAgentCwdReady();
             if (!navCwd) {
-              return Response.json({ error: "Local checkout unavailable" }, { status: 400 });
+              return Response.json({ error: "本地检出不可用" }, { status: 400 });
             }
             // Links followed like an editor; 5 MB cap and no FIFO hang
             // (packages/shared/repo-file.ts, the Pi server uses the same).
@@ -3974,17 +3974,17 @@ export async function startReviewServer(
           if (url.pathname === "/api/git-add" && req.method === "POST") {
             if (isStaticPatchMode) {
               return Response.json(
-                { error: "Staging is unavailable for a static patch review" },
+                { error: "静态补丁审查无法暂存" },
                 { status: 400 },
               );
             }
             try {
               const body = (await req.json()) as { filePath?: unknown; undo?: boolean };
               if (typeof body.filePath !== "string" || !body.filePath) {
-                return Response.json({ error: "Missing filePath" }, { status: 400 });
+                return Response.json({ error: "缺少 filePath" }, { status: 400 });
               }
               try { validateFilePath(body.filePath); } catch {
-                return Response.json({ error: "Invalid path" }, { status: 400 });
+                return Response.json({ error: "路径无效" }, { status: 400 });
               }
 
               if (workspace) {
@@ -4006,7 +4006,7 @@ export async function startReviewServer(
                 !(await canStageFiles(currentDiffType as DiffType, stageCwd))
               ) {
                 return Response.json(
-                  { error: "Staging not available" },
+                  { error: "暂存不可用" },
                   { status: 400 },
                 );
               }
@@ -4042,14 +4042,14 @@ export async function startReviewServer(
           // API: Update user config (write-back to ~/.plannotator/config.json)
           if (url.pathname === "/api/config" && req.method === "POST") {
             if (!isSameOriginOrNoOrigin(req.headers.get("origin"), url.host, req.headers.get("sec-fetch-site"))) {
-              return Response.json({ error: "Cross-origin config writes are not allowed" }, { status: 403 });
+              return Response.json({ error: "不允许跨源写入配置" }, { status: 403 });
             }
             try {
               const body = (await req.json()) as { agentSwitch?: unknown; displayName?: string; diffOptions?: Record<string, unknown>; reviewDefaults?: Record<string, { defaultDiffType?: string }>; theme?: Record<string, unknown>; favicon?: FaviconStyle; autoUpdate?: unknown; updateCheck?: unknown; agentTool?: unknown; reviewAnalysis?: Record<string, unknown>; packageChanges?: unknown; conventionalComments?: boolean; conventionalLabels?: unknown[] | null };
               const toSave: Record<string, unknown> = {};
               // OpenCode's agent switch (#1390): a known shape or nothing is saved.
               const agentSwitch = agentSwitchConfigToSave(body);
-              if (agentSwitch === null) return Response.json({ error: "Invalid agentSwitch" }, { status: 400 });
+              if (agentSwitch === null) return Response.json({ error: "agentSwitch 无效" }, { status: 400 });
               if (agentSwitch !== undefined) toSave.agentSwitch = agentSwitch;
               if (body.displayName !== undefined) toSave.displayName = body.displayName;
               if (body.diffOptions !== undefined) toSave.diffOptions = body.diffOptions;
@@ -4063,7 +4063,7 @@ export async function startReviewServer(
               if (body.reviewAnalysis !== undefined) {
                 const reviewAnalysis = parseReviewAnalysisConfig(body.reviewAnalysis);
                 if (!reviewAnalysis) {
-                  return Response.json({ error: "Invalid analysis settings" }, { status: 400 });
+                  return Response.json({ error: "分析设置无效" }, { status: 400 });
                 }
                 toSave.reviewAnalysis = reviewAnalysis;
                 if (reviewAnalysis.callFlow === false) callFlowService.cancelAll();
@@ -4071,7 +4071,7 @@ export async function startReviewServer(
               // Package changes: the card switch and the npm lookup consent, booleans only.
               if (body.packageChanges !== undefined) {
                 const packageChangesConfig = parsePackageChangesConfig(body.packageChanges);
-                if (!packageChangesConfig) return Response.json({ error: "Invalid packageChanges" }, { status: 400 });
+                if (!packageChangesConfig) return Response.json({ error: "packageChanges 无效" }, { status: 400 });
                 toSave.packageChanges = packageChangesConfig;
               }
               if (body.conventionalComments !== undefined) toSave.conventionalComments = body.conventionalComments;
@@ -4080,11 +4080,11 @@ export async function startReviewServer(
               // refused in remote mode and --tailscale sessions.
               const cookieHostWrite = cookieHostConfigWrite((body as { cookieHost?: unknown }).cookieHost, isRemote || options.tailnetPublished === true);
               if (cookieHostWrite && cookieHostWrite.status !== 200) return Response.json(cookieHostWrite.body, { status: cookieHostWrite.status });
-              if (Object.keys(toSave).length > 0 && !saveConfig(toSave as Parameters<typeof saveConfig>[0])) return Response.json({ error: "config.json could not be saved; nothing changed. A config.json that is not valid JSON is never written over: fix or remove it." }, { status: 500 });
-              if (agentToolSaveFailed(toSave)) return Response.json({ error: "Could not save the setting to config.json." }, { status: 500 });
+              if (Object.keys(toSave).length > 0 && !saveConfig(toSave as Parameters<typeof saveConfig>[0])) return Response.json({ error: "config.json 无法保存；未做任何更改。内容不是有效 JSON 的 config.json 绝不会被覆盖：请修复或删除它。" }, { status: 500 });
+              if (agentToolSaveFailed(toSave)) return Response.json({ error: "无法将设置保存到 config.json。" }, { status: 500 });
               return Response.json(cookieHostWrite ? cookieHostWrite.body : { ok: true });
             } catch {
-              return Response.json({ error: "Invalid request" }, { status: 400 });
+              return Response.json({ error: "请求无效" }, { status: 400 });
             }
           }
 
@@ -4117,7 +4117,7 @@ export async function startReviewServer(
             ) {
               return Response.json({ mode: "review", providers: [], available: false });
             }
-            return Response.json({ error: "AI features disabled" }, { status: 503 });
+            return Response.json({ error: "AI 功能已停用" }, { status: 503 });
           }
 
           // API: Review profiles (custom reviews discovery). Reloaded per
@@ -4157,10 +4157,10 @@ export async function startReviewServer(
             try {
               ({ name } = (await req.json()) as { name?: unknown });
             } catch {
-              return Response.json({ error: "Invalid JSON" }, { status: 400 });
+              return Response.json({ error: "JSON 无效" }, { status: 400 });
             }
             if (typeof name !== "string" || name.length === 0) {
-              return Response.json({ error: "`name` is required." }, { status: 400 });
+              return Response.json({ error: "`name` 为必填项。" }, { status: 400 });
             }
             try {
               return Response.json(enableReviewSkill(name));
@@ -4184,10 +4184,10 @@ export async function startReviewServer(
               try {
                 ({ instructions } = (await req.json()) as { instructions?: unknown });
               } catch {
-                return Response.json({ error: "Invalid JSON" }, { status: 400 });
+                return Response.json({ error: "JSON 无效" }, { status: 400 });
               }
               if (typeof instructions !== "string") {
-                return Response.json({ error: "`instructions` must be a string." }, { status: 400 });
+                return Response.json({ error: "`instructions` 必须是字符串。" }, { status: 400 });
               }
               return Response.json({ instructions: writeGuideInstructions(instructions) });
             }
@@ -4196,14 +4196,14 @@ export async function startReviewServer(
           // API: Durable viewed-file progress
           if (url.pathname === "/api/review-progress") {
             if (req.method === "POST" && !callFlowInstallOriginAllowed(req.headers.get("origin"), url.host, req.headers.get("sec-fetch-site"))) {
-              return Response.json({ error: "Cross-origin progress updates are not allowed" }, { status: 403 });
+              return Response.json({ error: "不允许跨源进度更新" }, { status: 403 });
             }
             let body: unknown;
             if (req.method === "POST") {
               try {
                 body = await req.json();
               } catch {
-                return Response.json({ error: "Invalid JSON" }, { status: 400 });
+                return Response.json({ error: "JSON 无效" }, { status: 400 });
               }
             }
             const result = await handleReviewProgress({
@@ -4218,7 +4218,7 @@ export async function startReviewServer(
           if (url.pathname === "/api/draft") {
             const keys = currentDraftKeys();
             if (url.searchParams.has("target") && url.searchParams.get("target") !== keys.targetKey) {
-              return Response.json({ code: "draft_target_changed", error: "Review draft target changed" }, { status: 409 });
+              return Response.json({ code: "draft_target_changed", error: "审查草稿的目标已更改" }, { status: 409 });
             }
             if (req.method === "POST") {
               try {
@@ -4227,7 +4227,7 @@ export async function startReviewServer(
                 // retain the historical always-ok response.
                 if (!saved && keys.targetKey) {
                   return Response.json(
-                    { ok: false, error: "stale draft generation", ...reviewDrafts.state(keys) },
+                    { ok: false, error: "草稿版本已过期", ...reviewDrafts.state(keys) },
                     { status: 409 },
                   );
                 }
@@ -4253,7 +4253,7 @@ export async function startReviewServer(
           }
           if (isGitButlerCommittedView() && url.pathname === "/api/editor-annotation" && req.method === "POST") {
             return Response.json(
-              { error: "Editor annotations are unavailable for committed GitButler views" },
+              { error: "已提交的 GitButler 视图无法使用编辑器批注" },
               { status: 400 },
             );
           }
@@ -4264,7 +4264,7 @@ export async function startReviewServer(
           if (url.pathname === "/api/pr-context/stream" && req.method === "GET") {
             if (!isPRMode || !prRef || !prMetadata) {
               return Response.json(
-                { error: "Not in PR mode" },
+                { error: "当前不在 PR 模式" },
                 { status: 400 },
               );
             }
@@ -4402,7 +4402,7 @@ export async function startReviewServer(
           // API: Submit PR review directly to GitHub (PR mode only)
           if (url.pathname === "/api/pr-action" && req.method === "POST") {
             if (!isPRMode || !prMetadata) {
-              return Response.json({ error: "Not in PR mode" }, { status: 400 });
+              return Response.json({ error: "当前不在 PR 模式" }, { status: 400 });
             }
             try {
               const body = (await req.json()) as {
@@ -4420,7 +4420,7 @@ export async function startReviewServer(
               const action = parsePRReviewAction(body.action);
               if (!action) {
                 return Response.json(
-                  { error: "action must be one of approve, comment, request_changes" },
+                  { error: "action 必须是 approve、comment 或 request_changes 之一" },
                   { status: 400 },
                 );
               }
@@ -4436,14 +4436,14 @@ export async function startReviewServer(
               if (body.targetPrUrl) {
                 const cached = prSwitchCache.get(body.targetPrUrl);
                 if (!cached) {
-                  return Response.json({ error: "Target PR not found in session" }, { status: 400 });
+                  return Response.json({ error: "会话中未找到目标 PR" }, { status: 400 });
                 }
                 targetRef = prRefFromMetadata(cached.metadata);
                 targetHeadSha = cached.metadata.headSha;
                 targetUrl = cached.metadata.url;
               } else if (currentPRDiffScope !== "layer") {
                 return Response.json(
-                  { error: "Switch to Layer diff before posting a platform review" },
+                  { error: "请先切换到 Layer diff 再发布平台审查" },
                   { status: 400 },
                 );
               }
@@ -4473,14 +4473,14 @@ export async function startReviewServer(
           // API: Mark/unmark PR files as viewed on GitHub (PR mode, GitHub only)
           if (url.pathname === "/api/pr-viewed" && req.method === "POST") {
             if (!isPRMode || !prMetadata) {
-              return Response.json({ error: "Not in PR mode" }, { status: 400 });
+              return Response.json({ error: "当前不在 PR 模式" }, { status: 400 });
             }
             if (prMetadata.platform !== "github") {
-              return Response.json({ error: "Viewed sync only supported for GitHub" }, { status: 400 });
+              return Response.json({ error: "已查看状态同步仅支持 GitHub" }, { status: 400 });
             }
             const prNodeId = prMetadata.prNodeId;
             if (!prNodeId) {
-              return Response.json({ error: "PR node ID not available" }, { status: 400 });
+              return Response.json({ error: "PR 节点 ID 不可用" }, { status: 400 });
             }
             try {
               const body = (await req.json()) as {
@@ -4506,7 +4506,7 @@ export async function startReviewServer(
               if (url.pathname.slice("/api/ai/".length) === "capabilities" && req.method === "GET") {
                 return Response.json({ available: false, providers: [] });
               }
-              return Response.json({ error: "AI backend not available" }, { status: 503 });
+              return Response.json({ error: "AI 后端不可用" }, { status: 503 });
             }
             const handler = aiRuntime.endpoints[url.pathname as keyof AIEndpoints];
             if (handler) {
@@ -4519,7 +4519,7 @@ export async function startReviewServer(
                 const checkout = await ensurePRLocalCwd();
                 if (!checkout) {
                   return Response.json(
-                    { error: "Local PR checkout unavailable — Ask AI can't read the PR files right now. Retry shortly." },
+                    { error: "本地 PR 检出不可用——Ask AI 目前无法读取 PR 文件。请稍后重试。" },
                     { status: 503 },
                   );
                 }

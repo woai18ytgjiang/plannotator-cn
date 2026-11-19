@@ -103,6 +103,12 @@ export interface SearchPaletteProps {
 type FilterKind = 'project' | 'status' | 'from';
 /** A chip and its menu: the three filters, the Type chip that leads them, and the Tag chip (several picks) after them. */
 type ChipKind = FilterKind | 'type' | 'tag';
+
+/** What each chip filters, for its ×'s accessible name. */
+const CHIP_KIND_WORDS: Record<ChipKind, string> = { project: '项目', status: '状态', from: '发件人', type: '类型', tag: '标签' };
+
+/** What each chip's menu is called. */
+const CHIP_MENU_WORDS: Record<ChipKind, string> = { project: '项目', status: '状态', from: '发件人', type: '类型', tag: '标签' };
 const NO_TAGS: readonly never[] = [];
 
 interface Answered {
@@ -174,14 +180,14 @@ function ThreadChip({ chip, terms }: { chip: RowThreadChip; terms: readonly stri
   const whole = chip.kind === 'name' && chip.subject ? `${chip.text}: ${chip.subject}` : chip.text;
   const named = chip.kind === 'name' && Boolean(chip.subject);
   return (
-    <Tip content={`Thread: ${whole}`} when={named ? undefined : (trigger) => isTextCut(trigger.querySelector('.ib-keyt'))}>
+    <Tip content={`话题：${whole}`} when={named ? undefined : (trigger) => isTextCut(trigger.querySelector('.ib-keyt'))}>
       <span className={`ib-key ib-sp-key${chip.kind === 'subject' ? ' ib-sp-key-subj' : ''}`} data-result-thread={chip.kind}>
-        <span className="ib-sr">Thread: </span>
+        <span className="ib-sr">话题：</span>
         <bdi className="ib-keyt" dir="auto">
           <Words text={chip.text} terms={terms} />
         </bdi>
-        {chip.kind === 'name' && chip.subject && <span className="ib-sr">, {chip.subject}</span>}
-        <span className="ib-sr">, </span>
+        {chip.kind === 'name' && chip.subject && <span className="ib-sr">，{chip.subject}</span>}
+        <span className="ib-sr">，</span>
       </span>
     </Tip>
   );
@@ -225,7 +231,7 @@ function MetaLine({ chip, chipTerms, lead, project, projectMarks, section, at }:
                 <span className="ib-sp-sep" aria-hidden="true">
                   ·
                 </span>
-                <span className="ib-sr">, </span>
+                <span className="ib-sr">，</span>
               </>
             )}
           </span>
@@ -255,7 +261,7 @@ function TimeColumn({ at }: { at: string | null }) {
   if (!at) return null;
   return (
     <span className="ib-sp-time" data-result-time="">
-      <span className="ib-sr">, </span>
+      <span className="ib-sr">，</span>
       {at}
     </span>
   );
@@ -267,7 +273,7 @@ function TimeColumn({ at }: { at: string | null }) {
  */
 function SortSwitch({ sort, onChange, name }: { sort: InboxSearchSort; onChange: (sort: InboxSearchSort) => void; name: string }) {
   return (
-    <span className="ib-seg ib-sp-sort" role="radiogroup" aria-label="Order results by" data-search-sort={sort}>
+    <span className="ib-seg ib-sp-sort" role="radiogroup" aria-label="排序方式" data-search-sort={sort}>
       {SEARCH_SORT_OPTIONS.map((option) => (
         <label key={option.value} className="ib-seg-o" data-on={sort === option.value ? '' : undefined} data-sort={option.value}>
           <input type="radio" name={name} value={option.value} checked={sort === option.value} onChange={() => onChange(option.value)} />
@@ -283,16 +289,16 @@ function KeyFooter() {
   return (
     <div className="ib-sp-foot" data-search-keys="" aria-hidden="true">
       <span>
-        <KeyCaps bindings={['ArrowUp', 'ArrowDown']} /> Move
+        <KeyCaps bindings={['ArrowUp', 'ArrowDown']} /> 移动
       </span>
       <span>
-        <KeyCaps bindings={['Enter']} /> Open
+        <KeyCaps bindings={['Enter']} /> 打开
       </span>
       <span>
-        <KeyCaps bindings={['Mod+Enter']} /> Open in new tab
+        <KeyCaps bindings={['Mod+Enter']} /> 在新标签页打开
       </span>
       <span className="ib-sp-foot-end">
-        <KeyCaps bindings={['Escape']} /> Close
+        <KeyCaps bindings={['Escape']} /> 关闭
       </span>
     </div>
   );
@@ -337,7 +343,7 @@ function RowBody({ row, phone, projectName, terms, tag }: { row: InboxSearchRow;
             {/* The thread's document indexes its subject, its name and its project's name: the chip and the project are marked. */}
             <MetaLine chip={chip} chipTerms={terms} project={projectName} projectMarks={projectMarks(projectName, row.project.name, terms)} section={label} at={metaAt} />
           </span>
-          {row.archived ? <span className="ib-sp-chip">Archived</span> : row.section === 'stopped' ? <span className="ib-sp-chip ib-sp-warn">Stopped</span> : null}
+          {row.archived ? <span className="ib-sp-chip">已归档</span> : row.section === 'stopped' ? <span className="ib-sp-chip ib-sp-warn">已停止</span> : null}
           {tag && <ResultTag json={tag} />}
           {!phone && <TimeColumn at={time} />}
         </>
@@ -356,7 +362,7 @@ function RowBody({ row, phone, projectName, terms, tag }: { row: InboxSearchRow;
               chipTerms={NO_TERMS}
               lead={
                 row.author.kind === 'me' ? (
-                  'You'
+                  '你'
                 ) : (
                   <bdi dir="auto">
                     <Words text={row.author.name} terms={terms} />
@@ -369,9 +375,9 @@ function RowBody({ row, phone, projectName, terms, tag }: { row: InboxSearchRow;
             />
           </span>
           {/* An action item (an Inbox `:::action`, key `a-…`) reads "Action item", not "Question". */}
-          {row.question && <span className="ib-sp-chip">{row.question.key.startsWith('a-') ? 'Action item' : 'Question'}</span>}
-          {row.question?.replaced && <span className="ib-sp-chip">Replaced</span>}
-          {row.archived && <span className="ib-sp-chip">Archived</span>}
+          {row.question && <span className="ib-sp-chip">{row.question.key.startsWith('a-') ? '行动项' : '问题'}</span>}
+          {row.question?.replaced && <span className="ib-sp-chip">已替换</span>}
+          {row.archived && <span className="ib-sp-chip">已归档</span>}
           {!phone && <TimeColumn at={time} />}
         </>
       );
@@ -393,13 +399,13 @@ function RowBody({ row, phone, projectName, terms, tag }: { row: InboxSearchRow;
             <MetaLine
               chip={chip}
               chipTerms={NO_TERMS}
-              lead={<bdi dir="auto">{row.type === 'guide' ? 'Guided review' : row.folder ? <Words text={`${row.folder}/`} terms={terms} /> : 'File'}</bdi>}
+              lead={<bdi dir="auto">{row.type === 'guide' ? '引导式审查' : row.folder ? <Words text={`${row.folder}/`} terms={terms} /> : '文件'}</bdi>}
               project={projectName}
               projectMarks={NO_MARKS}
             />
           </span>
           <span className="ib-sp-chip ib-sp-kind">{row.kind}</span>
-          {row.archived && <span className="ib-sp-chip">Archived</span>}
+          {row.archived && <span className="ib-sp-chip">已归档</span>}
         </>
       );
     }
@@ -415,7 +421,7 @@ function RowBody({ row, phone, projectName, terms, tag }: { row: InboxSearchRow;
           {/* The name's tooltip names the whole folder. */}
           <Secondary
             parts={[
-              'Project',
+              '项目',
               <bdi>
                 <Words text={row.root} terms={terms} />
               </bdi>,
@@ -435,16 +441,16 @@ function RowBody({ row, phone, projectName, terms, tag }: { row: InboxSearchRow;
 function SearchedOnly({ scope, onEverywhere }: { scope: readonly string[]; onEverywhere: () => void }) {
   return (
     <>
-      Searched only{' '}
+      仅搜索了{' '}
       {scope.map((s, i) => (
         <span key={i}>
           {i > 0 && ', '}
           <bdi>{s}</bdi>
         </span>
       ))}
-      .{' '}
+      。{' '}
       <button type="button" data-clear-filters="" onClick={onEverywhere}>
-        Search everywhere
+        在所有位置搜索
       </button>
     </>
   );
@@ -573,14 +579,14 @@ export default function SearchPalette(props: SearchPaletteProps) {
           setAnswered({ key, q: query.trim(), model, filters: nextFilters, type: nextType, sort: nextSort });
           const said = nextType ? typeCountWords(model, query, nextType) : countWords(model, query, filtersSet(nextFilters));
           // Found inside a filter: the count says so, as the line under the list does ("2 results in 2 groups. Searched only plannotator").
-          const only = said && query.trim() && filtersSet(nextFilters) && !said.startsWith('No ') ? scopeWords(nextFilters, projectNameRef.current, nextType, tagWords(nextFilters.tags, tagListRef.current)).join(', ') : '';
-          setLive(only ? `${said}. Searched only ${only}` : said);
+          const only = said && query.trim() && filtersSet(nextFilters) && !said.startsWith('没有') ? scopeWords(nextFilters, projectNameRef.current, nextType, tagWords(nextFilters.tags, tagListRef.current)).join(', ') : '';
+          setLive(only ? `${said}。仅搜索了 ${only}` : said);
         })
         .catch((cause) => {
           if (seq !== requestSeq.current || (cause instanceof DOMException && cause.name === 'AbortError')) return;
           setPending(false);
           setError(true);
-          setLive('Search is not answering.');
+          setLive('搜索无响应。');
           openWhenSettled.current = false;
         });
     },
@@ -638,7 +644,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
     const withShapes = shapeList.length ? [...found, { id: 'shapes' as const, heading: 'Shape', total: null, options: shapeList.map((shape) => ({ kind: 'shape' as const, shape })) }] : found;
     const actionList = actions ? actions(answered.q) : [];
     if (actionList.length === 0) return withShapes;
-    const group: SearchGroupView = { id: 'actions', heading: 'Actions', total: null, options: actionList.map((action) => ({ kind: 'action' as const, action })) };
+    const group: SearchGroupView = { id: 'actions', heading: '操作', total: null, options: actionList.map((action) => ({ kind: 'action' as const, action })) };
     // Above everything (Recent searches included) with no words, when nothing
     // matched, or when the words name an action; below real results otherwise.
     const first = !answered.q.trim() || withShapes.length === 0 || namesActionWord(answered.q);
@@ -812,13 +818,13 @@ export default function SearchPalette(props: SearchPaletteProps) {
   const typeCount = (id: InboxSearchGroupId): number | null => (answered && answered.q && !answered.model.indexing && answered.model.totals ? answered.model.totals[id] : null);
   const menuOptions = (kind: ChipKind): { value: string | null; label: string; count?: number | null }[] =>
     kind === 'type'
-      ? [{ value: null, label: 'All types' }, ...INBOX_SEARCH_GROUPS.map((id) => ({ value: id, label: GROUP_LABELS[id].heading, count: typeCount(id) }))]
+      ? [{ value: null, label: '全部类型' }, ...INBOX_SEARCH_GROUPS.map((id) => ({ value: id, label: GROUP_LABELS[id].heading, count: typeCount(id) }))]
       : kind === 'project'
-        ? [{ value: null, label: 'All projects' }, ...projects.map((p) => ({ value: p.id, label: projectName(p.id) }))]
+        ? [{ value: null, label: '全部项目' }, ...projects.map((p) => ({ value: p.id, label: projectName(p.id) }))]
         : kind === 'status'
           ? STATUS_OPTIONS.map((o) => ({ value: o.value, label: o.label }))
           : kind === 'tag'
-            ? [{ value: null, label: 'Any tag' }, ...tagList.map((tag) => ({ value: tag.id, label: tag.name }))]
+            ? [{ value: null, label: '任何标签' }, ...tagList.map((tag) => ({ value: tag.id, label: tag.name }))]
             : FROM_OPTIONS.map((o) => ({ value: o.value, label: o.label }));
 
   const chipValue = (kind: ChipKind): string | null => (kind === 'type' ? type : kind === 'tag' ? (tagList.find((tag) => tagPicked(tag, filters.tags))?.id ?? null) : filters[kind]);
@@ -890,7 +896,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
 
   const chip = (kind: ChipKind) => {
     const set = chipValue(kind) !== null;
-    const label = kind === 'type' ? (type ? GROUP_LABELS[type].heading : 'All types') : kind === 'tag' ? tagChipText(tagList, filters.tags) : chipText(kind, filters, projectName);
+    const label = kind === 'type' ? (type ? GROUP_LABELS[type].heading : '全部类型') : kind === 'tag' ? tagChipText(tagList, filters.tags) : chipText(kind, filters, projectName);
     const button = (
       <Tip content={label} when={(trigger) => isTextCut(trigger.querySelector('.ib-sp-fl'))}>
         <button
@@ -914,7 +920,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
     return (
       <span key={kind} className="ib-sp-fcell ib-sp-fwrap" data-cell={kind}>
         {button}
-        <button type="button" className="ib-sp-fx" data-unset={kind} aria-label={`Clear the ${kind} filter`} onClick={() => {
+        <button type="button" className="ib-sp-fx" data-unset={kind} aria-label={`清除${CHIP_KIND_WORDS[kind]}筛选`} onClick={() => {
           setChip(kind, null);
           requestAnimationFrame(() => filtersRef.current?.querySelector<HTMLElement>(`[data-chip="${kind}"]`)?.focus());
         }}>
@@ -932,7 +938,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
     const cell = chipEl?.closest<HTMLElement>('.ib-sp-fcell');
     const left = cell?.offsetLeft ?? 10;
     const top = cell ? cell.offsetTop + cell.offsetHeight + 6 : undefined;
-    const label = menu.kind === 'type' ? 'Type' : menu.kind === 'project' ? 'Project' : menu.kind === 'status' ? 'Status' : menu.kind === 'tag' ? 'Tag' : 'From';
+    const label = CHIP_MENU_WORDS[menu.kind];
     return (
       <div ref={menuRef} className="ib-sp-menu" role="menu" aria-label={label} style={phone ? undefined : { left, top }} onKeyDown={onMenuKey}>
         {items.map((item, i) => {
@@ -970,10 +976,10 @@ export default function SearchPalette(props: SearchPaletteProps) {
     if (error) {
       return (
         <div className="ib-sp-empty">
-          <span>Search isn&rsquo;t answering.</span>
+          <span>搜索无响应。</span>
           <span className="ib-sp-e2">
             <button type="button" data-search-retry="" onClick={() => run(q, filters)}>
-              Try again
+              重试
             </button>
           </span>
         </div>
@@ -986,13 +992,13 @@ export default function SearchPalette(props: SearchPaletteProps) {
         <>
           {indexing && renderGroups()}
           <div className="ib-sp-group">
-            <div className="ib-sp-gh">Threads</div>
+            <div className="ib-sp-gh">话题</div>
             <div className="ib-sp-skel"><i style={{ width: '62%' }} /><i /></div>
             <div className="ib-sp-skel"><i style={{ width: '48%' }} /><i /></div>
           </div>
           <div className="ib-sp-group">
-            <div className="ib-sp-gh">Messages</div>
-            {indexing && <div className="ib-sp-indexing" data-search-indexing="">Indexing {answered!.model.threads.toLocaleString('en-US')} threads&hellip;</div>}
+            <div className="ib-sp-gh">消息</div>
+            {indexing && <div className="ib-sp-indexing" data-search-indexing="">正在索引 {answered!.model.threads.toLocaleString('zh-CN')} 个话题…</div>}
             <div className="ib-sp-skel"><i style={{ width: '78%' }} /><i /></div>
             <div className="ib-sp-skel"><i style={{ width: '70%' }} /><i /></div>
             <div className="ib-sp-skel"><i style={{ width: '56%' }} /><i /></div>
@@ -1001,18 +1007,18 @@ export default function SearchPalette(props: SearchPaletteProps) {
       );
     }
     if (options.length === 0) {
-      if (answered.type && !answered.q) return <div className="ib-sp-empty ib-sp-quiet" data-search-type-empty="">Type to search {GROUP_LABELS[answered.type].noun}.</div>;
-      if (!answered.q && !filtered) return <div className="ib-sp-empty ib-sp-quiet">Type to search threads, messages and files.</div>;
+      if (answered.type && !answered.q) return <div className="ib-sp-empty ib-sp-quiet" data-search-type-empty="">输入以搜索{GROUP_LABELS[answered.type].noun}。</div>;
+      if (!answered.q && !filtered) return <div className="ib-sp-empty ib-sp-quiet">输入以搜索话题、消息和文件。</div>;
       const scope = scopeWords(answered.filters, projectName, answered.type, tagWords(answered.filters.tags, tagList));
       return (
         <div className="ib-sp-empty" data-search-none="">
           <span>
             {answered.q ? (
               <>
-                No matches for &ldquo;<bdi>{answered.q}</bdi>&rdquo;
+                没有匹配「<bdi>{answered.q}</bdi>」的结果
               </>
             ) : (
-              'No threads match these filters'
+              '没有话题匹配这些筛选条件'
             )}
           </span>
           {scope.length > 0 && (
@@ -1031,10 +1037,10 @@ export default function SearchPalette(props: SearchPaletteProps) {
         <div key={group.id} className="ib-sp-group" role="group" aria-labelledby={headingId} data-search-group={group.id}>
           <div className="ib-sp-gh" id={headingId} onMouseDown={keepInputFocus}>
             {group.heading}
-            {group.total !== null && <span className="ib-sp-gn">{group.total.toLocaleString('en-US')}</span>}
+            {group.total !== null && <span className="ib-sp-gn">{group.total.toLocaleString('zh-CN')}</span>}
             {group.id === 'recent-searches' && (
               <button type="button" className="ib-sp-gclear" data-clear-recent="" onClick={() => void clearRecent()}>
-                Clear
+                清除
               </button>
             )}
           </div>
@@ -1077,7 +1083,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
                   <span className="ib-sp-rs">
                     <span className="ib-sp-p">{actionLabel(action)}</span>
                     <span className="ib-sp-s">
-                      {action.kind === 'new' ? 'Start a thread with a live agent' : action.kind === 'review' ? 'Local changes or a pull request' : `${startedLine(action.target)}${busyWord(action.target) ? ` · ${busyWord(action.target)!.toLowerCase()}` : ''}`}
+                      {action.kind === 'new' ? '与在线智能体开启话题' : action.kind === 'review' ? '本地更改或 PR' : `${startedLine(action.target)}${busyWord(action.target) ? ` · ${busyWord(action.target)!.toLowerCase()}` : ''}`}
                     </span>
                   </span>
                 </div>
@@ -1140,7 +1146,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
       className="ib-sp"
       role="dialog"
       aria-modal="true"
-      aria-label="Search the Inbox"
+      aria-label="搜索收件箱"
       data-search-palette=""
       data-phone={phone ? '' : undefined}
       onKeyDown={onDialogKey}
@@ -1175,8 +1181,8 @@ export default function SearchPalette(props: SearchPaletteProps) {
           aria-autocomplete="list"
           aria-controls={listId}
           aria-activedescendant={hl !== null && options[hl] ? optionId(hl) : undefined}
-          placeholder="Search threads, messages and files"
-          aria-label="Search threads, messages and files"
+          placeholder="搜索话题、消息和文件"
+          aria-label="搜索话题、消息和文件"
           dir="auto"
           maxLength={400}
           value={q}
@@ -1196,7 +1202,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
             are words, so the filter row below is the filters alone and fits one line. Tab: the box, the order, the filters. */}
         {!phone && sortSwitch}
         <button type="button" className="ib-sp-cancel" data-search-cancel="" onClick={() => close('dismissed')}>
-          Cancel
+          取消
         </button>
       </div>
       {/* The filters and Clear filters on one line. A phone's filters scroll sideways, the order pinned at the line's end. */}
@@ -1210,7 +1216,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
           {anyFilter && (
             <span className="ib-sp-end">
               <button type="button" className="ib-sp-clear" data-clear-filters="" onClick={clearFilters}>
-                Clear filters
+                清除筛选
               </button>
             </span>
           )}
@@ -1225,7 +1231,7 @@ export default function SearchPalette(props: SearchPaletteProps) {
           id={listId}
           className="ib-sp-list"
           role="listbox"
-          aria-label="Search results"
+          aria-label="搜索结果"
           data-dim={pending && answered && !indexing ? '' : undefined}
           onScroll={measure}
         >

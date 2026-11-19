@@ -8,24 +8,24 @@ export function RulesIntro({ phone, onClose, onAdd }: { phone: boolean; onClose:
     <Modal labelledBy="ib-ri-title" describedBy="ib-ri-desc" testId="rules-intro" onClose={onClose} ownKeys className={`ib-bi ib-ri${phone ? ' ib-bi-phone' : ''}`}>
       <RulesIntroArt />
       <div className="ib-bi-text">
-        <h2 id="ib-ri-title">Set the rules</h2>
-        <p id="ib-ri-desc">Add custom instructions for how you want your agents to use your Inbox.</p>
-        <p className="ib-bi-q">They go along with Plannotator's own. Change them any time in Settings.</p>
+        <h2 id="ib-ri-title">设置规则</h2>
+        <p id="ib-ri-desc">添加自定义指令，规定你希望智能体如何使用你的收件箱。</p>
+        <p className="ib-bi-q">它们会与 Plannotator 自带的规则一并生效。之后可随时在设置中修改。</p>
       </div>
       <div className="ib-bi-acts">
         <button type="button" className="ib-btn ib-ghost" onClick={onClose} data-rules-intro-close="">
-          Not now
+          暂不
         </button>
         <span className="ib-bsp" />
         <button type="button" className="ib-btn ib-pri ib-bi-copy" onClick={onAdd} data-rules-intro-add="">
-          Add your rules
+          添加你的规则
         </button>
       </div>
     </Modal>
   );
 }
 
-const RULES = ['Keep messages short', 'Only when blocked or done'];
+const RULES = ['消息保持简短', '仅在受阻或完成时'];
 const BEATS = [
   { at: 0, rules: 0, short: false, gone: false, ask: false },
   { at: 1300, rules: 1, short: false, gone: false, ask: false },

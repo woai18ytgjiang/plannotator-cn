@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The `plannotator` agent tool switch as the UI sees it: what the server
  * reports in `serverConfig` (packages/shared/config.ts getServerConfig) and
@@ -66,7 +67,7 @@ export async function saveAgentToolSetting(
       body: JSON.stringify({ agentTool: value }),
     });
   } catch {
-    throw new Error('Could not reach Plannotator. Nothing was changed.');
+    throw new Error('无法连接 Plannotator。未做任何更改。');
   }
   if (response.ok) return;
   let detail = '';
@@ -76,7 +77,7 @@ export async function saveAgentToolSetting(
   } catch {
     // No JSON body: the status line below is all there is.
   }
-  throw new Error(detail || `Plannotator answered ${response.status}. Nothing was changed.`);
+  throw new Error(detail || `Plannotator 返回了 ${response.status}。未做任何更改。`);
 }
 
 const HOST_NAMES: Record<AgentToolHost, string> = {
@@ -98,7 +99,7 @@ export function agentToolHostName(host: AgentToolHost): string {
  * does Oh My Pi, which may keep the extension loaded across its sessions.
  */
 export function agentToolAppliesWhen(host: AgentToolHost): string {
-  return host === 'pi' ? 'the next Pi session' : `the next time ${HOST_NAMES[host]} starts`;
+  return host === 'pi' ? '下一个 Pi 会话' : `${HOST_NAMES[host]} 下次启动时`;
 }
 
 /**
@@ -109,7 +110,7 @@ export function agentToolAppliesWhen(host: AgentToolHost): string {
  * schema only when the model reads it.
  */
 export function agentToolCostNote(host: AgentToolHost): string {
-  if (host === 'claude-code') return 'Claude Code loads it only when needed.';
-  if (host === 'oh-my-pi') return 'Oh My Pi lists it in one short line (about 50 tokens) and loads the rest only when needed.';
-  return 'Adds about 800 tokens to every request.';
+  if (host === 'claude-code') return 'Claude Code 仅在需要时加载。';
+  if (host === 'oh-my-pi') return 'Oh My Pi 以一行简短说明列出（约 50 个令牌），其余部分仅在需要时加载。';
+  return '每次请求大约增加 800 个令牌。';
 }

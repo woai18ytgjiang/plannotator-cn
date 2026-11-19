@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Visible comment drafts (opt-in, `configurePlannotatorUI({ visibleCommentDrafts })`): a floating "Draft" badge just
  * under the end of each set of words whose comment was closed with words in it. The badge sits on top of the text,
@@ -111,9 +112,9 @@ export function CommentDraftBadges({
           className="pn-cdraft"
           style={{ left: p.left, top: p.top }}
           data-comment-draft-badge={p.id}
-          data-label="Draft"
-          aria-label={p.quote ? `Draft comment on “${p.quote}”, not sent. Open it` : 'Draft comment, not sent. Open it'}
-          title="Your comment, not sent. Open it"
+          data-label="草稿"
+          aria-label={p.quote ? `关于「${p.quote}」的草稿评论，尚未发送。点击打开` : '草稿评论，尚未发送。点击打开'}
+          title="你的评论尚未发送。点击打开"
           onPointerDown={(event) => event.stopPropagation()}
           onMouseDown={(event) => event.stopPropagation()}
           onMouseUp={(event) => event.stopPropagation()}

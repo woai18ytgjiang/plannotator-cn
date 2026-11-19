@@ -49,13 +49,13 @@ export const threadPullsBus = {
 export function pullStateWord(state: InboxThreadPullState): string {
   switch (state) {
     case 'open':
-      return 'Open';
+      return '开放';
     case 'draft':
-      return 'Draft';
+      return '草稿';
     case 'merged':
-      return 'Merged';
+      return '已合并';
     case 'closed':
-      return 'Closed';
+      return '已关闭';
     default:
       return 'State not known yet';
   }

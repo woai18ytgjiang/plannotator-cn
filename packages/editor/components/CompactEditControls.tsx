@@ -26,17 +26,17 @@ export const CompactEditControls: React.FC<CompactEditControlsProps> = ({
   const saveFailed = saveStatus === 'conflict' || saveStatus === 'error';
   const canSave = sourceBacked && saveStatus !== 'clean' && saveStatus !== 'saved';
   const saveLabel = saving
-    ? 'Saving…'
+    ? '保存中…'
     : saveFailed
-      ? 'Retry save'
+      ? '重试保存'
       : saveStatus === 'missing'
-        ? 'Recreate file'
+        ? '重新创建文件'
         : canSave
-          ? 'Save'
-          : 'Saved';
+          ? '保存'
+          : '已保存';
   const exitLabel = cancelMode
-    ? (confirmDiscard ? 'Discard changes' : 'Cancel')
-    : 'Done';
+    ? (confirmDiscard ? '放弃更改' : '取消')
+    : '完成';
 
   return (
     <div
@@ -44,9 +44,9 @@ export const CompactEditControls: React.FC<CompactEditControlsProps> = ({
       className="mb-3 flex w-full items-center gap-2 rounded-xl border border-border/60 bg-card/95 p-1.5 shadow-sm"
     >
       <div className="min-w-0 flex-1 px-2">
-        <span className="block truncate text-sm font-medium text-foreground">Editing {documentTitle}</span>
+        <span className="block truncate text-sm font-medium text-foreground">正在编辑 {documentTitle}</span>
         <span className="block text-[11px] leading-4 text-muted-foreground">
-          {sourceBacked ? 'Save writes to the source file' : 'Done adds this edit to your feedback'}
+          {sourceBacked ? '保存会写入源文件' : '「完成」会将此编辑加入反馈'}
         </span>
       </div>
       {sourceBacked && (

@@ -76,7 +76,7 @@ const CommitRow: React.FC<{
 const BaseBoundary: React.FC<{ base: string }> = ({ base }) => (
   <div
     className="flex items-center gap-2 px-2 py-2"
-    title={`Commits from here down are already part of ${base} — shared history, not branch work.`}
+    title={`从此处向下的提交已是 ${base} 的一部分——属于共享历史，而非分支工作。`}
   >
     <span className="h-px flex-1 bg-foreground/30" />
     <span className="text-xs font-semibold text-foreground/80 truncate max-w-[160px]">
@@ -141,21 +141,21 @@ export const CommitsPanel: React.FC<CommitsPanelProps> = ({
                 onClick={onRetry}
                 className="text-xs text-primary/80 underline underline-offset-2 decoration-primary/40 hover:text-primary transition-colors"
               >
-                Retry
+                重试
               </button>
             </div>
           ) : isLoading && commits.length === 0 ? (
-            <div className="py-6 text-center text-xs text-muted-foreground/50">Loading commits…</div>
+            <div className="py-6 text-center text-xs text-muted-foreground/50">正在加载提交…</div>
           ) : commits.length === 0 ? (
-            <div className="py-6 text-center text-xs text-muted-foreground/50">No commits</div>
+            <div className="py-6 text-center text-xs text-muted-foreground/50">没有提交</div>
           ) : (
             <>
               {commits.map((commit, index) => (
                 <React.Fragment key={commit.sha}>
                   {showGroups && index === 0 && boundaryIndex > 0 && (
                     <GroupHeader
-                      label="On this branch"
-                      title={`Commits that exist only on this branch — not yet part of ${base}.`}
+                      label="在此分支上"
+                      title={`仅存在于该分支的提交——尚未成为 ${base} 的一部分。`}
                     />
                   )}
                   {showGroups && index === boundaryIndex && <BaseBoundary base={base!} />}
@@ -173,7 +173,7 @@ export const CommitsPanel: React.FC<CommitsPanelProps> = ({
                   disabled={isLoadingMore}
                   className="w-full text-left px-2 py-1 text-xs text-primary/80 underline underline-offset-2 decoration-primary/40 hover:text-primary hover:decoration-primary transition-colors disabled:opacity-50"
                 >
-                  {isLoadingMore ? 'Loading…' : 'Show more'}
+                  {isLoadingMore ? '加载中…' : '显示更多'}
                 </button>
               )}
               {error && (
@@ -183,7 +183,7 @@ export const CommitsPanel: React.FC<CommitsPanelProps> = ({
                     onClick={onRetry}
                     className="flex-shrink-0 text-primary/80 underline underline-offset-2 decoration-primary/40 hover:text-primary transition-colors"
                   >
-                    Retry
+                    重试
                   </button>
                 </div>
               )}

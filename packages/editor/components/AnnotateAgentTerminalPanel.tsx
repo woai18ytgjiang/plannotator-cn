@@ -91,10 +91,10 @@ const FONT_FAMILY_OPTIONS: {
   label: string;
   family: string | null;
 }[] = [
-  { value: "theme", label: "Theme", family: null },
+  { value: "theme", label: "跟随主题", family: null },
   {
     value: "system",
-    label: "System mono",
+    label: "系统等宽字体",
     family:
       '"SF Mono", Menlo, Monaco, "Cascadia Mono", Consolas, ui-monospace, monospace',
   },
@@ -111,9 +111,9 @@ const FONT_WEIGHT_OPTIONS: {
   fontWeight: number;
   fontWeightBold: number;
 }[] = [
-  { value: "light", label: "Light", fontWeight: 300, fontWeightBold: 600 },
-  { value: "regular", label: "Regular", fontWeight: 400, fontWeightBold: 700 },
-  { value: "medium", label: "Medium", fontWeight: 500, fontWeightBold: 700 },
+  { value: "light", label: "细", fontWeight: 300, fontWeightBold: 600 },
+  { value: "regular", label: "常规", fontWeight: 400, fontWeightBold: 700 },
+  { value: "medium", label: "中等", fontWeight: 500, fontWeightBold: 700 },
 ];
 
 const LINE_HEIGHT_OPTIONS = [1, 1.1, 1.2, 1.35];
@@ -329,9 +329,9 @@ export const AnnotateAgentTerminalPanel = forwardRef<
     >
       {!capability.enabled ? (
         <div className="flex flex-1 flex-col justify-center gap-2 px-4 text-center">
-          <p className="text-xs font-medium text-foreground">Agent unavailable</p>
+          <p className="text-xs font-medium text-foreground">智能体不可用</p>
           <p className="text-[11px] leading-5 text-muted-foreground">
-            {capability.message ?? "WebTUI is not available in this session."}
+            {capability.message ?? "此会话不支持 WebTUI。"}
           </p>
         </div>
       ) : startedAgentId && backend ? (
@@ -339,7 +339,7 @@ export const AnnotateAgentTerminalPanel = forwardRef<
           <div className="flex h-10 items-center justify-between gap-2 border-b border-border/40 px-3">
             <div className="min-w-0 text-[11px] text-muted-foreground">
               <span className="text-foreground">{formatAgentName(startedAgentId, agents)}</span>
-              <span className="mx-1.5 text-muted-foreground/40">in</span>
+              <span className="mx-1.5 text-muted-foreground/40">位于</span>
               <span className="inline-block max-w-[13rem] truncate align-bottom font-mono" title={capability.cwd}>{capability.cwd}</span>
             </div>
             <div className="flex shrink-0 items-center gap-1">
@@ -351,19 +351,19 @@ export const AnnotateAgentTerminalPanel = forwardRef<
               />
               <button
                 type="button"
-                aria-label="Stop agent"
+                aria-label="停止智能体"
                 onClick={() => requestStop(false)}
                 disabled={status === "stopping" || status === "exited"}
                 className="h-6 shrink-0 rounded px-1.5 text-[11px] font-medium text-muted-foreground/80 transition-colors hover:text-destructive focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-50"
               >
-                Stop
+                停止
               </button>
             </div>
           </div>
           <div className="relative min-h-0 flex-1" style={terminalTheme.shellStyle}>
             {status === "starting" && (
               <div className="pointer-events-none absolute left-3 top-3 z-10 rounded border border-border/50 bg-card/95 px-2 py-1 text-[11px] text-muted-foreground shadow-sm">
-                Starting terminal...
+                正在启动终端…
               </div>
             )}
             <WebTuiTerminal
@@ -404,7 +404,7 @@ export const AnnotateAgentTerminalPanel = forwardRef<
       ) : (
         <div className="flex flex-1 flex-col gap-3 p-3">
           <div className="flex flex-col gap-1.5">
-            <span className="text-[11px] font-medium text-muted-foreground">Agent</span>
+            <span className="text-[11px] font-medium text-muted-foreground">智能体</span>
             <AgentSelect
               agents={availableAgents}
               selectedAgentId={selectedAgentId}
@@ -418,7 +418,7 @@ export const AnnotateAgentTerminalPanel = forwardRef<
               onChange={(event) => setSaveAsDefault(event.target.checked)}
               className="h-3.5 w-3.5 accent-primary"
             />
-            Use as default
+            设为默认
           </label>
           <button
             type="button"
@@ -427,11 +427,11 @@ export const AnnotateAgentTerminalPanel = forwardRef<
             className="mt-1 flex h-8 items-center justify-center gap-1.5 rounded-md bg-primary px-3 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90 disabled:cursor-not-allowed disabled:opacity-50"
           >
             <Play className="h-3.5 w-3.5" />
-            Start
+            启动
           </button>
           {availableAgents.length === 0 && (
             <p className="text-[11px] leading-5 text-muted-foreground">
-              No supported agent CLI was found on PATH.
+              PATH 中未找到受支持的智能体 CLI。
             </p>
           )}
         </div>
@@ -458,14 +458,14 @@ function AgentSelect({
         render={
           <button
             type="button"
-            aria-label="Select agent"
+            aria-label="选择智能体"
             disabled={agents.length === 0}
             className="flex h-8 w-full items-center gap-1.5 rounded-md border border-border/70 bg-muted/50 px-2.5 text-xs text-foreground transition-colors hover:bg-muted focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring data-[popup-open]:border-primary/50 data-[popup-open]:bg-muted disabled:cursor-not-allowed disabled:opacity-60"
           />
         }
       >
         <span className="min-w-0 flex-1 truncate text-left">
-          {selectedAgent?.name ?? "Select agent"}
+          {selectedAgent?.name ?? "选择智能体"}
         </span>
         <ChevronDown className="h-3.5 w-3.5 shrink-0 text-muted-foreground" />
       </DropdownMenuTrigger>
@@ -525,9 +525,9 @@ function normalizeTerminalDimension(value: unknown): number | undefined {
 }
 
 function formatExit(event: PtyExit): string {
-  if (event.signal) return `Stopped (${event.signal})`;
-  if (event.exitCode === null) return "Stopped";
-  return `Exited ${event.exitCode}`;
+  if (event.signal) return `已停止（${event.signal}）`;
+  if (event.exitCode === null) return "已停止";
+  return `已退出（${event.exitCode}）`;
 }
 
 /** Exported for tests (the surrounding panel needs a live WebTUI session to
@@ -551,8 +551,8 @@ export function AgentTerminalDisplayPopover({
         render={
           <button
             type="button"
-            aria-label="Terminal display settings"
-            title="Display settings"
+            aria-label="终端显示设置"
+            title="显示设置"
             className="flex h-6 w-6 items-center justify-center rounded text-muted-foreground/80 transition-colors hover:bg-muted/70 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring data-[popup-open]:bg-primary/15 data-[popup-open]:text-primary"
           />
         }
@@ -562,7 +562,7 @@ export function AgentTerminalDisplayPopover({
       <PopoverContent align="end" sideOffset={6} className="w-64 p-2.5">
         <div className="space-y-2.5">
           <div className="flex items-center justify-between gap-2">
-            <div className="text-xs font-medium text-foreground">Display</div>
+            <div className="text-xs font-medium text-foreground">显示</div>
             {/* Resets DISPLAY settings only, exactly as the label says.
                 Position is deliberately untouched: it is a durable layout
                 preference (config.json via onSideChange), not a display
@@ -571,7 +571,7 @@ export function AgentTerminalDisplayPopover({
                 a chosen right/hidden placement. */}
             <button
               type="button"
-              aria-label="Reset terminal display settings"
+              aria-label="重置终端显示设置"
               onClick={() => onChange(DEFAULT_DISPLAY_SETTINGS)}
               className="flex h-6 w-6 items-center justify-center rounded text-muted-foreground transition-colors hover:bg-muted/70 hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring"
             >
@@ -582,18 +582,18 @@ export function AgentTerminalDisplayPopover({
           {/* Hidden closes the terminal (and this popover with it). The same
               control lives in Settings, which is how it is reopened. */}
           <TerminalDisplaySegmented
-            label="Position"
+            label="位置"
             value={side}
             options={[
-              { value: "left", label: "Left" },
-              { value: "right", label: "Right" },
-              { value: "hidden", label: "Hidden" },
+              { value: "left", label: "左侧" },
+              { value: "right", label: "右侧" },
+              { value: "hidden", label: "隐藏" },
             ]}
             onChange={onSideChange}
           />
 
           <TerminalDisplayStepper
-            label="Font size"
+            label="字号"
             value={settings.fontSize}
             min={MIN_FONT_SIZE}
             max={MAX_FONT_SIZE}
@@ -602,7 +602,7 @@ export function AgentTerminalDisplayPopover({
           />
 
           <label className="flex items-center justify-between gap-3 py-1">
-            <span className="text-[11px] text-muted-foreground">Font</span>
+            <span className="text-[11px] text-muted-foreground">字体</span>
             <select
               value={settings.fontFamily}
               onChange={(event) =>
@@ -619,14 +619,14 @@ export function AgentTerminalDisplayPopover({
           </label>
 
           <TerminalDisplaySegmented
-            label="Weight"
+            label="字重"
             value={settings.fontWeight}
             options={FONT_WEIGHT_OPTIONS.map(({ value, label }) => ({ value, label }))}
             onChange={(fontWeight) => onChange({ fontWeight })}
           />
 
           <TerminalDisplaySegmented
-            label="Line height"
+            label="行高"
             value={String(settings.lineHeight)}
             options={LINE_HEIGHT_OPTIONS.map((lineHeight) => ({
               value: String(lineHeight),
@@ -662,7 +662,7 @@ function TerminalDisplayStepper({
       <div className="flex items-center gap-px rounded-md bg-muted/60 p-px">
         <button
           type="button"
-          aria-label={`Decrease ${label}`}
+          aria-label={`减小${label}`}
           onClick={() => onChange(clamped - 1)}
           disabled={clamped <= min}
           className="flex h-6 w-6 items-center justify-center rounded-[5px] text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"
@@ -675,7 +675,7 @@ function TerminalDisplayStepper({
         </span>
         <button
           type="button"
-          aria-label={`Increase ${label}`}
+          aria-label={`增大${label}`}
           onClick={() => onChange(clamped + 1)}
           disabled={clamped >= max}
           className="flex h-6 w-6 items-center justify-center rounded-[5px] text-muted-foreground transition-colors hover:bg-background hover:text-foreground focus-visible:outline focus-visible:outline-2 focus-visible:outline-ring disabled:cursor-not-allowed disabled:opacity-40 disabled:hover:bg-transparent"

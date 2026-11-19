@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * What was asked or changed on a part of the board, and what came back, in that part's comment box (above the
  * words). The board's side panel is References only (the owner, 2026-11-16: "Honestly, it's just the reference
@@ -140,7 +141,7 @@ export function ShapeTalkBox({ anchor, within, label, onClose, children }: { anc
     >
       <div className="shp-talkbox-head">
         <span>{label}</span>
-        <button type="button" className="shp-icon-btn" onClick={closeBack} aria-label="Close">×</button>
+        <button type="button" className="shp-icon-btn" onClick={closeBack} aria-label="关闭">×</button>
       </div>
       {children}
     </div>,

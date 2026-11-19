@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useRef, useEffect, useContext } from "react";
 import { isCodeFilePath } from "@plannotator/core/code-file";
 import type { Block } from "../../types";
@@ -48,7 +49,7 @@ function resolveHostMedia(
   responsiveImages = false,
 ): void {
   if (!preserveVideos) root.querySelectorAll('video').forEach((video) => {
-    video.replaceWith(unavailableMedia(doc, 'Video', 'Videos are not shown here'));
+    video.replaceWith(unavailableMedia(doc, '视频', '此处不显示视频'));
   });
   if (responsiveImages) {
     root.querySelectorAll('img[srcset], picture source[srcset]').forEach((element) => {
@@ -72,9 +73,9 @@ function resolveHostMedia(
       img.removeAttribute('sizes');
     }
     const src = img.getAttribute('src');
-    const alt = img.getAttribute('alt') || 'Image';
+    const alt = img.getAttribute('alt') || '图片';
     if (!src) {
-      img.replaceWith(unavailableMedia(doc, alt, 'Image has no source'));
+      img.replaceWith(unavailableMedia(doc, alt, '图片没有来源'));
       return;
     }
     const resolved = resolveImage(src);
@@ -114,7 +115,7 @@ function resolveSrcset(srcset: string, resolveImage: ImageResolver): string | nu
   return candidates.length > 0 ? serializeSrcset(candidates) : null;
 }
 
-const IMAGE_NOT_FOUND_TITLE = 'Image could not be loaded';
+const IMAGE_NOT_FOUND_TITLE = '图片无法加载';
 
 // Walks the sanitized DOM and rewrites relative <img src> / <a href> so they
 // behave the same as their markdown counterparts:
@@ -142,7 +143,7 @@ function rewriteRelativeRefs(
       // The raw HTML is not React's: replacing the <img> here cannot trip React's insertBefore.
       // The placeholder's alt text is never quoted by a text comment (annotation-exclude).
       const onError = () => {
-        const placeholder = unavailableMedia(img.ownerDocument, img.getAttribute('alt') || 'Image', IMAGE_NOT_FOUND_TITLE);
+        const placeholder = unavailableMedia(img.ownerDocument, img.getAttribute('alt') || '图片', IMAGE_NOT_FOUND_TITLE);
         placeholder.classList.add('annotation-exclude');
         img.replaceWith(placeholder);
       };

@@ -2,9 +2,9 @@
  * New message's To on a phone (approval "inbox-phone-composer-picker"): the sheet the pill in the bottom row opens.
  * A computer keeps ToPicker.tsx; the rows, their order and the filter are the same rules (`compose/model.ts`).
  *
- * - Running sessions, each by its own title (issue #2450) with "<agent> · <project> · <time>" under it; a session
+ * - 运行中 sessions, each by its own title (issue #2450) with "<agent> · <project> · <time>" under it; a session
  *   with no title is its agent. A check on the one To names.
- * - Launch on, or two or more machines (approval "inbox-launcher-machine-switch"): "Running", then "Start new" with one
+ * - Launch on, or two or more machines (approval "inbox-launcher-machine-switch"): "运行中", then "新建" with one
  *   row per agent kind ("Claude Code", "in kiln-render"); with two or more machines, chips that wrap choose the machine.
  * - The filter on top takes no focus when the sheet opens, so the keyboard stays down and the list has the screen;
  *   a tap on it raises the keyboard and the sheet sits above it. ↓ ↑ and Enter work from it, as in ToPicker.
@@ -102,7 +102,7 @@ export function PhoneToSheet({
   const indexOf = new Map(options.map((o, i) => [o.key, i]));
 
   return (
-    <BottomSheet open={open} onClose={onClose} title="To" host={host} attrs={{ 'data-compose-to-sheet': '' }}>
+    <BottomSheet open={open} onClose={onClose} title="收件人" host={host} attrs={{ 'data-compose-to-sheet': '' }}>
       <div className="ib-sheet-body" onKeyDown={onKey}>
         <label className="ib-sheet-filter">
           <Icon name="search" size={18} />
@@ -113,8 +113,8 @@ export function PhoneToSheet({
             aria-autocomplete="list"
             aria-controls={`ib-to-list-${uid}`}
             aria-activedescendant={hl >= 0 && options[hl] ? optionId(hl) : undefined}
-            aria-label="Find an agent or project"
-            placeholder="Find an agent or project"
+            aria-label="查找智能体或项目"
+            placeholder="查找智能体或项目"
             autoComplete="off"
             autoCorrect="off"
             spellCheck={false}
@@ -123,8 +123,8 @@ export function PhoneToSheet({
           />
         </label>
         {all.length > 1 && !typing && <MachineChips machines={all} chosen={chosen} onChoose={setChosen} />}
-        <div className="ib-sheet-list" role="listbox" id={`ib-to-list-${uid}`} aria-label="Live agent sessions">
-          {items.length === 0 && <div className="ib-sheet-none">{typing && parts ? `Nothing matches “${query.trim()}”` : 'No live session matches.'}</div>}
+        <div className="ib-sheet-list" role="listbox" id={`ib-to-list-${uid}`} aria-label="运行中的智能体会话">
+          {items.length === 0 && <div className="ib-sheet-none">{typing && parts ? `没有匹配「${query.trim()}」的内容` : '没有匹配的运行中会话。'}</div>}
           {items.map((item) => {
             const i = indexOf.get(item.key) ?? -1;
             if (item.type === 'cap') {

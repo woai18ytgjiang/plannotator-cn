@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { cn } from '../lib/utils';
 import { questionProgress, type QuestionPanelRow } from '../utils/questionAnswers';
@@ -21,26 +22,26 @@ const StateTag: React.FC<{ row: QuestionPanelRow }> = ({ row }) => {
       <span
         data-annotation-unanchored="true"
         className="whitespace-nowrap rounded px-1.5 py-0.5 text-[9px] font-medium bg-muted text-muted-foreground"
-        title="This question is no longer in the document. The answer is still sent."
+        title="此问题已不在文档中，回答仍会被发送。"
       >
-        Unanchored
+        未定位
       </span>
     );
   }
   if (row.status === 'answered' || row.status === 'settled') {
     return (
-      <span className="inline-flex" title={row.status === 'settled' ? 'Settled' : 'Answered'}>
+      <span className="inline-flex" title={row.status === 'settled' ? '已确定' : '已回答'}>
         <CheckIcon />
-        <span className="sr-only">{row.status === 'settled' ? 'Settled' : 'Answered'}</span>
+        <span className="sr-only">{row.status === 'settled' ? '已确定' : '已回答'}</span>
       </span>
     );
   }
   if (row.status === 'skipped') {
-    return <span className="whitespace-nowrap rounded bg-muted px-1.5 py-px text-[10px] font-semibold text-muted-foreground">Skipped</span>;
+    return <span className="whitespace-nowrap rounded bg-muted px-1.5 py-px text-[10px] font-semibold text-muted-foreground">已跳过</span>;
   }
   return (
     <span className="whitespace-nowrap rounded border border-dashed border-border px-1.5 py-px text-[10px] font-semibold text-muted-foreground">
-      Open
+      待回答
     </span>
   );
 };
@@ -57,9 +58,9 @@ export const QuestionsPanelSection: React.FC<QuestionsPanelSectionProps> = ({ ro
   const { done, total } = questionProgress(rows);
   const complete = total > 0 && done === total;
   return (
-    <section data-questions-panel="true" aria-label="Questions" className="mb-2">
+    <section data-questions-panel="true" aria-label="问题" className="mb-2">
       <div className="mx-0.5 mb-2 mt-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-muted-foreground">
-        <span className="flex-1">Questions</span>
+        <span className="flex-1">问题</span>
         {total > 0 && <span className="tabular-nums">{done}/{total}</span>}
       </div>
       {total > 0 && (
@@ -73,18 +74,18 @@ export const QuestionsPanelSection: React.FC<QuestionsPanelSectionProps> = ({ ro
       <div className="flex flex-col">
         {rows.map((row) => {
           const ok = !row.orphaned && (row.status === 'answered' || row.status === 'settled');
-          const summary = row.answerText ?? 'Not answered yet';
+          const summary = row.answerText ?? '尚未回答';
           const clickable = !!onSelect && !row.orphaned;
           const body = (
             <>
               <span className={cn('font-mono text-[10.5px] font-semibold leading-[1.6]', ok ? 'text-success' : 'text-muted-foreground')}>
-                {row.number ? `Q${row.number}` : 'Q'}
+                {row.number ? `第${row.number}题` : '题'}
               </span>
               <span className="min-w-0 text-[12.5px] leading-[1.4] text-foreground">{row.prompt}</span>
               <StateTag row={row} />
               <span className={cn('col-start-2 col-end-4 text-xs', row.answerText && row.status !== 'skipped' ? 'text-foreground' : 'text-muted-foreground')}>
                 {summary}
-                {row.hasNote ? ' · has note' : ''}
+                {row.hasNote ? ' · 有备注' : ''}
               </span>
             </>
           );
@@ -109,7 +110,7 @@ export const QuestionsPanelSection: React.FC<QuestionsPanelSectionProps> = ({ ro
                   onClick={() => onRemoveOrphan(row)}
                   className="col-start-2 col-end-4 justify-self-start text-[11px] text-muted-foreground underline-offset-2 hover:text-destructive hover:underline"
                 >
-                  Remove answer
+                  移除回答
                 </button>
               )}
             </div>

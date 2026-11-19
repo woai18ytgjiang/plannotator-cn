@@ -61,23 +61,23 @@ export interface UpdateButtonProps {
 }
 
 const LABEL: Record<Update['state'], string> = {
-  available: 'Update',
-  ready: 'Update',
-  updating: 'Updating…',
-  failed: 'Update failed',
+  available: '更新',
+  ready: '更新',
+  updating: '更新中…',
+  failed: '更新失败',
 };
 
 function tipFor(update: Update, restarting: boolean): string {
-  if (restarting) return `Restarting into ${update.version}`;
+  if (restarting) return `正在重启到 ${update.version}`;
   switch (update.state) {
     case 'available':
-      return `Plannotator ${update.version} is available`;
+      return `Plannotator ${update.version} 已可更新`;
     case 'ready':
-      return `Plannotator ${update.version} is ready`;
+      return `Plannotator ${update.version} 已就绪`;
     case 'updating':
-      return `Installing Plannotator ${update.version}`;
+      return `正在安装 Plannotator ${update.version}`;
     case 'failed':
-      return `Plannotator ${update.version} didn't install`;
+      return `Plannotator ${update.version} 安装失败`;
   }
 }
 
@@ -91,7 +91,7 @@ export function UpdateButton({ update, restarting, updated, onPress, onWhatsNew 
     return updated ? (
       <button type="button" className="ib-nav ib-quiet" data-whats-new-link={updated} onClick={() => onWhatsNew(updated)}>
         <Icon name="book" />
-        What&apos;s new in {updated}
+        {updated} 的新功能
       </button>
     ) : null;
   }
@@ -99,14 +99,14 @@ export function UpdateButton({ update, restarting, updated, onPress, onWhatsNew 
   // Available and Ready name their version ("Update to 0.28.22"), so the sidebar's
   // Update and the What's new page's are not two bare "Update"s.
   const label = restarting
-    ? 'Restarting…'
+    ? '重启中…'
     : update.state === 'available' || update.state === 'ready'
-      ? `Update to ${update.version}`
+      ? `更新到 ${update.version}`
       : LABEL[update.state];
   const tip = tipFor(update, restarting);
   // The name contains the visible words (WCAG 2.5.3 Label in Name: "click Update to 0.28.22" works by voice);
   // "Plannotator X" stays in the tooltip.
-  const aria = update.state === 'failed' && !restarting ? `Update failed: Plannotator ${update.version} didn't install` : label;
+  const aria = update.state === 'failed' && !restarting ? `更新失败：Plannotator ${update.version} 安装失败` : label;
   return (
     <div className="ib-upd" data-update-state={restarting ? 'restarting' : update.state}>
       <button
@@ -257,79 +257,79 @@ export function UpdateDialog({ details, update, error, busy, onUpdateNow, onRemi
   const managed = update.action === 'script';
   const auto = details?.auto_update;
   return (
-    <Modal label={`Update to Plannotator ${update.version}`} onClose={onCancel} testId="update">
-      <h2>Update to Plannotator {update.version}</h2>
+    <Modal label={`更新到 Plannotator ${update.version}`} onClose={onCancel} testId="update">
+      <h2>更新到 Plannotator {update.version}</h2>
       <p className="ib-sub">
-        You have {update.current}
-        {released ? ` · released ${released}` : ''}
+        当前版本 {update.current}
+        {released ? ` · 发布于 ${released}` : ''}
       </p>
       {details?.summary && <p className="ib-sum">{details.summary}</p>}
       <button type="button" className="ib-lnk" onClick={onWhatsNew}>
         <Icon name="book" size={14} />
-        What&apos;s new in {update.version}
+        {update.version} 的新功能
       </button>
       {managed ? (
         <>
-          <h3>What happens</h3>
+          <h3>会发生什么</h3>
           <ul className="ib-what">
             <li>
               <Icon name="restart" />
               <span>
-                Runs the install script for v{update.version}
+                为 v{update.version} 运行安装脚本
                 {details && details.flags.length > 0 ? (
                   <>
-                    {' '}with the choices from your last install: <code>{details.flags.join(' ')}</code>.
+                    {' '}并沿用你上次安装时的选项：<code>{details.flags.join(' ')}</code>。
                   </>
                 ) : (
-                  '.'
+                  '。'
                 )}
               </span>
             </li>
             <li>
               <Icon name="doc" />
               <span>
-                Open reviews keep running on {update.current} until you finish them; new ones open on {update.version}.
+                已打开的审查会继续运行在 {update.current} 上，直到你完成它们；新的审查会在 {update.version} 上打开。
                 {details && details.sessions.length > 0 && (
                   // The first few, then how many more: thirty open reviews never push Update now off the dialog (decision 7).
                   <ul className="ib-sess">
                     {details.sessions.slice(0, SESSIONS_SHOWN).map((s) => (
                       <li key={`${s.label}-${s.started_at}`}>
-                        {s.project} · {s.mode === 'review' ? 'code review' : s.mode}, opened {whenTime(s.started_at)}
+                        {s.project} · {s.mode === 'review' ? '代码审查' : s.mode}，打开于 {whenTime(s.started_at)}
                       </li>
                     ))}
-                    {details.sessions.length > SESSIONS_SHOWN && <li data-sessions-more="">and {formatCount(details.sessions.length - SESSIONS_SHOWN)} more</li>}
+                    {details.sessions.length > SESSIONS_SHOWN && <li data-sessions-more="">另有 {formatCount(details.sessions.length - SESSIONS_SHOWN)} 个</li>}
                   </ul>
                 )}
               </span>
             </li>
             <li>
               <Icon name="inbox" />
-              <span>The Inbox restarts when the update is in. Your picks, drafts and threads are saved.</span>
+              <span>更新完成后收件箱会重启。你的选择、草稿和话题都会保存。</span>
             </li>
           </ul>
         </>
       ) : (
         <>
-          <h3>Update this copy yourself</h3>
+          <h3>手动更新此副本</h3>
           <p className="ib-sum" style={{ marginTop: 0 }}>
-            This copy of Plannotator was not installed by the install script, so it can&apos;t update itself. Run:
+            此 Plannotator 副本不是由安装脚本安装的，因此无法自行更新。请运行：
           </p>
           {details && <CommandRow text={details.command} />}
         </>
       )}
       {details?.plugin_command ? (
         <>
-          <h3>Updates separately</h3>
+          <h3>单独更新</h3>
           <p className="ib-sum" style={{ margin: 0 }}>
-            Claude Code plugin. In a terminal, then restart Claude Code:
+            Claude Code 插件。请在终端中执行，然后重启 Claude Code：
           </p>
           <CommandRow text={details.plugin_command} />
         </>
       ) : (
         managed && (
           <p className="ib-sum ib-quietline">
-            It also updates the Claude Code plugin when it is installed, and OpenCode&apos;s cached plugin: reload those agents
-            afterwards (Settings, Agents says which). Pi: run <code>pi update --extensions</code>, then <code>/reload</code>.
+            它还会在已安装时更新 Claude Code 插件，以及 OpenCode 的缓存插件：之后请重新加载这些智能体
+            （「设置 → 智能体」会指明是哪些）。Pi：运行 <code>pi update --extensions</code>，然后 <code>/reload</code>。
           </p>
         )
       )}
@@ -347,10 +347,10 @@ export function UpdateDialog({ details, update, error, busy, onUpdateNow, onRemi
             Install new versions automatically
             <small>
               {details?.check.on === false
-                ? `Needs update checks, which are off${details.check.env === false ? ': this Inbox started with PLANNOTATOR_UPDATE_CHECK=0' : ''}.`
+                ? `需要更新检查，但检查已关闭${details.check.env === false ? '：此收件箱启动时设置了 PLANNOTATOR_UPDATE_CHECK=0' : ''}。`
                 : auto.env !== null
-                  ? `PLANNOTATOR_AUTO_UPDATE is set in this Inbox's environment, so it is ${auto.env ? 'on' : 'off'}.`
-                  : 'At most once a day, never while another review is open. Change it in Settings.'}
+                  ? `此收件箱的环境变量中已设置 PLANNOTATOR_AUTO_UPDATE，因此处于${auto.env ? '开启' : '关闭'}状态。`
+                  : '每天最多一次，且不会在其他审查进行时安装。可在「设置」中更改。'}
             </small>
           </span>
         </label>
@@ -358,14 +358,14 @@ export function UpdateDialog({ details, update, error, busy, onUpdateNow, onRemi
       {error && <div className="ib-error">{error}</div>}
       <div className="ib-acts-row">
         <button type="button" className="ib-btn ib-ghost ib-left" onClick={onRemindTomorrow}>
-          Remind me tomorrow
+          明天提醒我
         </button>
         <button type="button" className="ib-btn" onClick={onCancel}>
-          Cancel
+          取消
         </button>
         {managed && (
           <button type="button" className="ib-btn ib-pri" onClick={onUpdateNow} disabled={busy} data-update-now="">
-            Update now
+            立即更新
           </button>
         )}
       </div>
@@ -376,23 +376,23 @@ export function UpdateDialog({ details, update, error, busy, onUpdateNow, onRemi
 /** Ready → press with a reply in the box: say what a restart loses. */
 export function RestartDialog({ update, subject, onRestart, onCancel }: { update: Update; subject: string; onRestart: () => void; onCancel: () => void }) {
   return (
-    <Modal label="Restart the Inbox to finish updating?" onClose={onCancel} testId="restart">
-      <h2>Restart the Inbox to finish updating?</h2>
+    <Modal label="重启收件箱以完成更新？" onClose={onCancel} testId="restart">
+      <h2>重启收件箱以完成更新？</h2>
       <p className="ib-sub">
-        Plannotator {update.version} is installed. The Inbox is still running {update.current}.
+        Plannotator {update.version} 已安装。收件箱仍在运行 {update.current}。
       </p>
       <ul className="ib-what" style={{ marginTop: 14 }}>
         <li>
           <Icon name="info" />
-          <span>The files pasted into your reply to “{subject}” are not saved and will be lost. Its words, picks and comments are kept as a draft.</span>
+          <span>粘贴到你回复「{subject}」中的文件未保存，将会丢失。其中的文字、选择和评论会保留为草稿。</span>
         </li>
       </ul>
       <div className="ib-acts-row">
         <button type="button" className="ib-btn" onClick={onCancel}>
-          Cancel
+          取消
         </button>
         <button type="button" className="ib-btn ib-pri" onClick={onRestart}>
-          Restart Now
+          立即重启
         </button>
       </div>
     </Modal>
@@ -433,29 +433,29 @@ export function FailedDialog({
   // Downloaded, but the temp folder could not hold it: not a network problem, so no way out by curl either.
   const prepare = couldNotDownload ? details?.failure?.prepare : undefined;
   const sub = prepare
-    ? `Plannotator couldn't prepare the update: ${prepare}. Nothing was changed; Plannotator ${update.current} still works. ${updateStagingAdvice(prepare)}, then try again.`
+    ? `Plannotator 无法准备更新：${prepare}。没有做出任何更改；Plannotator ${update.current} 仍可正常使用。${updateStagingAdvice(prepare)}，然后重试。`
     : mismatch
-      ? `The download didn't match the checksum Plannotator fetched for it. Nothing was changed; Plannotator ${update.current} still works. Try again later, or on another network.`
+      ? `下载内容与 Plannotator 获取的校验和不匹配。没有做出任何更改；Plannotator ${update.current} 仍可正常使用。请稍后重试，或换一个网络重试。`
       : revoked
-        ? `The connection presented a revoked certificate, so Plannotator downloaded nothing. Plannotator ${update.current} still works. Don't install Plannotator over this network; try again on another network.`
+        ? `连接使用了已吊销的证书，因此 Plannotator 没有下载任何内容。Plannotator ${update.current} 仍可正常使用。请勿在此网络下安装 Plannotator；请换一个网络重试。`
         : couldNotDownload
-          ? `Plannotator couldn't download the update. Nothing was changed; Plannotator ${update.current} still works. Try again later.`
-          : `Plannotator is still ${update.current}.${code !== undefined ? ` The install script exited with code ${code}.` : ''}`;
+          ? `Plannotator 无法下载更新。没有做出任何更改；Plannotator ${update.current} 仍可正常使用。请稍后重试。`
+          : `Plannotator 仍为 ${update.current}。${code !== undefined ? ` 安装脚本以代码 ${code} 退出。` : ''}`;
   return (
-    <Modal label={mismatch ? 'The update stopped' : "The update didn't install"} onClose={onClose} testId="failed">
-      <h2>{mismatch ? 'The update stopped' : <>The update didn&apos;t install</>}{machineName ? ` on ${machineName}` : ''}</h2>
+    <Modal label={mismatch ? '更新已停止' : "更新未能安装"} onClose={onClose} testId="failed">
+      <h2>{mismatch ? '更新已停止' : <>更新未能安装</>}{machineName ? `（${machineName}）` : ''}</h2>
       <p className="ib-sub">{sub}</p>
       {details && (
         <>
           {details.log && (
             <>
-              <p className="ib-sum">{machineName ? `On ${machineName}, ` : ''}{mismatch || couldNotDownload ? (machineName ? 'details are in the log:' : 'Details are in the log:') : machineName ? 'the log says what went wrong:' : 'The log says what went wrong:'}</p>
+              <p className="ib-sum">{machineName ? `在 ${machineName} 上，` : ''}{mismatch || couldNotDownload ? '详情见日志：' : '日志说明了出错原因：'}</p>
               <CommandRow text={tildePath(details.log, home)} />
             </>
           )}
           {prepare && (
             <>
-              <p className="ib-sum">Or update from a terminal with another temp folder:</p>
+              <p className="ib-sum">或从终端使用另一个临时文件夹更新：</p>
               <CommandRow text={UPDATE_OTHER_TMPDIR_COMMAND} />
             </>
           )}
@@ -463,7 +463,7 @@ export function FailedDialog({
             <>
               {tls === 'untrusted' && (
                 <>
-                  <p className="ib-sum">If your network inspects HTTPS with its own certificate, point NODE_EXTRA_CA_CERTS at that certificate and update from a terminal:</p>
+                  <p className="ib-sum">如果你的网络用自己的证书检查 HTTPS，请将 NODE_EXTRA_CA_CERTS 指向该证书，然后从终端更新：</p>
                   <CommandRow text="NODE_EXTRA_CA_CERTS=/path/to/its-root.pem plannotator update" />
                 </>
               )}
@@ -472,23 +472,23 @@ export function FailedDialog({
                 // leaked key read as "untrusted", the release page comes first.
                 <>
                   <p className="ib-sum">
-                    If this keeps happening, download it from{' '}
+                    如果问题持续，请从{' '}
                     <a href={update.releaseUrl} target="_blank" rel="noopener noreferrer" data-failed-release="">
-                      the release page
+                      发布页面
                     </a>
-                    .
+                    下载。
                   </p>
-                  <p className="ib-sum">Or run the install script yourself:</p>
+                  <p className="ib-sum">或自行运行安装脚本：</p>
                   <CommandRow text={details.command} />
                 </>
               ) : (
                 <>
                   <p className="ib-sum">
-                    If this keeps happening, install it yourself, or download it from{' '}
+                    如果问题持续，请自行安装，或从{' '}
                     <a href={update.releaseUrl} target="_blank" rel="noopener noreferrer" data-failed-release="">
-                      the release page
+                      发布页面
                     </a>
-                    :
+                    下载：
                   </p>
                   <CommandRow text={details.command} />
                 </>
@@ -497,7 +497,7 @@ export function FailedDialog({
           )}
           {!mismatch && !couldNotDownload && (
             <>
-              <p className="ib-sum">Or run the install script yourself:</p>
+              <p className="ib-sum">或自行运行安装脚本：</p>
               <CommandRow text={details.command} />
             </>
           )}
@@ -506,10 +506,10 @@ export function FailedDialog({
       {error && <div className="ib-error">{error}</div>}
       <div className="ib-acts-row">
         <button type="button" className="ib-btn" onClick={onClose}>
-          Close
+          关闭
         </button>
         <button type="button" className="ib-btn ib-pri" onClick={onRetry}>
-          Try Again
+          重试
         </button>
       </div>
     </Modal>
@@ -563,19 +563,19 @@ function Standing({ standing, onJump }: { standing: WhatsNewStanding; onJump: ((
       return (
         <span className="ib-wn-st" data-whats-new-standing="current">
           <i className="ib-wn-dot ib-wn-d-yours" aria-hidden="true" />
-          You&apos;re on this version
+          你正使用此版本
         </span>
       );
     case 'dev':
       return (
         <span className="ib-wn-st" data-whats-new-standing="dev">
-          Development build
+          开发版
         </span>
       );
     case 'ahead':
       return (
         <span className="ib-wn-st" data-whats-new-standing="ahead">
-          You have <span className="ib-wn-mono">{standing.current}</span>
+          你的版本是 <span className="ib-wn-mono">{standing.current}</span>
         </span>
       );
     case 'behind':
@@ -583,14 +583,14 @@ function Standing({ standing, onJump }: { standing: WhatsNewStanding; onJump: ((
       if (standing.between === 0 || !onJump) {
         return (
           <span className="ib-wn-st" data-whats-new-standing="behind">
-            You have <span className="ib-wn-mono">{standing.current}</span>
-            {standing.between > 0 && ` · ${formatCount(standing.between)} ${standing.between === 1 ? 'release' : 'releases'} in between`}
+            你的版本是 <span className="ib-wn-mono">{standing.current}</span>
+            {standing.between > 0 && ` · 中间还有 ${formatCount(standing.between)} 个版本`}
           </span>
         );
       }
       return (
         <button type="button" className="ib-wn-st ib-wn-lk" data-whats-new-standing="behind" onClick={onJump}>
-          You have <span className="ib-wn-mono">{standing.current}</span> · {formatCount(standing.between)} {standing.between === 1 ? 'release' : 'releases'} in between
+          你的版本是 <span className="ib-wn-mono">{standing.current}</span> · 中间还有 {formatCount(standing.between)} 个版本
         </button>
       );
   }
@@ -663,7 +663,7 @@ export function WhatsNewPage({
     (src: string): ImageResolution | null => {
       if (/^(data|blob):/i.test(src)) return null;
       if (modelVersion && storedImages.has(src)) return { kind: 'src', src: whatsNewImageUrl(modelVersion, src) };
-      return { kind: 'unavailable', title: 'This image is not saved on this computer. It is in the release on GitHub.' };
+      return { kind: 'unavailable', title: '此图片未保存在本机，它位于 GitHub 上的发布页面中。' };
     },
     [modelVersion, storedImages],
   );
@@ -711,22 +711,22 @@ export function WhatsNewPage({
     if (next !== version) onOpenRelease?.(next);
   };
   return (
-    <div className="ib-wn" aria-label="What's new" tabIndex={-1} data-whats-new-page={model?.version ?? version ?? ''} ref={page}>
+    <div className="ib-wn" aria-label="新功能" tabIndex={-1} data-whats-new-page={model?.version ?? version ?? ''} ref={page}>
       <div className="ib-wn-bar">
         <SidebarTrigger />
         <button type="button" className="ib-pback" onClick={onBack} data-whats-new-back="">
           <Icon name="chevL" size={16} />
-          <span className="ib-pback-l">Inbox</span>
+          <span className="ib-pback-l">收件箱</span>
         </button>
         <span className="ib-wn-div" aria-hidden="true" />
-        <span className="ib-wn-title">What&apos;s new</span>
+        <span className="ib-wn-title">新功能</span>
         <div className="ib-wn-acts">
           {version && rows.length > 0 && (
             <button
               type="button"
               className="ib-wn-picker"
               aria-haspopup="dialog"
-              aria-label={`Release ${version}. Show all releases`}
+              aria-label={`版本 ${version}。显示所有版本`}
               onClick={() => setSheet({ focus: null })}
               data-whats-new-picker=""
             >
@@ -738,14 +738,14 @@ export function WhatsNewPage({
             <a className="ib-wn-gh" href={releaseUrl} target="_blank" rel="noopener noreferrer" data-whats-new-github="">
               <Icon name="github" />
               <span className="ib-wn-gh-l">GitHub</span>
-              <span className="ib-sr"> release (opens in a new tab)</span>
+              <span className="ib-sr"> 发布说明（在新标签页打开）</span>
             </a>
           )}
           {model && canUpdate && (
-            <button type="button" className="ib-btn ib-pri" onClick={onUpdate} aria-label={`Update to ${model.version}`} data-whats-new-update="">
-              <span>Update</span>
+            <button type="button" className="ib-btn ib-pri" onClick={onUpdate} aria-label={`更新到 ${model.version}`} data-whats-new-update="">
+              <span>更新</span>
               {/* Dropped on the narrowest phones; the button's name keeps the version. */}
-              <span className="ib-wn-to">to {model.version}</span>
+              <span className="ib-wn-to">到 {model.version}</span>
             </button>
           )}
         </div>
@@ -762,7 +762,7 @@ export function WhatsNewPage({
                   <p className="ib-wn-meta">
                     {released && (
                       <span>
-                        Released <span className="ib-wn-mono">{released}</span>
+                        发布于 <span className="ib-wn-mono">{released}</span>
                       </span>
                     )}
                     {standing && <Standing standing={standing} onJump={jumpToMine} />}
@@ -794,13 +794,13 @@ export function WhatsNewPage({
                     </ImageResolverContext.Provider>
                   </div>
                 ) : (
-                  <p className="ib-sum">The release has no notes. They are on GitHub.</p>
+                  <p className="ib-sum">此版本没有发布说明。说明位于 GitHub 上。</p>
                 )}
                 {onTakeTour && (
                   <p className="ib-wn-tour" data-whats-new-tour="">
-                    New: a 2-minute tour of how we built the Inbox with the Inbox.{' '}
+                    新功能：用 Inbox 构建 Inbox 的 2 分钟导览。{' '}
                     <button type="button" className="ib-lnk" onClick={onTakeTour}>
-                      Take the tour
+                      开始导览
                     </button>
                   </p>
                 )}
@@ -824,7 +824,7 @@ export function WhatsNewPage({
                 <div className="ib-wn-loading" data-whats-new-loading="">
                   <p className="ib-wn-wait" role="status">
                     <span className="ib-wn-spin" aria-hidden="true" />
-                    Getting the notes from GitHub
+                    正在从 GitHub 获取发布说明
                   </p>
                   {[92, 84, 88, 36, 0, 70, 90, 82, 56].map((w, i) =>
                     w ? <span key={i} className="ib-wn-sk" style={{ width: `${w}%` }} /> : <span key={i} className="ib-wn-sk-gap" />,
@@ -849,8 +849,8 @@ export function WhatsNewPage({
 /** "can't check for updates since 9:14 AM (GitHub API rate-limited)", from the server's failing record. */
 export function checkFailingWords(failing: UpdateCheckFailing): string {
   const day = dayWords(failing.since);
-  const when = day === 'today' ? clockTime(failing.since) : day === 'yesterday' ? `yesterday ${clockTime(failing.since)}` : day;
-  return `can't check for updates since ${when} (${failing.error})`;
+  const when = day === 'today' ? clockTime(failing.since) : day === 'yesterday' ? `昨天 ${clockTime(failing.since)}` : day;
+  return `自 ${when} 起无法检查更新（${failing.error}）`;
 }
 
 /**
@@ -860,7 +860,7 @@ export function checkFailingWords(failing: UpdateCheckFailing): string {
 export function CheckFailingCommand({ command }: { command: string }) {
   return (
     <div className="ib-chkfail" data-update-check-failing="">
-      <span>The install script finds the newest release by itself. To update now, run:</span>
+      <span>安装脚本会自动找到最新版本。如需立即更新，请运行：</span>
       <CommandRow text={command} />
     </div>
   );
@@ -875,8 +875,8 @@ export function CheckFailingRow({ failing, onOpen }: { failing: UpdateCheckFaili
   return (
     <button type="button" className="ib-nav ib-quiet ib-rw-restart" data-update-check-failing-row="" onClick={onOpen}>
       <Icon name="info" />
-      <span className="ib-rw-label">Can&apos;t check for updates</span>
-      <span className="ib-sr">. {checkFailingWords(failing).replace(/^./, (c) => c.toUpperCase())}. Opens Settings, About.</span>
+      <span className="ib-rw-label">无法检查更新</span>
+      <span className="ib-sr">。{checkFailingWords(failing).replace(/^./, (c) => c.toUpperCase())}。打开「设置 → 关于」。</span>
     </button>
   );
 }
@@ -892,7 +892,7 @@ function whenWords(iso: string): string {
  * failing line as Settings → General and About both show it.
  */
 function checkFailingStatus(failing: UpdateCheckFailing, details: UpdateDetails | null): string {
-  const tried = details?.check.last_attempt_at ? ` · last tried ${whenWords(details.check.last_attempt_at)}` : '';
+  const tried = details?.check.last_attempt_at ? ` · 上次尝试 ${whenWords(details.check.last_attempt_at)}` : '';
   return `${checkFailingWords(failing).replace(/^./, (c) => c.toUpperCase())}${tried}`;
 }
 
@@ -909,16 +909,16 @@ export const UP_TO_DATE_FRESH_MS = 24 * 60 * 60 * 1000;
 export function checkStatusWords(details: UpdateDetails | null, news: boolean, now: number = Date.now()): string {
   if (!details) return '';
   const check = details.check;
-  if (!check.on) return 'Update checks are off';
+  if (!check.on) return '更新检查已关闭';
   if (check.failing) return checkFailingStatus(check.failing, details);
-  if (check.last_failed_at) return `Last check failed ${whenWords(check.last_failed_at)}${check.error ? ` (${check.error})` : ''}`;
+  if (check.last_failed_at) return `上次检查失败于 ${whenWords(check.last_failed_at)}${check.error ? `（${check.error}）` : ''}`;
   const ok = details.latest?.fetched_at ?? null;
   const okAt = ok ? Date.parse(ok) : NaN;
   if (ok && Number.isFinite(okAt) && now - okAt < UP_TO_DATE_FRESH_MS && okAt - now < 60_000) {
-    return news ? `Checked ${whenWords(ok)}` : `Up to date · checked ${whenWords(ok)}`;
+    return news ? `${whenWords(ok)} 检查过` : `已是最新 · ${whenWords(ok)} 检查过`;
   }
-  if (ok) return `Last checked ${whenWords(ok)}`;
-  return 'Not checked yet';
+  if (ok) return `上次检查于 ${whenWords(ok)}`;
+  return '尚未检查';
 }
 
 // ───────────────────────────── Settings → General ─────────────────────────────
@@ -932,10 +932,10 @@ export function checksOffWords(details: UpdateDetails | null): ReactNode {
   if (details.check.env === false)
     return (
       <>
-        Update checks are off: this Inbox started with <code>PLANNOTATOR_UPDATE_CHECK=0</code>. Restart it without that to turn them back on.
+        更新检查已关闭：此收件箱启动时设置了 <code>PLANNOTATOR_UPDATE_CHECK=0</code>。请去掉该变量后重启以重新开启。
       </>
     );
-  return 'Update checks are off. Turn on "Tell me when a new version is out" in Settings → About to check again.';
+  return '更新检查已关闭。请在「设置 → 关于」中开启「有新版本时通知我」，以重新检查。';
 }
 
 /**
@@ -972,17 +972,17 @@ export function GeneralUpdateRow({
   const off = version === 'dev' ? null : checksOffWords(details);
   let offLine = !!off;
   let status: ReactNode;
-  if (version === 'dev') status = 'A development build';
-  else if (restarting && update) status = `Restarting into ${update.version}…`;
-  else if (update?.state === 'updating') status = `Installing ${update.version}…`;
-  else if (update?.state === 'ready') status = `${update.version} is installed · restart to use it`;
-  else if (update?.state === 'failed') status = `${update.version} didn't install`;
+  if (version === 'dev') status = '开发版';
+  else if (restarting && update) status = `正在重启到 ${update.version}…`;
+  else if (update?.state === 'updating') status = `正在安装 ${update.version}…`;
+  else if (update?.state === 'ready') status = `${update.version} 已安装 · 重启后生效`;
+  else if (update?.state === 'failed') status = `${update.version} 安装失败`;
   else if (update?.state === 'available')
     status = (
       <>
-        {update.version} is available ·{' '}
+        {update.version} 已可更新 ·{' '}
         <button type="button" className="ib-lnk" onClick={() => onWhatsNew(update.version)}>
-          What&apos;s new
+          新功能
         </button>
       </>
     );
@@ -992,24 +992,24 @@ export function GeneralUpdateRow({
     offLine = false;
     status = (
       <>
-        {known && `${known} is available · `}
+        {known && `${known} 已可更新 · `}
         {off}
       </>
     );
   }
   // A newer release known but not offered (Remind me tomorrow): never "Up to date".
-  else status = [checkStatusWords(details, !!known), known && `${known} is available`].filter(Boolean).join(' · ');
+  else status = [checkStatusWords(details, !!known), known && `${known} 已可更新`].filter(Boolean).join(' · ');
   const label = restarting
-    ? 'Restarting…'
+    ? '重启中…'
     : update?.state === 'updating'
-      ? 'Updating…'
+      ? '更新中…'
       : update?.state === 'failed'
-        ? 'Update failed…'
+        ? '更新失败…'
         : update
-          ? `Update to ${update.version}`
+          ? `更新到 ${update.version}`
           : null;
   return (
-    <section className="ib-sgroup ib-sgroup-first" data-settings-update="" data-update-state={restarting ? 'restarting' : (update?.state ?? (failing ? 'check-failing' : 'none'))} aria-label="Plannotator version">
+    <section className="ib-sgroup ib-sgroup-first" data-settings-update="" data-update-state={restarting ? 'restarting' : (update?.state ?? (failing ? 'check-failing' : 'none'))} aria-label="Plannotator 版本">
       <div className="ib-card">
         <div className="ib-prow">
           <span className="ib-tile">
@@ -1041,7 +1041,7 @@ export function GeneralUpdateRow({
             )}
             {!busy && (
               <button type="button" className="ib-btn ib-sm" onClick={onCheckNow} disabled={checking || version === 'dev'} data-general-check="">
-                {checking ? 'Checking…' : 'Check now'}
+                {checking ? '检查中…' : '立即检查'}
               </button>
             )}
           </span>
@@ -1102,23 +1102,23 @@ export function AboutBlock({
   const failing = details?.check.failing ?? null;
   // What is happening with the version, beside what the checks say (checkStatusWords).
   let status = '';
-  if (version === 'dev') status = 'a development build';
-  else if (details?.update?.state === 'updating') status = `installing ${details.update.version}`;
-  else if (details?.update?.state === 'ready') status = `${details.update.version} is installed; restart to use it`;
-  else if (latest && newerThan(latest.version, version)) status = `${latest.version} is available`;
-  const checked = version === 'dev' ? 'not checked' : checkStatusWords(details, status !== '');
+  if (version === 'dev') status = '开发版';
+  else if (details?.update?.state === 'updating') status = `正在安装 ${details.update.version}`;
+  else if (details?.update?.state === 'ready') status = `${details.update.version} 已安装；重启后生效`;
+  else if (latest && newerThan(latest.version, version)) status = `${latest.version} 已可更新`;
+  const checked = version === 'dev' ? '尚未检查' : checkStatusWords(details, status !== '');
   const checks = switches?.update_check;
   const auto = switches?.auto_update;
   const autoSupported = details?.auto_update.supported ?? false;
   const available = update?.version ?? (latest && newerThan(latest.version, version) ? latest.version : null);
-  const updateLabel = update?.state === 'ready' ? 'Restart to update' : update?.state === 'failed' ? 'Update failed…' : 'Update now';
+  const updateLabel = update?.state === 'ready' ? '重启以更新' : update?.state === 'failed' ? '更新失败…' : '立即更新';
   const locked = (checks?.env !== null && checks?.env !== undefined) || (auto?.env !== null && auto?.env !== undefined);
   // The running release's notes; a development build has none to name.
   const running = whatsNewRunning && onWhatsNew && STABLE.test(version) ? version : null;
   if (!updates) {
     return (
       <>
-        <section className="ib-sgroup ib-sgroup-first" data-settings-about="tailnet" aria-label="Version">
+        <section className="ib-sgroup ib-sgroup-first" data-settings-about="tailnet" aria-label="版本">
           <div className="ib-card">
             <div className="ib-prow">
               <span className="ib-tile">
@@ -1129,7 +1129,7 @@ export function AboutBlock({
                 {running && (
                   <span className="ib-desc">
                     <button type="button" className="ib-lnk" data-about-whats-new={running} onClick={() => onWhatsNew!(running)}>
-                      What&apos;s new in {running}
+                      {running} 的新功能
                     </button>
                   </span>
                 )}
@@ -1144,7 +1144,7 @@ export function AboutBlock({
   }
   return (
     <>
-      <section className="ib-sgroup ib-sgroup-first" data-settings-about="" aria-label="Version and updates">
+      <section className="ib-sgroup ib-sgroup-first" data-settings-about="" aria-label="版本与更新">
         <div className="ib-card">
           <div className="ib-prow">
             <span className="ib-tile">
@@ -1153,7 +1153,7 @@ export function AboutBlock({
             <span className="ib-txt">
               <span className="ib-l">
                 Plannotator {version}
-                {available && update?.state !== 'updating' && <span className="ib-chip ib-chip-pri">{available} is available</span>}
+                {available && update?.state !== 'updating' && <span className="ib-chip ib-chip-pri">{available} 已可更新</span>}
               </span>
               <span className="ib-desc" data-update-status="">
                 {[checked, status]
@@ -1164,7 +1164,7 @@ export function AboutBlock({
                   <>
                     {' · '}
                     <button type="button" className="ib-lnk" onClick={() => onWhatsNew(available)}>
-                      What&apos;s new in {available}
+                      {available} 的新功能
                     </button>
                   </>
                 )}
@@ -1172,7 +1172,7 @@ export function AboutBlock({
                   <>
                     {' · '}
                     <button type="button" className="ib-lnk" data-about-whats-new={running} onClick={() => onWhatsNew!(running)}>
-                      What&apos;s new in {running}
+                      {running} 的新功能
                     </button>
                   </>
                 )}
@@ -1181,20 +1181,20 @@ export function AboutBlock({
             <span className="ib-ctl">
               {update && onUpdate && (
                 <button type="button" className="ib-btn ib-sm ib-pri" onClick={onUpdate} disabled={update.state === 'updating'} data-about-update="">
-                  {update.state === 'updating' ? 'Updating…' : updateLabel}
+                  {update.state === 'updating' ? '更新中…' : updateLabel}
                 </button>
               )}
               <button type="button" className="ib-btn ib-sm" onClick={onCheckNow} disabled={checking || version === 'dev'}>
-                {checking ? 'Checking…' : 'Check now'}
+                {checking ? '检查中…' : '立即检查'}
               </button>
             </span>
           </div>
           <div className="ib-prow">
             <span className="ib-txt">
               <span className="ib-l" id="ib-upd-check">
-                Tell me when a new version is out
+                有新版本时通知我
               </span>
-              <span className="ib-desc">Every few minutes, from this computer</span>
+              <span className="ib-desc">每隔几分钟，从此设备检查</span>
             </span>
             <span className="ib-ctl">
               <button
@@ -1211,10 +1211,10 @@ export function AboutBlock({
           <div className="ib-prow">
             <span className="ib-txt">
               <span className="ib-l" id="ib-upd-auto">
-                Keep Plannotator up to date
+                让 Plannotator 保持最新
               </span>
               <span className="ib-desc">
-                {!autoSupported ? 'Only for the binary the install script manages' : checks && !checks.on ? 'Needs update checks' : 'Installs new versions automatically'}
+                {!autoSupported ? '仅适用于安装脚本管理的二进制文件' : checks && !checks.on ? '需要开启更新检查' : '自动安装新版本'}
               </span>
             </span>
             <span className="ib-ctl">
@@ -1234,9 +1234,9 @@ export function AboutBlock({
           <Icon name="info" />
           {locked
             ? checks?.env !== null && checks?.env !== undefined
-              ? `PLANNOTATOR_UPDATE_CHECK is set in this Inbox's environment, so update checks are ${checks.env ? 'on' : 'off'}. Restart the Inbox without it to change that.${checks.env ? '' : ' Check now and Update still work.'}`
-              : `PLANNOTATOR_AUTO_UPDATE is set in this Inbox's environment, so automatic updates are ${auto?.env ? 'on' : 'off'}.`
-            : 'Off makes no request to GitHub at all. Check now always asks.'}
+              ? `此收件箱的环境变量中已设置 PLANNOTATOR_UPDATE_CHECK，因此更新检查处于${checks.env ? '开启' : '关闭'}状态。去掉该变量后重启收件箱即可更改。${checks.env ? '' : '「立即检查」和「更新」仍可使用。'}`
+              : `此收件箱的环境变量中已设置 PLANNOTATOR_AUTO_UPDATE，因此自动更新处于${auto?.env ? '开启' : '关闭'}状态。`
+            : '关闭后完全不会请求 GitHub。「立即检查」始终会请求。'}
         </div>
         {failing && details && <CheckFailingCommand command={details.command} />}
         {error && <div className="ib-error">{error}</div>}
@@ -1254,16 +1254,16 @@ export function AboutBlock({
 function AboutPrivacy() {
   return (
     <section className="ib-sgroup" aria-labelledby="ib-g-privacy" data-settings-privacy="">
-      <h2 id="ib-g-privacy">Privacy</h2>
+      <h2 id="ib-g-privacy">隐私</h2>
       <p>
-        Once a day, each Plannotator tool you use (Inbox, plan review, code review, annotate, last) sends one anonymous ping: the tool&apos;s name, the
-        version, and how many weeks since this computer first used Plannotator. There&apos;s no ID and nothing about you or your work. It helps us see how many
-        people use Plannotator and where to put our effort.
+        每天一次，你使用的每个 Plannotator 工具（收件箱、计划评审、代码审查、批注、last）会发送一条匿名 ping：工具的名称、
+        版本，以及此设备首次使用 Plannotator 至今的周数。不含任何 ID，也不含关于你或你工作的内容。它帮助我们了解有多少人
+        在使用 Plannotator，以及该把精力放在哪里。
       </p>
       <p>
-        To turn it off, set <code>NO_ANON_PING=1</code> and restart Plannotator.{' '}
+        如需关闭，请设置 <code>NO_ANON_PING=1</code> 并重启 Plannotator。{' '}
         <a className="ib-lnk" href="https://plannotator.ai/privacy" target="_blank" rel="noreferrer">
-          Privacy policy
+          隐私政策
         </a>
       </p>
     </section>
@@ -1273,11 +1273,11 @@ function AboutPrivacy() {
 function AboutWhere({ where }: { where: { data: string; mcpUrl: string; mcpCommand: string } }) {
   return (
     <section className="ib-sgroup" aria-labelledby="ib-g-where">
-      <h2 id="ib-g-where">Where things are</h2>
+      <h2 id="ib-g-where">各项所在位置</h2>
       <div className="ib-card">
         <div className="ib-prow">
           <span className="ib-txt">
-            <span className="ib-l">Data</span>
+            <span className="ib-l">数据</span>
             <span className="ib-desc">
               <code>{where.data}</code>
             </span>
@@ -1285,9 +1285,9 @@ function AboutWhere({ where }: { where: { data: string; mcpUrl: string; mcpComma
         </div>
         <div className="ib-prow">
           <span className="ib-txt">
-            <span className="ib-l">MCP for other agents</span>
+            <span className="ib-l">供其他智能体使用的 MCP</span>
             <span className="ib-desc">
-              <code>{where.mcpUrl}</code> · or the command <code>{where.mcpCommand}</code>
+              <code>{where.mcpUrl}</code> · 或命令 <code>{where.mcpCommand}</code>
             </span>
           </span>
         </div>

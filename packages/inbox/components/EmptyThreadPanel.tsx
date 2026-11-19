@@ -37,7 +37,7 @@ export function EmptyThreadPanel({ onOpen }: { onOpen?: (threadId: string) => vo
   }, [drop]);
   return (
     <>
-      <p ref={line} hidden={drop !== null}>No thread selected</p>
+      <p ref={line} hidden={drop !== null}>未选择话题</p>
       {drop && (
         <span className="ib-topen" data-thread-drop-label={drop.answer === 'refuse' ? 'refuse' : undefined} data-ghost-says={drop.over && drop.answer === 'take' ? '' : undefined} aria-hidden="true">
           {drop.answer === 'refuse' ? 'Open one thread at a time' : 'Open here'}

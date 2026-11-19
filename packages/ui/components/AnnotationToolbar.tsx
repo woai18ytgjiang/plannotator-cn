@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useEffect, useLayoutEffect, useRef, useMemo, useSyncExternalStore } from "react";
 import { AnnotationType } from "../types";
 import { createPortal } from "react-dom";
@@ -467,8 +468,8 @@ export const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
               <ToolbarButton
                 onClick={handleRichCopy}
                 icon={richCopied ? <CheckIcon /> : <CopyIcon />}
-                label={!richCopied ? "Copy"
-                  : richCopied.copied === 'rich' ? "Copied!"
+                label={!richCopied ? "复制"
+                  : richCopied.copied === 'rich' ? "已复制"
                   : richCopyOutcomeLabel(richCopied)}
                 className={richCopied ? "text-success" : "text-muted-foreground hover:bg-muted hover:text-foreground"}
               />
@@ -476,7 +477,7 @@ export const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
               <ToolbarButton
                 onClick={handleCopy}
                 icon={copied ? <CheckIcon /> : <CopyIcon />}
-                label={copied ? "Copied!" : "Copy"}
+                label={copied ? "已复制" : "复制"}
                 className={copied ? "text-success" : "text-muted-foreground hover:bg-muted hover:text-foreground"}
               />
             )}
@@ -487,14 +488,14 @@ export const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
           <ToolbarButton
             onClick={() => handleTypeSelect(AnnotationType.DELETION)}
             icon={<TrashIcon />}
-            label="Delete"
+            label="删除"
             className="text-destructive hover:bg-destructive/10"
           />
         )}
         <ToolbarButton
           onClick={() => handleTypeSelect(AnnotationType.COMMENT)}
           icon={<CommentIcon />}
-          label="Comment"
+          label="评论"
           className="text-annotation-comment hover:bg-annotation-comment/10"
         />
         {hasSelectionActions && (
@@ -502,7 +503,7 @@ export const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
             ref={actionsButtonRef}
             onClick={() => setShowSelectionActions(prev => !prev)}
             icon={selectionActionsIcon ?? <WandIcon />}
-            label="Actions"
+            label="操作"
             className={selectionActionsOpen ? "text-primary bg-primary/10" : "text-primary hover:bg-primary/10"}
             dataAttributes={{ 'data-selection-actions': 'true' }}
           />
@@ -532,14 +533,14 @@ export const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
                 ref={zapButtonRef}
                 onClick={() => setShowQuickLabels(prev => !prev)}
                 icon={<ZapIcon />}
-                label="Quick label"
+                label="快捷标签"
                 className={showQuickLabels ? "text-amber-500 bg-amber-500/10" : "text-amber-500 hover:bg-amber-500/10"}
               />
             )}
             <ToolbarButton
               onClick={() => onQuickLabel(THUMBS_UP_LABEL)}
               icon={<span className="block w-4 h-4 text-sm leading-4 text-center">👍</span>}
-              label="Looks good"
+              label="看起来不错"
               className="hover:bg-green-500/10"
             />
             {quickLabelsOpen && zapButtonRef.current && (
@@ -586,7 +587,7 @@ export const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
                   className="flex items-center gap-1.5 h-7 pl-2 pr-2.5 rounded-md text-foreground hover:bg-muted transition-colors text-[12.5px] font-medium whitespace-nowrap"
                 >
                   <MessagesSquareIcon />
-                  Side
+                  侧聊
                 </button>
               )}
             </>
@@ -596,7 +597,7 @@ export const AnnotationToolbar: React.FC<AnnotationToolbarProps> = ({
         <ToolbarButton
           onClick={onClose}
           icon={<CloseIcon />}
-          label="Cancel"
+          label="取消"
           className="text-muted-foreground hover:bg-muted"
         />
       </div>

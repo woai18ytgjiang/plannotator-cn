@@ -111,7 +111,7 @@ function pathDisplayName(path: string): string {
 
 /** The open bundle file: `spec.md (1 of 2)`. */
 function bundleName(path: string, bundle: { index: number; total: number }): string {
-  return `${annotateBundleBaseName(path)} (${bundle.index + 1} of ${bundle.total})`;
+  return `${annotateBundleBaseName(path)}（第 ${bundle.index + 1} 个，共 ${bundle.total} 个）`;
 }
 
 /**
@@ -160,7 +160,7 @@ function documentName(input: DocumentTitleInput): { name: string; title?: string
     const web = URL_PATTERN.test(path);
     return { name: pathDisplayName(path), title: web ? scrubbedUrl(path) : path, web };
   }
-  if (input.annotateSource === 'message') return { name: 'Last message', web: false };
+  if (input.annotateSource === 'message') return { name: '最后一条消息', web: false };
   if (input.annotateSource === 'folder' && input.folderPath) {
     return { name: `${annotateBundleBaseName(input.folderPath)}/`, title: input.folderPath, web: false };
   }
@@ -181,7 +181,7 @@ export function documentTabTitle(input: DocumentTitleInput): string {
   if (named) return `${named.name} · ${named.web ? 'Plannotator' : repoSuffix(input.repo)}`;
   if (!input.annotateMode && input.planHeading) {
     const heading = planHeadingText(input.planHeading);
-    if (heading) return `${heading} (plan) · ${repoSuffix(input.repo)}`;
+    if (heading) return `${heading}（计划） · ${repoSuffix(input.repo)}`;
   }
   return defaultTabTitle(input.repo);
 }
@@ -221,7 +221,7 @@ export function compactDocumentTitle(input: DocumentTitleInput): string {
   if (path && input.bundle && input.bundle.index >= 0) return bundleName(path, input.bundle);
   if (path) return path.replace(/\\/g, '/').split('/').pop() || path;
   if (input.archiveTitle) return input.archiveTitle;
-  if (input.annotateSource === 'message') return 'Message';
-  if (input.annotateSource === 'folder') return 'Choose a file';
-  return 'Plan';
+  if (input.annotateSource === 'message') return '消息';
+  if (input.annotateSource === 'folder') return '选择文件';
+  return '计划';
 }

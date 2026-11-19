@@ -5,6 +5,7 @@ import type { FileTreeNode } from '../utils/buildFileTree';
 import type { DiffFile } from '../types';
 import { GROUP_ICONS, TreeRowMenu, ancestorsOf, countParts, fileRowParts, gitStatusFor, type FileRowState } from './treeRows';
 import { treeLook } from './treeLook';
+import { TREE_LABELS } from './treeLabels';
 import { useTreeSearchKeys } from './treeSearchKeys';
 
 export interface ChangesTreeGroup {
@@ -194,6 +195,7 @@ export const ChangesTreeView: React.FC<ChangesTreeViewProps> = (props) => {
 
   const { model } = useFileTree({
     paths: layout.paths,
+    labels: TREE_LABELS,
     sort: (a: FileTreeSortEntry, b: FileTreeSortEntry) => orderOf(a) - orderOf(b),
     initialExpansion: 'closed',
     flattenEmptyDirectories: false,

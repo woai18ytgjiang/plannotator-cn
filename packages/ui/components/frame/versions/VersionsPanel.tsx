@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { ChevronDown, Circle, CircleAlert, CircleCheck, X } from "lucide-react";
 import { cloneElement, createContext, useContext, useId, useMemo, useState, type ReactElement, type ReactNode } from "react";
 
@@ -69,8 +70,8 @@ export function VersionActions({
   /** The host's own actions, beside "Compare". */
   readonly actions?: ReactNode;
 }) {
-  const named = number === null ? "this version" : `version ${number}`;
-  const newest = currentNumber === null ? "the newest version" : `version ${currentNumber}`;
+  const named = number === null ? "此版本" : `版本 ${number}`;
+  const newest = currentNumber === null ? "最新版本" : `版本 ${currentNumber}`;
   const compareWords =
     number === null || currentNumber === null
       ? "Compare with the newest"
@@ -84,7 +85,7 @@ export function VersionActions({
             size="sm"
             data-version-compare=""
             data-version={version}
-            aria-label={`Compare ${named} with ${newest}`}
+            aria-label={`比较${named}与${newest}`}
             onClick={onCompare}
           >
             {compareWords}
@@ -94,7 +95,7 @@ export function VersionActions({
             type="button"
             data-version-compare=""
             data-version={version}
-            aria-label={`Compare ${named} with ${newest}`}
+            aria-label={`比较${named}与${newest}`}
             className={TEXT_ACTION}
             onClick={onCompare}
           >
@@ -105,8 +106,8 @@ export function VersionActions({
       <button
         type="button"
         data-version-copy-link=""
-        aria-label={`Copy a link to ${named}`}
-        title="The link always opens this exact version"
+        aria-label={`复制${named}的链接`}
+        title="此链接始终打开这一精确版本"
         className={TEXT_ACTION}
         onClick={onCopyLink}
       >
@@ -154,13 +155,13 @@ function Decision({ decision }: { readonly decision: VersionDecision }) {
 function rowName(entry: FrameVersionEntry, who: string, compared = false): string {
   return [
     versionTitle(entry),
-    entry.current ? "newest" : null,
-    entry.viewing ? "on screen" : null,
-    compared && !entry.viewing ? "compared" : null,
+    entry.current ? "最新" : null,
+    entry.viewing ? "屏幕上" : null,
+    compared && !entry.viewing ? "已比较" : null,
     who === "" ? null : who,
     whenWords(entry.createdAt),
-    entry.sameAsOlder ? "no change to the text" : null,
-    entry.approval === null ? null : `approved by ${entry.approval}`,
+    entry.sameAsOlder ? "文本无变化" : null,
+    entry.approval === null ? null : `由 ${entry.approval} 批准`,
     entry.decision == null ? null : entry.decision.label,
   ]
     .filter((part): part is string => part !== null)
@@ -205,7 +206,7 @@ function RowLines({
   readonly authors: boolean;
 }) {
   const who = nested || !authors ? "" : authorWords(entry.author);
-  const detail = [who === "" ? null : who, entry.sameAsOlder ? "No change to the text" : null]
+  const detail = [who === "" ? null : who, entry.sameAsOlder ? "文本无变化" : null]
     .filter((part): part is string => part !== null)
     .join(" · ");
   return (
@@ -231,7 +232,7 @@ function RowLines({
           className="flex min-w-0 items-center gap-1.5 text-frame-xs text-foreground"
         >
           <CircleCheck className="size-3.5 shrink-0 text-success" aria-hidden="true" />
-          <span className="truncate">Approved by {entry.approval}</span>
+          <span className="truncate">由 {entry.approval}</span>
         </span>
       )}
       {entry.decision != null && <Decision decision={entry.decision} />}
@@ -318,12 +319,12 @@ function FoldRow({
   const onScreen = entries.find((entry) => entry.viewing);
   const hidden = holdsViewing && !open && onScreen !== undefined;
   const who = place.authors === false ? "" : authorWords(newest.author);
-  const summary = who === "" ? `${entries.length} saves` : `${who} · ${entries.length} saves`;
+  const summary = who === "" ? `${entries.length} 次保存` : `${who} · ${entries.length} 次保存`;
   const name = [
     foldTitle(entries),
-    who === "" ? `${entries.length} saves` : `${who}, ${entries.length} saves`,
+    who === "" ? `${entries.length} 次保存` : `${who}，${entries.length} 次保存`,
     whenWords(newest.createdAt),
-    hidden && onScreen !== undefined ? `${versionTitle(onScreen)} on screen` : null,
+    hidden && onScreen !== undefined ? `${versionTitle(onScreen)} 在屏幕上` : null,
     ...(open ? [] : entries.filter((entry) => comparedKeys.has(entry.key)).map((entry) => `${versionTitle(entry)} compared`)),
   ]
     .filter((part): part is string => part !== null)
@@ -446,16 +447,16 @@ export function VersionsPanel({
     <ComparedKeys.Provider value={comparedKeys}>
       <aside
         data-versions-panel=""
-        aria-label="Versions"
+        aria-label="版本"
         className="flex w-full shrink-0 flex-col overflow-hidden bg-card md:w-72 md:border-l md:border-border"
       >
         <div className="flex h-11 shrink-0 items-center gap-2 px-4">
-          <h2 className="min-w-0 flex-1 truncate text-frame-sm font-medium">Versions</h2>
+          <h2 className="min-w-0 flex-1 truncate text-frame-sm font-medium">版本</h2>
           {onClose !== undefined && (
             <Button
               variant="ghost"
               size="icon"
-              aria-label="Close versions"
+              aria-label="关闭版本"
               className="-mr-1.5"
               onClick={onClose}
             >
@@ -465,7 +466,7 @@ export function VersionsPanel({
         </div>
         <div className="flex-1 overflow-y-auto px-1 pb-3">
           {status === "pending" && (
-            <div className="flex flex-col gap-3 px-3 py-2" aria-label="Loading versions">
+            <div className="flex flex-col gap-3 px-3 py-2" aria-label="正在加载版本">
               <Skeleton className="h-9 w-full" />
               <Skeleton className="h-9 w-4/5" />
               <Skeleton className="h-9 w-full" />
@@ -473,19 +474,19 @@ export function VersionsPanel({
           )}
           {status === "error" && (
             <div className="flex flex-col items-start gap-2 px-3 py-2 text-frame-sm text-frame-muted-fg">
-              <span>Couldn't load the versions.</span>
+              <span>无法加载版本。</span>
               <button type="button" className={TEXT_ACTION} onClick={onRetry}>
-                Try again
+                重试
               </button>
             </div>
           )}
           {status === "success" && entries.length === 0 && (
             <p data-versions-empty="" className="px-3 py-2 text-frame-sm text-frame-muted-fg">
-              No versions yet. Each save of this page shows here.
+              还没有版本。此页面每次保存都会显示在这里。
             </p>
           )}
           {status === "success" && entries.length > 0 && (
-            <ol aria-label="Versions, newest first" className="flex flex-col gap-0.5">
+            <ol aria-label="版本，最新的在前" className="flex flex-col gap-0.5">
               {items.map((item) =>
                 item.kind === "one" ? (
                   <VersionRow
@@ -512,7 +513,7 @@ export function VersionsPanel({
           )}
           {status === "success" && entries.length === 1 && !hasMore && (
             <p data-versions-one="" className="px-3 pt-3 text-frame-xs text-frame-muted-fg">
-              Later saves show here, newest first.
+              后续保存会显示在这里，最新的在前。
             </p>
           )}
           {hasMore && (

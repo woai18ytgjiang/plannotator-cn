@@ -76,7 +76,7 @@ export const PermissionCard: React.FC<PermissionCardProps> = ({
         </div>
         <div className="flex-1 min-w-0">
           <p className="text-xs font-medium text-warning mb-1">
-            Permission request
+            权限请求
           </p>
           <p className="text-xs font-mono text-foreground/80 break-all">
             {prefix}{label}
@@ -94,14 +94,14 @@ export const PermissionCard: React.FC<PermissionCardProps> = ({
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
               </svg>
-              Allowed
+              已允许
             </>
           ) : (
             <>
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
               </svg>
-              Denied
+              已拒绝
             </>
           )}
         </div>
@@ -112,14 +112,14 @@ export const PermissionCard: React.FC<PermissionCardProps> = ({
             disabled={loading}
             className="review-toolbar-btn primary disabled:opacity-50 flex-1 text-xs"
           >
-            Allow
+            允许
           </button>
           <button
             onClick={() => handleDecision(false)}
             disabled={loading}
             className="review-toolbar-btn flex-1 text-xs"
           >
-            Deny
+            拒绝
           </button>
         </div>
       )}

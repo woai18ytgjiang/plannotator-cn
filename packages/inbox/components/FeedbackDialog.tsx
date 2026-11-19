@@ -21,14 +21,14 @@ export function forgetUnsentFeedback() {
 
 type FeedbackTab = 'message' | 'questions';
 const TABS: { id: FeedbackTab; label: string }[] = [
-  { id: 'message', label: 'Message' },
-  { id: 'questions', label: 'Common questions' },
+  { id: 'message', label: '消息' },
+  { id: 'questions', label: '常见问题' },
 ];
 
 const CATEGORIES: { value: FeedbackCategory; label: string }[] = [
-  { value: 'bug', label: 'Bug' },
-  { value: 'idea', label: 'Idea' },
-  { value: 'other', label: 'Other' },
+  { value: 'bug', label: '缺陷' },
+  { value: 'idea', label: '建议' },
+  { value: 'other', label: '其他' },
 ];
 
 export interface FeedbackDialogProps {
@@ -182,20 +182,20 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
       {phase === 'sent' ? (
         <div className="ib-fbk-sent" data-feedback-sent="">
           <Icon name="checkCircle" size={28} />
-          <h2 id={`ib-fbk-t-${uid}`}>Thanks, it's sent</h2>
-          <p className="ib-sub">Your feedback went to the Plannotator maintainers.</p>
+          <h2 id={`ib-fbk-t-${uid}`}>谢谢，已发送</h2>
+          <p className="ib-sub">你的反馈已发送给 Plannotator 维护者。</p>
           <div className="ib-acts-row">
             <button type="button" className="ib-btn ib-pri" ref={doneRef} data-feedback-done="" onClick={close}>
-              Done
+              完成
             </button>
           </div>
         </div>
       ) : (
         <>
           <div className="ib-dlg-head">
-            <h2 id={`ib-fbk-t-${uid}`}>Feedback</h2>
+            <h2 id={`ib-fbk-t-${uid}`}>反馈</h2>
             {!phone && (
-              <button type="button" className="ib-btn ib-ghost ib-icon" aria-label="Close" onClick={close} disabled={sending}>
+              <button type="button" className="ib-btn ib-ghost ib-icon" aria-label="关闭" onClick={close} disabled={sending}>
                 <Icon name="x" />
               </button>
             )}
@@ -235,14 +235,14 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
             }}
           >
             <label className="ib-bfield" htmlFor={`ib-fbk-msg-${uid}`}>
-              <span className="ib-sr">Your feedback</span>
+              <span className="ib-sr">你的反馈</span>
               <textarea
                 id={`ib-fbk-msg-${uid}`}
                 ref={boxRef}
                 className="ib-fbk-msg"
                 rows={phone ? 5 : 6}
                 value={message}
-                placeholder="What works, what doesn't, what you'd like…"
+                placeholder="哪些好用、哪些不好用、你希望有什么…"
                 aria-invalid={error ? true : undefined}
                 aria-errormessage={error ? `ib-fbk-err-${uid}` : undefined}
                 readOnly={sending}
@@ -256,12 +256,12 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
             {count >= COUNT_FROM && (
               <p className={`ib-fbk-count${count > FEEDBACK_MESSAGE_MAX ? ' ib-fbk-over' : ''}`} aria-live="polite" data-feedback-count="">
                 {count > FEEDBACK_MESSAGE_MAX
-                  ? `${(count - FEEDBACK_MESSAGE_MAX).toLocaleString('en-US')} over the limit`
-                  : `${(FEEDBACK_MESSAGE_MAX - count).toLocaleString('en-US')} characters left`}
+                  ? `超出限制 ${(count - FEEDBACK_MESSAGE_MAX).toLocaleString('en-US')} 个字符`
+                  : `还可输入 ${(FEEDBACK_MESSAGE_MAX - count).toLocaleString('en-US')} 个字符`}
               </p>
             )}
             <div className="ib-fbk-rel" role="status" data-feedback-related="">
-              {(known || hits.length > 0) && <p className="ib-fbk-rel-h">These might help</p>}
+              {(known || hits.length > 0) && <p className="ib-fbk-rel-h">这些可能有用</p>}
               {(known || hits.length > 0) && (
                 <ul>
                   {known && <KnownLine answer={known} simpleListOn={simpleListOn} onAction={onAction} />}
@@ -278,7 +278,7 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
               )}
             </div>
             <div className="ib-fbk-row">
-              <div className="ib-fbk-cats" role="group" aria-label="Category (optional)">
+              <div className="ib-fbk-cats" role="group" aria-label="类别（可选）">
                 {CATEGORIES.map((option) => (
                   <button
                     key={option.value}
@@ -299,8 +299,8 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
                 type="text"
                 inputMode="email"
                 autoComplete="email"
-                aria-label="Email (optional)"
-                placeholder="Email, if you'd like a reply (optional)"
+                aria-label="邮箱（可选）"
+                placeholder="邮箱，如需回复（可选）"
                 maxLength={FEEDBACK_CONTACT_MAX}
                 value={contact}
                 readOnly={sending}
@@ -313,8 +313,7 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
               />
             </div>
             <p className="ib-fbk-what" id={`ib-fbk-what-${uid}`} data-feedback-what="">
-              Sends your message, Plannotator {version}, the name of your OS and the names of your agents. Nothing from your threads or files. This is
-              anonymous unless you add your email.
+              发送你的消息、Plannotator {version}、你的操作系统名称以及你使用的智能体名称。不会发送话题或文件中的任何内容。除非你填写邮箱，否则这是匿名的。
             </p>
             {error && (
               <p className="ib-callout ib-err ib-fbk-err" id={`ib-fbk-err-${uid}`} role="alert" data-feedback-error="">
@@ -325,13 +324,13 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
             <div className="ib-acts-row ib-fbk-acts">
               <button type="button" className="ib-btn ib-ghost ib-left" data-feedback-copy-prompt="" disabled={sending} onClick={() => onCopyPrompt(message)}>
                 <Icon name="copy" />
-                Prompt your agent to send feedback
+                让你的智能体发送反馈
               </button>
               <button type="button" className="ib-btn" onClick={close} disabled={sending}>
                 Cancel
               </button>
               <button type="submit" className="ib-btn ib-pri" aria-disabled={sending || undefined} data-feedback-send="">
-                {sending ? 'Sending…' : 'Send'}
+                {sending ? '发送中…' : '发送'}
               </button>
             </div>
           </form>
@@ -373,7 +372,7 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
                               data-feedback-faq-action={item.action.kind}
                               onClick={() => item.action && onAction(item.action.kind)}
                             >
-                              {simpleOn ? 'Simple list is on' : item.action.label}
+                              {simpleOn ? '简洁列表已开启' : item.action.label}
                             </button>
                           )}
                           {item.link && (
@@ -390,13 +389,13 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
             </div>
             <div className="ib-fbk-cq-foot">
               <p>
-                Not here?{' '}
+                没有找到答案？{' '}
                 <button type="button" className="ib-fbk-back" data-feedback-back="" onClick={backToMessage}>
-                  Tell us about it
+                  告诉我们
                 </button>
               </p>
               <button type="button" className="ib-btn" onClick={close}>
-                Close
+                关闭
               </button>
             </div>
           </div>
@@ -410,7 +409,7 @@ export function FeedbackDialog({ version, phone, onSend, onCopyPrompt, onAction,
 function FixedLead({ release }: { release: string }) {
   return (
     <>
-      <span className="ib-fbk-lead">Fixed</span> in {release}:{' '}
+      <span className="ib-fbk-lead">已修复</span>于 {release}：{' '}
     </>
   );
 }
@@ -427,7 +426,7 @@ function KnownLine({ answer, simpleListOn, onAction }: { answer: KnownAnswer; si
         <FixedLead release={answer.fixedIn} />
       ) : answer.experimental ? (
         <>
-          <span className="ib-fbk-lead">Experimental</span>:{' '}
+          <span className="ib-fbk-lead">实验性</span>：{' '}
         </>
       ) : null}
       {link ? (
@@ -441,7 +440,7 @@ function KnownLine({ answer, simpleListOn, onAction }: { answer: KnownAnswer; si
         <>
           {' · '}
           {action.kind === 'simple-list' && simpleListOn ? (
-            <span data-feedback-known-done="">Simple list is on</span>
+            <span data-feedback-known-done="">简洁列表已开启</span>
           ) : (
             <button type="button" className="ib-fbk-act" data-feedback-known-action={action.kind} onClick={() => onAction(action.kind)}>
               {action.label}

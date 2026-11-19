@@ -12,7 +12,7 @@ function AddressQr({ url }: { url: string }) {
   const path = useMemo(() => qrModules(url), [url]);
   return (
     <div className="ib-qr-wrap ib-cf-qr">
-      <svg className="ib-qr" viewBox={`-2 -2 ${path.size + 4} ${path.size + 4}`} role="img" aria-label="QR code of the Inbox address" data-cloudflare-qr="" shapeRendering="crispEdges">
+      <svg className="ib-qr" viewBox={`-2 -2 ${path.size + 4} ${path.size + 4}`} role="img" aria-label="收件箱地址二维码" data-cloudflare-qr="" shapeRendering="crispEdges">
         <rect x={-2} y={-2} width={path.size + 4} height={path.size + 4} fill="#fff" />
         <path d={path.d} fill="#000" />
       </svg>
@@ -35,7 +35,7 @@ function CopyButton({ text, label }: { text: string; label: string }) {
       }}
     >
       <Icon name={copied ? 'check' : 'copy'} size={13} />
-      {copied ? 'Copied' : 'Copy'}
+      {copied ? '已复制' : '复制'}
     </button>
   );
 }
@@ -72,7 +72,7 @@ function RemoveForm({ onDone, onCancel }: { onDone: (view: CloudflareView) => vo
     try {
       onDone(await postCloudflare('remove', { token: sent }));
     } catch (failure) {
-      setError(failure instanceof CloudflareRefusal ? failure.message : 'Could not reach this Inbox.');
+      setError(failure instanceof CloudflareRefusal ? failure.message : '无法连接此收件箱。');
     } finally {
       setBusy(false);
     }
@@ -132,7 +132,7 @@ export function ThroughCloudflare() {
     return (
       <section className="ib-sgroup" data-settings-cloudflare="elsewhere" aria-labelledby="ib-g-cloudflare">
         <h2 id="ib-g-cloudflare">Cloudflare</h2>
-        <p>Change this on the computer itself or over your tailnet.</p>
+        <p>请在本机或通过 tailnet 修改此项。</p>
       </section>
     );
   }
@@ -186,7 +186,7 @@ export function ThroughCloudflare() {
               <CloudflareTileMark />
             </span>
             <span className="ib-txt">
-              <span className="ib-l">Reach the Inbox through Cloudflare</span>
+              <span className="ib-l">通过 Cloudflare 访问收件箱</span>
               <span className="ib-desc">Needs a Cloudflare account with a domain on it, Zero Trust turned on (the Free plan is enough) and cloudflared on this computer.</span>
               <ul className="ib-checks ib-cf-need" data-cloudflared={view.cloudflared.found ? 'found' : 'missing'}>
                 <li className={view.cloudflared.found ? 'ib-ck-ok' : 'ib-ck-fail'}>
@@ -213,11 +213,11 @@ export function ThroughCloudflare() {
             </span>
             <span className="ib-txt">
               <span className="ib-l">
-                <span id="ib-cf-label">Reach the Inbox through Cloudflare</span>
-                {problem && <span className="ib-chip ib-chip-err">Not working</span>}
+                <span id="ib-cf-label">通过 Cloudflare 访问收件箱</span>
+                {problem && <span className="ib-chip ib-chip-err">无法使用</span>}
               </span>
               <span className="ib-desc">
-                {view.on ? 'On' : 'Off'} · only {view.allowed.join(', ')} can sign in · {tunnelLine(view)}
+                {view.on ? '开启' : '关闭'} · 仅 {view.allowed.join('、')} 可登录 · {tunnelLine(view)}
               </span>
             </span>
             <span className="ib-ctl">

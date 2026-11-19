@@ -105,10 +105,10 @@ export interface WorkspaceDiffSnapshot {
   error?: string;
 }
 
-const WORKSPACE_CURRENT: DiffOption = { id: "workspace-current", label: "Current changes" };
-const WORKSPACE_STAGED: DiffOption = { id: "workspace-staged", label: "Staged changes" };
-const WORKSPACE_UNSTAGED: DiffOption = { id: "workspace-unstaged", label: "Unstaged changes" };
-const WORKSPACE_LAST: DiffOption = { id: "workspace-last", label: "Last change" };
+const WORKSPACE_CURRENT: DiffOption = { id: "workspace-current", label: "当前更改" };
+const WORKSPACE_STAGED: DiffOption = { id: "workspace-staged", label: "已暂存的更改" };
+const WORKSPACE_UNSTAGED: DiffOption = { id: "workspace-unstaged", label: "未暂存的更改" };
+const WORKSPACE_LAST: DiffOption = { id: "workspace-last", label: "最近一次更改" };
 
 const WORKSPACE_DIFF_TYPES = new Set<WorkspaceDiffType>([
   "workspace-current",
@@ -360,7 +360,7 @@ export class WorkspaceReviewSession implements WorkspaceReviewState {
   } = {}): Promise<WorkspaceDiffSnapshot> {
     const requestedMode = mapRepoDiffTypeToWorkspaceMode(options.diffType) ?? this.diffType;
     if (!workspaceModeAvailable(this.repos, requestedMode)) {
-      throw new Error(`Workspace diff mode is not available: ${requestedMode}`);
+      throw new Error(`工作区不支持该差异模式：${requestedMode}`);
     }
 
     if (typeof options.hideWhitespace === "boolean") {
@@ -380,7 +380,7 @@ export class WorkspaceReviewSession implements WorkspaceReviewState {
           diffType: undefined,
           rawPatch: "",
           gitRef: "",
-          error: `Workspace diff mode ${requestedMode} is not available for ${repo.vcsType}`,
+          error: `${repo.vcsType} 不支持工作区差异模式 ${requestedMode}`,
         };
       }
 
@@ -463,16 +463,16 @@ export class WorkspaceReviewSession implements WorkspaceReviewState {
   /** Map workspace display paths onto one child repository's diff. */
   private resolveFileTarget(filePath: string, oldPath?: string) {
     const resolved = resolveWorkspaceFilePath(this.repos, filePath);
-    if (!resolved) throw new Error("File is not part of this workspace review");
+    if (!resolved) throw new Error("该文件不属于本次工作区审查");
 
     const resolvedOld = oldPath ? resolveWorkspaceFilePath(this.repos, oldPath) : null;
     if (oldPath && (!resolvedOld || resolvedOld.repo.id !== resolved.repo.id)) {
-      throw new Error("Old path is not part of the same workspace repository");
+      throw new Error("旧路径不属于同一个工作区仓库");
     }
 
     const diffType = resolved.repo.diffType
       ?? mapWorkspaceModeToRepoDiffType(this.diffType, resolved.repo.vcsType);
-    if (!diffType) throw new Error("VCS context is unavailable for this workspace repository");
+    if (!diffType) throw new Error("该工作区仓库没有可用的 VCS 上下文");
 
     return {
       diffType,
@@ -545,7 +545,7 @@ export class WorkspaceReviewSession implements WorkspaceReviewState {
     const allWorktree = live;
     return {
       paths,
-      revision: allWorktree ? { kind: "worktree", label: "working tree" } : { kind: "commit", label: "the workspace" },
+      revision: allWorktree ? { kind: "worktree", label: "工作区" } : { kind: "commit", label: "整个工作区" },
       live,
       root: this.root,
       diskRoots,
@@ -554,13 +554,13 @@ export class WorkspaceReviewSession implements WorkspaceReviewState {
 
   async stageFile(filePath: string, undo?: boolean): Promise<void> {
     const resolved = resolveWorkspaceFilePath(this.repos, filePath);
-    if (!resolved) throw new Error("File is not part of this workspace review");
+    if (!resolved) throw new Error("该文件不属于本次工作区审查");
 
     const diffType = resolved.repo.diffType
       ?? mapWorkspaceModeToRepoDiffType(this.diffType, resolved.repo.vcsType);
-    if (!diffType) throw new Error("VCS context is unavailable for this workspace repository");
+    if (!diffType) throw new Error("该工作区仓库没有可用的 VCS 上下文");
     if (!(await this.runtime.canStageFiles(diffType, resolved.repo.cwd))) {
-      throw new Error("Staging not available");
+      throw new Error("不支持暂存操作");
     }
 
     if (undo) {

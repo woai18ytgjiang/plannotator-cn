@@ -25,13 +25,13 @@ export const StageControl: React.FC<{
 }> = ({ isStaged, isStaging, onStage }) => {
   if (isStaged) {
     return (
-      <span className="w-4 h-4 flex items-center justify-center flex-shrink-0" title="Staged (git add)" aria-label="Staged">
+      <span className="w-4 h-4 flex items-center justify-center flex-shrink-0" title="已暂存（git add）" aria-label="已暂存">
         <span className="w-1.5 h-1.5 rounded-full bg-primary" />
       </span>
     );
   }
   return (
-    <Tooltip content="Stage file (git add)" side="bottom">
+    <Tooltip content="暂存文件（git add）" side="bottom">
       <span
         role="button"
         // tabIndex + key handling: lives INSIDE the row <button> (a real nested
@@ -50,7 +50,7 @@ export const StageControl: React.FC<{
           }
         }}
         className="stage-plus w-4 h-4 flex-shrink-0 rounded border border-border flex items-center justify-center text-muted-foreground hover:text-foreground hover:border-muted-foreground/60 hover:bg-muted/50 transition-colors focus-visible:outline focus-visible:outline-1 focus-visible:outline-primary/60"
-        aria-label="Stage file"
+        aria-label="暂存文件"
       >
         {isStaging ? (
           <span className="inline-block w-2 h-2 border border-current border-t-transparent rounded-full animate-spin" />

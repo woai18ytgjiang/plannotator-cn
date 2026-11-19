@@ -55,7 +55,7 @@ export function BoardFilter(props: BoardFilterProps) {
   const trigger = useRef<HTMLButtonElement>(null);
   const portal = usePortal(trigger);
   const initiativeName = initiativeLabel(props.initiatives, initiative);
-  const projectName = project ? (props.names.get(project) ?? 'Project') : null;
+  const projectName = project ? (props.names.get(project) ?? '项目') : null;
   const set = initiative !== null || project !== null;
   const showProjects = props.projects.length > 1 || project !== null;
   const picked = [initiativeName, projectName].filter(Boolean).join(', ');
@@ -63,43 +63,43 @@ export function BoardFilter(props: BoardFilterProps) {
     <span className="ib-bflt" data-set={set ? '' : undefined} data-board-filter="">
       {props.tokens && <BoardFilterTokens {...props} focusAfterClear={() => trigger.current} />}
       <Menu.Root open={open} onOpenChange={setOpen} modal={false}>
-        <Tip content="Filter">
-          <Menu.Trigger ref={trigger} className="ib-bflt-btn" aria-label={set ? `Filter: ${picked}` : 'Filter'} data-board-filter-button="">
+        <Tip content="筛选">
+          <Menu.Trigger ref={trigger} className="ib-bflt-btn" aria-label={set ? `筛选：${picked}` : '筛选'} data-board-filter-button="">
             <FilterGlyph size={phone ? 20 : 16} />
           </Menu.Trigger>
         </Tip>
         <Menu.Portal container={portal ?? undefined}>
           {phone && <Menu.Backdrop className="ib-pm-scrim" />}
           <Menu.Positioner className="ib-pm-pos" side="bottom" align="end" sideOffset={4} data-phone={phone ? '' : undefined}>
-            <Menu.Popup className="ib-pm ib-bflt-menu" aria-label="Filter" data-board-filter-menu="">
+            <Menu.Popup className="ib-pm ib-bflt-menu" aria-label="筛选" data-board-filter-menu="">
               <Menu.Group>
-                <Menu.GroupLabel className="ib-pm-glabel">Tag</Menu.GroupLabel>
+                <Menu.GroupLabel className="ib-pm-glabel">标签</Menu.GroupLabel>
                 <Menu.RadioGroup value={initiative ?? ''} onValueChange={(next: string) => next !== (initiative ?? '') && props.onInitiative(next || null)}>
-                  <FilterItem value="" label="All tags" icon="layers" on={initiative === null} data={{ 'data-board-initiative-option': '' }} />
+                  <FilterItem value="" label="全部标签" icon="layers" on={initiative === null} data={{ 'data-board-initiative-option': '' }} />
                   {props.initiatives.map((i) => (
                     <FilterItem key={i.id} value={i.id} label={i.name} icon="hash" count={props.counts.get(i.id) ?? 0} on={initiative === i.id} data={{ 'data-board-initiative-option': i.id }} />
                   ))}
                   <FilterItem
                     value={INBOX_NO_INITIATIVE}
-                    label="No tag"
+                    label="无标签"
                     icon="minus"
                     count={props.counts.get(INBOX_NO_INITIATIVE) ?? 0}
                     on={initiative === INBOX_NO_INITIATIVE}
                     data={{ 'data-board-initiative-option': INBOX_NO_INITIATIVE }}
                   />
                 </Menu.RadioGroup>
-                <Menu.Item className="ib-pmi ib-bflt-act" label="New tag…" onClick={() => props.onManage('new')} data-board-initiative-new="">
+                <Menu.Item className="ib-pmi ib-bflt-act" label="新建标签…" onClick={() => props.onManage('new')} data-board-initiative-new="">
                   <span className="ib-bflt-ico" aria-hidden="true">
                     <Icon name="plus" size={14} />
                   </span>
-                  <span className="ib-pmi-l">New tag…</span>
+                  <span className="ib-pmi-l">新建标签…</span>
                 </Menu.Item>
                 {props.initiatives.length > 0 && (
-                  <Menu.Item className="ib-pmi ib-bflt-act" label="Edit tags…" onClick={() => props.onManage('edit')} data-board-initiative-edit="">
+                  <Menu.Item className="ib-pmi ib-bflt-act" label="编辑标签…" onClick={() => props.onManage('edit')} data-board-initiative-edit="">
                     <span className="ib-bflt-ico" aria-hidden="true">
                       <Icon name="pen" size={14} />
                     </span>
-                    <span className="ib-pmi-l">Edit tags…</span>
+                    <span className="ib-pmi-l">编辑标签…</span>
                   </Menu.Item>
                 )}
               </Menu.Group>
@@ -107,9 +107,9 @@ export function BoardFilter(props: BoardFilterProps) {
                 <>
                   <Menu.Separator className="ib-pm-sep" />
                   <Menu.Group>
-                    <Menu.GroupLabel className="ib-pm-glabel">Project</Menu.GroupLabel>
+                    <Menu.GroupLabel className="ib-pm-glabel">项目</Menu.GroupLabel>
                     <Menu.RadioGroup value={project ?? ''} onValueChange={(next: string) => next !== (project ?? '') && props.onProject(next || null)}>
-                      <FilterItem value="" label="All projects" icon="layers" on={project === null} data={{ 'data-board-project-option': '' }} />
+                      <FilterItem value="" label="全部项目" icon="layers" on={project === null} data={{ 'data-board-project-option': '' }} />
                       {props.projects.map((p) => {
                         const shown = props.names.get(p.id) ?? p.name;
                         return <FilterItem key={p.id} value={p.id} label={shown} icon="folder" on={project === p.id} data={{ 'data-board-project-option': p.id }} />;
@@ -147,8 +147,8 @@ function FilterItem({ value, label, icon, count, on, data }: { value: string; la
 /** The picked initiative's name: "No tag" for none, null when nothing is picked (or it is not loaded yet). */
 export function initiativeLabel(initiatives: readonly InboxInitiative[], initiative: string | null): string | null {
   if (initiative === null) return null;
-  if (initiative === INBOX_NO_INITIATIVE) return 'No tag';
-  return initiatives.find((i) => i.id === initiative)?.name ?? 'Tag';
+  if (initiative === INBOX_NO_INITIATIVE) return '无标签';
+  return initiatives.find((i) => i.id === initiative)?.name ?? '标签';
 }
 
 /**
@@ -160,7 +160,7 @@ export function BoardFilterTokens(
   props: Pick<BoardFilterProps, 'initiatives' | 'initiative' | 'onInitiative' | 'names' | 'project' | 'onProject'> & { focusAfterClear?: () => HTMLElement | null },
 ) {
   const initiativeName = initiativeLabel(props.initiatives, props.initiative);
-  const projectName = props.project ? (props.names.get(props.project) ?? 'Project') : null;
+  const projectName = props.project ? (props.names.get(props.project) ?? '项目') : null;
   if (!initiativeName && !projectName) return null;
   const refocus = () =>
     requestAnimationFrame(() => (props.focusAfterClear?.() ?? document.querySelector<HTMLElement>('.ib-bpage [data-board-filter-button]'))?.focus());
@@ -171,7 +171,7 @@ export function BoardFilterTokens(
           kind="initiative"
           icon={props.initiative === INBOX_NO_INITIATIVE ? 'minus' : 'hash'}
           label={initiativeName}
-          clearLabel="Clear the tag filter"
+          clearLabel="清除标签筛选"
           onClear={() => {
             props.onInitiative(null);
             refocus();
@@ -183,7 +183,7 @@ export function BoardFilterTokens(
           kind="project"
           icon="folder"
           label={projectName}
-          clearLabel="Clear the project filter"
+          clearLabel="清除项目筛选"
           onClear={() => {
             props.onProject(null);
             refocus();
@@ -220,14 +220,14 @@ export function CardInitiativeMenu({ initiatives, value, onPick }: { initiatives
   const name = value ? (initiatives.find((i) => i.id === value)?.name ?? null) : null;
   return (
     <Menu.Root open={open} onOpenChange={setOpen} modal={false}>
-      <Menu.Trigger ref={trigger} className="ib-crdp-ini" data-card-initiative={value ?? INBOX_NO_INITIATIVE} aria-label={`Tag: ${name ?? 'none'}. Change`}>
+      <Menu.Trigger ref={trigger} className="ib-crdp-ini" data-card-initiative={value ?? INBOX_NO_INITIATIVE} aria-label={`标签：${name ?? '无'}。更改`}>
         <Icon name={name ? 'hash' : 'minus'} size={14} />
-        <span dir="auto">{name ?? 'No tag'}</span>
+        <span dir="auto">{name ?? '无标签'}</span>
         <Icon name="chevD" size={13} />
       </Menu.Trigger>
       <Menu.Portal container={portal ?? undefined}>
         <Menu.Positioner className="ib-pm-pos" side="bottom" align="start" sideOffset={4}>
-          <Menu.Popup className="ib-pm ib-bflt-menu" aria-label="Tag" data-card-initiative-menu="">
+          <Menu.Popup className="ib-pm ib-bflt-menu" aria-label="标签" data-card-initiative-menu="">
             <CardInitiativeItems initiatives={initiatives} value={value} onPick={onPick} />
           </Menu.Popup>
         </Menu.Positioner>
@@ -240,7 +240,7 @@ export function CardInitiativeMenu({ initiatives, value, onPick }: { initiatives
 export function CardInitiativeItems({ initiatives, value, onPick }: { initiatives: readonly InboxInitiative[]; value: string | null; onPick: (initiative: string | null) => void }) {
   const current = value ?? INBOX_NO_INITIATIVE;
   return (
-    <Menu.RadioGroup value={current} onValueChange={(next: string) => next !== current && onPick(next === INBOX_NO_INITIATIVE ? null : next)} aria-label="Tag">
+    <Menu.RadioGroup value={current} onValueChange={(next: string) => next !== current && onPick(next === INBOX_NO_INITIATIVE ? null : next)} aria-label="标签">
       {initiatives.map((i) => (
         <Menu.RadioItem key={i.id} value={i.id} closeOnClick className="ib-pmi" label={i.name} data-card-initiative-option={i.id}>
           <span className="ib-bflt-ico" aria-hidden="true">
@@ -253,11 +253,11 @@ export function CardInitiativeItems({ initiatives, value, onPick }: { initiative
         </Menu.RadioItem>
       ))}
       <Menu.Separator className="ib-pm-sep" />
-      <Menu.RadioItem value={INBOX_NO_INITIATIVE} closeOnClick className="ib-pmi" label="No tag" data-card-initiative-option={INBOX_NO_INITIATIVE}>
+      <Menu.RadioItem value={INBOX_NO_INITIATIVE} closeOnClick className="ib-pmi" label="无标签" data-card-initiative-option={INBOX_NO_INITIATIVE}>
         <span className="ib-bflt-ico" aria-hidden="true">
           <Icon name="minus" size={14} />
         </span>
-        <span className="ib-pmi-l">No tag</span>
+        <span className="ib-pmi-l">无标签</span>
         {current === INBOX_NO_INITIATIVE && <Icon name="check" size={15} className="ib-pmi-check" />}
       </Menu.RadioItem>
     </Menu.RadioGroup>

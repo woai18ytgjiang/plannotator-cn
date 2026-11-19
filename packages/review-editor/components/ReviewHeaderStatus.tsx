@@ -59,7 +59,7 @@ export const ReviewHeaderStatus: React.FC<ReviewHeaderStatusProps> = (props) => 
   }
 
   if (kind === 'workspace-error') {
-    const text = props.hasFiles ? 'Some workspace changes could not be loaded' : 'Workspace changes could not be loaded';
+    const text = props.hasFiles ? '部分工作区更改无法加载' : '工作区更改无法加载';
     return strip ? (
       <div className={STRIP_WARN} data-review-status={kind}>{text}.</div>
     ) : (
@@ -71,9 +71,9 @@ export const ReviewHeaderStatus: React.FC<ReviewHeaderStatusProps> = (props) => 
 
   if (kind === 'partial-diff') {
     const action = !props.canLoadFullDiff ? null : props.isLoadingFullDiff ? (
-      <span className="flex items-center gap-1.5 font-medium" title="Recomputing the full diff from the local checkout. You can keep reviewing.">
+      <span className="flex items-center gap-1.5 font-medium" title="正在从本地检出重新计算完整差异。你可以继续审查。">
         <Spinner />
-        Loading full diff…
+        正在加载完整差异…
       </span>
     ) : (
       <button
@@ -81,9 +81,9 @@ export const ReviewHeaderStatus: React.FC<ReviewHeaderStatusProps> = (props) => 
         data-pn-touch-target={touch}
         onClick={props.onLoadFullDiff}
         className={ACTION}
-        title="Recompute the full diff from the local checkout (may wait for the background clone; you can keep reviewing)"
+        title="从本地检出重新计算完整差异（可能需要等待后台克隆；你可以继续审查）"
       >
-        Load full diff
+        加载完整差异
       </button>
     );
     return (
@@ -92,9 +92,9 @@ export const ReviewHeaderStatus: React.FC<ReviewHeaderStatusProps> = (props) => 
           className="min-w-0 truncate"
           title={props.canLoadFullDiff
             ? `${props.platformLabel} omitted diff content for some files because this PR is too large`
-            : 'The platform omitted diff content for some files and this session has no local checkout to recompute from. CLI sessions can re-run the review with --local.'}
+            : '平台省略了部分文件的差异内容，而本次会话没有可用于重新计算的本地检出。CLI 会话可以加 --local 重新运行审查。'}
         >
-          {strip ? 'The platform omitted part of this diff.' : props.canLoadFullDiff ? 'Partial diff' : 'Partial diff (no local checkout)'}
+          {strip ? '平台省略了此差异的一部分。' : props.canLoadFullDiff ? '部分差异' : '部分差异（无本地检出）'}
         </span>
         {action}
       </div>
@@ -104,12 +104,12 @@ export const ReviewHeaderStatus: React.FC<ReviewHeaderStatusProps> = (props) => 
   if (kind === 'stale-diff') {
     return (
       <div className={strip ? STRIP_WARN : PILL_WARN} data-review-status={kind}>
-        <span>Diff out of date</span>
-        <button type="button" data-pn-touch-target={touch} onClick={props.onRefreshStaleDiff} className={ACTION} title="Re-run the diff with the current settings">
-          Refresh
+        <span>差异已过期</span>
+        <button type="button" data-pn-touch-target={touch} onClick={props.onRefreshStaleDiff} className={ACTION} title="使用当前设置重新运行差异">
+          刷新
         </button>
         {!strip && (
-          <button type="button" onClick={props.onDismissStaleDiff} className="leading-none opacity-70 hover:opacity-100" title="Dismiss" aria-label="Dismiss stale diff notice">
+          <button type="button" onClick={props.onDismissStaleDiff} className="leading-none opacity-70 hover:opacity-100" title="忽略" aria-label="忽略过期差异提示">
             ×
           </button>
         )}
@@ -123,11 +123,11 @@ export const ReviewHeaderStatus: React.FC<ReviewHeaderStatusProps> = (props) => 
       {props.isFetchingBase ? (
         <span className="flex items-center gap-1.5 font-medium">
           <Spinner />
-          Fetching…
+          获取中…
         </span>
       ) : (
-        <button type="button" data-pn-touch-target={touch} onClick={props.onFetchBase} disabled={props.isFetchingBase} className={ACTION} title="git fetch the default branch and recompute the diff">
-          Fetch
+        <button type="button" data-pn-touch-target={touch} onClick={props.onFetchBase} disabled={props.isFetchingBase} className={ACTION} title="git fetch 默认分支并重新计算差异">
+          获取
         </button>
       )}
     </div>

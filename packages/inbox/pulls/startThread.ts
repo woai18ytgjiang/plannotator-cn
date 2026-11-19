@@ -59,7 +59,7 @@ export type PullThreadResult = { kind: 'started'; threadId: string } | { kind: '
 /** A Send with no agent to take a new thread. */
 export class PullThreadNoAgent extends Error {}
 
-const whyOf = (cause: unknown) => (cause instanceof Error && cause.message ? cause.message : 'It didn’t go.');
+const whyOf = (cause: unknown) => (cause instanceof Error && cause.message ? cause.message : '未成功。');
 
 /** Tie the PR to the thread (the `thread` ask). */
 async function tie(send: PullThreadSend, start: PullThreadUntied): Promise<PullThreadResult> {

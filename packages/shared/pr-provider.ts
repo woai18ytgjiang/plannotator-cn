@@ -285,13 +285,13 @@ export function canPostMarkedText(ref: PRRef): boolean {
 /** Post or update the person's marked comment (a GitLab note) on a PR. Throws on a platform without one. */
 export async function upsertPRMarkedComment(runtime: PRRuntime, ref: PRRef, input: PRMarkedCommentInput): Promise<PRMarkedResult> {
   const provider = getPRProvider(ref);
-  if (!provider.upsertMarkedComment) throw new Error(`Posting a comment on ${ref.platform} is not supported yet.`);
+  if (!provider.upsertMarkedComment) throw new Error(`暂不支持在 ${ref.platform} 上发布评论。`);
   return provider.upsertMarkedComment(runtimeFor(runtime, ref), ref, input);
 }
 
 /** Put a marked section in a PR's description. Throws on a platform without one. */
 export async function upsertPRDescriptionSection(runtime: PRRuntime, ref: PRRef, input: PRMarkedSectionInput): Promise<PRMarkedResult> {
   const provider = getPRProvider(ref);
-  if (!provider.upsertDescriptionSection) throw new Error(`Editing a description on ${ref.platform} is not supported yet.`);
+  if (!provider.upsertDescriptionSection) throw new Error(`暂不支持在 ${ref.platform} 上编辑描述。`);
   return provider.upsertDescriptionSection(runtimeFor(runtime, ref), ref, input);
 }

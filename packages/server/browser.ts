@@ -330,7 +330,7 @@ export async function openBrowserDetached(
   });
   if (started === null) return "opened";
   if (plannotatorBrowser) {
-    process.stderr.write(`Plannotator: could not launch PLANNOTATOR_BROWSER="${plannotatorBrowser}": ${started}\n`);
+    process.stderr.write(`Plannotator：无法启动 PLANNOTATOR_BROWSER="${plannotatorBrowser}"：${started}\n`);
   }
   return (await tryVscodeIpc(url, { timeoutMs: DETACHED_IPC_TIMEOUT_MS })) ? "opened" : "failed";
 }
@@ -373,7 +373,7 @@ export async function openBrowser(
     if (plannotatorBrowser) {
       const message = error instanceof Error ? error.message : String(error);
       process.stderr.write(
-        `Plannotator: could not launch PLANNOTATOR_BROWSER="${plannotatorBrowser}": ${message}\n`,
+        `Plannotator：无法启动 PLANNOTATOR_BROWSER="${plannotatorBrowser}"：${message}\n`,
       );
     }
     // Shell-based open failed — try VS Code IPC registry as fallback

@@ -34,7 +34,7 @@ export function ConnectLine({
     </button>
   );
   return (
-    <div className="ib-askline ib-askquiet ib-cline" role="region" aria-label="Your agents" data-connect-line="">
+    <div className="ib-askline ib-askquiet ib-cline" role="region" aria-label="你的智能体" data-connect-line="">
       <div className="ib-cline-in">
         <div className="ib-cline-lines" role="status">
           {band?.connected && (

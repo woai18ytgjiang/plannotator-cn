@@ -15,12 +15,12 @@ declare module '../api' {
 /** Only from this window's own Inbox; the answer never holds the key. Null removes it. */
 const saveLinearKey = (key: string | null) => post<{ key: InboxLinearKeyState }>(inboxUrl('/linear/key'), { key });
 
-const HINT = 'Shows Linear issues when you hover their links.';
+const HINT = '悬停链接时显示 Linear 事项。';
 
 /** What the last Linear answer said of the key shown; nothing until one did (no gate: a key saves either way). */
 function verdictText(verdict: LinearKeyVerdict | null): string | null {
-  if (verdict === 'accepted') return 'Linear accepted it.';
-  if (verdict === 'refused') return 'Linear refused it, so cards cannot load. Replace it with a working key.';
+  if (verdict === 'accepted') return 'Linear 已接受。';
+  if (verdict === 'refused') return 'Linear 拒绝了它，因此卡片无法加载。请换成一个可用的密钥。';
   return null;
 }
 
@@ -54,7 +54,7 @@ export function LinearKeySettings({ initial, where }: { initial: InboxLinearKeyS
       setTyped('');
       void refreshLinearCards();
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'The key was not saved.');
+      setError(cause instanceof Error ? cause.message : '密钥未保存。');
     } finally {
       setSaving(false);
     }
@@ -69,10 +69,10 @@ export function LinearKeySettings({ initial, where }: { initial: InboxLinearKeyS
     row = (
       <div className="ib-prow" data-linear-key="env">
         <span className="ib-txt">
-          <span className="ib-l">Using LINEAR_API_KEY</span>
+          <span className="ib-l">使用 LINEAR_API_KEY</span>
           <span className="ib-desc" data-linear-key-verdict={verdict ?? undefined}>
             {told ? `${told} ` : ''}
-            {HINT} It is set in this Inbox’s environment.
+            {HINT} 它设置在此收件箱的环境中。
           </span>
         </span>
       </div>
@@ -84,7 +84,7 @@ export function LinearKeySettings({ initial, where }: { initial: InboxLinearKeyS
           <span className="ib-l">
             <span className="ib-paired">
               {verdict !== 'refused' && <Icon name="check" size={14} />}
-              Key saved, ending in {key.last4}
+              密钥已保存，结尾为 {key.last4}
             </span>
           </span>
           <span className="ib-desc" data-linear-key-verdict={verdict ?? undefined}>
@@ -94,10 +94,10 @@ export function LinearKeySettings({ initial, where }: { initial: InboxLinearKeyS
         </span>
         <span className="ib-ctl">
           <button type="button" className="ib-btn" onClick={() => setReplacing(true)} data-linear-key-replace="">
-            Replace
+            替换
           </button>
           <button type="button" className="ib-btn ib-ghost" disabled={saving} onClick={() => void save(null)} data-linear-key-remove="">
-            Remove
+            移除
           </button>
         </span>
       </div>
@@ -107,16 +107,16 @@ export function LinearKeySettings({ initial, where }: { initial: InboxLinearKeyS
       <form className="ib-prow ib-vkeyrow" onSubmit={submit} data-linear-key="empty">
         <span className="ib-txt">
           <label className="ib-l" htmlFor="ib-linear-key">
-            API key
+            API 密钥
           </label>
           <span className="ib-desc">
-            {HINT} Kept on {where}, never shown again.
+            {HINT} 保存在 {where} 上，之后不再显示。
           </span>
         </span>
         <span className="ib-ctl ib-vkeyctl">
           <input id="ib-linear-key" className="ib-vkey" type="password" autoComplete="new-password" spellCheck={false} placeholder="lin_api_…" value={typed} onChange={(event) => setTyped(event.target.value)} />
           <button type="submit" className="ib-btn" disabled={saving || !typed.trim()}>
-            Save
+            保存
           </button>
         </span>
       </form>

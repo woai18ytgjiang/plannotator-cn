@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { ExternalLink, Pause, Play } from 'lucide-react';
@@ -41,7 +42,7 @@ export const ASK_SESSION_DEMO = {
   webm: `${MEDIA_BASE_URL}/ask-this-session-demo.webm`,
   poster: `${MEDIA_BASE_URL}/ask-this-session-poster.jpg`,
   description:
-    'A code review opened from Claude Code: two lines are selected and asked about in Plannotator, the question arrives in the Claude Code session, and its answer streams back into the Ask AI panel. Then a comment is sent and arrives in Claude Code as a message.',
+    '从 Claude Code 打开的一次代码审查：在 Plannotator 中选中两行并提问，问题会到达 Claude Code 会话，回答则流式返回 Ask AI 面板。随后发送一条评论，它会以消息形式出现在 Claude Code 中。',
 } as const;
 
 /** The footage is 1280x800. */
@@ -56,15 +57,15 @@ interface AgentCopy {
 const AGENT_COPY: Record<AskSessionAgent, AgentCopy> = {
   'claude-code': {
     name: 'Claude Code',
-    freeLine: 'Claude Code stays free while you review, and your decision arrives as a message.',
+    freeLine: '你审查期间 Claude Code 保持空闲，你的决策会以消息形式送达。',
   },
   pi: {
     name: 'Pi',
-    freeLine: 'Pi stays free while you review, and your decision arrives as a message.',
+    freeLine: '你审查期间 Pi 保持空闲，你的决策会以消息形式送达。',
   },
   opencode: {
     name: 'OpenCode',
-    freeLine: 'Code review and annotate no longer hold the session, and your feedback arrives as a message.',
+    freeLine: '代码审查和批注不再占用会话，你的反馈会以消息形式送达。',
   },
 };
 
@@ -140,14 +141,14 @@ function DemoPlayer({ reducedMotion }: { readonly reducedMotion: boolean }) {
             className="inline-flex min-h-10 items-center gap-2 rounded-lg border border-border bg-card px-4 text-sm font-medium text-foreground outline-none hover:bg-surface-1 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           >
             <XMark className="size-3.5" />
-            Watch on X
+            在 X 上观看
           </a>
         </div>
       ) : (
         <button
           type="button"
           onClick={toggle}
-          aria-label={playing ? 'Pause demo' : 'Play demo'}
+          aria-label={playing ? '暂停演示' : '播放演示'}
           data-ask-session-playback={playing ? 'pause' : 'play'}
           className={
             playing
@@ -268,14 +269,13 @@ export function AskSessionAnnouncementDialog({
             id="ask-session-announcement-title"
             className="text-balance text-xl font-semibold tracking-tight sm:text-2xl"
           >
-            Ask {copy.name}, right from Plannotator
+            直接在 Plannotator 中询问 {copy.name}
           </h2>
           <p
             id="ask-session-announcement-description"
             className="mt-1 text-pretty text-sm leading-relaxed text-muted-foreground"
           >
-            Ask AI now goes to the {copy.name} session that opened Plannotator, and the answer
-            streams back here. {copy.freeLine}
+            「询问 AI」现在会发送到打开 Plannotator 的 {copy.name} 会话，回答会流式返回到这里。{copy.freeLine}
           </p>
 
           <div className="mt-5 flex flex-wrap items-center gap-x-4 gap-y-3">
@@ -284,7 +284,7 @@ export function AskSessionAnnouncementDialog({
               className="inline-flex min-w-0 items-center gap-2 text-sm text-foreground"
             >
               <span className="size-2 shrink-0 rounded-full bg-success" aria-hidden="true" />
-              This session is connected. Open Ask AI to try it.
+              此会话已连接。打开「询问 AI」试试。
             </p>
             {/* The actions wrap as one group, so a narrow panel puts them on their
                 own row under the status line instead of splitting them. */}
@@ -299,7 +299,7 @@ export function AskSessionAnnouncementDialog({
                 className={OUTBOUND_ACTION_CLASS}
               >
                 <XMark className="size-3.5" />
-                Watch on X
+                在 X 上观看
               </a>
               <a
                 href={ASK_SESSION_DOCS_URL}
@@ -308,7 +308,7 @@ export function AskSessionAnnouncementDialog({
                 data-ask-session-learn-more
                 className={OUTBOUND_ACTION_CLASS}
               >
-                Learn more
+                了解更多
                 <ExternalLink className="size-3.5" aria-hidden="true" />
               </a>
               <button
@@ -317,7 +317,7 @@ export function AskSessionAnnouncementDialog({
                 onClick={onDismiss}
                 className="min-h-9 rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground outline-none transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card"
               >
-                Got it
+                知道了
               </button>
             </div>
           </div>

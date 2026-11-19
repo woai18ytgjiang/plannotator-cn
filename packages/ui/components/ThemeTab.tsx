@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { useTheme } from './ThemeProvider';
 import { THEME_MODES } from './themeModes';
@@ -13,8 +14,8 @@ interface ThemeTabProps {
 }
 
 const HALVES: { id: ThemeHalf; label: string }[] = [
-  { id: 'light', label: 'Light' },
-  { id: 'dark', label: 'Dark' },
+  { id: 'light', label: '浅色' },
+  { id: 'dark', label: '深色' },
 ];
 
 const SyntaxLinesIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -30,7 +31,7 @@ const SyntaxLinesIcon: React.FC<{ className?: string }> = ({ className }) => (
  * never all a screen reader gets.
  */
 const FaviconStyleControl: React.FC<{ selected: FaviconStyle }> = ({ selected }) => (
-  <div className="flex gap-1" role="group" aria-label="Favicon style">
+  <div className="flex gap-1" role="group" aria-label="Favicon 样式">
     {FAVICON_STYLE_CHOICES.map(({ id, label }) => (
       <button
         key={id}
@@ -73,12 +74,12 @@ export const ThemeTab: React.FC<ThemeTabProps> = ({ onPreview, compact }) => {
           {index > 0 && <span className="text-muted-foreground/40">·</span>}
           <button
             onClick={() => setHalf(id)}
-            title={`Assign the ${label.toLowerCase()} theme`}
+            title={`设置${label}主题`}
             className={`rounded px-1 py-0.5 transition-colors hover:bg-muted ${
               half === id ? 'text-foreground' : ''
             }`}
           >
-            <span className="text-muted-foreground/70">{label}: </span>
+            <span className="text-muted-foreground/70">{label}：</span>
             <span className="font-medium">{nameOf(pair[id])}</span>
           </button>
         </React.Fragment>
@@ -90,7 +91,7 @@ export const ThemeTab: React.FC<ThemeTabProps> = ({ onPreview, compact }) => {
     <div className={compact ? '' : 'space-y-5'}>
       {/* Mode */}
       <div className={compact ? 'flex items-center gap-3 mb-2' : 'space-y-2'}>
-        {!compact && <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Mode</label>}
+        {!compact && <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">模式</label>}
         <div className="flex gap-1">
           {THEME_MODES.map(({ id, label, Icon }) => (
             <button
@@ -112,7 +113,7 @@ export const ThemeTab: React.FC<ThemeTabProps> = ({ onPreview, compact }) => {
         </div>
         {!compact && (
           <p className="text-[11px] text-muted-foreground/70">
-            System uses your OS and switches between the two themes below.
+            「跟随系统」会使用你的操作系统设置，并在下方两套主题之间切换。
           </p>
         )}
         {!compact && manageFavicon && (
@@ -134,18 +135,18 @@ export const ThemeTab: React.FC<ThemeTabProps> = ({ onPreview, compact }) => {
         {!compact && (
           <>
             <div className="flex items-center justify-between border-t border-border pt-5">
-              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">Theme</label>
+              <label className="text-xs font-medium text-muted-foreground uppercase tracking-wide">主题</label>
               <div className="flex items-center gap-3">
                 <span className="text-[10px] text-muted-foreground/70 flex items-center gap-1">
                   <SyntaxLinesIcon className="w-2.5 h-2.5" />
-                  = matched syntax colors
+                  = 语法配色一致
                 </span>
                 {onPreview && (
                   <button
                     onClick={onPreview}
                     className="px-1.5 py-0.5 rounded text-[10px] font-medium bg-primary/10 text-primary border border-primary/20 hover:bg-primary/20 hover:border-primary/40 transition-colors"
                   >
-                    Preview Mode
+                    预览模式
                   </button>
                 )}
               </div>
@@ -156,7 +157,7 @@ export const ThemeTab: React.FC<ThemeTabProps> = ({ onPreview, compact }) => {
 
         {/* Which half the grid assigns to */}
         <div className="flex items-center gap-2">
-          <span className="text-[11px] text-muted-foreground/70">Assigning</span>
+          <span className="text-[11px] text-muted-foreground/70">正在分配</span>
           <div className="flex items-center gap-0.5 rounded-lg bg-muted/50 p-0.5">
             {HALVES.map(({ id, label }) => (
               <button
@@ -169,7 +170,7 @@ export const ThemeTab: React.FC<ThemeTabProps> = ({ onPreview, compact }) => {
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                {label} theme
+                {label}主题
               </button>
             ))}
           </div>
@@ -190,7 +191,7 @@ export const ThemeTab: React.FC<ThemeTabProps> = ({ onPreview, compact }) => {
               >
                 {/* Syntax highlighting badge */}
                 {theme.syntaxHighlighting && (
-                  <div className="absolute top-1 right-1" title="Matched syntax highlighting in diffs">
+                  <div className="absolute top-1 right-1" title="差异中的语法高亮一致">
                     <SyntaxLinesIcon className="w-2.5 h-2.5 text-muted-foreground/50" />
                   </div>
                 )}

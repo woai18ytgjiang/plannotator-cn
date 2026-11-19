@@ -45,8 +45,8 @@ export const OWN_CHOICE = 'own';
 export const SETS_CHOICE = 'sets';
 /** A place in the fan: a face, "Your own…" or "Sets". */
 export type FanChoice = Exclude<AgentFace, `own:${string}` | `set:${string}`> | typeof OWN_CHOICE | typeof SETS_CHOICE;
-export const OWN_LABEL = 'Your own…';
-export const SETS_LABEL = 'Sets';
+export const OWN_LABEL = '你自己的…';
+export const SETS_LABEL = '图标集';
 
 /**
  * The fan's arcs: the kinds inside, the Glass colours outside (one arc, or two short ones when room is short). `own`:
@@ -274,7 +274,7 @@ export function FaceFan({ anchor, open, openedBy, host, agent, name, face, sourc
             data-still={still ? '' : undefined}
             data-opening={opening ? '' : undefined}
             data-touch={touch ? '' : undefined}
-            aria-label={`Icon for ${name}`}
+            aria-label={`${name} 的图标`}
             initialFocus={openedBy === 'keyboard' ? () => items.current[Math.max(0, order.indexOf(chosen))] ?? true : false}
             finalFocus={openedBy === 'keyboard' ? focusBackTo(anchor, '.am-fan') : false}
             onPointerDownCapture={() => {
@@ -296,7 +296,7 @@ export function FaceFan({ anchor, open, openedBy, host, agent, name, face, sourc
                 <span className="am-fan-plate" />
               </span>
             </span>
-            <div role="radiogroup" aria-label={`Icon for ${name}`} className="am-fan-g" onKeyDown={onKeyDown}>
+            <div role="radiogroup" aria-label={`${name} 的图标`} className="am-fan-g" onKeyDown={onKeyDown}>
               {arcs?.faces.map((ring, r) =>
                 ring.map((f, i) => {
                   index++;

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import type { SelectionAction } from '../utils/selectionActions';
@@ -147,7 +148,7 @@ export const FloatingSelectionActionsPicker: React.FC<{
     <div
       ref={ref}
       role="listbox"
-      aria-label="Actions"
+      aria-label="操作"
       data-selection-actions-picker
       data-floating-picker="true"
       className="fixed z-[100]"

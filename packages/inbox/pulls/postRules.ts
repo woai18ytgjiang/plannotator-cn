@@ -47,13 +47,13 @@ export function platformRules(pull: PlatformPostPull): PlatformRules {
     requestChangesUnavailableReason: !caps.requestChanges
       ? `${caps.label} has no request-changes review; this posts as a comment.`
       : selfAuthored && caps.selfRequestChangesBlocked
-        ? `You can't request changes on your own ${noun} on ${caps.label}.`
+        ? `你不能对自己的 ${caps.label} ${noun}请求修改。`
         : undefined,
   };
 }
 
 export function postedWords(posted: { label: string; action: string }): string {
-  if (posted.action === 'approve') return `Approved on ${posted.label}`;
-  if (posted.action === 'request_changes') return `Changes requested on ${posted.label}`;
-  return `Review posted on ${posted.label}`;
+  if (posted.action === 'approve') return `已在 ${posted.label} 上批准`;
+  if (posted.action === 'request_changes') return `已在 ${posted.label} 上请求修改`;
+  return `审查已发布到 ${posted.label}`;
 }

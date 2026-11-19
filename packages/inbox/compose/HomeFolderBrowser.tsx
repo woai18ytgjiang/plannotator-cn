@@ -27,15 +27,15 @@ import {
  * and under it the folders of the typed path's parent that start with what is typed after its last slash (read
  * through `inboxApi.homeFolders`, this computer's route or the machine's forward, a moment after typing stops; an
  * answer for a path no longer typed is dropped). Picking a folder goes into it; when the field names a folder that is
- * there, "✓ Start in <name>" leads, and picking it calls `onPick`. Create a folder (approval "launch-create-clone",
- * A1-A12, the rules in `folderBrowserView`): a name that isn't there offers "Create <name> and start" (last and quiet
+ * there, "✓ Start in <name>" leads, and picking it calls `onPick`. 创建 a folder (approval "launch-create-clone",
+ * A1-A12, the rules in `folderBrowserView`): a name that isn't there offers "创建 <name> 并启动" (last and quiet
  * while a folder still starts with it), a typo one level up "Go to <path>", and a file, a folder that can't be opened
  * or written, a hidden one or one outside home is said in one line. An asleep machine is never read ("Mac mini is
  * asleep"), so nothing unverified can be picked. A pasted path is cleaned here (B1-B3), as the server refuses `\`.
  *
- * Clone into another folder (approval "launch-create-clone", C14-C15c, `clone`): the same browser, headed "Clone <repo>
- * on <machine>". A folder that is there is where the clone goes ("Clone <repo> here", into the repo's name or the next
- * free one, as that machine answers), home too; a new name becomes the clone's own folder ("Clone into <name> and
+ * 克隆到 another folder (approval "launch-create-clone", C14-C15c, `clone`): the same browser, headed "Clone <repo>
+ * on <machine>". A folder that is there is where the clone goes ("在此克隆 <repo>", into the repo's name or the next
+ * free one, as that machine answers), home too; a new name becomes the clone's own folder ("克隆到 <name> and
  * start"). A git URL typed or pasted in the folder field (B5) goes back to the list as that machine's clone row
  * (`onGitUrl`).
  *
@@ -53,9 +53,9 @@ export interface HomeFolderMachine {
   asleep?: boolean;
   /** Its home folder, so a pasted full path reads as `~/…`; null when not known. */
   home?: string | null;
-  /** Its drives (approval "inbox-launch-any-folder"): the places row, Home · each drive. None or absent: no row. */
+  /** Its drives (approval "inbox-launch-any-folder"): the places row, 主目录 · each drive. None or absent: no row. */
   drives?: readonly FolderDrive[] | null;
-  /** "Choose in Finder…": this computer's own window on macOS (never a phone, a tailnet window or a linked machine). */
+  /** "在 Finder 中选择…": this computer's own window on macOS (never a phone, a tailnet window or a linked machine). */
   finder?: boolean;
 }
 
@@ -67,7 +67,7 @@ const READ_DEBOUNCE_MS = 150;
 
 /**
  * One read of the listing for `path` (null: none), a moment after it settles; an answer for an older path is dropped.
- * `retry`: Try again after a drive didn't answer (its read asks the drive again at once, `fresh`).
+ * `retry`: 重试 after a drive didn't answer (its read asks the drive again at once, `fresh`).
  */
 function useFolderRead(path: string | null, machineId: string | null, asleep: boolean, retry = 0): Read | null {
   const [read, setRead] = useState<Read | null>(null);
@@ -101,7 +101,7 @@ function useFolderRead(path: string | null, machineId: string | null, asleep: bo
           setRead({
             path,
             retry,
-            error: cause instanceof InboxApiError ? folderRefusalWords(cause.code ?? null, cause.message) : "The folders couldn't be read.",
+            error: cause instanceof InboxApiError ? folderRefusalWords(cause.code ?? null, cause.message) : "无法读取文件夹。",
             code: cause instanceof InboxApiError ? (cause.code ?? null) : null,
           });
         },
@@ -129,7 +129,7 @@ function useSettled(key: string | null, ms: number): boolean {
 
 /**
  * Drives that didn't answer (by machine and drive path), until one of their folders is read again: the places row
- * says so, and the browser says it at once there instead of waiting on the drive again. Try again asks it.
+ * says so, and the browser says it at once there instead of waiting on the drive again. 重试 asks it.
  */
 const quietDrives = new Set<string>();
 const quietKey = (machineId: string | null, drivePath: string) => `${machineId ?? ''}\n${drivePath}`;
@@ -162,19 +162,19 @@ function useCloneTarget(at: string | null, url: string | null, machineId: string
 function rowAria(row: FolderRow): string {
   switch (row.kind) {
     case 'start':
-      return `Start in ${row.name}, ${row.path}`;
+      return `起始位置 ${row.name}，${row.path}`;
     case 'create':
-      return `Create ${row.name} and start, a new folder at ${row.path}`;
+      return `创建 ${row.name} 并启动，新文件夹位于 ${row.path}`;
     case 'fix':
-      return `Go to ${row.path.replace(/\/$/, '')}, the path with ${row.name} in place of ${row.from}`;
+      return `前往 ${row.path.replace(/\/$/, '')}，即在路径中用 ${row.name} 替换 ${row.from}`;
     case 'noaccess':
-      return `${row.name}, no access, can't be opened`;
+      return `${row.name}, 无访问权限, can't be opened`;
     case 'cloneHere':
-      return `Clone ${row.repo} here, into ${row.path}${row.taken ? `. ${row.taken} is another folder` : ''}`;
+      return `克隆 ${row.repo} here, into ${row.path}${row.taken ? `. ${row.taken} is another folder` : ''}`;
     case 'cloneStart':
-      return `Start in ${row.name}, ${row.path}, already cloned`;
+      return `起始位置 ${row.name}，${row.path}，已克隆`;
     case 'cloneInto':
-      return `Clone into ${row.name} and start, ${row.path}`;
+      return `克隆到 ${row.name} 并启动, ${row.path}`;
     default:
       return `${row.name}, ${row.path}`;
   }
@@ -198,11 +198,11 @@ export function HomeFolderBrowser({
   onPick: (folder: string, name: string, how: 'start' | 'create' | 'clone') => void;
   onBack: () => void;
   initialPath?: string;
-  /** A phone's sheet: its top bar ("‹ Back  Another folder") is drawn here, and paths are left out of the rows. */
+  /** A phone's sheet: its top bar ("‹ 返回  其他文件夹") is drawn here, and paths are left out of the rows. */
   phone?: boolean;
   /** The path as typed, on every change (its host keeps it, so the browser reopens there: D2). */
   onTyped?: (typed: string) => void;
-  /** Clone into another folder: the URL as pasted and the repo's name. */
+  /** 克隆到 another folder: the URL as pasted and the repo's name. */
   clone?: { url: string; repo: string } | null;
   /** A git URL typed or pasted in the folder field (B5): its host shows that machine's clone row instead. */
   onGitUrl?: (url: string) => void;
@@ -225,9 +225,9 @@ export function HomeFolderBrowser({
   const atHome = shown.startsWith('~');
   // Hidden: said in one line (A11), never read. Any other folder is read; a system one is the server's to refuse.
   const refused = parent.split('/').some((segment) => segment.startsWith('.'));
-  // Try again after a drive didn't answer.
+  // 重试 after a drive didn't answer.
   const [retry, setRetry] = useState(0);
-  // A drive that didn't answer is said at once, not asked again (until Try again).
+  // A drive that didn't answer is said at once, not asked again (until 重试).
   const [, setQuietSeen] = useState(0);
   const quietHere = here !== null && quietDrives.has(quietKey(machine.id, here.path));
   const read = useFolderRead(refused || quietHere ? null : parent, machine.id, asleep, retry);
@@ -277,7 +277,7 @@ export function HomeFolderBrowser({
   };
   // A read still under way after a moment: "Reading <drive>…" where the folders will be.
   const reading = useSettled(!asleep && !refused && !quietHere && !read ? `${retry}\n${parent}` : null, READING_SHOWN_MS);
-  // "Choose in Finder…": waiting on the dialog on this computer.
+  // "在 Finder 中选择…": waiting on the dialog on this computer.
   const [finding, setFinding] = useState(false);
   const okName = nameRead && 'answer' in nameRead ? nameRead.answer : null;
   // A name the machine won't offer (Windows hides AppData by its mark, not a dot): its words, not a blank.
@@ -378,7 +378,7 @@ export function HomeFolderBrowser({
     goTo(start === 0 && end === input.value.length ? clean : input.value.slice(0, start) + clean + input.value.slice(end));
   };
 
-  /** "Choose in Finder…": the folder picked there reads in the field as if typed, so the same rules say what it is. */
+  /** "在 Finder 中选择…": the folder picked there reads in the field as if typed, so the same rules say what it is. */
   const chooseInFinder = () => {
     if (finding) return;
     setFinding(true);
@@ -394,10 +394,10 @@ export function HomeFolderBrowser({
   const placesRow = (drives.length > 0 || machine.finder === true) && !clone && (
     <div className="ib-hfb-places" data-home-folders-places="" ref={placesRef} onScroll={measurePlaces} data-more-before={more.before ? '' : undefined} data-more-after={more.after ? '' : undefined}>
       {drives.length > 0 && (
-        <div className="ib-seg ib-seg-sm" role="radiogroup" aria-label="Places">
+        <div className="ib-seg ib-seg-sm" role="radiogroup" aria-label="位置">
           <button type="button" className="ib-seg-o" role="radio" aria-checked={atHome} data-on={atHome ? '' : undefined} onClick={() => goTo(HOME_FOLDER_START)} data-home-folders-place="home">
             <Icon name="folder" size={14} />
-            Home
+            主目录
           </button>
           {drives.map((drive) => {
             const on = here?.path === drive.path;
@@ -409,7 +409,7 @@ export function HomeFolderBrowser({
                 className="ib-seg-o"
                 role="radio"
                 aria-checked={on}
-                aria-label={`${drive.name}${drive.network ? ', network drive' : ''}${quiet ? ", isn't responding" : ''}`}
+                aria-label={`${drive.name}${drive.network ? '，网络驱动器' : ''}${quiet ? '，无响应' : ''}`}
                 data-on={on ? '' : undefined}
                 onClick={() => goTo(`${drive.path}/`)}
                 data-home-folders-place={drive.path}
@@ -417,7 +417,7 @@ export function HomeFolderBrowser({
               >
                 <Icon name={drive.network ? 'globe' : 'drive'} size={14} />
                 {drive.name}
-                {quiet && <span className="ib-hfb-quiet"> · isn't responding</span>}
+                {quiet && <span className="ib-hfb-quiet"> · 无响应</span>}
               </button>
             );
           })}
@@ -426,7 +426,7 @@ export function HomeFolderBrowser({
       {machine.finder === true && (
         <button type="button" className="ib-lnk ib-hfb-finder" disabled={finding} onClick={chooseInFinder} data-home-folders-finder="">
           <Icon name="external" size={14} />
-          {finding ? 'Waiting for Finder…' : 'Choose in Finder…'}
+          {finding ? '正在等待 Finder…' : '在 Finder 中选择…'}
         </button>
       )}
     </div>
@@ -434,7 +434,7 @@ export function HomeFolderBrowser({
 
   const where = clone ? (
     <>
-      Clone <b dir="auto">{clone.repo}</b>
+      在此克隆 <b dir="auto">{clone.repo}</b>
       {machine.name && (
         <>
           {' '}
@@ -444,10 +444,10 @@ export function HomeFolderBrowser({
     </>
   ) : machine.name ? (
     <>
-      A folder on <b dir="auto">{machine.name}</b>
+      位于 <b dir="auto">{machine.name}</b> 的文件夹
     </>
   ) : (
-    'A folder'
+    '文件夹'
   );
 
   const lead = (row: FolderRow) =>
@@ -477,7 +477,7 @@ export function HomeFolderBrowser({
       case 'create':
         return (
           <>
-            Create <b>{row.name}</b> and start
+            创建 <b>{row.name}</b> 并启动
           </>
         );
       case 'fix':
@@ -496,21 +496,21 @@ export function HomeFolderBrowser({
         return (
           <>
             Start in <b>{row.name}</b>
-            <span className="ib-cp-trust"> · already cloned</span>
+            <span className="ib-cp-trust"> · 已克隆</span>
           </>
         );
       case 'cloneInto':
         return (
           <>
-            Clone into <b>{row.name}</b> and start
+            克隆到 <b>{row.name}</b> 并启动
           </>
         );
       default:
         return row.name;
     }
   };
-  // The place in the path column: none for Go to (its words are the path); "no access" for a folder that can't be opened.
-  const place = (row: FolderRow) => (row.kind === 'fix' ? '' : row.kind === 'noaccess' ? 'no access' : row.path);
+  // The place in the path column: none for Go to (its words are the path); "无访问权限" for a folder that can't be opened.
+  const place = (row: FolderRow) => (row.kind === 'fix' ? '' : row.kind === 'noaccess' ? '无访问权限' : row.path);
 
   return (
     <div className="ib-hfb" data-home-folders={machine.id ?? 'self'} data-home-folders-clone={clone ? clone.repo : undefined} data-asleep={asleep ? '' : undefined} onKeyDown={onKey}>
@@ -518,9 +518,9 @@ export function HomeFolderBrowser({
         <div className="ib-cp-pickhead">
           <button type="button" className="ib-cp-back" onClick={onBack} data-home-folders-back="">
             <Icon name="chevL" size={16} />
-            Back
+            返回
           </button>
-          <span>{clone ? 'Clone into' : 'Another folder'}</span>
+          <span>{clone ? '克隆到' : '其他文件夹'}</span>
         </div>
       )}
       {phone ? (
@@ -531,7 +531,7 @@ export function HomeFolderBrowser({
         )
       ) : (
         <div className="ib-hfb-head">
-          <button type="button" className="ib-hfb-back" aria-label="Back to the list" onClick={onBack} data-home-folders-back="">
+          <button type="button" className="ib-hfb-back" aria-label="返回列表" onClick={onBack} data-home-folders-back="">
             <Icon name="chevL" size={15} />
           </button>
           <span>{where}</span>
@@ -548,7 +548,7 @@ export function HomeFolderBrowser({
           aria-autocomplete="list"
           aria-controls={`ib-hfb-list-${uid}`}
           aria-activedescendant={at >= 0 ? optionId(at) : undefined}
-          aria-label={clone ? `Folder to clone ${clone.repo} into${machine.name ? `, on ${machine.name}` : ''}` : machine.name ? `A folder on ${machine.name}` : 'A folder'}
+          aria-label={clone ? `克隆 ${clone.repo} 到的文件夹${machine.name ? `，位于 ${machine.name}` : ''}` : machine.name ? `位于 ${machine.name} 的文件夹` : '文件夹'}
           autoComplete="off"
           autoCapitalize="off"
           autoCorrect="off"
@@ -559,10 +559,10 @@ export function HomeFolderBrowser({
           data-home-folders-path=""
         />
       </div>
-      <div className="ib-cp-list" role="listbox" id={`ib-hfb-list-${uid}`} aria-label="Folders">
+      <div className="ib-cp-list" role="listbox" id={`ib-hfb-list-${uid}`} aria-label="文件夹">
         {asleep && (
           <div className="ib-cp-none" role="status" data-home-folders-note="asleep">
-            {machine.name ?? 'This computer'} is asleep
+            {machine.name ?? '本机'} is asleep
           </div>
         )}
         {reading && (
@@ -578,7 +578,7 @@ export function HomeFolderBrowser({
               <>
                 {' '}
                 <button type="button" className="ib-lnk" onMouseDown={(event) => event.preventDefault()} onClick={tryAgain} data-home-folders-retry="">
-                  Try again
+                  重试
                 </button>
               </>
             )}
@@ -608,7 +608,7 @@ export function HomeFolderBrowser({
                 {/* A phone hides the path column: a new folder's or a clone's place goes on a second line (G5, G6). */}
                 {twoLine(row) && <span className="ib-hfb-sub">{row.path}</span>}
               </span>
-              {place(row) ? row.kind === 'noaccess' ? <span className="ib-hfb-noaccess-word">no access</span> : <FolderPath path={place(row)} /> : <span />}
+              {place(row) ? row.kind === 'noaccess' ? <span className="ib-hfb-noaccess-word">无访问权限</span> : <FolderPath path={place(row)} /> : <span />}
               <span className="ib-cp-check" aria-hidden="true" />
             </div>
             {view.after && view.after.at === i + 1 && (

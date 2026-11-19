@@ -48,7 +48,7 @@ export function resolveStackInfo(
     isStacked: true,
     baseBranch: metadata.baseBranch,
     defaultBranch: metadata.defaultBranch!,
-    label: `Root of stack — ${metadata.headBranch}`,
+    label: `堆栈根 — ${metadata.headBranch}`,
     source: "tree-discovered",
   };
 }
@@ -62,18 +62,18 @@ export function getPRDiffScopeOptions(
   return [
     {
       id: "layer",
-      label: "Layer",
+      label: "层",
       description: metadata?.baseBranch
-        ? `Only changes relative to ${metadata.baseBranch}.`
-        : "Only changes from this review.",
+        ? `仅显示相对于 ${metadata.baseBranch} 的更改。`
+        : "仅显示本次审查的更改。",
       enabled: true,
     },
     {
       id: "full-stack",
-      label: "Full stack",
+      label: "整个堆栈",
       description: stackInfo?.defaultBranch
-        ? `All changes from ${stackInfo.defaultBranch} to HEAD in the local checkout.`
-        : "All changes from the default branch to HEAD in the local checkout.",
+        ? `本地检出中从 ${stackInfo.defaultBranch} 到 HEAD 的所有更改。`
+        : "本地检出中从默认分支到 HEAD 的所有更改。",
       enabled: Boolean(stackInfo && hasLocalCheckout),
     },
   ];
@@ -109,8 +109,8 @@ export async function runPRFullStackDiff(
   if (!defaultBranch || !branchNameIsSafe(defaultBranch)) {
     return {
       patch: "",
-      label: "Full stack diff unavailable",
-      error: "Could not determine a safe default branch for this review.",
+      label: "整个堆栈差异不可用",
+      error: "无法确定本次审查可安全使用的默认分支。",
     };
   }
 
@@ -118,8 +118,8 @@ export async function runPRFullStackDiff(
   if (!baseRef) {
     return {
       patch: "",
-      label: "Full stack diff unavailable",
-      error: `Could not find origin/${defaultBranch} or local ${defaultBranch} in this checkout.`,
+      label: "整个堆栈差异不可用",
+      error: `在此检出中找不到 origin/${defaultBranch} 或本地 ${defaultBranch}。`,
     };
   }
 
@@ -138,14 +138,14 @@ export async function runPRFullStackDiff(
     const message = diffFailureMessage(error) || `git diff failed`;
     return {
       patch: "",
-      label: "Full stack diff unavailable",
+      label: "整个堆栈差异不可用",
       error: message.split("\n").find((line) => line.trim().length > 0) ?? message,
     };
   }
 
   return {
     patch,
-    label: `Full stack diff vs ${baseRef}`,
+    label: `与 ${baseRef} 的整个堆栈差异`,
   };
 }
 

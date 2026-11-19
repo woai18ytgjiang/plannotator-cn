@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { Origin } from '@plannotator/core/agents';
 import { isSessionBridgeProvider, type AIProviderOption } from './aiProvider';
 
@@ -23,5 +24,5 @@ export function askSessionSetupHint(
 ): string | null {
   if (origin !== 'oh-my-pi') return null;
   if (providers.some(isSessionBridgeProvider)) return null;
-  return `To ask your Oh My Pi session instead, install the Plannotator extension (${OMP_EXTENSION_INSTALL_COMMAND}) and open reviews with its /plannotator-* commands.`;
+  return `要改为询问你的 Oh My Pi 会话，请安装 Plannotator 扩展（${OMP_EXTENSION_INSTALL_COMMAND}），并用其 /plannotator-* 命令打开审查。`;
 }

@@ -97,7 +97,7 @@ export function buildEditorMarkers(annotations: CodeAnnotation[], filePath: stri
   const markers: PierreEditorMarker[] = [];
   for (const ann of annotations) {
     if (ann.filePath !== filePath || (ann.scope ?? 'line') !== 'line' || ann.side !== 'new') continue;
-    const message = ann.text || (ann.suggestedCode ? 'Suggested change' : 'Comment');
+    const message = ann.text || (ann.suggestedCode ? '建议的更改' : 'Comment');
     const startLine = Math.max(0, ann.lineStart - 1);
     markers.push({
       start: { line: startLine, character: 0 },

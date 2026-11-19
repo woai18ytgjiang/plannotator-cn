@@ -709,7 +709,7 @@ export function localIdsIn(value: unknown): Set<string> {
 }
 
 /** Two linked machines claim the thread, message, file or project a path names: it goes to neither (inboxUrl.ts). */
-export const CONFLICT_TEXT = 'Two linked machines both claim this thread, so it opens on neither. Unlink the one that should not have it.';
+export const CONFLICT_TEXT = '两台已关联的设备都声明拥有此话题，因此两边都无法打开。请解除不应拥有它的那台设备的关联。';
 function refuseContested(path: string): void {
   const named = /^\/api\/inbox\/(?:threads|messages|attachments|projects|cards)\/([^/?]+)/.exec(path)?.[1];
   if (named && isContested(decodeURIComponent(named))) throw new InboxApiError(409, 'machine_conflict', CONFLICT_TEXT);
@@ -936,9 +936,9 @@ export async function post<T>(path: string, body: Record<string, unknown>, init:
         return entry.answer as T;
       }
       // Taken back with Cancel: a Send retried with its key never sends it after all.
-      if (entry.state === 'cancelled') throw new InboxApiError(409, 'outbox_cancelled', `Cancelled. It was never sent to ${held.machine?.name ?? 'the other machine'}.`);
+      if (entry.state === 'cancelled') throw new InboxApiError(409, 'outbox_cancelled', `已取消。它从未发送到${held.machine?.name ?? '另一台设备'}。`);
       const why = entry.answer && typeof entry.answer === 'object' ? (entry.answer as { error?: unknown }).error : null;
-      throw new InboxApiError(409, 'not_delivered', typeof why === 'string' && why ? why : `Not delivered to ${held.machine?.name ?? 'the other machine'}.`);
+      throw new InboxApiError(409, 'not_delivered', typeof why === 'string' && why ? why : `未送达${held.machine?.name ?? '另一台设备'}。`);
     }
   }
   const answer = await readJson<T>(response);
@@ -1161,7 +1161,7 @@ export async function reuseAttachment(attachmentId: string, version: 'current' |
     signal: options.signal,
   });
   const body = (await response.json().catch(() => ({}))) as { upload?: InboxUpload; error?: string; code?: string };
-  if (!response.ok || !body.upload) throw new InboxApiError(response.status, body.code ?? 'error', body.error ?? 'Not attached: that file could not be added.');
+  if (!response.ok || !body.upload) throw new InboxApiError(response.status, body.code ?? 'error', body.error ?? '未附加：无法添加该文件。');
   return body.upload;
 }
 
@@ -1194,11 +1194,11 @@ export function uploadFile(
           new InboxApiError(
             xhr.status,
             typeof body.code === 'string' ? body.code : 'error',
-            typeof body.error === 'string' ? body.error : xhr.status === 413 ? 'Not attached: the file is too large.' : 'Not attached: the upload failed.',
+            typeof body.error === 'string' ? body.error : xhr.status === 413 ? '未附加：文件过大。' : '未附加：上传失败。',
           ),
         );
     };
-    xhr.onerror = () => reject(new InboxApiError(0, 'network', 'Not attached: the upload failed.'));
+    xhr.onerror = () => reject(new InboxApiError(0, 'network', '未附加：上传失败。'));
     xhr.onabort = () => reject(new DOMException('Aborted', 'AbortError'));
     options.signal?.addEventListener('abort', () => xhr.abort(), { once: true });
     xhr.send(file);

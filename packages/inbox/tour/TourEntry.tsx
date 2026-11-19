@@ -26,7 +26,7 @@ export function tourEntryModel(agents: InboxAgentsModel | null, _unavailable: 'f
     return {
       marks: PLUGIN_HOSTS.map((id) => ({ id, ready: null })),
       count: null,
-      line: 'Claude Code, Pi, OpenCode and any MCP client. Most take one click or one command.',
+      line: 'Claude Code、Pi、OpenCode 以及任何 MCP 客户端。大多只需一次点击或一条命令。',
     };
   }
   const done = new Set(plan.done.map((r) => r.id));
@@ -35,23 +35,23 @@ export function tourEntryModel(agents: InboxAgentsModel | null, _unavailable: 'f
   const first = plan.done[0];
   const line =
     plan.done.length === n
-      ? `${n} found on this computer, and ${n === 1 ? 'it reaches' : 'all of them reach'} the Inbox.`
+      ? `在这台电脑上找到 ${n} 个，${n === 1 ? '它可以访问' : '它们都可以访问'}收件箱。`
       : first
-        ? `${n} found on this computer. ${first.label} is already on; most others take one click.`
-        : `${n} found on this computer. Most take one click or one command.`;
-  return { marks, count: `${plan.done.length} of ${n} ready`, line };
+        ? `在这台电脑上找到 ${n} 个。${first.label} 已开启；其余大多只需一次点击。`
+        : `在这台电脑上找到 ${n} 个。大多只需一次点击或一条命令。`;
+  return { marks, count: `已就绪 ${plan.done.length} / ${n}`, line };
 }
 
 export function TourEntry({ model, onStart, onConnect }: { model: TourEntryModel; onStart: () => void; onConnect: () => void }) {
   return (
-    <section className="ib-listcol" aria-label="Inbox">
+    <section className="ib-listcol" aria-label="收件箱">
       <div className="ib-lhead">
         <SidebarTrigger />
-        <h1>Inbox</h1>
+        <h1>收件箱</h1>
       </div>
       <div className="ib-lbody">
         <div className="ib-empty ib-te-empty" data-tour-entry="">
-          <h2 tabIndex={-1}>Two ways to start</h2>
+          <h2 tabIndex={-1}>两种开始方式</h2>
           {/* The bento: how the Inbox fits with your agents, wide on top, then the two paths. */}
           <section className="ib-te-card ib-te-fit" aria-labelledby="ib-te-fit-h" data-tour-fit="">
             <div className="ib-te-fit-pic">
@@ -67,15 +67,15 @@ export function TourEntry({ model, onStart, onConnect }: { model: TourEntryModel
                 {/* Not here: the card keeps its calm ground, never a broken image. */}
                 <img src={tourAssetUrl('vs-a-thumb.webp')} alt="" onError={(event) => (event.currentTarget.style.visibility = 'hidden')} />
                 <span className="ib-te-time">
-                  <Icon name="play" size={12} />2 min
+                  <Icon name="play" size={12} />2 分钟
                 </span>
               </div>
               <div className="ib-te-body">
-                <h3 id="ib-te-tour-h">Watch how we built the Inbox with the Inbox</h3>
-                <p>A replay of a real thread: Claude Code asks with mockups, Plannotator’s developer picks one, and it builds it.</p>
+                <h3 id="ib-te-tour-h">看看我们如何用收件箱打造收件箱</h3>
+                <p>一段真实话题的回放：Claude Code 带着设计稿提问，Plannotator 的开发者选中一个，它就开始实现。</p>
                 <button type="button" className="ib-btn ib-pri" onClick={onStart} data-tour-start="">
                   <Icon name="play" size={15} />
-                  Start the tour
+                  开始导览
                 </button>
               </div>
             </section>
@@ -89,11 +89,11 @@ export function TourEntry({ model, onStart, onConnect }: { model: TourEntryModel
                 {model.count && <span className="ib-te-time ib-te-count">{model.count}</span>}
               </div>
               <div className="ib-te-body">
-                <h3 id="ib-te-con-h">Connect my agents</h3>
+                <h3 id="ib-te-con-h">连接我的智能体</h3>
                 <p>{model.line}</p>
                 <button type="button" className="ib-btn ib-pri" onClick={onConnect} data-tour-connect="">
                   <Icon name="chevR" size={15} />
-                  Connect my agents
+                  连接我的智能体
                 </button>
               </div>
             </section>

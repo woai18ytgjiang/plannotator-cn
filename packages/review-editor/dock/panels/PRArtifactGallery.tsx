@@ -151,7 +151,7 @@ export function PRArtifactGallery({
   if (artifacts.length === 0) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted-foreground">
-        No visible artifacts
+        没有可见的附件
       </div>
     );
   }

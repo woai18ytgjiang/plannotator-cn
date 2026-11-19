@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Hover cards for issue, pull request and merge request links.
  *
@@ -66,13 +67,13 @@ function timeAgo(iso: string, now = Date.now()): string {
   const t = Date.parse(iso);
   if (!Number.isFinite(t)) return '';
   const s = Math.max(0, Math.round((now - t) / 1000));
-  if (s < 60) return 'just now';
+  if (s < 60) return '刚刚';
   const m = Math.round(s / 60);
-  if (m < 60) return `${m} min ago`;
+  if (m < 60) return `${m} 分钟前`;
   const h = Math.round(m / 60);
-  if (h < 24) return `${h} h ago`;
+  if (h < 24) return `${h} 小时前`;
   const d = Math.round(h / 24);
-  if (d < 30) return `${d} day${d === 1 ? '' : 's'} ago`;
+  if (d < 30) return `${d} 天前`;
   return new Date(t).toLocaleDateString(undefined, { year: 'numeric', month: 'short', day: 'numeric' });
 }
 
@@ -81,17 +82,17 @@ const forgeName = (p: ForgeRef['platform']) => FORGE_SPECS[p].name;
 
 /** "Issue", "Pull request", "Merge request". */
 export function refKindName(ref: Pick<ForgeRef, 'platform' | 'kind'>): string {
-  return ref.kind === 'issue' ? 'Issue' : FORGE_SPECS[ref.platform].pullName;
+  return ref.kind === 'issue' ? '议题' : FORGE_SPECS[ref.platform].pullName;
 }
 
 /** Bitbucket has no CLI: Plannotator reads it with an API token, so its failures keep their own lines (`unavailable` also: no answer at all). */
 const BITBUCKET_FAILURE_TEXT: Record<ForgeRefCardError, string> = {
-  unsupported: 'Details show for Bitbucket Cloud pull requests in the Inbox.',
-  cli_missing: "Details couldn't load right now.",
-  signed_out: "Plannotator couldn't sign in to Bitbucket. Check its API token setup to see details here.",
-  not_found: "Your Bitbucket API token can't see this one, or it doesn't exist.",
-  rate_limited: 'Bitbucket asked for a short break. Details come back in a minute.',
-  unavailable: "Details couldn't load right now.",
+  unsupported: '收件箱中会显示 Bitbucket Cloud 拉取请求的详情。',
+  cli_missing: "暂时无法加载详情。",
+  signed_out: "Plannotator 无法登录 Bitbucket。请检查其 API 令牌设置以在此查看详情。",
+  not_found: "你的 Bitbucket API 令牌无权查看此项，或它并不存在。",
+  rate_limited: 'Bitbucket 请求稍作等待，详情将在稍后恢复。',
+  unavailable: "暂时无法加载详情。",
 };
 
 type Tone = 'open' | 'merged' | 'closed' | 'neutral';
@@ -99,17 +100,17 @@ type Tone = 'open' | 'merged' | 'closed' | 'neutral';
 function stateOf(data: ForgeRefCardData): { label: string; tone: Tone } {
   switch (data.state) {
     case 'open':
-      return { label: 'Open', tone: 'open' };
+      return { label: '开放', tone: 'open' };
     case 'draft':
-      return { label: 'Draft', tone: 'neutral' };
+      return { label: '草稿', tone: 'neutral' };
     case 'merged':
-      return { label: 'Merged', tone: 'merged' };
+      return { label: '已合并', tone: 'merged' };
     case 'completed':
-      return { label: 'Closed', tone: 'merged' };
+      return { label: '已关闭', tone: 'merged' };
     case 'not_planned':
-      return { label: 'Not planned', tone: 'neutral' };
+      return { label: '不处理', tone: 'neutral' };
     default:
-      return { label: 'Closed', tone: data.kind === 'pull' ? 'closed' : 'neutral' };
+      return { label: '已关闭', tone: data.kind === 'pull' ? 'closed' : 'neutral' };
   }
 }
 
@@ -169,14 +170,14 @@ function Avatar({ person, size = 18 }: { person: ForgeRefPerson; size?: number }
 /** "All 32 checks passed" / "Pipeline failed · 2 of 12 jobs". */
 export function checksText(checks: ForgeRefChecks, platform: ForgeRef['platform']): string {
   if (platform === 'gitlab') {
-    const jobs = (n: number) => `${n} job${n === 1 ? '' : 's'}`;
-    if (checks.state === 'failure') return `Pipeline failed${checks.total ? ` · ${checks.failed} of ${jobs(checks.total)}` : ''}`;
-    if (checks.state === 'pending') return `Pipeline running${checks.total ? ` · ${checks.pending} of ${jobs(checks.total)} left` : ''}`;
-    return `Pipeline passed${checks.total ? ` · ${jobs(checks.total)}` : ''}`;
+    const jobs = (n: number) => `${n} 个任务`;
+    if (checks.state === 'failure') return `流水线失败${checks.total ? ` · ${checks.failed}/${jobs(checks.total)}` : ''}`;
+    if (checks.state === 'pending') return `流水线运行中${checks.total ? ` · 还剩 ${checks.pending}/${jobs(checks.total)}` : ''}`;
+    return `流水线通过${checks.total ? ` · ${jobs(checks.total)}` : ''}`;
   }
-  if (checks.failed > 0) return `${checks.failed} failing${checks.pending ? `, ${checks.pending} running` : ''} · ${checks.passed} passed`;
-  if (checks.pending > 0 || checks.state === 'pending') return `${checks.pending} running · ${checks.passed} passed`;
-  return `All ${checks.total} check${checks.total === 1 ? '' : 's'} passed`;
+  if (checks.failed > 0) return `${checks.failed} 项失败${checks.pending ? `，${checks.pending} 项运行中` : ''} · ${checks.passed} 项通过`;
+  if (checks.pending > 0 || checks.state === 'pending') return `${checks.pending} 项运行中 · ${checks.passed} 项通过`;
+  return `全部 ${checks.total} 项检查通过`;
 }
 
 function ChecksLine({ checks, platform }: { checks: ForgeRefChecks; platform: ForgeRef['platform'] }) {
@@ -192,9 +193,9 @@ function ChecksLine({ checks, platform }: { checks: ForgeRefChecks; platform: Fo
 }
 
 const REVIEW_TEXT = {
-  approved: { text: 'Approved', cls: 'text-success' },
-  changes_requested: { text: 'Changes requested', cls: 'text-destructive' },
-  review_required: { text: 'Review required', cls: 'text-warning' },
+  approved: { text: '已批准', cls: 'text-success' },
+  changes_requested: { text: '已请求修改', cls: 'text-destructive' },
+  review_required: { text: '需要审查', cls: 'text-warning' },
 } as const;
 
 /** Body markdown with images and links made harmless (the renderer still sanitizes HTML). An empty title: the alt text says it, and no native tooltip shows. */
@@ -336,13 +337,13 @@ function SafeMarkdown({ markdown }: { markdown: string }) {
         <RenderedMarkdown markdown={markdown} softLineBreaks resolveImage={NO_IMAGES} resolveLocalLink={NO_LOCAL_LINKS} />
       </div>
       {confirm ? (
-        <div className="mt-1.5 flex items-center gap-2 rounded-md border border-border bg-muted/50 px-2 py-1.5 text-[11.5px]" role="group" aria-label="Open this link?" data-ref-card-confirm="">
+        <div className="mt-1.5 flex items-center gap-2 rounded-md border border-border bg-muted/50 px-2 py-1.5 text-[11.5px]" role="group" aria-label="打开此链接？" data-ref-card-confirm="">
           <ConfirmUrl url={confirm} />
           <a href={confirm} target="_blank" rel="noopener noreferrer nofollow" className="font-medium text-primary hover:underline" onClick={() => setConfirm(null)}>
-            Open
+            打开
           </a>
           <button type="button" className="text-muted-foreground hover:text-foreground" onClick={() => setConfirm(null)}>
-            Cancel
+            取消
           </button>
         </div>
       ) : null}
@@ -380,7 +381,7 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
       <span className="min-w-0 flex-1 truncate">{extra}</span>
       {onClose && (pinned || sheet) ? (
         <button type="button" onClick={onClose} className={`${btn} rounded-md hover:bg-muted hover:text-foreground`} data-ref-card-close="">
-          Close
+          关闭
         </button>
       ) : null}
       <a
@@ -390,7 +391,7 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
         className={`${btn} inline-flex items-center gap-1 rounded-md bg-primary/10 font-medium text-primary hover:bg-primary/15`}
         data-ref-card-open=""
       >
-        Open on {forge} <span aria-hidden="true">↗</span>
+        在 {forge} 中打开 <span aria-hidden="true">↗</span>
       </a>
     </div>
   );
@@ -450,13 +451,13 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
     <div className="flex min-h-0 flex-1 flex-col">
       <div
         className={together ? 'min-h-0 flex-1 overflow-y-auto overscroll-contain' : 'flex min-h-0 flex-1 flex-col'}
-        {...(together ? { ...scroller, 'aria-label': `${refKindName(ref)} details` } : {})}
+        {...(together ? { ...scroller, 'aria-label': `${refKindName(ref)}详情` } : {})}
       >
         <div className="flex-none px-3.5 pt-3" data-ref-card-head="">
           <div className="flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
             <span className="truncate">{d.repo || repoName}</span>
             <span aria-hidden="true">·</span>
-            <span className="flex-none">opened {timeAgo(d.createdAt)}</span>
+            <span className="flex-none">于 {timeAgo(d.createdAt)}打开</span>
           </div>
           <div className="mt-1.5 flex items-start gap-2">
             <StateIcon kind={d.kind} tone={state.tone} className="mt-[3px]" />
@@ -476,10 +477,10 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
             ) : null}
             {d.closedAt && d.state !== 'open' && d.state !== 'draft' ? (
               <span>
-                {d.state === 'merged' ? 'merged' : 'closed'} {timeAgo(d.closedAt)}
+                {d.state === 'merged' ? '已合并' : '已关闭'} {timeAgo(d.closedAt)}
               </span>
             ) : (
-              <span>updated {timeAgo(d.updatedAt)}</span>
+              <span>更新于 {timeAgo(d.updatedAt)}</span>
             )}
           </div>
           {p ? (
@@ -494,7 +495,7 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
                   <span className="text-success">+{fmt(p.additions)}</span> <span className="text-destructive">−{fmt(p.deletions)}</span>
                   <span className="text-muted-foreground">
                     {' '}
-                    · {fmt(p.files)} file{p.files === 1 ? '' : 's'}
+                    · {fmt(p.files)} 个文件
                   </span>
                 </span>
                 {p.checks ? <ChecksLine checks={p.checks} platform={d.platform} /> : null}
@@ -515,7 +516,7 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
                 </span>
               ))}
               {d.assignees.length > 0 ? (
-                <span className="ml-auto inline-flex items-center gap-1" role="img" aria-label={`Assigned to ${d.assignees.map((a) => a.login).join(', ')}`}>
+                <span className="ml-auto inline-flex items-center gap-1" role="img" aria-label={`指派给 ${d.assignees.map((a) => a.login).join(', ')}`}>
                   {d.assignees.map((a) => (
                     <Avatar key={a.login} person={a} size={16} />
                   ))}
@@ -529,13 +530,13 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
           className={`mt-2.5 border-t border-border px-3.5 py-2.5 ${together ? '' : 'min-h-0 flex-1 overflow-y-auto overscroll-contain'}`}
           style={sheet || together ? undefined : { maxHeight: pinned ? BODY_MAX_PINNED : BODY_MAX }}
           data-ref-card-body=""
-          {...(together ? {} : { ...scroller, 'aria-label': `${refKindName(ref)} description` })}
+          {...(together ? {} : { ...scroller, 'aria-label': `${refKindName(ref)}描述` })}
         >
-          {d.body.trim() ? <SafeMarkdown markdown={d.body} /> : <p className="text-[12px] italic text-muted-foreground">No description.</p>}
-          {d.bodyCut ? <p className="mt-1 text-[11px] text-muted-foreground">The rest is on {forge}.</p> : null}
+          {d.body.trim() ? <SafeMarkdown markdown={d.body} /> : <p className="text-[12px] italic text-muted-foreground">暂无描述。</p>}
+          {d.bodyCut ? <p className="mt-1 text-[11px] text-muted-foreground">其余内容见 {forge}。</p> : null}
           {d.linked.length > 0 ? (
             <div className="mt-2.5 space-y-1">
-              <div className="text-[10.5px] font-semibold uppercase tracking-wide text-muted-foreground">{d.kind === 'pull' ? 'Closes' : 'Closed by'}</div>
+              <div className="text-[10.5px] font-semibold uppercase tracking-wide text-muted-foreground">{d.kind === 'pull' ? '关闭了' : '由以下关闭'}</div>
               {d.linked.map((l) => (
                 <div key={l.number} className="flex items-center gap-1.5 text-[12px]">
                   <StateIcon kind={d.kind === 'pull' ? 'issue' : 'pull'} tone={l.state === 'open' ? 'open' : l.state === 'merged' || d.kind === 'pull' ? 'merged' : 'closed'} />
@@ -549,9 +550,9 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
             <div className="mt-2.5 rounded-md border border-border bg-muted/30 px-2.5 py-2" data-ref-card-comment="">
               <div className="mb-1 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 {d.lastComment.author ? <Avatar person={d.lastComment.author} size={14} /> : null}
-                <span className="font-medium text-foreground">{d.lastComment.author?.login ?? 'someone'}</span>
-                <span>commented {timeAgo(d.lastComment.at)}</span>
-                <span className="ml-auto">latest</span>
+                <span className="font-medium text-foreground">{d.lastComment.author?.login ?? '某人'}</span>
+                <span>评论于 {timeAgo(d.lastComment.at)}</span>
+                <span className="ml-auto">最新</span>
               </div>
               <SafeMarkdown markdown={d.lastComment.body} />
             </div>
@@ -560,8 +561,8 @@ export function RefCardView({ target, href, result, pinned, onClose, sheet, tigh
       </div>
       {footer(
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden="true">💬</span> {d.comments} comment{d.comments === 1 ? '' : 's'}
-          {pinned && !sheet ? <span className="ml-1.5 text-muted-foreground/80">· pinned</span> : null}
+          <span aria-hidden="true">💬</span> {d.comments} 条评论
+          {pinned && !sheet ? <span className="ml-1.5 text-muted-foreground/80">· 已置顶</span> : null}
         </span>,
       )}
     </div>

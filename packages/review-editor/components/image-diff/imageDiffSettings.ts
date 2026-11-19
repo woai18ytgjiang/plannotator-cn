@@ -16,14 +16,14 @@ export interface ImageDiffSettings {
 export const IMAGE_DIFF_MODE_COOKIE = 'plannotator-image-diff-view';
 export const IMAGE_BACKGROUND_COOKIE = 'plannotator-image-background';
 export const IMAGE_BACKGROUNDS: readonly ImageBackground[] = ['checker', 'light', 'dark'];
-export const IMAGE_BACKGROUND_LABEL: Record<ImageBackground, string> = { checker: 'Checkerboard', light: 'Light', dark: 'Dark' };
+export const IMAGE_BACKGROUND_LABEL: Record<ImageBackground, string> = { checker: '棋盘格', light: 'Light', dark: 'Dark' };
 
 export const IMAGE_DIFF_MODES: readonly ImageDiffMode[] = ['side', 'swipe', 'onion'];
 
 export const IMAGE_DIFF_MODE_LABEL: Record<ImageDiffMode, string> = {
-  side: 'Side by side',
-  swipe: 'Swipe',
-  onion: 'Onion skin',
+  side: '并排',
+  swipe: '滑动',
+  onion: '洋葱皮',
 };
 
 function readMode(): ImageDiffMode {

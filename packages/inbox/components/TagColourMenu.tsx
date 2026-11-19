@@ -28,9 +28,9 @@ import type { ListTag } from '../threadTags';
 /** The tag menu's Color item: a dot of the tag's colour where the icons sit, its name ("Teal", "Custom") at the right. */
 export function TagColourItem({ colour, onOpen }: { colour: string; onOpen: () => void }) {
   return (
-    <Menu.Item className="ib-pmi" label="Color" closeOnClick={false} onClick={onOpen} data-tag-action="colour">
+    <Menu.Item className="ib-pmi" label="颜色" closeOnClick={false} onClick={onOpen} data-tag-action="colour">
       <span className="ib-tagm-dot" aria-hidden="true" style={{ background: tagShownHex(colour) }} />
-      Color
+      颜色
       <span className="ib-zsub">
         <span className="ib-tagm-n">{tagColourName(colour)}</span>
         <Icon name="chevR" size={13} />
@@ -133,13 +133,13 @@ export function TagColourList({ tag, colours, onBack }: { tag: ListTag; colours:
   const ownName = (hex: string) => (isInboxTagPreset(picked) && hex === shown ? TAG_PRESET_NAMES[picked] : tagColourLong(hex));
   return (
     <div ref={body} data-tag-colour-list="">
-      <Menu.Item className="ib-pmi ib-zb" label="Color" closeOnClick={false} onClick={onBack} data-tag-colour-back="">
+      <Menu.Item className="ib-pmi ib-zb" label="颜色" closeOnClick={false} onClick={onBack} data-tag-colour-back="">
         <Icon name="chevL" size={14} />
-        Color
+        颜色
       </Menu.Item>
       <Menu.Separator className="ib-pm-sep" />
       {/* The checked swatch pressed again reports itself too: written only while Highlight rows is off (it turns it on). */}
-      <Menu.RadioGroup value={shown} onValueChange={(next: string) => (next !== shown || colour === null) && pick(next)} aria-label={`Color for ${tag.name}`}>
+      <Menu.RadioGroup value={shown} onValueChange={(next: string) => (next !== shown || colour === null) && pick(next)} aria-label={`颜色：${tag.name}`}>
         {[TAG_SWATCHES.slice(0, 6), TAG_SWATCHES.slice(6)].map((line, i) => (
           <div key={i} className={`ib-tagc-sw${i > 0 ? ' ib-tagc-sw2' : ''}`}>
             {line.map((sw) => (
@@ -170,8 +170,8 @@ export function TagColourList({ tag, colours, onBack }: { tag: ListTag; colours:
           min={0}
           max={359}
           value={Math.round(hsv.h)}
-          aria-label="Hue"
-          aria-valuetext={`Hue ${Math.round(hsv.h)}`}
+          aria-label="色相"
+          aria-valuetext={`色相 ${Math.round(hsv.h)}`}
           data-tag-colour-hue=""
           onChange={(event) => {
             // Moved without a pointer (keys, a screen reader's swipe): settled once it rests.
@@ -200,7 +200,7 @@ export function TagColourList({ tag, colours, onBack }: { tag: ListTag; colours:
           placeholder="#rrggbb"
           spellCheck={false}
           autoComplete="off"
-          aria-label="Hex color"
+          aria-label="Hex 颜色"
           data-tag-colour-hex=""
           onChange={(event) => {
             // Trimmed first, then held to a code's length (with or without "#"): a pasted "  #00FF88  " is kept whole. A

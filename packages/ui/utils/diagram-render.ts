@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The renderer slot: ONE seam between "a diagram kind" and "the engine that
  * turns its source into an svg". `renderDiagram(kind, renderId, source,
@@ -188,7 +189,7 @@ function sanitizeAcceptedDiagramSvg(svg: string, accept: (svg: SVGSVGElement) =>
   return root;
 }
 
-const REFUSED_RESULT: DiagramRenderError = { ok: false, message: 'The diagram is shown as its source.', line: null, runtimeUnavailable: false, refused: true };
+const REFUSED_RESULT: DiagramRenderError = { ok: false, message: '图表已以其源码形式显示。', line: null, runtimeUnavailable: false, refused: true };
 
 /** The sanitized root, through `accept` when the host gave one. */
 function sanitizeFor(svg: string, options: DiagramRenderOptions | undefined): SVGSVGElement | null | typeof REFUSED {
@@ -608,7 +609,7 @@ async function renderMermaidOnce(runtime: Mermaid, renderId: string, source: str
   const svgNode = sanitizeFor(svg, options);
   if (svgNode === REFUSED) return REFUSED_RESULT;
   if (svgNode === null) {
-    return { ok: false, message: 'The diagram could not be rendered.', line: null, runtimeUnavailable: false };
+    return { ok: false, message: '无法渲染图表。', line: null, runtimeUnavailable: false };
   }
   widenEdgeHitAreas(svgNode);
   return { ok: true, svgNode, findTarget: MERMAID_FINDER.findTarget };
@@ -755,7 +756,7 @@ const graphvizRenderer: DiagramRenderer = {
       const svgNode = sanitizeFor(result.output, options);
       if (svgNode === REFUSED) return REFUSED_RESULT;
       if (svgNode === null) {
-        return { ok: false, message: 'The graph could not be rendered.', line: null, runtimeUnavailable: false };
+        return { ok: false, message: '无法渲染图表。', line: null, runtimeUnavailable: false };
       }
       themeGraphvizSvg(svgNode);
       widenEdgeHitAreas(svgNode);

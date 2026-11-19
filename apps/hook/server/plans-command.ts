@@ -25,7 +25,7 @@ import { PLANS_COMMAND_USAGE } from "./cli";
 export { PLANS_COMMAND_USAGE };
 
 /** What every `plannotator plans …` but `plans` and `plans off` says while Plans is off. */
-export const PLANS_OFF_TEXT = "plans_off: Plans is off. To turn it on, run `plannotator plans`.";
+export const PLANS_OFF_TEXT = "plans_off: Plans 已关闭。要开启，请运行 `plannotator plans`。";
 
 export interface PlansCommandDeps {
   dataDir: string;
@@ -103,7 +103,7 @@ export async function runPlansCommand(argv: readonly string[], deps: PlansComman
       err(`config_not_saved: ${PLANS_SWITCH_NOT_SAVED}`);
       return 1;
     }
-    out("Plans is off.");
+    out("Plans 已关闭。");
     return 0;
   }
 
@@ -112,7 +112,7 @@ export async function runPlansCommand(argv: readonly string[], deps: PlansComman
       err(`config_not_saved: ${PLANS_SWITCH_NOT_SAVED}`);
       return 1;
     }
-    err("Plans is on.");
+    err("Plans 已开启。");
     let entry: { url: string; port: number };
     try {
       entry = await deps.ensureInbox();
@@ -139,7 +139,7 @@ export async function runPlansCommand(argv: readonly string[], deps: PlansComman
 
   if (which === "list" && argv.length === 1) {
     const plans = await listPlans(deps);
-    if (plans.length === 0) out("No plans yet.");
+    if (plans.length === 0) out("暂无计划。");
     for (const plan of plans) out(planLine(plan));
     return 0;
   }
@@ -151,8 +151,8 @@ export async function runPlansCommand(argv: readonly string[], deps: PlansComman
 /** One plan as `plans list` prints it: id, last change, project, head version, decision, name. */
 export function planLine(plan: PlanSummary): string {
   const day = plan.updated_at.slice(0, 10);
-  const decision = plan.decision ? `${plan.decision.decision}${plan.decision.version_number ? ` v${plan.decision.version_number}` : ""}` : "no decision";
-  const changed = plan.changed && plan.seen_version_number !== null ? ` · changed, you saw v${plan.seen_version_number}` : "";
+  const decision = plan.decision ? `${plan.decision.decision}${plan.decision.version_number ? ` v${plan.decision.version_number}` : ""}` : "无决策";
+  const changed = plan.changed && plan.seen_version_number !== null ? ` · 已更改，你看到的是 v${plan.seen_version_number}` : "";
   return `${plan.id}  ${day}  ${plan.project_name ?? "-"}  v${plan.head_version_number}  ${decision}${changed}  ${plan.name}`;
 }
 

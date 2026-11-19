@@ -10,7 +10,7 @@ import {
 } from './reviewSubmissionRecovery';
 
 const UNKNOWN_RESULT_ERROR =
-  'The platform may have accepted part of this review, but Plannotator could not confirm the result. Automatic retry is blocked to avoid duplicate comments. Inspect the pull request or merge request before starting another review.';
+  '平台可能已接受了本次审查的一部分，但 Plannotator 无法确认结果。为避免重复评论，自动重试已被阻止。请先检查拉取请求或合并请求，再开始新的审查。';
 
 /** Fetch-compatible capability used to submit one platform review target. */
 export type PlatformReviewFetch = (
@@ -92,7 +92,7 @@ export async function submitPlatformReviewTarget(options: {
     return {
       target: response.ok
         ? markPlatformReviewAmbiguous(target)
-        : markPlatformReviewSafeFailure(target, 'Failed to submit review'),
+        : markPlatformReviewSafeFailure(target, '提交审查失败'),
     };
   }
 
@@ -104,7 +104,7 @@ export async function submitPlatformReviewTarget(options: {
     return {
       target: markPlatformReviewSafeFailure(
         target,
-        readPRActionError(rawResponse) ?? 'Failed to submit review',
+        readPRActionError(rawResponse) ?? '提交审查失败',
       ),
     };
   }

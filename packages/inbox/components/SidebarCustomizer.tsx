@@ -165,10 +165,10 @@ export function SidebarCustomizer({
     return (
       <div className="ib-sbc-zone" data-sbc-zone={stack} role="group" aria-labelledby={`ib-sbc-${stack}`}>
         <div className="ib-sbc-glabel" id={`ib-sbc-${stack}`}>
-          {stack === 'top' ? 'Top' : 'Bottom'}
+          {stack === 'top' ? '顶部' : '底部'}
         </div>
         {stack === 'top' && drawn.has('logo') && <FixedRow item="logo" layout={layout} />}
-        {rows.length ? rows : <div className="ib-sbc-empty">Drag items here</div>}
+        {rows.length ? rows : <div className="ib-sbc-empty">拖动项目到此处</div>}
       </div>
     );
   };
@@ -187,15 +187,15 @@ export function SidebarCustomizer({
       >
         <div className="ib-sbc-head">
           <h2 id="ib-sbc-title" ref={title} tabIndex={-1}>
-            Customize sidebar
+            自定义侧边栏
           </h2>
-          <button type="button" className="ib-sbc-x" aria-label="Close" onClick={close}>
+          <button type="button" className="ib-sbc-x" aria-label="关闭" onClick={close}>
             <Icon name="x" />
           </button>
         </div>
         <div className="ib-sbc-start" data-sidebar-preset={preset ?? 'custom'}>
           <span className="ib-sr" id="ib-sbc-start">
-            Start from
+            起始设置
           </span>
           <span className="ib-seg ib-seg-sm" role="group" aria-labelledby="ib-sbc-start" aria-describedby={preset ? undefined : 'ib-sbc-custom'}>
             {INBOX_SIDEBAR_PRESET_ORDER.map((choice) => (
@@ -214,7 +214,7 @@ export function SidebarCustomizer({
           </span>
           {!preset && (
             <span className="ib-sbc-custom" id="ib-sbc-custom">
-              Custom
+              自定义
             </span>
           )}
         </div>
@@ -228,10 +228,10 @@ export function SidebarCustomizer({
         </div>
         <div className="ib-sbc-foot">
           <button type="button" className="ib-btn ib-ghost ib-sm" disabled={inboxSidebarSame(layout, INBOX_SIDEBAR_DEFAULT)} onClick={() => void writeSidebarLayout(INBOX_SIDEBAR_DEFAULT)} data-sidebar-reset="">
-            Reset to default
+            重置为默认
           </button>
           <button type="button" className="ib-btn ib-sm ib-pri" onClick={close} data-sidebar-done="">
-            Done
+            完成
           </button>
         </div>
       </div>
@@ -255,7 +255,7 @@ function ShowSwitch({ item, layout }: { item: InboxSidebarItem; layout: InboxSid
     return (
       <span className="ib-sbc-lock" data-sbc-locked="">
         <Icon name="lock" />
-        <span className="ib-sr">Always shown</span>
+        <span className="ib-sr">始终显示</span>
       </span>
     );
   }
@@ -322,7 +322,7 @@ function ItemRow({
           ref={grip}
           type="button"
           className="ib-sbc-grip"
-          aria-label={`Move ${name}`}
+          aria-label={`移动 ${name}`}
           aria-haspopup="menu"
           aria-expanded={menu}
           data-sidebar-grip={item}
@@ -344,14 +344,14 @@ function ItemRow({
         <Menu.Root open={menu} onOpenChange={setMenu} modal={false}>
           <Menu.Portal container={grip.current?.closest<HTMLElement>('.pn-inbox') ?? undefined}>
             <Menu.Positioner className="ib-pm-pos ib-sbc-movepos" anchor={grip} side="bottom" align="start" sideOffset={4}>
-              <Menu.Popup className="ib-pm" aria-label={`Move ${name}`} data-sbc-move-menu={item} finalFocus={grip}>
+              <Menu.Popup className="ib-pm" aria-label={`移动 ${name}`} data-sbc-move-menu={item} finalFocus={grip}>
                 <Menu.Item className="ib-pmi" disabled={!inboxSidebarCanStep(layout, item, -1, shown)} onClick={() => act(inboxSidebarStep(readSidebarLayout(), item, -1, shown))} data-sbc-move="up">
                   <Icon name="chevU" />
-                  <span className="ib-pmi-l">Move up</span>
+                  <span className="ib-pmi-l">上移</span>
                 </Menu.Item>
                 <Menu.Item className="ib-pmi" disabled={!inboxSidebarCanStep(layout, item, 1, shown)} onClick={() => act(inboxSidebarStep(readSidebarLayout(), item, 1, shown))} data-sbc-move="down">
                   <Icon name="chevD" />
-                  <span className="ib-pmi-l">Move down</span>
+                  <span className="ib-pmi-l">下移</span>
                 </Menu.Item>
                 <Menu.Separator className="ib-pm-sep" />
                 <Menu.Item
@@ -360,7 +360,7 @@ function ItemRow({
                   data-sbc-move={stack === 'top' ? 'bottom' : 'top'}
                 >
                   <Icon name={stack === 'top' ? 'arrowDown' : 'arrowUp'} />
-                  <span className="ib-pmi-l">{stack === 'top' ? 'Move to bottom' : 'Move to top'}</span>
+                  <span className="ib-pmi-l">{stack === 'top' ? '移到下方' : '移到上方'}</span>
                 </Menu.Item>
               </Menu.Popup>
             </Menu.Positioner>

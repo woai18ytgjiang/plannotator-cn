@@ -48,7 +48,7 @@ export function RowsAsk({ replyPollMs = REPLY_POLL_MS }: { replyPollMs?: number 
   const sendKey = useRef(newUuid());
 
   const sessions = model
-    ? model.projects.flatMap((group) => group.sessions.map((session) => ({ host: session.host, session: session.session, name: INBOX_HOST_NAMES[session.host] ?? 'An agent', project: group.project.name, label: session.label ?? null })))
+    ? model.projects.flatMap((group) => group.sessions.map((session) => ({ host: session.host, session: session.session, name: INBOX_HOST_NAMES[session.host] ?? '一个智能体', project: group.project.name, label: session.label ?? null })))
     : null;
   // Sessions come and go while this is open: the choice holds by its session, and falls to the most recent.
   const agent = sessions ? (sessions.find((session) => session.session === chosen) ?? sessions[0] ?? null) : null;
@@ -100,7 +100,7 @@ export function RowsAsk({ replyPollMs = REPLY_POLL_MS }: { replyPollMs?: number 
     } catch (cause) {
       // The agent went while this was open: nothing was sent, and the box reads the sessions there are now.
       if (cause instanceof InboxApiError && cause.code === 'session_not_live') await load();
-      else setError(cause instanceof InboxApiError && cause.code !== 'project_unresolved' ? cause.message : 'The message was not sent. Send again to retry.');
+      else setError(cause instanceof InboxApiError && cause.code !== 'project_unresolved' ? cause.message : '消息未发送。请再次发送以重试。');
     } finally {
       setBusy(false);
     }
@@ -111,7 +111,7 @@ export function RowsAsk({ replyPollMs = REPLY_POLL_MS }: { replyPollMs?: number 
       className="ib-rws-ask"
       data-rows-ask=""
       data-open={shown ? '' : undefined}
-      aria-label="Tell your agent"
+      aria-label="告诉你的智能体"
       onFocus={() => setOpen(true)}
       onBlur={(event) => {
         if (!event.currentTarget.contains(event.relatedTarget as Node | null)) setOpen(false);
@@ -124,20 +124,20 @@ export function RowsAsk({ replyPollMs = REPLY_POLL_MS }: { replyPollMs?: number 
           void send();
         }}
       >
-        <input aria-label="Or tell your agent how you want your rows" placeholder="Or tell your agent how you want your rows…" autoComplete="off" value={text} disabled={busy} onChange={(event) => change(event.target.value)} />
+        <input aria-label="或者告诉你的智能体你希望如何排列这些行" placeholder="或者告诉你的智能体你希望如何排列这些行…" autoComplete="off" value={text} disabled={busy} onChange={(event) => change(event.target.value)} />
         {shown && sessions && sessions.length > 1 && (
-          <select aria-label="Which agent" value={agent?.session ?? ''} disabled={busy} onChange={(event) => setChosen(event.target.value)} data-rows-ask-who="">
+          <select aria-label="选择智能体" value={agent?.session ?? ''} disabled={busy} onChange={(event) => setChosen(event.target.value)} data-rows-ask-who="">
             {sessions.map((session) => (
               <option key={session.session} value={session.session}>
                 {session.label ? `${session.label} · ` : ''}
-                {session.name} in {session.project}
+                {session.name} 在 {session.project}
               </option>
             ))}
           </select>
         )}
         {shown && agent && (
-          <button type="submit" className="ib-btn ib-pri ib-sm" disabled={!ask || busy} data-rows-ask-send="" title={`Send to ${agent.name} in ${agent.project}`}>
-            Send
+          <button type="submit" className="ib-btn ib-pri ib-sm" disabled={!ask || busy} data-rows-ask-send="" title={`发送给 ${agent.project} 中的 ${agent.name}`}>
+            发送
           </button>
         )}
         {shown && sessions && !agent && (
@@ -151,13 +151,13 @@ export function RowsAsk({ replyPollMs = REPLY_POLL_MS }: { replyPollMs?: number 
             }}
           >
             <Icon name={copied ? 'check' : 'copy'} size={14} />
-            <span>{copied ? 'Copied' : 'Copy'}</span>
+            <span>{copied ? '已复制' : '复制'}</span>
           </button>
         )}
       </form>
       {shown && sessions && !agent && (
         <p className="ib-rws-asknote" data-rows-ask-none="">
-          No agent is running
+          没有智能体在运行
         </p>
       )}
       {error && (
@@ -168,9 +168,9 @@ export function RowsAsk({ replyPollMs = REPLY_POLL_MS }: { replyPollMs?: number 
       {sent && (
         <div className="ib-rws-asklog" aria-live="polite" data-rows-ask-log="">
           <p data-rows-ask-sent="">
-            Sent to {sent.name}.{' '}
+            已发送给 {sent.name}。{' '}
             <a className="ib-lnk" href={`#thread=${sent.thread}`} data-rows-ask-thread="">
-              Open thread
+              打开话题
             </a>
           </p>
           {sent.reply && (

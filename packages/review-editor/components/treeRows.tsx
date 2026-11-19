@@ -118,14 +118,14 @@ export const TreeRowMenu: React.FC<{
             close();
           }}
         >
-          Open to the side
+          在侧边打开
         </button>
       )}
-      <button type="button" role="menuitem" onClick={() => choose(path)}>Copy path</button>
-      <button type="button" role="menuitem" onClick={() => choose(name)}>Copy filename</button>
+      <button type="button" role="menuitem" onClick={() => choose(path)}>复制路径</button>
+      <button type="button" role="menuitem" onClick={() => choose(name)}>复制文件名</button>
       {repoRoot && (
         <button type="button" role="menuitem" onClick={() => choose(`${repoRoot.replace(/\/$/, '')}/${path}`)}>
-          Copy full path
+          复制完整路径
         </button>
       )}
     </div>

@@ -212,11 +212,11 @@ export function PullsPage(given: PullsPageProps) {
   const projectName = props.project ? (props.projectNames.get(props.project) ?? offered.find((p) => p.id === props.project)?.name ?? null) : null;
 
   const list = (
-    <section className={`ib-listcol${phone ? '' : ' ib-narrow ib-resizable'} ib-prlist`} aria-label="Reviews" data-pulls-list="">
+    <section className={`ib-listcol${phone ? '' : ' ib-narrow ib-resizable'} ib-prlist`} aria-label="审查" data-pulls-list="">
       <div className="ib-lhead" ref={head}>
         <SidebarTrigger />
         <h1 dir="auto" tabIndex={-1} data-pulls-heading="">
-          Reviews
+          审查
         </h1>
         {(model || system) && (
           <span className="ib-pf-slot">
@@ -248,8 +248,8 @@ export function PullsPage(given: PullsPageProps) {
             onRules={() => setRulesOpen(true)}
           />
         )}
-        <Tip content="New review">
-          <button type="button" className="ib-iconbtn ib-pr-new" onClick={props.onNew} aria-label="New review" data-reviews-new="head">
+        <Tip content="新建审查">
+          <button type="button" className="ib-iconbtn ib-pr-new" onClick={props.onNew} aria-label="新建审查" data-reviews-new="head">
             <Icon name="plus" size={18} />
           </button>
         </Tip>
@@ -273,15 +273,15 @@ export function PullsPage(given: PullsPageProps) {
             {state.error}
           </div>
         )}
-        {!model && !state.error && <p className="ib-pr-empty">Reading your pull requests…</p>}
+        {!model && !state.error && <p className="ib-pr-empty">正在读取你的 PR…</p>}
         {phone && props.onPullRequests && (
           <button type="button" className="ib-prs-entry" onClick={props.onPullRequests} data-prs-entry="">
             <Icon name="pullRequest" size={16} />
-            <span className="ib-prs-entry-t">Pull requests</span>
+            <span className="ib-prs-entry-t">PR</span>
             {props.prsSummary && (
               <span className="ib-prs-entry-n">
-                {props.prsSummary.open} open
-                {props.prsSummary.needYou > 0 && <span className="ib-prs-you"> · {props.prsSummary.needYou} need you</span>}
+                {props.prsSummary.open} 个打开
+                {props.prsSummary.needYou > 0 && <span className="ib-prs-you"> · {props.prsSummary.needYou} 个需要你</span>}
               </span>
             )}
             <Icon name="chevR" size={14} />
@@ -368,7 +368,7 @@ export function PullsPage(given: PullsPageProps) {
             props.prBoard
           ) : (
             <div className="ib-pane ib-pempty" data-pulls-pane-empty="">
-              {rows && rows.length > 0 ? 'Pick a review to open it.' : null}
+              {rows && rows.length > 0 ? '选择一条审查以打开。' : null}
             </div>
           )
         ))}
@@ -384,15 +384,15 @@ export function ReviewsOff({ phone, onSettings }: { phone: boolean; onSettings: 
         <div className="ib-lhead">
           <SidebarTrigger />
           <h1 dir="auto" tabIndex={-1}>
-            Reviews
+            审查
           </h1>
         </div>
         <div className="ib-lbody ib-pr-off">
           <div className="ib-pr-empty">
-            <p className="ib-pr-empty-h">Code review is off</p>
-            <p>Reviews of your local changes and pull requests show here when it’s on.</p>
+            <p className="ib-pr-empty-h">代码审查已关闭</p>
+            <p>开启后，本地更改和 PR 的审查会显示在这里。</p>
             <button type="button" className="ib-btn" onClick={onSettings} data-reviews-off-settings="">
-              Open Settings
+              打开设置
             </button>
           </div>
         </div>
@@ -413,12 +413,12 @@ function PullsFoot({ model, loading, error, onRefresh }: { model: InboxPullsAnsw
   const words = error
     ? error
     : !model
-      ? 'From gh and glab on this computer'
+      ? '来自此电脑上的 gh 和 glab'
       : answered.length > 0
-        ? `From ${answered.join(' and ')} on this computer${when ? ` · ${when}` : ''}`
+        ? `来自此电脑上的 ${answered.join(' 和 ')}${when ? ` · ${when}` : ''}`
         : model.hosts.length > 0
-          ? 'Nothing read this time'
-          : 'Nothing read on this computer';
+          ? '这次没有读取到内容'
+          : '此电脑上没有读取到内容';
   return (
     <div className="ib-pr-foot" data-pulls-foot="">
       {/* As the list's ↻ (the owner, on #2911): "Refresh" with Shift+R's two keycaps, which Shift+R runs here. */}
@@ -427,7 +427,7 @@ function PullsFoot({ model, loading, error, onRefresh }: { model: InboxPullsAnsw
           type="button"
           className="ib-iconbtn ib-pr-refresh"
           onClick={onRefresh}
-          aria-label="Read the pull requests again"
+          aria-label="重新读取 PR"
           aria-keyshortcuts={refreshKeys}
           data-refreshing={loading ? '' : undefined}
           data-pulls-refresh=""
@@ -492,25 +492,25 @@ function StackView(props: PullsPageProps & { item: InboxPullItem; model: InboxPu
       data-pulls-primary={link && !mentioned ? 'again' : 'review'}
     >
       <Icon name="plus" size={15} />
-      {link && !mentioned ? 'Start a new review thread' : 'Review with an agent'}
+      {link && !mentioned ? '开始新的审查话题' : '让智能体审查'}
     </button>
   ) : link && !ended ? (
     <button type="button" className="ib-btn ib-pri" onClick={() => props.onOpenThread(link.thread_id)} data-pulls-primary="open">
       <Icon name="questionBubble" size={15} />
-      Open review thread
+      打开审查话题
     </button>
   ) : null;
   // The person's own review, in every state: straight into phase 1's review mode (layer by layer for a stack), no stop on the way.
   // A stack's whole diff is the review's own "This layer | Whole stack" switch, not a second button here.
   const openThread = mentioned ? (
     <button type="button" className="ib-btn" onClick={() => props.onOpenThread(link!.thread_id)} data-pulls-open-thread="">
-      Open thread
+      打开话题
     </button>
   ) : null;
   const openDiff = start ? (
     <button type="button" className="ib-btn" onClick={() => props.onReview(stack.id, start.key, 'layer')} data-pulls-open-diff="">
       <Icon name="code" size={15} />
-      Open the diff
+      打开差异
     </button>
   ) : null;
   const projects = stackProjects(model, stack);
@@ -531,7 +531,7 @@ function StackView(props: PullsPageProps & { item: InboxPullItem; model: InboxPu
         {judged && (
           <p className="ib-pr-riskline" data-pulls-risk-line={judged.level}>
             <span className="ib-risk" data-risk={judged.level}>
-              {riskLevelWord[judged.level]} risk
+              {riskLevelWord[judged.level]}风险
             </span>{' '}
             <span dir="auto">{judged.why}</span>
             {/* A high judgment's places (context notes): the diff opens at the first one. */}
@@ -545,7 +545,7 @@ function StackView(props: PullsPageProps & { item: InboxPullItem; model: InboxPu
                   props.onReview(stack.id, judged.key, 'layer');
                 }}
               >
-                See the {placesWord(riskPlaceCount(judged))}
+                查看{placesWord(riskPlaceCount(judged))}
               </button>
             )}
           </p>
@@ -624,12 +624,12 @@ function StackView(props: PullsPageProps & { item: InboxPullItem; model: InboxPu
         <PullPaneBack phone={phone} stacked={!phone && !!props.stacked} onClose={props.onClose} />
         <a className="ib-pr-ext" href={(many ? top : (start ?? top)).url} target="_blank" rel="noreferrer noopener" data-pulls-open-forge="">
           <Icon name="external" size={15} />
-          {phone ? <span className="ib-sr">Open on {forge}</span> : `Open on ${forge}`}
+          {phone ? <span className="ib-sr">在 {forge} 中打开</span> : `在 ${forge} 中打开`}
         </a>
         <span className="ib-sp" />
         {!phone && !props.stacked && (
-          <Tip content="Close">
-            <button type="button" className="ib-iconbtn" onClick={props.onClose} aria-label="Close the stack">
+          <Tip content="关闭">
+            <button type="button" className="ib-iconbtn" onClick={props.onClose} aria-label="关闭堆叠">
               <Icon name="x" />
             </button>
           </Tip>
@@ -641,17 +641,17 @@ function StackView(props: PullsPageProps & { item: InboxPullItem; model: InboxPu
         </h2>
         <div className="ib-pr-meta">
           <span dir="auto">{stack.host === 'github.com' ? stack.repo : `${stack.host}/${stack.repo}`}</span>
-          {stack.layers.length > 1 && <span>{plural(stack.layers.length, pullNounWord(stack.platform))}</span>}
+          {stack.layers.length > 1 && <span>{stack.layers.length} 个{pullNounWord(stack.platform)}</span>}
           {phone && next && (
             <span data-pulls-lands-next-head="">
-              Lands next: <span className="ib-pr-num">{inboxPullLabel(next)}</span>
+              接下来落地：<span className="ib-pr-num">{inboxPullLabel(next)}</span>
             </span>
           )}
           {card && props.onOpenCard && (
-            <Tip content="Open its card on the Board">
+            <Tip content="在看板中打开它的卡片">
               <button type="button" className="ib-pr-chip" onClick={() => props.onOpenCard!(card.id)} data-pulls-card={card.id}>
                 <Icon name="board" size={13} />
-                <span className="ib-pr-chip-k">Board</span>
+                <span className="ib-pr-chip-k">看板</span>
                 <span dir="auto">{card.title}</span>
               </button>
             </Tip>
@@ -674,7 +674,7 @@ function StackView(props: PullsPageProps & { item: InboxPullItem; model: InboxPu
             {[...stack.layers].reverse().map((layer) => (
               <Layer key={layer.key} layer={layer} stack={stack} next={next?.key === layer.key} now={now} layerRisk={stack.layers.length > 1 ? judgments[layer.key] : undefined} layerFailed={stack.layers.length > 1 ? riskFailed[layer.key] : undefined} onReview={() => props.onReview(stack.id, layer.key, 'layer')} />
             ))}
-            <li className="ib-pr-base" aria-label={`Base branch ${stack.base}`}>
+            <li className="ib-pr-base" aria-label={`基础分支 ${stack.base}`}>
               <span className="ib-pr-dot" aria-hidden="true" />
               <code>{stack.base}</code>
             </li>
@@ -692,25 +692,25 @@ function StackView(props: PullsPageProps & { item: InboxPullItem; model: InboxPu
  * ended. No box. Focus lands here when a thread has just started.
  */
 const ThreadLine = forwardRef<HTMLDivElement, { link: InboxPullLink; ended: boolean; mentioned?: boolean; now: number }>(function ThreadLine({ link, ended, mentioned, now }, ref) {
-  const name = linkAgentName(link) ?? 'Agent';
+  const name = linkAgentName(link) ?? '智能体';
   // The ask (the person started it), until the agent's guided review arrives in the thread.
   // A thread started from the PR's page (`thread`) asked for nothing: the launchpad's own rule (`onItsWay`).
-  const asked = link.via === 'owner' && (link.ask === 'guide' || link.ask === 'custom') && !link.guide?.review ? (link.ask === 'custom' ? 'Custom curation on the way' : 'Guided review on the way') : null;
+  const asked = link.via === 'owner' && (link.ask === 'guide' || link.ask === 'custom') && !link.guide?.review ? (link.ask === 'custom' ? '定制引导正在路上' : '引导式审查正在路上') : null;
   return (
     <div ref={ref} tabIndex={-1} className="ib-pr-thread" data-pulls-thread-line={ended ? 'ended' : asked ? 'asked' : 'live'} data-pulls-thread={link.thread_id}>
       <div className="ib-pr-thread-h">
         <RowAgentTiles participants={undefined} agent={{ kind: 'agent', host: link.agent?.host ?? null }} tip={false} />
         {ended ? (
           <span>
-            <b>{name}</b> ended
+            <b>{name}</b> 已结束
           </span>
         ) : (
           <>
             <span>
-              {mentioned ? 'Thread' : 'Review thread'} with <b>{name}</b>
+              {mentioned ? '话题' : '审查话题'}，伙伴 <b>{name}</b>
             </span>
             <span className="ib-mut" data-pulls-ask={asked ? link.ask : undefined}>
-              {asked ?? (link.last ? relativeTime(link.last.at, now) : 'No answer yet')}
+              {asked ?? (link.last ? relativeTime(link.last.at, now) : '还没有回答')}
             </span>
           </>
         )}
@@ -748,7 +748,7 @@ function Layer({ layer, stack, next, now, layerRisk, layerFailed, onReview }: { 
           </span>
           {next && (
             <span className="ib-pr-pill" data-tone="next" data-pulls-lands-next="">
-              Lands next
+              接下来落地
             </span>
           )}
           {layerRisk && <RiskMark judgment={layerRisk} />}
@@ -757,8 +757,8 @@ function Layer({ layer, stack, next, now, layerRisk, layerFailed, onReview }: { 
         <span className="ib-pr-l2">
           {merged ? (
             <span>
-              Merged {layer.merged_at ? relativeWords(layer.merged_at, now) : ''}
-              {layer.mine ? ' by you' : ''}
+              已合并 {layer.merged_at ? relativeWords(layer.merged_at, now) : ''}
+              {layer.mine ? '（由你操作）' : ''}
             </span>
           ) : (
             <>
@@ -783,10 +783,10 @@ function Layer({ layer, stack, next, now, layerRisk, layerFailed, onReview }: { 
       {merged || layer.state === 'closed' ? (
         <div className="ib-pr-lrow">{body}</div>
       ) : (
-        <button type="button" className="ib-pr-lrow" onClick={onReview} aria-label={`Open diff ${inboxPullLabel(layer)} ${layer.title}${next ? ', lands next' : ''}`}>
+        <button type="button" className="ib-pr-lrow" onClick={onReview} aria-label={`打开差异 ${inboxPullLabel(layer)} ${layer.title}${next ? '，接下来落地' : ''}`}>
           {body}
           <span className="ib-pr-lgo" aria-hidden="true">
-            Open diff
+            打开差异
             <Icon name="chevR" size={13} />
           </span>
         </button>
@@ -821,7 +821,7 @@ function StackReply({ link, agent, onOpenThread }: { link: InboxPullLink; agent:
       setOpen(false);
       setSent(true);
     } catch (cause) {
-      setError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : 'Your reply was not sent.');
+      setError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : '你的回复未发送。');
     } finally {
       setSending(false);
     }
@@ -835,8 +835,8 @@ function StackReply({ link, agent, onOpenThread }: { link: InboxPullLink; agent:
             className="ib-pr-replyin"
             rows={3}
             value={words}
-            placeholder={`Reply to ${agent}`}
-            aria-label={`Reply to ${agent}`}
+            placeholder={`回复 ${agent}`}
+            aria-label={`回复 ${agent}`}
             onChange={(event) => setWords(event.target.value)}
             onKeyDown={(event) => {
               // The registry's Send (`inboxThreadShortcuts.send`, Mod+Enter), as the thread's reply box and compose match it.
@@ -856,13 +856,13 @@ function StackReply({ link, agent, onOpenThread }: { link: InboxPullLink; agent:
             </div>
           )}
           <div className="ib-pr-replyacts">
-            <span className="ib-mut">Goes to {agent}’s thread</span>
+            <span className="ib-mut">发送到 {agent} 的话题</span>
             <span className="ib-sp" />
             <button type="button" className="ib-btn" onClick={() => setOpen(false)} disabled={sending}>
-              Cancel
+              取消
             </button>
             <button type="button" className="ib-btn ib-pri" onClick={() => void send()} disabled={sending || !words.trim()} aria-keyshortcuts={sendKeys} data-pulls-reply-send="">
-              {sending ? 'Sending…' : 'Send'}
+              {sending ? '发送中…' : '发送'}
             </button>
           </div>
         </div>
@@ -878,13 +878,13 @@ function StackReply({ link, agent, onOpenThread }: { link: InboxPullLink; agent:
             data-pulls-reply-open=""
           >
             <Icon name="reply" size={15} />
-            <b>Reply</b> <span className="ib-mut">to {agent}</span>
+            <b>回复</b> <span className="ib-mut">{agent}</span>
           </button>
           {sent && (
             <span className="ib-pr-sent" role="status">
-              Sent.{' '}
+              已发送。{' '}
               <button type="button" className="ib-pr-linkbtn" onClick={onOpenThread}>
-                Open the thread
+                打开话题
               </button>
             </span>
           )}

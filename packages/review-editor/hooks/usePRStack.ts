@@ -41,11 +41,11 @@ export function usePRStack(callbacksRef: RefObject<PRStackCallbacks | null>) {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? 'Failed to switch PR diff scope');
+        throw new Error(data.error ?? '切换 PR 差异范围失败');
       }
       cb.applyPRResponse(data);
     } catch (err) {
-      cb.onError(err instanceof Error ? err.message : 'Failed to switch PR diff scope');
+      cb.onError(err instanceof Error ? err.message : '切换 PR 差异范围失败');
     } finally {
       setIsSwitchingPRScope(false);
     }
@@ -68,11 +68,11 @@ export function usePRStack(callbacksRef: RefObject<PRStackCallbacks | null>) {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? 'Failed to load the full diff');
+        throw new Error(data.error ?? '加载完整差异失败');
       }
       cb.applyPRResponse(data);
     } catch (err) {
-      cb.onError(err instanceof Error ? err.message : 'Failed to load the full diff');
+      cb.onError(err instanceof Error ? err.message : '加载完整差异失败');
     } finally {
       setIsLoadingFullDiff(false);
     }
@@ -91,11 +91,11 @@ export function usePRStack(callbacksRef: RefObject<PRStackCallbacks | null>) {
       });
       const data = await res.json();
       if (!res.ok) {
-        throw new Error(data.error ?? 'Failed to switch PR');
+        throw new Error(data.error ?? '切换 PR 失败');
       }
       cb.applyPRResponse(data);
     } catch (err) {
-      cb.onError(err instanceof Error ? err.message : 'Failed to switch PR');
+      cb.onError(err instanceof Error ? err.message : '切换 PR 失败');
     } finally {
       setIsSwitchingPRScope(false);
     }

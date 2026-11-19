@@ -53,7 +53,7 @@ export function PRMediaScope({ children }: { children: React.ReactNode }): React
         img.setAttribute('role', 'button');
         img.setAttribute('tabindex', '0');
         img.setAttribute('aria-label', label);
-        img.setAttribute('title', artifact ? 'Open in Artifacts' : 'View larger');
+        img.setAttribute('title', artifact ? '在附件中打开' : '查看大图');
         img.classList.add('cursor-zoom-in');
       }
       for (const link of root.querySelectorAll<HTMLAnchorElement>('a[href]')) {
@@ -66,7 +66,7 @@ export function PRMediaScope({ children }: { children: React.ReactNode }): React
         }
         link.setAttribute(MEDIA_ATTR, 'artifact');
         link.setAttribute(ARTIFACT_ID_ATTR, artifact.id);
-        link.setAttribute('title', 'Open in Artifacts');
+        link.setAttribute('title', '在附件中打开');
       }
     };
     decorate();

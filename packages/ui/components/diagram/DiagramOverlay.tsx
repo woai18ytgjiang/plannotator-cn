@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { diagramTargetName } from '@plannotator/core/diagram-anchor';
 import { cn } from '../../lib/utils';
@@ -174,7 +175,7 @@ export function DiagramOverlay({
               entry.id === selectedCommentId && 'ring-2 ring-primary/40',
             )}
             style={{ left: entry.whole ? entry.rect.left : entry.rect.left + entry.rect.width, top: entry.rect.top }}
-            aria-label={`Comment ${entry.number}: ${entry.label}`}
+            aria-label={`评论 ${entry.number}：${entry.label}`}
             title={entry.label}
             onClick={(event) => {
               event.stopPropagation();

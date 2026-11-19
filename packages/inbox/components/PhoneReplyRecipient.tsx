@@ -73,20 +73,20 @@ export function PhoneReplyRecipient({
     open,
     keepFocus: true,
     onClick: () => onOpen(!open),
-    ariaLabel: `${noun === 'reply' ? 'Reply' : 'Message'} goes to ${spoken || 'nobody yet'}${ended ? ', ended' : ''}. Change`,
+    ariaLabel: `${noun === 'reply' ? '回复' : '消息'}发送给 ${spoken || '尚无人选'}${ended ? '（已结束）' : ''}。更改`,
     attrs: { 'data-recipient': '', 'data-recipient-chosen': chosenIds.join(' ') },
   };
   return (
     <>
       {!first ? (
-        <AgentPill {...control} label="Choose an agent" ask />
+        <AgentPill {...control} label="选择智能体" ask />
       ) : chosen.length === 1 ? (
-        <AgentPill {...control} host={first.host} agent={first.start ? null : first.session} start={!!first.start} label={null} detail={ended ? 'ended' : null} />
+        <AgentPill {...control} host={first.host} agent={first.start ? null : first.session} start={!!first.start} label={null} detail={ended ? '已结束' : null} />
       ) : (
         <AgentMark {...control} host={first.host} agent={first.session} count={chosen.length} />
       )}
-      <BottomSheet open={open} onClose={() => onOpen(false)} title={`Who gets this ${noun}`} host={section} attrs={{ 'data-recipient-list': '' }}>
-        <div className="ib-sheet-list" role="listbox" aria-label={`Who gets this ${noun}`} aria-multiselectable={onToggle ? true : undefined}>
+      <BottomSheet open={open} onClose={() => onOpen(false)} title={`谁接收这条${noun === 'reply' ? '回复' : '消息'}`} host={section} attrs={{ 'data-recipient-list': '' }}>
+        <div className="ib-sheet-list" role="listbox" aria-label={`谁接收这条${noun === 'reply' ? '回复' : '消息'}`} aria-multiselectable={onToggle ? true : undefined}>
           {rows.map((row) => {
             const on = chosenIds.includes(row.session);
             if (row.start) {
@@ -104,8 +104,8 @@ export function PhoneReplyRecipient({
                     </>
                   }
                   title={row.label}
-                  detail={[`in ${row.start.project}`, row.start.asleep ? "starts when it's back" : null].filter(Boolean).join(' · ')}
-                  ariaLabel={`${row.label} in ${row.start.project}`}
+                  detail={[`位于 ${row.start.project}`, row.start.asleep ? '恢复后启动' : null].filter(Boolean).join(' · ')}
+                  ariaLabel={`${row.label} 位于 ${row.start.project}`}
                   selected={on}
                   attrs={{ 'data-recipient-row': row.session, 'data-recipient-start': row.host ?? '' }}
                   onClick={() => onOnly(row)}
@@ -140,7 +140,7 @@ export function PhoneReplyRecipient({
                     type="button"
                     role="checkbox"
                     aria-checked={on}
-                    aria-label={`Also send to ${named.name}`}
+                    aria-label={`同时发送给 ${named.name}`}
                     className="ib-sheet-tick"
                     data-recipient-tick={row.session}
                     disabled={!canAddRecipient(row, chosenIds, rows)}
@@ -159,7 +159,7 @@ export function PhoneReplyRecipient({
           {onTagAnother && (
             <>
               <SheetLine />
-              <SheetRow quiet lead={<AtSign />} title="Tag another agent" attrs={{ 'data-recipient-tag': '' }} onClick={onTagAnother} />
+              <SheetRow quiet lead={<AtSign />} title="标记另一个智能体" attrs={{ 'data-recipient-tag': '' }} onClick={onTagAnother} />
             </>
           )}
         </div>

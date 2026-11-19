@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { CircleCheck, CircleSlash, CircleX, Loader2, PanelRight, RotateCcw, X } from 'lucide-react';
 import type { AgentJobInfo } from '../../types';
@@ -8,9 +9,9 @@ import { findingCountsLine, type FindingLike } from './jobFindings';
 
 export function formatDuration(ms: number): string {
   const seconds = Math.max(0, Math.floor(ms / 1000));
-  if (seconds < 60) return `${seconds}s`;
+  if (seconds < 60) return `${seconds} 秒`;
   const minutes = Math.floor(seconds / 60);
-  return `${minutes}m ${seconds % 60}s`;
+  return `${minutes} 分 ${seconds % 60} 秒`;
 }
 
 export function ElapsedTime({ startedAt }: { startedAt: number }) {
@@ -23,11 +24,11 @@ export function ElapsedTime({ startedAt }: { startedAt: number }) {
 }
 
 const STATUS_WORD: Record<AgentJobInfo['status'], string> = {
-  starting: 'Starting',
-  running: 'Running',
-  done: 'Done',
-  failed: 'Failed',
-  killed: 'Cancelled',
+  starting: '启动中',
+  running: '运行中',
+  done: '完成',
+  failed: '失败',
+  killed: '已取消',
 };
 
 function StatusIcon({ status }: { status: AgentJobInfo['status'] }) {
@@ -75,17 +76,19 @@ export function JobRow({
   const terminal = isTerminalStatus(job.status);
   const isGuide = job.provider === 'guide';
   const engine = GUIDE_ENGINE_LABEL[(isGuide ? job.engine : job.provider) as keyof typeof GUIDE_ENGINE_LABEL] ?? job.engine ?? job.provider;
-  const runTitle = job.launchLabel ?? (isGuide ? 'Guided Review' : job.reviewProfileLabel && job.reviewProfileLabel !== 'Default' ? `${job.label}: ${job.reviewProfileLabel}` : job.label);
+  const runTitle = job.launchLabel ?? (isGuide ? '引导式审查' : job.reviewProfileLabel && job.reviewProfileLabel !== 'Default' ? `${job.label}: ${job.reviewProfileLabel}` : job.label);
   const detail = !terminal
     ? STATUS_WORD[job.status]
     : job.status === 'failed'
-      ? `Failed${job.error ? `: ${job.error.split('\n')[0]}` : ''}`
+      ? `失败${job.error ? `：${job.error.split('\n')[0]}` : ''}`
       : job.status === 'killed'
-        ? 'Cancelled'
+        ? '已取消'
         : isGuide
-          ? 'Ready to read'
+          ? '可阅读'
           : findingCountsLine(findings);
-  const colon = detail.indexOf(':');
+  // The failed detail reads "失败：<first line>"; the '：' split keeps the word
+  // and the line separately styled (the line truncates, the word never does).
+  const colon = detail.indexOf('：');
   const statusWord = job.status === 'failed' && colon > 0 ? detail.slice(0, colon + 1) : detail;
   const statusRest = statusWord === detail ? '' : detail.slice(colon + 1);
   return (
@@ -101,7 +104,7 @@ export function JobRow({
         }
       }}
       data-agent-job-row={job.status}
-      title={`${runTitle} · started ${new Date(job.startedAt).toLocaleString()}`}
+      title={`${runTitle} · 开始于 ${new Date(job.startedAt).toLocaleString()}`}
       className="group -mx-1 flex items-start gap-2 rounded-md px-1 py-1.5 hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
     >
       <span className="pt-0.5"><StatusIcon status={job.status} /></span>
@@ -133,18 +136,18 @@ export function JobRow({
       </span>
       <span className="flex shrink-0 items-center opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100">
         {onDetails && (
-          <IconButton label="Details and logs" onClick={onDetails}>
+          <IconButton label="详情与日志" onClick={onDetails}>
             <PanelRight size={13} />
           </IconButton>
         )}
         {terminal
           ? onRerun && (
-              <IconButton label="Run again" onClick={onRerun}>
+              <IconButton label="重新运行" onClick={onRerun}>
                 <RotateCcw size={13} />
               </IconButton>
             )
           : (
-              <IconButton label="Cancel" onClick={onCancel}>
+              <IconButton label="取消" onClick={onCancel}>
                 <X size={13} />
               </IconButton>
             )}
@@ -157,7 +160,7 @@ export function rerunParams(job: AgentJobInfo): Record<string, unknown> {
   const isGuide = job.provider === 'guide';
   return {
     provider: job.provider,
-    label: isGuide ? 'Guided Review' : job.label,
+    label: isGuide ? '引导式审查' : job.label,
     ...(isGuide && job.engine ? { engine: job.engine } : {}),
     ...(job.model ? { model: job.model } : {}),
     ...(job.effort ? { effort: job.effort } : {}),

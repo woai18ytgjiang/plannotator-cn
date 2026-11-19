@@ -48,7 +48,7 @@ export const AIConfigBar: React.FC<AIConfigBarProps> = ({
     return (
       <>
       <div className="border-t border-border/50 px-2 py-1.5 text-xs text-muted-foreground/50">
-        No AI providers available
+        没有可用的 AI 服务商
       </div>
       <AskSessionSetupHint text={setupHint} />
       </>
@@ -102,7 +102,7 @@ export const AIConfigBar: React.FC<AIConfigBarProps> = ({
     <>
     <div className="relative border-t border-border/50 px-2 py-1.5 flex items-center gap-1.5 text-xs text-muted-foreground" data-ai-config-bar="">
       {providers.length > 1 ? (
-        <OptionPicker trigger="text" side="top" value={effectiveProviderId} options={providerOptions} onChange={handleProviderSelect} title="AI provider" />
+        <OptionPicker trigger="text" side="top" value={effectiveProviderId} options={providerOptions} onChange={handleProviderSelect} title="AI 服务商" />
       ) : (
         <span className="flex items-center gap-1.5">
           <Icon className="w-3.5 h-3.5 flex-shrink-0" />
@@ -112,7 +112,7 @@ export const AIConfigBar: React.FC<AIConfigBarProps> = ({
       {models.length > 1 ? (
         <>
           <span className="text-border" aria-hidden="true">·</span>
-          <OptionPicker trigger="text" side="top" value={effectiveModel ?? ''} options={models.map((m) => ({ value: m.id, label: m.label }))} onChange={handleModelSelect} title="Model" />
+          <OptionPicker trigger="text" side="top" value={effectiveModel ?? ''} options={models.map((m) => ({ value: m.id, label: m.label }))} onChange={handleModelSelect} title="模型" />
         </>
       ) : currentModelLabel ? (
         <>
@@ -123,11 +123,11 @@ export const AIConfigBar: React.FC<AIConfigBarProps> = ({
       {reasoningEfforts.length > 0 && (
         <>
           <span className="text-border" aria-hidden="true">·</span>
-          <OptionPicker trigger="text" side="top" value={activeEffort} options={effortOptions} onChange={handleEffortSelect} title="Reasoning effort" />
+          <OptionPicker trigger="text" side="top" value={activeEffort} options={effortOptions} onChange={handleEffortSelect} title="推理强度" />
         </>
       )}
       <div className="flex-1" />
-      {showSessionNote && <span className="text-xs text-warning">New chat session</span>}
+      {showSessionNote && <span className="text-xs text-warning">新会话</span>}
     </div>
     <ModelSourceHint
       tool={modelSourceToolForProvider(currentProvider.name)}

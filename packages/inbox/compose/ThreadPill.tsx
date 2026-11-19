@@ -12,7 +12,7 @@ import type { PinnedState } from '../pins';
 export function ThreadPill(props: { name: string; author: InboxAuthor; agent: string; state: PinnedState | null }) {
   const { name, author, agent, state } = props;
   return (
-    <span className="ib-tpill" role="img" aria-label={`${name}, with ${agent}`} data-compose-thread-pill="" data-state={state?.kind}>
+    <span className="ib-tpill" role="img" aria-label={`${name}，与 ${agent}`} data-compose-thread-pill="" data-state={state?.kind}>
       <AuthorMark author={author} />
       <bdi className="ib-tpill-n">{name}</bdi>
       {state?.kind === 'stop' && (

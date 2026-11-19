@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useMemo, useState } from 'react';
 import {
   createColumnHelper,
@@ -141,7 +142,7 @@ const TablePopoutImpl: React.FC<TablePopoutProps> = ({
     <PopoutDialog
       open={open}
       onClose={onClose}
-      title="Table"
+      title="表格"
       container={container}
       dataAttributes={{ 'data-block-id': block.id }}
     >
@@ -154,24 +155,24 @@ const TablePopoutImpl: React.FC<TablePopoutProps> = ({
             type="text"
             value={globalFilter}
             onChange={(e) => setGlobalFilter(e.target.value)}
-            placeholder="Filter rows…"
+            placeholder="筛选行…"
             className="w-full pl-8 pr-3 py-1.5 text-sm bg-muted/40 border border-border/60 rounded-md focus:outline-none focus:ring-1 focus:ring-primary/50 focus:border-primary/50"
           />
         </div>
         <span className="text-xs text-muted-foreground tabular-nums">
           {visibleRows.length === totalRows
-            ? `${totalRows} row${totalRows === 1 ? '' : 's'}`
-            : `${visibleRows.length} of ${totalRows}`}
+            ? `${totalRows} 行`
+            : `${visibleRows.length} / ${totalRows}`}
         </span>
         <div className="ml-auto flex items-center gap-1">
           <button
             onClick={handleCopyMarkdown}
             title={
               copiedMd
-                ? 'Copied!'
+                ? '已复制'
                 : visibleRows.length === totalRows
-                  ? 'Copy as markdown'
-                  : `Copy ${visibleRows.length} row${visibleRows.length === 1 ? '' : 's'} as markdown`
+                  ? '复制为 Markdown'
+                  : `以 Markdown 复制 ${visibleRows.length} 行`
             }
             className={`p-1.5 rounded-md transition-colors ${
               copiedMd ? 'text-success' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
@@ -191,10 +192,10 @@ const TablePopoutImpl: React.FC<TablePopoutProps> = ({
             onClick={handleCopyCsv}
             title={
               copiedCsv
-                ? 'Copied as CSV!'
+                ? '已复制为 CSV'
                 : visibleRows.length === totalRows
-                  ? 'Copy as CSV'
-                  : `Copy ${visibleRows.length} row${visibleRows.length === 1 ? '' : 's'} as CSV`
+                  ? '复制为 CSV'
+                  : `以 CSV 复制 ${visibleRows.length} 行`
             }
             className={`px-2 py-1 rounded-md text-[10px] font-bold tracking-tight uppercase leading-none transition-colors ${
               copiedCsv ? 'text-success' : 'text-primary hover:bg-primary/10'
@@ -232,7 +233,7 @@ const TablePopoutImpl: React.FC<TablePopoutProps> = ({
             {visibleRows.length === 0 ? (
               <tr>
                 <td colSpan={columnIds.length} className="px-3 py-8 text-center text-sm text-muted-foreground">
-                  No rows match the filter.
+                  没有符合筛选条件的行。
                 </td>
               </tr>
             ) : (

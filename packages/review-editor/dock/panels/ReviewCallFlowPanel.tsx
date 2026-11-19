@@ -17,14 +17,14 @@ import { callTreeFromEntry } from '@plannotator/shared/call-tree';
 import { formatCallFlowInstallSize } from '../../utils/callFlowPresentation';
 
 function errorMessage(error: Exclude<import('@plannotator/shared/call-flow-types').CallFlowResponse, { status: 'ok' }> | Error): string {
-  return error.message || 'Call-flow analysis failed.';
+  return error.message || '调用流程分析失败。';
 }
 
 const INSTALL_STAGES: ReadonlyArray<{ id: CallFlowInstallStage; label: string }> = [
-  { id: 'downloading', label: 'Downloading pinned packages' },
-  { id: 'verifying', label: 'Verifying package integrity' },
-  { id: 'installing-deps', label: 'Installing pinned dependencies' },
-  { id: 'building', label: 'Preparing native runtime' },
+  { id: 'downloading', label: '正在下载固定版本的包' },
+  { id: 'verifying', label: '正在校验包的完整性' },
+  { id: 'installing-deps', label: '正在安装固定版本的依赖' },
+  { id: 'building', label: '正在准备原生运行时' },
 ];
 
 function isNodeInstallError(reason: string | undefined): boolean {
@@ -69,19 +69,19 @@ function CallFlowLanguagesMenu({
         />
       }>
         <Settings2 aria-hidden="true" size={14} strokeWidth={1.75} />
-        <span>Languages</span>
+        <span>语言</span>
         <span className="call-flow-languages-trigger-count">{installed.length}/{languages.length}</span>
       </Popover.Trigger>
       <Popover.Portal>
         <Popover.Positioner align="end" side="bottom" sideOffset={6} className="z-[110]">
           <Popover.Popup
             className="call-flow-languages-popover shadow-lg popover-enter"
-            aria-label="Call Flow language support"
+            aria-label="调用流程语言支持"
           >
             <header className="call-flow-languages-popover-header">
               <div>
-                <strong>Language support</strong>
-                <span>Install parsers ahead of the next review.</span>
+                <strong>语言支持</strong>
+                <span>提前为下一次审查安装解析器。</span>
               </div>
               <span>{formatCallFlowInstallSize(installedSize)} installed</span>
             </header>
@@ -103,7 +103,7 @@ function CallFlowLanguagesMenu({
                           ? `Installed · ${formatCallFlowInstallSize(language.installSizeBytes)}`
                           : `${requirement} · ${formatCallFlowInstallSize(language.installSizeBytes)}`}
                       </small>
-                      {languageInstalling && <small className="call-flow-language-progress">Installing…</small>}
+                      {languageInstalling && <small className="call-flow-language-progress">正在安装…</small>}
                       {languageInstallError && (
                         <small className="call-flow-language-error">Install failed: {languageInstallError.error}</small>
                       )}
@@ -153,11 +153,11 @@ export function CallFlowInstallFunnel({
     return (
       <div className="call-flow-panel" aria-live="polite">
         <div className="call-flow-shell call-flow-install call-flow-empty" role="status">
-          <span className="call-flow-empty-kicker">Installing runtime</span>
+          <span className="call-flow-empty-kicker">正在安装运行时</span>
           <strong>
             {status.state === 'done'
-              ? 'Install complete. Starting call-flow analysis.'
-              : 'Setting up the call-flow runtime.'}
+              ? '安装完成，正在开始调用流程分析。'
+              : '正在设置调用流程运行时。'}
           </strong>
           {status.state === 'running' && status.currentLanguageId && (
             <p>{getCallFlowLanguage(status.currentLanguageId).label}</p>
@@ -189,12 +189,12 @@ export function CallFlowInstallFunnel({
     return (
       <div className="call-flow-panel">
         <div className="call-flow-shell call-flow-install call-flow-empty" role="alert">
-          <span className="call-flow-empty-kicker">Install failed</span>
+          <span className="call-flow-empty-kicker">安装失败</span>
           <strong>{status.error}</strong>
           <p>
             {isNodeInstallError(status.reason)
-              ? 'Install Node.js 22.18 or newer, make sure it is on PATH, then retry.'
-              : 'Nothing was changed. You can retry the install at any time.'}
+              ? '请安装 Node.js 22.18 或更高版本，确保它在 PATH 中，然后重试。'
+              : '未做任何更改。你可以随时重试安装。'}
           </p>
           <div className="call-flow-install-action">
             <button
@@ -202,7 +202,7 @@ export function CallFlowInstallFunnel({
               className="call-flow-install-cta"
               onClick={() => install.start(status.languageIds)}
             >
-              Retry install
+              重试安装
             </button>
           </div>
         </div>
@@ -212,11 +212,10 @@ export function CallFlowInstallFunnel({
   return (
     <div className="call-flow-panel">
       <div className="call-flow-shell call-flow-install call-flow-empty">
-        <span className="call-flow-empty-kicker">Preparing analysis</span>
-        <strong>Call flow is setting up in the background.</strong>
+        <span className="call-flow-empty-kicker">正在准备分析</span>
+        <strong>调用流程正在后台设置。</strong>
         <p>
-          You can keep reviewing while Plannotator prepares the local runtime and the
-          language support this review needs.
+          在 Plannotator 准备本地运行时和本次审查所需的语言支持时，你可以继续审查。
         </p>
         {advert.message && advert.reason !== 'runtime-unavailable' && (
           <p className="call-flow-install-detail">{advert.message}</p>
@@ -266,16 +265,16 @@ export function ReviewCallFlowPanel() {
     }
     const recovery = state.callFlowAdvert.state === 'unsupported'
       ? state.callFlowAdvert.reason === 'demo-mode'
-        ? 'Launch a review through Plannotator to analyze its Git snapshots.'
-        : 'Choose a supported local Git review view to run this analysis.'
-      : 'The ordinary code diff remains available.';
+        ? '通过 Plannotator 启动审查，即可分析其 Git 快照。'
+        : '选择受支持的本地 Git 审查视图来运行此分析。'
+      : '常规代码差异仍可使用。';
     return (
       <div className="call-flow-panel">
         <div className="call-flow-shell call-flow-empty" role="status">
           <span className="call-flow-empty-kicker">
-            {state.callFlowAdvert.state === 'unsupported' ? 'Not supported in this view' : 'Call flow unavailable'}
+            {state.callFlowAdvert.state === 'unsupported' ? '此视图不支持' : '调用流程不可用'}
           </span>
-          <strong>{state.callFlowAdvert.message ?? 'Call flow is not available.'}</strong>
+          <strong>{state.callFlowAdvert.message ?? '调用流程不可用。'}</strong>
           <p>{recovery}</p>
         </div>
       </div>
@@ -288,7 +287,7 @@ export function ReviewCallFlowPanel() {
           <div className="call-flow-loading">
             <span className="call-flow-spinner" aria-hidden="true" />
             <div>
-              <strong>Tracing changed calls…</strong>
+              <strong>正在追踪更改的调用…</strong>
               <span>Comparing complete Git snapshots in an isolated worker.</span>
             </div>
           </div>
@@ -300,11 +299,11 @@ export function ReviewCallFlowPanel() {
     return (
       <div className="call-flow-panel">
         <div className="call-flow-shell call-flow-empty" role="alert">
-          <span className="call-flow-empty-kicker">Call flow unavailable</span>
+          <span className="call-flow-empty-kicker">调用流程不可用</span>
           <strong>{errorMessage(analysis.error)}</strong>
-          <p>The code diff remains available and no repository files were changed. Wait a moment if the analysis timed out, then retry.</p>
+          <p>代码差异仍然可用，且未改动任何仓库文件。如果分析超时，请稍等片刻后重试。</p>
           <button type="button" className="call-flow-retry" onClick={state.retryCallFlowAnalysis}>
-            Retry analysis
+            重试分析
           </button>
         </div>
       </div>
@@ -327,7 +326,7 @@ export function ReviewCallFlowPanel() {
       <div className="call-flow-shell">
         <header className="call-flow-header">
           <div>
-            <h2>{data.summary.changedNodes === 0 ? 'No changed call paths' : 'Call paths'}</h2>
+            <h2>{data.summary.changedNodes === 0 ? '没有更改的调用路径' : '调用路径'}</h2>
             {/* The items are spaced by CSS gap; the hidden ", " keeps them apart when read aloud. */}
             <p className="call-flow-summary">
               {data.summary.added > 0 && (
@@ -354,10 +353,10 @@ export function ReviewCallFlowPanel() {
             </p>
           </div>
           <div className="call-flow-header-actions">
-            <div className="call-flow-view-switch" aria-label="Call flow view">
-              <button type="button" aria-pressed={view === 'tree'} onClick={() => setView('tree')}>Call tree</button>
-              <button type="button" aria-pressed={view === 'paths'} onClick={() => setView('paths')}>Paths</button>
-              <button type="button" aria-pressed={view === 'raw'} onClick={() => setView('raw')}>Raw</button>
+            <div className="call-flow-view-switch" aria-label="调用流程视图">
+              <button type="button" aria-pressed={view === 'tree'} onClick={() => setView('tree')}>调用树</button>
+              <button type="button" aria-pressed={view === 'paths'} onClick={() => setView('paths')}>路径</button>
+              <button type="button" aria-pressed={view === 'raw'} onClick={() => setView('raw')}>原始</button>
             </div>
             {state.callFlowAdvert.languages && (
               <CallFlowLanguagesMenu
@@ -372,7 +371,7 @@ export function ReviewCallFlowPanel() {
               align="end"
               wide
             >
-              <button type="button" className="call-flow-info" aria-label="Call flow analysis details">
+              <button type="button" className="call-flow-info" aria-label="调用流程分析详情">
                 <Info aria-hidden="true" size={15} strokeWidth={1.75} />
               </button>
             </Tooltip>
@@ -380,7 +379,7 @@ export function ReviewCallFlowPanel() {
         </header>
 
         {view === 'paths' && (
-          <div className="call-flow-legend" aria-label="Call-flow legend">
+          <div className="call-flow-legend" aria-label="调用流程图例">
             <span className="call-flow-legend-key">
               <span className="call-flow-marker call-flow-marker-same" aria-hidden="true" /> unchanged
             </span>
@@ -395,14 +394,14 @@ export function ReviewCallFlowPanel() {
               {data.skippedLanguages.map((language) => language.label).join(', ')} support not installed
               {' '}({formatCallFlowInstallSize(data.skippedLanguages.reduce((total, language) => total + language.installSizeBytes, 0))}).
               {skippedInstallRunning && (
-                <small className="call-flow-language-progress">Installing support in the background…</small>
+                <small className="call-flow-language-progress">正在后台安装支持…</small>
               )}
               {skippedInstallError && (
                 <small className="call-flow-language-error">Install failed: {skippedInstallError.error}</small>
               )}
               {!state.callFlowAdvert.installable && (
                 <small className="call-flow-language-progress">
-                  Add this language grammar to PLANNOTATOR_CALLDIFF_PATH to include these files.
+                  将此语言语法加入 PLANNOTATOR_CALLDIFF_PATH 即可包含这些文件。
                 </small>
               )}
             </span>
@@ -411,7 +410,7 @@ export function ReviewCallFlowPanel() {
                 type="button"
                 onClick={retrySkipped}
               >
-                Retry
+                重试
               </button>
             )}
           </div>
@@ -429,8 +428,8 @@ export function ReviewCallFlowPanel() {
                 <button
                   type="button"
                   className="call-flow-icon-button"
-                  aria-label="Close"
-                  title="Close"
+                  aria-label="关闭"
+                  title="关闭"
                   onClick={state.clearCallTreeRequest}
                 >
                   <X aria-hidden="true" size={14} />
@@ -445,8 +444,8 @@ export function ReviewCallFlowPanel() {
         ) : view === 'tree' ? (
           data.trees.length === 0 ? (
             <div className="call-flow-empty">
-              <span className="call-flow-empty-kicker">Snapshots match structurally</span>
-              <strong>{data.message ?? 'CallDiff found no changed call paths.'}</strong>
+              <span className="call-flow-empty-kicker">快照在结构上一致</span>
+              <strong>{data.message ?? 'CallDiff 没有找到更改的调用路径。'}</strong>
               <p>This is syntactic call analysis; the ordinary and semantic diffs may still contain changes.</p>
             </div>
           ) : (
@@ -466,8 +465,8 @@ export function ReviewCallFlowPanel() {
           />
         ) : data.trees.length === 0 ? (
           <div className="call-flow-empty">
-            <span className="call-flow-empty-kicker">Snapshots match structurally</span>
-            <strong>{data.message ?? 'CallDiff found no changed call paths.'}</strong>
+            <span className="call-flow-empty-kicker">快照在结构上一致</span>
+            <strong>{data.message ?? 'CallDiff 没有找到更改的调用路径。'}</strong>
             <p>This is syntactic call analysis; the ordinary and semantic diffs may still contain changes.</p>
           </div>
         ) : (

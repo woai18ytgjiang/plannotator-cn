@@ -348,7 +348,7 @@ export function ImageAttachmentView({
         <Tip content="Your marked-up copy rides this comment">
           <span className="ib-markup">
             <img src={getImageSrc(markup.path)} alt="Your marked-up copy" />
-            <button type="button" onClick={() => setMarkup(null)} aria-label="Remove the marked-up copy">
+            <button type="button" onClick={() => setMarkup(null)} aria-label="移除标注副本">
               <Icon name="x" size={10} />
             </button>
           </span>
@@ -359,7 +359,7 @@ export function ImageAttachmentView({
         className="ib-ta"
         rows={1}
         value={text}
-        placeholder={kept ? 'Note (optional)' : markup ? 'What should change?' : 'Comment on this image…'}
+        placeholder={kept ? '备注（可选）' : markup ? '需要更改什么？' : '对此图片添加评论…'}
         aria-label={kept ? `A note with your drawing on ${attachment.name}` : `Comment on ${attachment.name}`}
         onChange={(event) => setText(event.target.value)}
         onKeyDown={(event) => {
@@ -382,10 +382,10 @@ export function ImageAttachmentView({
         }}
       />
       <Tip content="Draw on the image (pen, arrow, circle)">
-        <button type="button" className="ib-btn ib-cbtn" onClick={() => setAnnotating(true)} disabled={failed} data-markup-open="" aria-label={markup || kept ? 'Redraw' : 'Mark up'}>
+        <button type="button" className="ib-btn ib-cbtn" onClick={() => setAnnotating(true)} disabled={failed} data-markup-open="" aria-label={markup || kept ? '重新绘制' : '标注'}>
           <Icon name="pen" size={15} />
           <span className="ib-cbtn-l" aria-hidden="true">
-            {markup || kept ? 'Redraw' : 'Mark up'}
+            {markup || kept ? '重新绘制' : '标注'}
           </span>
         </button>
       </Tip>
@@ -397,7 +397,7 @@ export function ImageAttachmentView({
         disabled={saving || (!text.trim() && !markup)}
         data-image-comment-save=""
       >
-        {kept ? 'Add note' : 'Comment'}
+        {kept ? '添加备注' : '评论'}
       </button>
     </div>
   );
@@ -462,11 +462,11 @@ export function ImageAttachmentView({
           {natural && <span className="ib-imgsize">{`${natural.width} × ${natural.height}`}</span>}
           {natural && scale !== null && (
             <span className="ib-imgsize ib-imgzoom" data-image-zoom="">
-              <span className="sr-only">Zoom </span>
+              <span className="sr-only">缩放 </span>
               {zoomPercent(scale)}
             </span>
           )}
-          <Tip content={mode === 'fit' ? 'Show the image at its own size' : 'Fit the image to the pane'}>
+          <Tip content={mode === 'fit' ? '按原始大小显示图片' : '让图片适应面板'}>
             <button
               type="button"
               className="ib-btn ib-ghost ib-sm"
@@ -476,7 +476,7 @@ export function ImageAttachmentView({
               data-image-fit=""
             >
               <Icon name={mode === 'fit' ? 'expand' : 'collapse'} size={13} />
-              {mode === 'fit' ? 'Actual size' : 'Fit'}
+              {mode === 'fit' ? '实际大小' : '适应'}
             </button>
           </Tip>
         </div>
@@ -539,7 +539,7 @@ export function ImageAttachmentView({
               const keptFile = await source.keepMarkup(blob);
               await addDrawing({ path: keptFile.path, name: `${stem(attachment.name)}, marked up` });
             } catch (cause) {
-              onError(cause instanceof InboxApiError ? cause.message : 'The drawing was not kept.');
+              onError(cause instanceof InboxApiError ? cause.message : '绘图未能保留。');
             }
           }}
         />

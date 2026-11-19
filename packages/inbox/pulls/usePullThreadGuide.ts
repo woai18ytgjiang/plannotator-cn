@@ -33,9 +33,9 @@ export function pullThreadGuideAsked(thread: InboxThread, stack: NonNullable<Rev
 }
 
 /** The request did not go. */
-export const PULL_GUIDE_NOT_SENT = 'The guided review request was not sent.';
+export const PULL_GUIDE_NOT_SENT = '引导式审查请求未发送。';
 /** It went, but the PR's link still says nothing asked. */
-export const PULL_GUIDE_UNTOLD = 'Asked for a guided review, but this pull request doesn’t say so yet. Press Guided review again.';
+export const PULL_GUIDE_UNTOLD = '已请求引导式审查，但这个 PR 还没有记录。请再按一次引导式审查。';
 
 /** Per thread: the request's key, and whether it went. */
 const requests = new Map<string, { key: string; sent: boolean }>();
@@ -72,7 +72,7 @@ export function usePullThreadGuide(
         request.sent = true;
       }
     } catch (cause) {
-      setError(`${PULL_GUIDE_NOT_SENT} ${cause instanceof Error && cause.message ? cause.message : 'Try again.'}`);
+      setError(`${PULL_GUIDE_NOT_SENT} ${cause instanceof Error && cause.message ? cause.message : '请重试。'}`);
       busy.current = false;
       return;
     }

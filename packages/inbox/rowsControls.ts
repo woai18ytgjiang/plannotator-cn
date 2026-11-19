@@ -45,58 +45,58 @@ const showSwitch = (id: RowsControlId, key: ListLookKey, label: string, desc?: s
 export const ROWS_MAIN_CONTROLS: readonly RowsControl[] = [
   seg({
     id: 'spacing',
-    label: 'Spacing',
+    label: '间距',
     keys: ['compact', 'roomy'],
-    desc: (look) => (look.compact ? 'Project and name share the first line' : undefined),
+    desc: (look) => (look.compact ? '项目和名称共用第一行' : undefined),
     choices: [
-      { id: 'compact', label: 'Compact' },
-      { id: 'comfortable', label: 'Comfortable' },
-      { id: 'roomy', label: 'Roomy' },
+      { id: 'compact', label: '紧凑' },
+      { id: 'comfortable', label: '舒适' },
+      { id: 'roomy', label: '宽松' },
     ],
     get: (look) => (look.compact ? 'compact' : look.roomy ? 'roomy' : 'comfortable'),
     set: (value) => ({ compact: value === 'compact', roomy: value === 'roomy' }),
   }),
   seg({
     id: 'preview',
-    label: 'Grey line under the name',
+    label: '名称下方的灰色行',
     keys: ['hidePreview', 'previewTwo'],
     choices: [
-      { id: 'none', label: 'None' },
-      { id: 'one', label: '1 line' },
-      { id: 'two', label: '2 lines' },
+      { id: 'none', label: '无' },
+      { id: 'one', label: '1 行' },
+      { id: 'two', label: '2 行' },
     ],
     get: (look) => (look.hidePreview ? 'none' : look.previewTwo ? 'two' : 'one'),
     set: (value) => ({ hidePreview: value === 'none', previewTwo: value === 'two' }),
   }),
   seg({
     id: 'first',
-    label: 'First on the row',
+    label: '行首内容',
     keys: ['titleFirst'],
     choices: [
-      { id: 'project', label: 'Project' },
-      { id: 'name', label: 'Thread name' },
+      { id: 'project', label: '项目' },
+      { id: 'name', label: '话题名称' },
     ],
     get: (look) => (look.titleFirst ? 'name' : 'project'),
     set: (value) => ({ titleFirst: value === 'name' }),
   }),
   seg({
     id: 'time',
-    label: 'Time',
+    label: '时间',
     keys: ['relativeTime'],
     choices: [
-      { id: 'clock', label: '9:12 PM' },
-      { id: 'relative', label: '10m ago' },
+      { id: 'clock', label: '9:12' },
+      { id: 'relative', label: '10 分钟前' },
     ],
     get: (look) => (look.relativeTime ? 'relative' : 'clock'),
     set: (value) => ({ relativeTime: value === 'relative' }),
   }),
   seg({
     id: 'needs',
-    label: 'When a thread needs you',
+    label: '话题需要你处理时',
     keys: ['statusMark'],
     choices: [
-      { id: 'count', label: 'Question count' },
-      { id: 'mark', label: 'One mark' },
+      { id: 'count', label: '问题数量' },
+      { id: 'mark', label: '一个标记' },
     ],
     get: (look) => (look.statusMark ? 'mark' : 'count'),
     set: (value) => ({ statusMark: value === 'mark' }),
@@ -105,59 +105,59 @@ export const ROWS_MAIN_CONTROLS: readonly RowsControl[] = [
   // "From the project name" also changes the Agents list and threads; a face picked for one agent stays.
   seg({
     id: 'agents',
-    label: 'Agent icons',
+    label: '智能体图标',
     keys: ['hideAgents', 'agentProjectIcons'],
-    desc: (look) => (look.agentProjectIcons && !look.hideAgents ? 'Also the Agents list and threads. A face picked for one agent stays.' : undefined),
+    desc: (look) => (look.agentProjectIcons && !look.hideAgents ? '也会影响智能体列表和话题。为某个智能体单独选定的图标保持不变。' : undefined),
     choices: [
-      { id: 'own', label: "Each agent's own" },
-      { id: 'project', label: 'From the project name' },
-      { id: 'hidden', label: 'Hidden' },
+      { id: 'own', label: '各智能体自己的' },
+      { id: 'project', label: '取自项目名称' },
+      { id: 'hidden', label: '隐藏' },
     ],
     get: (look) => (look.hideAgents ? 'hidden' : look.agentProjectIcons ? 'project' : 'own'),
     set: (value) => ({ hideAgents: value === 'hidden', agentProjectIcons: value === 'project' }),
   }),
-  showSwitch('project', 'hideProject', 'Project name'),
-  showSwitch('pulls', 'hidePulls', 'Pull requests', 'Their state at the end of the row'),
+  showSwitch('project', 'hideProject', '项目名称'),
+  showSwitch('pulls', 'hidePulls', 'PR', '行末显示其状态'),
 ];
 
 /** Under "More choices": nine choices over the other twelve options. */
 export const ROWS_MORE_CONTROLS: readonly RowsControl[] = [
   seg({
     id: 'newer',
-    label: 'New threads',
+    label: '新话题',
     keys: ['smallNames', 'unreadDot'],
     choices: [
-      { id: 'larger', label: 'Bigger name' },
-      { id: 'bold', label: 'Bold name' },
-      { id: 'dot', label: 'Dot' },
+      { id: 'larger', label: '更大的名称' },
+      { id: 'bold', label: '加粗名称' },
+      { id: 'dot', label: '圆点' },
     ],
     get: (look) => (look.unreadDot ? 'dot' : look.smallNames ? 'bold' : 'larger'),
     set: (value) => ({ smallNames: value !== 'larger', unreadDot: value === 'dot' }),
   }),
-  onSwitch('boldAll', 'boldNames', 'Every thread name in bold', 'Read ones too'),
-  onSwitch('pill', 'highlight', 'Thread name in a grey pill'),
-  onSwitch('dividers', 'dividers', 'Lines between rows'),
+  onSwitch('boldAll', 'boldNames', '所有话题名称加粗', '已读的也加粗'),
+  onSwitch('pill', 'highlight', '话题名称放在灰色胶囊中'),
+  onSwitch('dividers', 'dividers', '行间分隔线'),
   seg({
     id: 'timeAt',
-    label: 'Where the time sits',
+    label: '时间位置',
     keys: ['timeBelow'],
-    desc: (look) => (look.compact ? 'Only on rows that are not Compact' : undefined),
+    desc: (look) => (look.compact ? '仅对非紧凑行生效' : undefined),
     choices: [
-      { id: 'top', label: 'Top right' },
-      { id: 'below', label: 'Under the row' },
+      { id: 'top', label: '右上角' },
+      { id: 'below', label: '行下方' },
     ],
     get: (look) => (look.timeBelow ? 'below' : 'top'),
     set: (value) => ({ timeBelow: value === 'below' }),
   }),
   seg({
     id: 'badges',
-    label: 'Letter badges',
+    label: '字母徽标',
     keys: ['marksThreads', 'marksProjects'],
     choices: [
-      { id: 'off', label: 'Off' },
-      { id: 'threads', label: 'Threads' },
-      { id: 'projects', label: 'Projects' },
-      { id: 'both', label: 'Both' },
+      { id: 'off', label: '关' },
+      { id: 'threads', label: '话题' },
+      { id: 'projects', label: '项目' },
+      { id: 'both', label: '两者' },
     ],
     get: (look) => lookMarks(look).what,
     set: (value) => marksWhatLook(value as MarksWhat),
@@ -165,19 +165,19 @@ export const ROWS_MORE_CONTROLS: readonly RowsControl[] = [
   // Nothing is picked while badges are off (core drops the shape then); picking one turns thread badges on.
   seg({
     id: 'shape',
-    label: 'Badge shape',
+    label: '徽标形状',
     keys: ['markInline', 'markDot'],
-    desc: (look) => (lookMarks(look).what === 'off' ? 'Picking one turns thread badges on' : undefined),
+    desc: (look) => (lookMarks(look).what === 'off' ? '选择一个会开启话题徽标' : undefined),
     choices: [
-      { id: 'avatar', label: 'Big, at the left' },
-      { id: 'inline', label: 'Small, in the line' },
-      { id: 'dot', label: 'A dot' },
+      { id: 'avatar', label: '大徽标，位于左侧' },
+      { id: 'inline', label: '小徽标，位于行内' },
+      { id: 'dot', label: '圆点' },
     ],
     get: (look) => (lookMarks(look).what === 'off' ? null : lookMarks(look).style),
     set: (value, look) => markStyleLook(value as MarkStyle, look),
   }),
-  onSwitch('logo', 'repoLogo', 'Repo logo on project badges', 'Stays on this computer'),
-  onSwitch('github', 'githubPictures', 'GitHub pictures on project badges', 'Asks GitHub once a week'),
+  onSwitch('logo', 'repoLogo', '项目徽标上的仓库 logo', '仅保存在本机'),
+  onSwitch('github', 'githubPictures', '项目徽标上的 GitHub 头像', '每周向 GitHub 请求一次'),
 ];
 
 export const ROWS_CONTROLS: readonly RowsControl[] = [...ROWS_MAIN_CONTROLS, ...ROWS_MORE_CONTROLS];
@@ -211,12 +211,12 @@ export type RowsPreset = 'balanced' | 'dense' | 'minimal' | 'detailed';
  * pressed.
  */
 export const ROWS_PRESETS: readonly { id: RowsPreset; label: string; look: ListLook }[] = [
-  { id: 'balanced', label: 'Balanced', look: LIST_LOOK_DEFAULT },
-  { id: 'dense', label: 'Dense', look: { ...LIST_LOOK_OFF, compact: true, smallNames: true, relativeTime: true, dividers: true, statusMark: true } },
+  { id: 'balanced', label: '均衡', look: LIST_LOOK_DEFAULT },
+  { id: 'dense', label: '紧凑', look: { ...LIST_LOOK_OFF, compact: true, smallNames: true, relativeTime: true, dividers: true, statusMark: true } },
   // Minimal (approval "inbox-rows-dialog", round 7b): the two-line title-first row, no preview, no dot, clock times.
-  { id: 'minimal', label: 'Minimal', look: { ...LIST_LOOK_OFF, titleFirst: true, hidePreview: true, smallNames: true } },
+  { id: 'minimal', label: '极简', look: { ...LIST_LOOK_OFF, titleFirst: true, hidePreview: true, smallNames: true } },
   // Detailed (approval "inbox-letter-marks"): letter badges on, both kinds as the big one, the repo's logo on.
-  { id: 'detailed', label: 'Detailed', look: { ...LIST_LOOK_OFF, roomy: true, previewTwo: true, marksThreads: true, marksProjects: true, repoLogo: true } },
+  { id: 'detailed', label: '详细', look: { ...LIST_LOOK_OFF, roomy: true, previewTwo: true, marksThreads: true, marksProjects: true, repoLogo: true } },
 ];
 
 export function rowsPreset(look: ListLook): RowsPreset | null {

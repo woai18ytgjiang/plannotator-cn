@@ -69,8 +69,8 @@ export interface ReviewPanelHeaderModel {
 }
 
 const VIEW_META: Record<ReviewPanelView, { label: string; title: string; Icon: React.FC<{ className?: string }> }> = {
-  tree: { label: 'Tree', title: 'Tree view', Icon: FolderTree },
-  commits: { label: 'Commits', title: 'Commit history: click a commit to review its diff', Icon: GitCommitHorizontal },
+  tree: { label: '树', title: '树视图', Icon: FolderTree },
+  commits: { label: '提交', title: '提交历史：点击某个提交即可审查其差异', Icon: GitCommitHorizontal },
 };
 
 /** Below this the view tabs become icons and the scope reads "All". */
@@ -85,11 +85,11 @@ const formatCount = (count: number) => count.toLocaleString('en-US');
 
 function relativeAge(ms: number): string {
   const seconds = Math.max(0, Math.round(ms / 1000));
-  if (seconds < 10) return 'just now';
-  if (seconds < 60) return `${seconds}s ago`;
+  if (seconds < 10) return '刚刚';
+  if (seconds < 60) return `${seconds} 秒前`;
   const minutes = Math.round(seconds / 60);
-  if (minutes < 60) return `${minutes}m ago`;
-  return `${Math.round(minutes / 60)}h ago`;
+  if (minutes < 60) return `${minutes} 分钟前`;
+  return `${Math.round(minutes / 60)} 小时前`;
 }
 
 /** "1 added, 1 edited": what changed on disk since the diff was taken. */
@@ -97,15 +97,15 @@ function onDiskSummary(repo: ReadyRepo): string {
   const counts = { A: 0, M: 0, D: 0 };
   for (const change of Object.values(repo.onDisk)) counts[change] += 1;
   return [
-    counts.A > 0 ? `${counts.A} added` : null,
-    counts.M > 0 ? `${counts.M} edited` : null,
-    counts.D > 0 ? `${counts.D} deleted` : null,
+    counts.A > 0 ? `${counts.A} 个新增` : null,
+    counts.M > 0 ? `${counts.M} 个修改` : null,
+    counts.D > 0 ? `${counts.D} 个删除` : null,
   ]
     .filter(Boolean)
-    .join(', ');
+    .join('，');
 }
 
-export const PARTIAL_LISTING_TEXT = 'Part of the repository is listed (the platform stopped early).';
+export const PARTIAL_LISTING_TEXT = '仓库只列出了部分内容（平台提前停止）。';
 
 /** "Live · updated 45s ago · 1 added, 1 edited", for the dot's tooltip. */
 function useLiveTooltip(repo: ReadyRepo | null | undefined): string | null {
@@ -119,7 +119,7 @@ function useLiveTooltip(repo: ReadyRepo | null | undefined): string | null {
   if (!repo) return null;
   if (!repo.live) return repo.truncated ? PARTIAL_LISTING_TEXT : null;
   const changes = onDiskSummary(repo);
-  return `Live · updated ${relativeAge(now - repo.updatedAt)}${changes ? ` · ${changes}` : ''}`;
+  return `实时 · 更新于 ${relativeAge(now - repo.updatedAt)}${changes ? ` · ${changes}` : ''}`;
 }
 
 /**
@@ -145,7 +145,7 @@ const LiveDot: React.FC<{ repo: ReadyRepo | null | undefined; className?: string
  * and when the files changed on disk change, never on the 15 s age tick.
  */
 const LiveStatus: React.FC<{ repo: ReadyRepo | null | undefined }> = ({ repo }) => {
-  const text = repo?.live ? `All files is live${onDiskSummary(repo) ? `: ${onDiskSummary(repo)} on disk since the diff` : ''}.` : '';
+  const text = repo?.live ? `全部文件为实时更新${onDiskSummary(repo) ? `：自差异以来磁盘上有 ${onDiskSummary(repo)}` : ''}。` : '';
   return (
     <span className="sr-only" role="status" aria-live="polite" data-repo-listing-status={repo?.live ? 'live' : undefined}>
       {text}
@@ -170,20 +170,20 @@ export function diffWords(model: Pick<ReviewPanelHeaderModel, 'view' | 'diff' | 
   const option = model.diff?.options.find((o) => o.id === id);
   if (!model.base) {
     // No base in the sentence: the option's own words say everything.
-    if (id === 'since-base' && model.diff?.activeBase) return { noun: `All changes since ${displayRef(model.diff.activeBase)}`, connector: null };
-    return { noun: option?.label ?? 'Changes', connector: null };
+    if (id === 'since-base' && model.diff?.activeBase) return { noun: `自 ${displayRef(model.diff.activeBase)} 以来的所有更改`, connector: null };
+    return { noun: option?.label ?? '更改', connector: null };
   }
   switch (id) {
     case 'since-base':
-      return { noun: 'All changes', connector: 'since' };
+      return { noun: '所有更改', connector: '基于' };
     case 'merge-base':
-      return { noun: 'Committed changes', connector: 'since' };
+      return { noun: '已提交的更改', connector: '基于' };
     case 'branch':
-      return { noun: 'Branch diff', connector: 'against' };
+      return { noun: '分支差异', connector: '对比' };
     case 'jj-line':
-      return { noun: option?.label ?? 'Line of work', connector: 'from' };
+      return { noun: option?.label ?? '工作线', connector: '来自' };
     default:
-      return { noun: option?.label ?? 'Changes', connector: 'vs' };
+      return { noun: option?.label ?? '更改', connector: '对比' };
   }
 }
 
@@ -210,13 +210,13 @@ export function middleTruncateRef(base: string, width: number): string {
 const GoToFileButton: React.FC<{ onClick: () => void }> = ({ onClick }) => {
   const binding = resolveShortcutBindings(reviewExplorerShortcuts.shortcuts.goToFile)[0] ?? '';
   const keys = formatShortcutBindingTokens(binding);
-  const label = keys.length > 0 ? `Go to file (${keys.join('')})` : 'Go to file';
+  const label = keys.length > 0 ? `转到文件（${keys.join('')}）` : '转到文件';
   return (
     <Tooltip content={label} side="bottom">
       <button
         type="button"
         onClick={onClick}
-        aria-label="Go to File…"
+        aria-label="转到文件…"
         aria-keyshortcuts={binding ? ariaKeyShortcut(binding) : undefined}
         data-go-to-file-button=""
         className={`ml-auto -mr-1 h-6 w-6 flex flex-shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-[var(--sidebar-fill)] hover:text-foreground transition-colors ${FOCUS}`}
@@ -330,7 +330,7 @@ const ViewTabs: React.FC<{ model: ReviewPanelHeaderModel; views: ReviewPanelView
     <div
       ref={listRef}
       role="tablist"
-      aria-label="Panel view"
+      aria-label="面板视图"
       data-panel-view-switch=""
       onKeyDown={onKeyDown}
       className="flex items-center gap-4"
@@ -400,7 +400,7 @@ export const ReviewPanelHeader: React.FC<{ model: ReviewPanelHeaderModel; width:
           <ViewTabs model={model} views={views} narrow={narrow} trailing={goToFile} />
         ) : (
           <div className="-mx-2 px-4 h-7 flex items-center shadow-[inset_0_-1px_0_var(--sidebar-line)]">
-            <span className="text-[13px] font-medium text-muted-foreground">Files</span>
+            <span className="text-[13px] font-medium text-muted-foreground">文件</span>
             {goToFile}
           </div>
         )}
@@ -417,7 +417,7 @@ export const ReviewPanelHeader: React.FC<{ model: ReviewPanelHeaderModel; width:
               activeBase={model.diff.activeBase}
               trigger={{
                 className: token,
-                ariaLabel: `Changes shown: ${noun}`,
+                ariaLabel: `显示的更改：${noun}`,
                 content: (
                   <>
                     <span className="truncate">{noun}</span>
@@ -474,14 +474,14 @@ export interface ScopeProgress {
 
 function progressTitle(progress: ScopeProgress): string {
   const parts: string[] = [];
-  if (progress.showViewed) parts.push(progress.viewed >= progress.total && progress.total > 0 ? `All ${progress.total} viewed` : `${progress.viewed} of ${progress.total} viewed`);
-  if (progress.staged > 0) parts.push(`${progress.staged} staged`);
+  if (progress.showViewed) parts.push(progress.viewed >= progress.total && progress.total > 0 ? `已查看全部 ${progress.total} 个` : `已查看 ${progress.viewed}/${progress.total}`);
+  if (progress.staged > 0) parts.push(`${progress.staged} 个已暂存`);
   return parts.join(' · ');
 }
 
 export function allPillDotNote(repo: ReadyRepo | null | undefined): string {
-  if (repo?.live) return '. The green dot: the list updates live as files change on disk';
-  if (repo?.truncated) return '. The amber ring: only part of the repository is listed';
+  if (repo?.live) return '。绿色圆点：文件在磁盘上变化时列表会实时更新';
+  if (repo?.truncated) return '。琥珀色圆环：只列出了仓库的一部分';
   return '';
 }
 
@@ -508,16 +508,16 @@ export const ScopeSwitch: React.FC<{ model: ReviewPanelHeaderModel; width: numbe
     }`;
   return (
     <div className="min-w-0" data-tree-scope-row="">
-      <div className="flex min-w-0 items-center" role="group" aria-label="Files shown in the tree" data-tree-scope-switch="">
+      <div className="flex min-w-0 items-center" role="group" aria-label="树中显示的文件" data-tree-scope-switch="">
         <button
           type="button"
           aria-pressed={scope === 'changes'}
           onClick={() => selectScope(model, 'changes')}
           data-tree-scope="changes"
-          title={progress && progressTitle(progress) ? `The files this review changes: ${progressTitle(progress)}` : 'The files this review changes'}
+          title={progress && progressTitle(progress) ? `本次审查更改的文件：${progressTitle(progress)}` : '本次审查更改的文件'}
           className={`flex-shrink-0 px-1.5 ${pill(scope === 'changes')}`}
         >
-          <span className={countOnly ? 'sr-only' : undefined}>Changes</span>
+          <span className={countOnly ? 'sr-only' : undefined}>更改</span>
           {progress?.showViewed ? (
             <span
               className={`tabular-nums text-[12px] font-normal ${progress.total > 0 && progress.viewed >= progress.total ? 'text-success' : 'text-muted-foreground'}`}
@@ -527,17 +527,17 @@ export const ScopeSwitch: React.FC<{ model: ReviewPanelHeaderModel; width: numbe
               {progress.viewed}/{formatCount(progress.total)}
             </span>
           ) : changed !== undefined && <span className="tabular-nums text-[12px] font-normal text-muted-foreground">{formatCount(changed)}</span>}
-          {progress && progress.staged > 0 && <span className="sr-only" data-panel-staged-count="">{progress.staged} staged</span>}
+          {progress && progress.staged > 0 && <span className="sr-only" data-panel-staged-count="">{progress.staged} 个已暂存</span>}
         </button>
         <button
           type="button"
           aria-pressed={scope === 'all'}
           onClick={() => selectScope(model, 'all')}
           data-tree-scope="all"
-          title={`Every file of the repository at the revision the diff reads${all !== undefined ? ` (${formatCount(all)} files)` : ''}${allPillDotNote(scope === 'all' ? model.repo : null)}`}
+          title={`差异所读取版本下仓库的全部文件${all !== undefined ? `（${formatCount(all)} 个文件）` : ''}${allPillDotNote(scope === 'all' ? model.repo : null)}`}
           className={`relative flex-shrink-0 pl-1.5 pr-2.5 ${pill(scope === 'all')}`}
         >
-          <span data-tree-scope-label="">{shortAll ? <>All<span className="sr-only"> files</span></> : 'All files'}</span>
+          <span data-tree-scope-label="">{shortAll ? <>全部<span className="sr-only">文件</span></> : '全部文件'}</span>
           {all !== undefined && <span className="sr-only">{formatCount(all)}</span>}
           {scope === 'all' && <LiveDot repo={model.repo} className="absolute top-1 right-1 flex" />}
         </button>

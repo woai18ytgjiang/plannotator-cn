@@ -16,7 +16,7 @@ export function CopyButton({ text }: { text: string }) {
         }
       }}
     >
-      {copied ? 'Copied' : 'Copy'}
+      {copied ? '已复制' : '复制'}
     </button>
   );
 }
@@ -54,7 +54,7 @@ function Another({ summary, body }: { summary: string; body?: Artefact }) {
     return (
       <div className="ib-another">
         <Icon name="chevR" size={13} />
-        Another way<span className="ib-mut">{summary}</span>
+        其他方式<span className="ib-mut">{summary}</span>
       </div>
     );
   }
@@ -62,7 +62,7 @@ function Another({ summary, body }: { summary: string; body?: Artefact }) {
     <div>
       <button type="button" className="ib-another" onClick={() => setOpen((v) => !v)} aria-expanded={open}>
         <Icon name={open ? 'chevD' : 'chevR'} size={13} />
-        Another way<span className="ib-mut">{summary}</span>
+        其他方式<span className="ib-mut">{summary}</span>
       </button>
       {open && (
         <div className="ib-another-body ib-cpanel">
@@ -88,7 +88,7 @@ export function ConnectPicker({ harnesses, initial, context, compact, icons }: C
   const panel = harnessPanel(harness.id, context);
   return (
     <div className={`ib-connect${compact ? ' ib-compact' : ''}`}>
-      <div className="ib-ctabs" role="tablist" aria-label="Agent harness">
+      <div className="ib-ctabs" role="tablist" aria-label="智能体宿主">
         {harnesses.map((h) => (
           <button
             key={h.id}

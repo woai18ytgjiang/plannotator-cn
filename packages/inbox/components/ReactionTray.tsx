@@ -33,7 +33,7 @@ import type { EmojiRow } from './emojiData';
 import { atEnd } from '../seenOnSight';
 import { addSavedReaction, changeSavedReaction, freeSlots, nameSavedReaction, rememberEmoji, removeSavedReaction, savedReactions, useSavedReactions } from '../reactions';
 
-const LOOKS_GOOD_LABEL = 'Looks good';
+const LOOKS_GOOD_LABEL = '看起来不错';
 const HOVER_OPEN_MS = 320;
 const HOVER_CLOSE_MS = 220;
 const LONG_PRESS_MS = 380;
@@ -47,7 +47,7 @@ export function emojiName(emoji: string): string {
 
 /** What the window says for a reaction: its name, else "Reacted with unicorn". */
 export function reactionSpeech(reaction: InboxReaction): string {
-  return reaction.label || `Reacted with ${emojiName(reaction.emoji)}`;
+  return reaction.label || `用 ${emojiName(reaction.emoji)} 回应`;
 }
 
 /** Two reactions are the same emoji with the same name (null is 👍 Looks good). */
@@ -453,7 +453,7 @@ export function ReactionTray({ messageId, agent, on, current, phone, onAck, open
   const shownEmoji = on && current ? current.emoji : '👍';
   const spoken = on && current ? reactionSpeech(current) : LOOKS_GOOD_LABEL;
   const tip = on
-    ? `Take back ${current ? (current.label ? current.label : `your ${current.emoji}`) : LOOKS_GOOD_LABEL}`
+    ? `撤回${current ? (current.label ? ` ${current.label}` : `你的 ${current.emoji}`) : ` ${LOOKS_GOOD_LABEL}`}`
     : `Sends ${agent} 👍 Looks good. Moves to Quiet until it writes again.${phone ? ' Hold for more reactions.' : ''}`;
   const cells = 1 + saved.length + free + 1;
 
@@ -520,7 +520,7 @@ export function ReactionTray({ messageId, agent, on, current, phone, onAck, open
           )}
           {/* The keyboard's and screen reader's way in: hidden until it has focus. Not a <button>, so the foot's row of
               buttons stays Reply and Looks good. */}
-          <Menu.Trigger className="ib-react-more" data-react-more="" nativeButton={false} render={<span />} aria-label={`More reactions for ${agent}'s message`}>
+          <Menu.Trigger className="ib-react-more" data-react-more="" nativeButton={false} render={<span />} aria-label={`给 ${agent} 的消息添加更多回应`}>
             <Icon name="plus" size={12} />
           </Menu.Trigger>
           <Menu.Portal container={portal ?? undefined}>
@@ -529,7 +529,7 @@ export function ReactionTray({ messageId, agent, on, current, phone, onAck, open
                 className="ib-react-pop"
                 data-reaction-tray=""
                 data-instant={instant ? '' : undefined}
-                aria-label="Reactions"
+                aria-label="回应"
                 style={{ ['--n' as string]: cells }}
                 // A pick with the pointer, or a hand-off to the picker or a field, does not move focus to the hidden "More reactions".
                 finalFocus={(type) => !handOff.current && type === 'keyboard'}
@@ -600,8 +600,8 @@ export function ReactionTray({ messageId, agent, on, current, phone, onAck, open
                       className="ib-react-cell ib-react-add"
                       data-reaction="add"
                       style={{ ['--i' as string]: 1 + saved.length + k }}
-                      label="Save an emoji"
-                      aria-label="Save an emoji to your tray"
+                      label="保存表情"
+                      aria-label="保存表情到你的托盘"
                       aria-haspopup="dialog"
                       onClick={() => openPicker({ kind: 'save' })}
                     >
@@ -614,8 +614,8 @@ export function ReactionTray({ messageId, agent, on, current, phone, onAck, open
                     className="ib-react-cell"
                     data-reaction="any"
                     style={{ ['--i' as string]: 1 + saved.length + free }}
-                    label="Any emoji"
-                    aria-label="React with any emoji, once"
+                    label="任意表情"
+                    aria-label="用任意表情回应一次"
                     aria-haspopup="dialog"
                     onClick={() => openPicker({ kind: 'once' })}
                   >
@@ -630,8 +630,8 @@ export function ReactionTray({ messageId, agent, on, current, phone, onAck, open
                   <Menu.Item
                     className="ib-react-kedit"
                     data-react-edit=""
-                    label="Edit"
-                    aria-label="Edit your saved emoji"
+                    label="编辑"
+                    aria-label="编辑已保存的表情"
                     onClick={() => openEditor(lastSaved.current !== null && saved[lastSaved.current] ? lastSaved.current : 0)}
                   >
                     <Icon name="pen" size={14} />
@@ -655,10 +655,10 @@ export function ReactionTray({ messageId, agent, on, current, phone, onAck, open
         anchor={mainRef}
         container={portal}
         phone={phone}
-        label={picker?.kind === 'once' ? `React to ${agent}'s message with any emoji` : 'Pick an emoji to save in your tray'}
+        label={picker?.kind === 'once' ? `用任意表情回应 ${agent} 的消息` : '选择要保存到托盘的表情'}
         returnTo={() => (toField.current ? false : mainRef.current)}
-        idle={picker?.kind === 'once' ? 'Pick one to react with it' : 'Pick one to save'}
-        says={(row) => (picker?.kind === 'once' ? `React with ${row[0]}` : `Save ${row[0]} to your tray`)}
+        idle={picker?.kind === 'once' ? '选择一个即可回应' : '选择一个以保存'}
+        says={(row) => (picker?.kind === 'once' ? `用 ${row[0]} 回应` : `将 ${row[0]} 保存到托盘`)}
         onPick={pick}
       />
       <NameField
@@ -730,13 +730,13 @@ function TrayRow({ highlight, fresh, onPick, onPress }: { highlight: number | nu
       </button>
     );
     return (
-      <div className="ib-react-cells" role="group" aria-label="Reactions">
+      <div className="ib-react-cells" role="group" aria-label="回应">
         {cell('looks-good', `👍 ${LOOKS_GOOD_LABEL}`, false, <span className="ib-react-e">👍</span>, 'lg')}
         {saved.map((r, i) => cell(i, `${r.emoji} ${r.label || capFirst(emojiName(r.emoji))}`, i === fresh, <span className="ib-react-e">{r.emoji}</span>, `s-${r.emoji}`))}
         {Array.from({ length: free }, (_, k) =>
           cell(
             'add',
-            'Save an emoji to your tray',
+            '保存表情到你的托盘',
             false,
             <span className="ib-react-e ib-react-hole" aria-hidden="true">
               <Icon name="plus" size={14} />
@@ -746,7 +746,7 @@ function TrayRow({ highlight, fresh, onPick, onPress }: { highlight: number | nu
         )}
         {cell(
           'any',
-          'React with any emoji, once',
+          '用任意表情回应一次',
           false,
           <span className="ib-react-e ib-react-hole ib-react-dots" aria-hidden="true">
             <Icon name="dots" size={16} />
@@ -757,7 +757,7 @@ function TrayRow({ highlight, fresh, onPick, onPress }: { highlight: number | nu
     );
   }
   return (
-    <div className="ib-react-cells" role={onPick ? 'group' : undefined} aria-label={onPick ? 'Your saved emoji' : undefined} aria-hidden={onPick ? undefined : 'true'}>
+    <div className="ib-react-cells" role={onPick ? 'group' : undefined} aria-label={onPick ? '已保存的表情' : undefined} aria-hidden={onPick ? undefined : 'true'}>
       <span className="ib-react-cell ib-react-fixed">
         <span className="ib-react-e">👍</span>
       </span>
@@ -770,7 +770,7 @@ function TrayRow({ highlight, fresh, onPick, onPress }: { highlight: number | nu
             data-saved-pick={i}
             data-highlighted={i === highlight ? '' : undefined}
             aria-pressed={i === highlight}
-            aria-label={`Edit ${r.label || capFirst(emojiName(r.emoji))}`}
+            aria-label={`编辑 ${r.label || capFirst(emojiName(r.emoji))}`}
             onClick={() => onPick(i)}
           >
             <span className="ib-react-e">{r.emoji}</span>
@@ -833,7 +833,7 @@ function NameField({ container, index, fresh, anchor, phone, onClose, onReact }:
             data-phone={phone ? '' : undefined}
             initialFocus={phone ? false : nameRef}
             finalFocus={() => (closing.current === 'escape' ? anchor.current : false)}
-            aria-label={r ? `Name ${r.emoji} (optional)` : 'Name it'}
+            aria-label={r ? `命名 ${r.emoji}（可选）` : '命名'}
           >
             {r && (
               <>
@@ -843,11 +843,11 @@ function NameField({ container, index, fresh, anchor, phone, onClose, onReact }:
                   data-name-field=""
                   type="text"
                   value={text}
-                  placeholder="Name it (optional)"
+                  placeholder="命名（可选）"
                   maxLength={INBOX_REACTION_LABEL_MAX}
                   autoComplete="off"
                   enterKeyHint="done"
-                  aria-label={`Name for ${r.emoji}, optional. Enter to keep it`}
+                  aria-label={`${r.emoji} 的名称（可选）。按 Enter 保存`}
                   onChange={(e) => setText(e.target.value)}
                   onKeyDown={(e) => {
                     if (e.key === 'Enter' && !e.nativeEvent.isComposing) {
@@ -936,7 +936,7 @@ function SavedEditor({
             data-phone={phone ? '' : undefined}
             initialFocus={phone ? false : nameRef}
             finalFocus={() => (byKeys.current ? anchor.current : false)}
-            aria-label={r ? `Edit ${r.emoji}` : 'Edit a saved emoji'}
+            aria-label={r ? `编辑 ${r.emoji}` : '编辑已保存的表情'}
           >
             {r && index !== null && (
               <>
@@ -947,11 +947,11 @@ function SavedEditor({
                     data-edit-name=""
                     type="text"
                     value={text}
-                    placeholder="Name it (optional)"
+                    placeholder="命名（可选）"
                     maxLength={INBOX_REACTION_LABEL_MAX}
                     autoComplete="off"
                     enterKeyHint="done"
-                    aria-label={`Name for ${r.emoji}`}
+                    aria-label={`${r.emoji} 的名称`}
                     onChange={(e) => setText(e.target.value)}
                     onKeyDown={onKey}
                   />
@@ -965,7 +965,7 @@ function SavedEditor({
                         onChangeEmoji(index);
                       }}
                     >
-                      Change emoji
+                      更换表情
                     </button>
                     <button
                       type="button"
@@ -977,11 +977,11 @@ function SavedEditor({
                         onClose();
                       }}
                     >
-                      Remove
+                      移除
                     </button>
                     <span className="ib-react-sp" />
                     <button type="button" className="ib-react-done" data-edit-done="" onClick={(e) => done(e.detail === 0)}>
-                      Done
+                      完成
                     </button>
                   </div>
                 </div>

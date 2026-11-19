@@ -106,8 +106,8 @@ export function TagsSection(props: TagsSectionProps) {
     <div className="ib-tagsec" data-tags-section="" data-closed={closed ? '' : undefined}>
       <div ref={head} className="ib-secrow" data-tags-head="">
         {props.header}
-        <Tip content="New tag">
-          <button type="button" className="ib-proj-sort ib-tags-add" aria-label="New tag" data-tags-add="" onClick={startCreate}>
+        <Tip content="新标签">
+          <button type="button" className="ib-proj-sort ib-tags-add" aria-label="新标签" data-tags-add="" onClick={startCreate}>
             <Icon name="plus" />
           </button>
         </Tip>
@@ -117,7 +117,7 @@ export function TagsSection(props: TagsSectionProps) {
           {creating && (
             <TagNameField
               name=""
-              label="New tag"
+              label="新标签"
               onCancel={(refocus) => {
                 setCreating(false);
                 if (refocus) head.current?.querySelector<HTMLElement>('[data-tags-add]')?.focus({ preventScroll: true });
@@ -139,7 +139,7 @@ export function TagsSection(props: TagsSectionProps) {
                 <TagNameField
                   key={tag.id}
                   name={tag.name}
-                  label="Rename"
+                  label="重命名"
                   onCancel={(refocus) => {
                     if (refocus) focusRow.current = tag.id;
                     setRenaming(null);
@@ -185,7 +185,7 @@ export function TagsSection(props: TagsSectionProps) {
         <ContextMenu.Portal container={portal ?? undefined}>
           {props.phone && <ContextMenu.Backdrop className="ib-pm-scrim" />}
           <ContextMenu.Positioner className="ib-pm-pos" data-phone={props.phone ? '' : undefined}>
-            <ContextMenu.Popup className="ib-pm" aria-label={target?.name ?? 'Tag'} data-tag-menu={target?.id} {...menu.popup}>
+            <ContextMenu.Popup className="ib-pm" aria-label={target?.name ?? '标签'} data-tag-menu={target?.id} {...menu.popup}>
               {target && (
                 <div className="ib-pm-title" dir="auto" aria-hidden="true">
                   {target.name}
@@ -194,13 +194,13 @@ export function TagsSection(props: TagsSectionProps) {
               {target && colourView && colours && <TagColourList tag={target} colours={colours} onBack={() => setColourView(false)} />}
               {target && !(colourView && colours) && (
                 <>
-                  <Menu.Item className="ib-pmi" label="Show threads" onClick={props.pick(() => props.onOpen(target.id))} data-tag-action="open">
+                  <Menu.Item className="ib-pmi" label="显示话题" onClick={props.pick(() => props.onOpen(target.id))} data-tag-action="open">
                     <Icon name="inbox" size={15} />
                     Show threads
                   </Menu.Item>
                   <Menu.Item
                     className="ib-pmi"
-                    label="Rename"
+                    label="重命名"
                     onClick={() => {
                       // The field takes focus: the menu's close puts it nowhere.
                       menu.keepFocus();
@@ -214,14 +214,14 @@ export function TagsSection(props: TagsSectionProps) {
                   {colours && (
                     <>
                       {/* Two rows (the owner, 2026-11-16): the tint on and off at once, and the colour chosen apart. */}
-                      <MenuCheckbox label="Highlight rows" checked={colours.colourOf(target.id) !== null} onChange={(on) => colours.highlight(target, on)} data-tag-action="highlight" />
+                      <MenuCheckbox label="高亮行" checked={colours.colourOf(target.id) !== null} onChange={(on) => colours.highlight(target, on)} data-tag-action="highlight" />
                       <TagColourItem colour={colours.pickOf(target.id)} onOpen={() => setColourView(true)} />
                     </>
                   )}
                   <Menu.Separator className="ib-pm-sep" />
                   <Menu.Item
                     className="ib-pmi"
-                    label="Delete tag"
+                    label="删除标签"
                     onClick={() => {
                       menu.follow(target.id);
                       props.onDelete(target);
@@ -277,7 +277,7 @@ function TagNameField(props: { name: string; label: string; onSave: (name: strin
       type="text"
       className="ib-proj-rename ib-tag-name"
       aria-label={props.label}
-      placeholder={props.label === 'New tag' ? 'New tag' : undefined}
+      placeholder={props.label === '新标签' ? '新标签' : undefined}
       spellCheck={false}
       autoComplete="off"
       enterKeyHint="done"

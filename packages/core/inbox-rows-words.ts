@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * "Tell your agent" for Settings → Rows (approval "inbox-rows-settings-page"): the one place for every word an agent
  * reads about the Inbox list's rows. The instruction block a Rows ask carries, the setting names and values an agent
@@ -49,8 +50,8 @@ export interface InboxRowsSetting {
 }
 
 const ON_OFF = [
-  { value: "on", label: "on" },
-  { value: "off", label: "off" },
+  { value: "on", label: "开" },
+  { value: "off", label: "关" },
 ] as const;
 /** A switch that is on while its option is. */
 const onSetting = (name: string, key: InboxRowsOption, label: string, changes: string): InboxRowsSetting => ({ name, label, values: ON_OFF, changes, get: (on) => (on.has(key) ? "on" : "off"), set: (value) => ({ [key]: value === "on" }) });
@@ -62,11 +63,11 @@ const badges = (on: On) => (on.has("marksThreads") ? (on.has("marksProjects") ? 
 export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   {
     name: "spacing",
-    label: "Spacing",
+    label: "间距",
     values: [
-      { value: "compact", label: "Compact" },
-      { value: "comfortable", label: "Comfortable" },
-      { value: "roomy", label: "Roomy" },
+      { value: "compact", label: "紧凑" },
+      { value: "comfortable", label: "舒适" },
+      { value: "roomy", label: "宽松" },
     ],
     changes: "Room around each row. compact: project and name share the first line.",
     get: (on) => (on.has("compact") ? "compact" : on.has("roomy") ? "roomy" : "comfortable"),
@@ -74,11 +75,11 @@ export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   },
   {
     name: "grey-line",
-    label: "Grey line under the name",
+    label: "名称下方的灰色行",
     values: [
-      { value: "none", label: "None" },
-      { value: "1", label: "1 line" },
-      { value: "2", label: "2 lines" },
+      { value: "none", label: "无" },
+      { value: "1", label: "1 行" },
+      { value: "2", label: "2 行" },
     ],
     changes: "Lines of the latest message under a thread's name.",
     get: (on) => (on.has("hidePreview") ? "none" : on.has("previewTwo") ? "2" : "1"),
@@ -86,10 +87,10 @@ export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   },
   {
     name: "first",
-    label: "First on the row",
+    label: "行首内容",
     values: [
-      { value: "project", label: "Project" },
-      { value: "name", label: "Thread name" },
+      { value: "project", label: "项目" },
+      { value: "name", label: "话题名称" },
     ],
     changes: "What the row starts with.",
     get: (on) => (on.has("titleFirst") ? "name" : "project"),
@@ -97,10 +98,10 @@ export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   },
   {
     name: "time",
-    label: "Time",
+    label: "时间",
     values: [
-      { value: "clock", label: "9:12 PM" },
-      { value: "ago", label: "10m ago" },
+      { value: "clock", label: "9:12" },
+      { value: "ago", label: "10 分钟前" },
     ],
     changes: "9:12 PM, or 10m.",
     get: (on) => (on.has("relativeTime") ? "ago" : "clock"),
@@ -108,10 +109,10 @@ export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   },
   {
     name: "needs-you",
-    label: "When a thread needs you",
+    label: "话题需要你处理时",
     values: [
-      { value: "count", label: "Question count" },
-      { value: "mark", label: "One mark" },
+      { value: "count", label: "问题数量" },
+      { value: "mark", label: "一个标记" },
     ],
     changes: "The question count, or one mark, when a thread needs the person.",
     get: (on) => (on.has("statusMark") ? "mark" : "count"),
@@ -120,39 +121,39 @@ export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   {
     // `on` and `off` are the values from when this was a switch, kept so a command written then still works.
     name: "agent-icons",
-    label: "Agent icons",
+    label: "智能体图标",
     values: [
-      { value: "on", label: "Each agent's own" },
-      { value: "project", label: "From the project name" },
-      { value: "off", label: "Hidden" },
+      { value: "on", label: "各智能体自己的" },
+      { value: "project", label: "取自项目名称" },
+      { value: "off", label: "隐藏" },
     ],
     changes: "The agents' icons. on: each agent's own mark. project: a tile from the project's name (also the Agents list and threads; an icon picked for one agent stays). off: none on rows.",
     get: (on) => (on.has("hideAgents") ? "off" : on.has("agentProjectIcons") ? "project" : "on"),
     set: (value) => ({ hideAgents: value === "off", agentProjectIcons: value === "project" }),
   },
-  showSetting("project-name", "hideProject", "Project name", "The project's name on each row."),
-  showSetting("pull-requests", "hidePulls", "Pull requests", "A pull request's state at the end of the row."),
+  showSetting("project-name", "hideProject", "项目名称", "The project's name on each row."),
+  showSetting("pull-requests", "hidePulls", "PR", "A pull request's state at the end of the row."),
   {
     name: "new-threads",
-    label: "New threads",
+    label: "新话题",
     values: [
-      { value: "bigger", label: "Bigger name" },
-      { value: "bold", label: "Bold name" },
-      { value: "dot", label: "Dot" },
+      { value: "bigger", label: "更大的名称" },
+      { value: "bold", label: "加粗名称" },
+      { value: "dot", label: "圆点" },
     ],
     changes: "How an unread thread stands out.",
     get: (on) => (on.has("unreadDot") ? "dot" : on.has("smallNames") ? "bold" : "bigger"),
     set: (value) => ({ smallNames: value !== "bigger", unreadDot: value === "dot" }),
   },
-  onSetting("bold-names", "boldNames", "Every thread name in bold", "Every thread name in bold, read ones too."),
-  onSetting("name-pill", "highlight", "Thread name in a grey pill", "The thread name in a grey pill."),
-  onSetting("row-lines", "dividers", "Lines between rows", "A line between rows."),
+  onSetting("bold-names", "boldNames", "所有话题名称加粗", "Every thread name in bold, read ones too."),
+  onSetting("name-pill", "highlight", "话题名称放在灰色胶囊中", "The thread name in a grey pill."),
+  onSetting("row-lines", "dividers", "行间分隔线", "A line between rows."),
   {
     name: "time-place",
-    label: "Where the time sits",
+    label: "时间位置",
     values: [
-      { value: "top", label: "Top right" },
-      { value: "under", label: "Under the row" },
+      { value: "top", label: "右上角" },
+      { value: "under", label: "行下方" },
     ],
     changes: "The time at the top right, or under the row. Not on compact rows.",
     get: (on) => (on.has("timeBelow") ? "under" : "top"),
@@ -160,12 +161,12 @@ export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   },
   {
     name: "letter-badges",
-    label: "Letter badges",
+    label: "字母徽标",
     values: [
-      { value: "off", label: "Off" },
-      { value: "threads", label: "Threads" },
-      { value: "projects", label: "Projects" },
-      { value: "both", label: "Both" },
+      { value: "off", label: "关" },
+      { value: "threads", label: "话题" },
+      { value: "projects", label: "项目" },
+      { value: "both", label: "两者" },
     ],
     changes: "Coloured letter badges.",
     get: badges,
@@ -173,27 +174,27 @@ export const INBOX_ROWS_SETTINGS: readonly InboxRowsSetting[] = [
   },
   {
     name: "badge-shape",
-    label: "Badge shape",
+    label: "徽标形状",
     values: [
-      { value: "big", label: "Big, at the left" },
-      { value: "small", label: "Small, in the line" },
-      { value: "dot", label: "A dot" },
+      { value: "big", label: "大徽标，位于左侧" },
+      { value: "small", label: "小徽标，位于行内" },
+      { value: "dot", label: "圆点" },
     ],
     changes: "The badge: big at the left, small in the line, or a dot. Picking one turns thread badges on.",
     get: (on) => (badges(on) === "off" ? null : on.has("markInline") ? "small" : on.has("markDot") ? "dot" : "big"),
     set: (value, on) => ({ markInline: value === "small", markDot: value === "dot", ...(badges(on) === "off" ? { marksThreads: true } : {}) }),
   },
-  onSetting("repo-logo", "repoLogo", "Repo logo on project badges", "The repo's logo on project badges. Turns project badges on."),
-  onSetting("github-pictures", "githubPictures", "GitHub pictures on project badges", "The GitHub owner's picture on project badges. Turns project badges on."),
+  onSetting("repo-logo", "repoLogo", "项目徽标上的仓库 logo", "The repo's logo on project badges. Turns project badges on."),
+  onSetting("github-pictures", "githubPictures", "项目徽标上的 GitHub 头像", "The GitHub owner's picture on project badges. Turns project badges on."),
 ];
 
 /** The whole looks (`look=`): the page's "Start from". */
 export const INBOX_ROWS_LOOKS: readonly { value: string; label: string; rows: readonly InboxRowsOption[] }[] = [
   // The defaults (`INBOX_ROWS_DEFAULT`), written out for the reason above; rowsWords.test.ts holds them equal.
-  { value: "balanced", label: "Balanced", rows: ["smallNames"] },
-  { value: "dense", label: "Dense", rows: ["compact", "smallNames", "relativeTime", "dividers", "statusMark"] },
-  { value: "minimal", label: "Minimal", rows: ["smallNames", "hidePreview", "titleFirst"] },
-  { value: "detailed", label: "Detailed", rows: ["roomy", "previewTwo", "marksThreads", "marksProjects", "repoLogo"] },
+  { value: "balanced", label: "均衡", rows: ["smallNames"] },
+  { value: "dense", label: "紧凑", rows: ["compact", "smallNames", "relativeTime", "dividers", "statusMark"] },
+  { value: "minimal", label: "极简", rows: ["smallNames", "hidePreview", "titleFirst"] },
+  { value: "detailed", label: "详细", rows: ["roomy", "previewTwo", "marksThreads", "marksProjects", "repoLogo"] },
 ];
 export const INBOX_ROWS_LOOK_NAME = "look";
 const LOOK_CHANGES = "A whole look: sets every option above at once.";

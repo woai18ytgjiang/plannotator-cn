@@ -81,9 +81,9 @@ export function PlanPage(props: PlanPageProps) {
   useEffect(() => {
     void flushQueuedPlanSent().then((landed) => landed > 0 && onChanged());
   }, [props.id, onChanged]);
-  if (state.missing) return <PlansMessage title="This plan is not here" body="It may have been removed, or Spaces was turned off." onBack={toList} />;
-  if (state.error) return <PlansMessage title="This plan could not be read" body={state.error} onRetry={() => setRetry((n) => n + 1)} onBack={toList} />;
-  if (!state.read || !state.versions) return <PlansMessage busy title="Plan" body="Loading the plan…" onBack={toList} />;
+  if (state.missing) return <PlansMessage title="计划不在此处" body="It may have been removed, or Spaces was turned off." onBack={toList} />;
+  if (state.error) return <PlansMessage title="无法读取此计划" body={state.error} onRetry={() => setRetry((n) => n + 1)} onBack={toList} />;
+  if (!state.read || !state.versions) return <PlansMessage busy title="计划" body="Loading the plan…" onBack={toList} />;
   if (state.versions.length === 0) return <PlansMessage title={state.read.plan.name} body="This plan has no version yet." onBack={toList} />;
   return <PlanLoaded {...props} read={state.read} versions={state.versions} fresh={fresh} onChanged={onChanged} />;
 }
@@ -434,7 +434,7 @@ function DocLoaded({
             <div className="ib-plan-banner" data-plan-banner="changed">
               <Icon name="eye" />
               <p>
-                <b>Changed since you looked.</b> You saw v{seenAtOpen}. {since === 1 ? `v${head} came since.` : `v${seenAtOpen! + 1} to v${head} came since.`}
+                <b>自你上次查看后已更改。</b> You saw v{seenAtOpen}. {since === 1 ? `v${head} came since.` : `v${seenAtOpen! + 1} to v${head} came since.`}
               </p>
               <button type="button" className="ib-plans-soft" onClick={() => go({ diff: { from: seenAtOpen!, to: head } })} data-plan-show-changes="">
                 Show changes

@@ -56,7 +56,7 @@ export function pastedPreview(text: string): string {
     const words = line.replace(/\s+/g, ' ').trim();
     if (words) return words.slice(0, 200);
   }
-  return 'Pasted text';
+  return '粘贴的文本';
 }
 
 /**

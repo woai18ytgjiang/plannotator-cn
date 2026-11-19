@@ -28,9 +28,9 @@ export function listenErrorCode(error: unknown): string | null {
 const SKIPPABLE_CODES = new Set(["EADDRINUSE", "EACCES"]);
 
 const CODE_HINTS: Record<string, string> = {
-  EACCES: "permission denied",
-  EADDRINUSE: "already in use",
-  EADDRNOTAVAIL: "address not available",
+  EACCES: "权限不足",
+  EADDRINUSE: "已被占用",
+  EADDRNOTAVAIL: "地址不可用",
 };
 
 function codeText(code: string): string {
@@ -54,25 +54,25 @@ export class LiveProxyPortError extends Error {
 export class LiveProxyPortInUseError extends LiveProxyPortError {
   constructor(selection: ParsedPortSelection) {
     const detail = selection.kind === "range"
-      ? `every port in PLANNOTATOR_LIVE_PORT ${selection.ports[0]}-${selection.ports.at(-1)} is already in use`
-      : `port ${selection.ports[0]} (PLANNOTATOR_LIVE_PORT) is already in use`;
-    super(`Plannotator: live app proxy ${detail}. Close another live annotation session or set PLANNOTATOR_LIVE_PORT to a different port or range.`);
+      ? `PLANNOTATOR_LIVE_PORT 范围 ${selection.ports[0]}-${selection.ports.at(-1)} 内的每个端口都已被占用`
+      : `端口 ${selection.ports[0]}（PLANNOTATOR_LIVE_PORT）已被占用`;
+    super(`Plannotator：实时应用代理无法启动，${detail}。请关闭另一个实时批注会话，或将 PLANNOTATOR_LIVE_PORT 设为其他端口或端口范围。`);
     this.name = "LiveProxyPortInUseError";
   }
 }
 
-const NEXT_STEP = "Set PLANNOTATOR_LIVE_PORT to a different port or range.";
+const NEXT_STEP = "请将 PLANNOTATOR_LIVE_PORT 设为其他端口或端口范围。";
 
 function nextStep(failures: ReadonlyArray<{ port: number; code: string }>): string {
   const lowPortDenied = failures.some((f) => f.code === "EACCES" && f.port > 0 && f.port < 1024);
-  return lowPortDenied ? `Ports below 1024 usually need root. ${NEXT_STEP}` : NEXT_STEP;
+  return lowPortDenied ? `1024 以下的端口通常需要 root 权限。${NEXT_STEP}` : NEXT_STEP;
 }
 
 function onePortFailure(port: number, code: string, next: string): string {
   const subject = port === 0
-    ? "could not bind a loopback port"
-    : `port ${port} (PLANNOTATOR_LIVE_PORT) could not be used`;
-  return `Plannotator: live app proxy ${subject} (${codeText(code)}). ${next}`;
+    ? "无法绑定回环端口"
+    : `端口 ${port}（PLANNOTATOR_LIVE_PORT）无法使用`;
+  return `Plannotator：实时应用代理${subject}（${codeText(code)}）。${next}`;
 }
 
 /**
@@ -105,10 +105,10 @@ export function createLiveProxyPortAttempts(selection: ParsedPortSelection) {
       const counts = new Map<string, number>();
       for (const { code } of failures) counts.set(code, (counts.get(code) ?? 0) + 1);
       const detail = [...counts]
-        .map(([code, count]) => code === "EADDRINUSE" ? `${count} in use` : `${count} ${CODE_HINTS[code] ?? "failed"} (${code})`)
-        .join(", ");
+        .map(([code, count]) => code === "EADDRINUSE" ? `${count} 个被占用` : `${count} 个${CODE_HINTS[code] ?? "失败"}（${code}）`)
+        .join("，");
       return new LiveProxyPortError(
-        `Plannotator: live app proxy could not use any port in PLANNOTATOR_LIVE_PORT ${selection.ports[0]}-${selection.ports.at(-1)} (${detail}). ${nextStep(failures)}`,
+        `Plannotator：实时应用代理无法使用 PLANNOTATOR_LIVE_PORT 范围 ${selection.ports[0]}-${selection.ports.at(-1)} 中的任何端口（${detail}）。${nextStep(failures)}`,
       );
     },
   };

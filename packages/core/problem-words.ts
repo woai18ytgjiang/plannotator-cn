@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The words for every problem, in one table (the errors system): code → the
  * bold line, the muted line and the one action. The servers fill a problem's
@@ -65,9 +66,9 @@ export const TOOL_INSTALL_URL: Record<ToolCli, string> = {
 const forgeOf = (cli: ToolCli) => (cli === "glab" ? "GitLab" : "GitHub");
 
 function nounOf(ctx: ToolProblemContext): string {
-  if (ctx.kind === "issue") return "issue";
-  if (ctx.kind === "pull") return ctx.cli === "glab" ? "merge request" : "pull request";
-  return "one";
+  if (ctx.kind === "issue") return "议题";
+  if (ctx.kind === "pull") return ctx.cli === "glab" ? "MR" : "PR";
+  return "内容";
 }
 
 type Words = { title: string; detail: string; action?: ProblemAction; retry?: true };
@@ -75,37 +76,37 @@ type Words = { title: string; detail: string; action?: ProblemAction; retry?: tr
 /** The table: one entry per state. A short bold line, at most one short muted line, one next step. */
 export const TOOL_WORDS: Record<ToolState, (ctx: ToolProblemContext) => Words> = {
   missing: ({ cli }) => ({
-    title: `${cli} isn't installed`,
-    detail: `Install the ${forgeOf(cli)} CLI, then try again.`,
-    action: { kind: "open_url", value: TOOL_INSTALL_URL[cli], label: `Install ${cli}` },
+    title: `未安装 ${cli}`,
+    detail: `安装 ${forgeOf(cli)} CLI，然后重试。`,
+    action: { kind: "open_url", value: TOOL_INSTALL_URL[cli], label: `安装 ${cli}` },
     retry: true,
   }),
   signed_out: ({ cli, host, envToken }) =>
     envToken
-      ? { title: `${cli} isn't signed in to ${host}`, detail: `${forgeOf(cli)} refused the token in ${envToken}. Replace it, or remove it and sign in.`, retry: true }
+      ? { title: `${cli} 未登录 ${host}`, detail: `${forgeOf(cli)} 拒绝了 ${envToken} 中的令牌。请更换令牌，或删除后重新登录。`, retry: true }
       : {
-          title: `${cli} isn't signed in to ${host}`,
-          detail: "Run this once in a terminal, then try again.",
+          title: `${cli} 未登录 ${host}`,
+          detail: "请在终端中运行一次，然后重试。",
           action: { kind: "copy_command", value: `${cli} auth login --hostname ${host}` },
           retry: true,
         },
   timed_out: ({ cli, seconds = 8 }) => ({
-    title: `${cli} didn't answer in ${seconds} seconds`,
-    detail: "It may be slow or stuck. Try again in a moment.",
+    title: `${cli} 在 ${seconds} 秒内没有响应`,
+    detail: "它可能较慢或卡住了。请稍后重试。",
     action: { kind: "retry" },
   }),
   refused: (ctx) => ({
-    title: `${ctx.cli} can't see this ${nounOf(ctx)}`,
-    detail: ctx.cli === "glab" ? `Your GitLab account on ${ctx.host} can't see it, or it doesn't exist.` : "No signed-in GitHub account can see it, or it doesn't exist.",
-    ...(ctx.url && /^https:\/\//.test(ctx.url) ? { action: { kind: "open_url" as const, value: ctx.url, label: `Open on ${forgeOf(ctx.cli)}` } } : {}),
+    title: `${ctx.cli} 看不到这个 ${nounOf(ctx)}`,
+    detail: ctx.cli === "glab" ? `你在 ${ctx.host} 上的 GitLab 账号看不到它，或它不存在。` : "没有已登录的 GitHub 账号能看到它，或它不存在。",
+    ...(ctx.url && /^https:\/\//.test(ctx.url) ? { action: { kind: "open_url" as const, value: ctx.url, label: `在 ${forgeOf(ctx.cli)} 中打开` } } : {}),
   }),
   rate_limited: ({ cli }) => ({
-    title: `${forgeOf(cli)} asked for a short break`,
-    detail: "Try again in a minute.",
+    title: `${forgeOf(cli)} 请求稍后再试`,
+    detail: "请在一分钟后重试。",
   }),
   failed: (ctx) => ({
-    title: `${ctx.cli} couldn't read this ${nounOf(ctx)}`,
-    detail: `If it keeps failing, check that ${ctx.cli} works in a terminal.`,
+    title: `${ctx.cli} 无法读取这个 ${nounOf(ctx)}`,
+    detail: `如果持续失败，请在终端中确认 ${ctx.cli} 能正常工作。`,
     action: { kind: "retry" },
   }),
 };
@@ -123,7 +124,7 @@ export function toolProblem(state: ToolState, ctx: ToolProblemContext, at: Date 
 }
 
 /** A host this computer's CLI does not read: no claim about the host, no command. */
-const UNSUPPORTED_WORDS = (cli: ToolCli) => ({ title: `Details show for hosts your ${cli} is signed in to`, detail: "This one isn't, so nothing was fetched." });
+const UNSUPPORTED_WORDS = (cli: ToolCli) => ({ title: `仅对已登录 ${cli} 的主机显示详情`, detail: "这台主机未登录，因此没有获取任何内容。" });
 
 /**
  * An older server's bare card error as a tool state (`unsupported` is not one: a host this computer does not read).
@@ -152,7 +153,7 @@ export function cardErrorOfToolState(state: ToolState): ForgeRefCardError {
 }
 
 /** The hover card's line for a host this computer's CLI does not read (no tool state: nothing was run). */
-export const refUnsupportedLine = (cli: ToolCli) => `${UNSUPPORTED_WORDS(cli).title}. ${UNSUPPORTED_WORDS(cli).detail}`;
+export const refUnsupportedLine = (cli: ToolCli) => `${UNSUPPORTED_WORDS(cli).title}。${UNSUPPORTED_WORDS(cli).detail}`;
 
 /**
  * A failed hover card's problem: the server's own (newer servers), else its older bare error code in the same words

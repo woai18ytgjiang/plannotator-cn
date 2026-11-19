@@ -39,14 +39,14 @@ export interface TableSelect {
 }
 
 const COLUMNS: { key: SortKey; label: string; className: string }[] = [
-  { key: 'number', label: 'Pull request', className: 'ib-prtb-n' },
-  { key: 'title', label: 'Title', className: 'ib-prtb-t' },
-  { key: 'author', label: 'Author', className: 'ib-prtb-a' },
-  { key: 'state', label: 'State', className: 'ib-prtb-s' },
-  { key: 'checks', label: 'Checks', className: 'ib-prtb-ck' },
-  { key: 'risk', label: 'Risk', className: 'ib-prtb-risk' },
-  { key: 'updated', label: 'Updated', className: 'ib-prtb-upd' },
-  { key: 'size', label: 'Size', className: 'ib-prtb-size' },
+  { key: 'number', label: 'PR', className: 'ib-prtb-n' },
+  { key: 'title', label: '标题', className: 'ib-prtb-t' },
+  { key: 'author', label: '作者', className: 'ib-prtb-a' },
+  { key: 'state', label: '状态', className: 'ib-prtb-s' },
+  { key: 'checks', label: '检查', className: 'ib-prtb-ck' },
+  { key: 'risk', label: '风险', className: 'ib-prtb-risk' },
+  { key: 'updated', label: '更新', className: 'ib-prtb-upd' },
+  { key: 'size', label: '大小', className: 'ib-prtb-size' },
 ];
 
 export function SheetTable(props: {
@@ -107,8 +107,8 @@ export function SheetTable(props: {
               <button
                 type="button"
                 className="ib-prtb-stack"
-                aria-label={`Open the stack: ${stack.layers.length} layers`}
-                title={`Open the stack: ${stack.layers.length} layers`}
+                aria-label={`打开堆叠：${stack.layers.length} 层`}
+                title={`打开堆叠：${stack.layers.length} 层`}
                 onClick={(event) => {
                   event.stopPropagation();
                   props.onOpenStack(stack);
@@ -133,7 +133,7 @@ export function SheetTable(props: {
         <td className="ib-prtb-a">
           <span className="ib-prtb-who">
             <Face login={pull.author ?? ''} host={pull.host} size={20} />
-            {pull.mine ? 'You' : pull.author && <span>{pull.author}</span>}
+            {pull.mine ? '你' : pull.author && <span>{pull.author}</span>}
           </span>
         </td>
         <td className="ib-prtb-s" data-tone={you ? 'you' : open && pull.checks === 'failure' ? 'bad' : undefined}>
@@ -194,7 +194,7 @@ export function SheetTable(props: {
             <tr className="ib-prtb-g">
               {select && (
                 <td className="ib-prtb-c">
-                  <SelectBox state={select.section(section)} label={`Select all in ${section.label}`} tooltip onClick={() => select.onSection(section)} />
+                  <SelectBox state={select.section(section)} label={`全选 ${section.label} 中的项`} tooltip onClick={() => select.onSection(section)} />
                 </td>
               )}
               <th colSpan={span} scope="rowgroup">

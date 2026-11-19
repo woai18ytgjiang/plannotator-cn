@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useId, useLayoutEffect, useMemo, useRef, useState, type KeyboardEvent, type ReactNode } from 'react';
 import { Menu } from '@base-ui/react/menu';
 import { inboxSnoozeChoices, inboxSnoozeDays, inboxSnoozeFirstPick, inboxSnoozeKeepTime, inboxSnoozeTimes, inboxSnoozeWhen } from '@plannotator/core/inbox-snooze';
@@ -67,7 +68,7 @@ export function SnoozeTimes({ view, onView, onBack, onPick, onClose }: SnoozeTim
     <div ref={body} data-snooze-view={view}>
       {view === 'pick' ? (
         <>
-          <BackRow label="Pick a time" onBack={() => onView('times')} />
+          <BackRow label="选择时间" onBack={() => onView('times')} />
           <SnoozePicker
             now={now}
             onPick={(until) => {
@@ -79,7 +80,7 @@ export function SnoozeTimes({ view, onView, onBack, onPick, onClose }: SnoozeTim
       ) : (
         <>
           {onBack ? (
-            <BackRow label="Snooze until" onBack={onBack} />
+            <BackRow label="暂停通知至" onBack={onBack} />
           ) : (
             <div className="ib-pm-title" aria-hidden="true" data-snooze-title="">
               Snooze until
@@ -92,7 +93,7 @@ export function SnoozeTimes({ view, onView, onBack, onPick, onClose }: SnoozeTim
             </Menu.Item>
           ))}
           <Menu.Separator className="ib-pm-sep" />
-          <Menu.Item className="ib-pmi" label="Pick a time" closeOnClick={false} onClick={() => onView('pick')} data-snooze-pick-time="">
+          <Menu.Item className="ib-pmi" label="选择时间" closeOnClick={false} onClick={() => onView('pick')} data-snooze-pick-time="">
             Pick a time…
           </Menu.Item>
         </>
@@ -219,7 +220,7 @@ export function SnoozePicker({ now, onPick }: { now: Date; onPick: (until: strin
     >
       <div className="ib-zlists">
         <PickList label="Day" id={`${uid}day`} options={days} value={day} onChange={setDay} onNeighbour={cross('Time')} onDone={go} centreOn="" />
-        <PickList label="Time" id={`${uid}time`} options={times} value={shownTime ?? ''} onChange={setTime} onNeighbour={cross('Day')} onDone={go} centreOn={day} />
+        <PickList label="时间" id={`${uid}time`} options={times} value={shownTime ?? ''} onChange={setTime} onNeighbour={cross('Day')} onDone={go} centreOn={day} />
       </div>
       <div className="ib-zfoot">
         <button type="button" className="ib-zgo" onClick={go} disabled={!until} data-snooze-go="">

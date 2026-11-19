@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState } from 'react';
 import type { UpdateInfo } from '../hooks/useUpdateCheck';
 import type { Origin } from '@plannotator/core/agents';
@@ -82,7 +83,7 @@ export const MenuVersionSection: React.FC<MenuVersionSectionProps> = ({
         <span className="flex items-center gap-1.5">
           {hasUpdate && (
             <>
-              <span className="font-medium text-foreground">{updateInfo!.latestVersion} is available</span>
+              <span className="font-medium text-foreground">{updateInfo!.latestVersion} 已发布</span>
               <span className="text-muted-foreground/40">·</span>
             </>
           )}
@@ -93,12 +94,12 @@ export const MenuVersionSection: React.FC<MenuVersionSectionProps> = ({
             onClick={closeMenu}
             className="text-muted-foreground hover:text-foreground transition-colors"
           >
-            {hasUpdate ? "What's new" : 'Release notes'}
+            {hasUpdate ? "新功能" : '发布说明'}
           </a>
         </span>
         {!hasUpdate && checkFailing && (
           <span className="text-muted-foreground" data-menu-update-check-failing="">
-            Can&apos;t check for updates since {failingSince(checkFailing.since)} ({checkFailing.error}). To update now:
+            自 {failingSince(checkFailing.since)} 起无法检查更新（{checkFailing.error}）。如需立即更新：
           </span>
         )}
         {(hasUpdate || checkFailing) && (
@@ -113,7 +114,7 @@ export const MenuVersionSection: React.FC<MenuVersionSectionProps> = ({
               onClick={handleCopy}
               className="shrink-0 rounded px-1.5 py-0.5 text-[10px] font-medium border border-border hover:bg-muted transition-colors"
             >
-              {copied ? 'Copied' : 'Copy'}
+              {copied ? '已复制' : '复制'}
             </button>
           </div>
         )}
@@ -125,7 +126,7 @@ export const MenuVersionSection: React.FC<MenuVersionSectionProps> = ({
                 disabled={updating === 'starting' || updating === 'started'}
                 className="w-full mt-1 px-2.5 py-1.5 rounded-md text-[11px] font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-60"
               >
-                {updating === 'started' ? `Updating to ${updateInfo!.latestVersion}…` : updating === 'starting' ? 'Starting…' : 'Update now'}
+                {updating === 'started' ? `正在更新到 ${updateInfo!.latestVersion}…` : updating === 'starting' ? '启动中…' : '立即更新'}
               </button>
             )}
             {updating !== 'idle' && updating !== 'starting' && updating !== 'started' && (

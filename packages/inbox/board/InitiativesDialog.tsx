@@ -176,7 +176,7 @@ export function InitiativesDialog({
   let body: ReactNode = null;
   if (visible.length > 0) {
     body = (
-      <ul className="ib-inid-list" aria-label="Tags">
+      <ul className="ib-inid-list" aria-label="标签">
         {visible.map((i) => (
           <InitiativeRow
             key={i.id}
@@ -206,11 +206,11 @@ export function InitiativesDialog({
   const words = deleted.length > 0 ? initiativeDeletedToast(deleted) : null;
   const toast: InboxToastModel | null = words ? { id: toastId, icon: 'check', lead: words.lead, detail: words.detail, onUndo: () => void undo(), noKey: true } : null;
   return (
-    <Modal label="Tags" testId="initiatives" onClose={close} ownKeys fallbackFocus={fallbackFocus} className={`ib-inid${phone ? ' ib-inid-phone' : ''}`}>
+    <Modal label="标签" testId="initiatives" onClose={close} ownKeys fallbackFocus={fallbackFocus} className={`ib-inid${phone ? ' ib-inid-phone' : ''}`}>
       <div className="ib-dlg-in" ref={inner}>
         <div className="ib-dlg-head">
-          <h2>Tags</h2>
-          <button type="button" className="ib-ncd-x" aria-label="Close" onClick={close}>
+          <h2>标签</h2>
+          <button type="button" className="ib-ncd-x" aria-label="关闭" onClick={close}>
             <Icon name="x" size={16} />
           </button>
         </div>
@@ -229,15 +229,15 @@ export function InitiativesDialog({
             ref={newField}
             type="text"
             className="ib-inid-in"
-            placeholder="New tag"
-            aria-label="New tag"
+            placeholder="新建标签"
+            aria-label="新建标签"
             maxLength={INBOX_INITIATIVE_NAME_MAX}
             value={adding}
             onChange={(event) => setAdding(event.target.value)}
             data-initiative-new-name=""
           />
           <button type="submit" className="ib-btn ib-sm" disabled={busy || !adding.trim()} data-initiative-add="">
-            Add
+            添加
           </button>
         </form>
         {error && (
@@ -247,12 +247,12 @@ export function InitiativesDialog({
         )}
         <div className="ib-acts-row">
           <button type="button" className="ib-btn ib-pri" onClick={close} data-initiatives-done="">
-            Done
+            完成
           </button>
         </div>
         {/* It never takes focus, as the window's; inside the dialog, so its Undo can be pressed and this live region heard. */}
         <div className="ib-sr" aria-live="polite" data-initiative-live="">
-          {words ? `${words.lead} ${words.detail}. Undo is available.` : ''}
+          {words ? `${words.lead} ${words.detail}。可以撤销。` : ''}
         </div>
         {toast && <InboxToast toast={toast} phone={phone} onDismiss={clearToast} onHold={holdToast} />}
       </div>
@@ -280,7 +280,7 @@ function InitiativeRow({ initiative, busy, onRename, onDelete }: { initiative: I
       <input
         type="text"
         className="ib-inid-in"
-        aria-label={`Name of ${initiative.name}`}
+        aria-label={`名称：${initiative.name}`}
         maxLength={INBOX_INITIATIVE_NAME_MAX}
         value={draft}
         dir="auto"
@@ -294,11 +294,11 @@ function InitiativeRow({ initiative, busy, onRename, onDelete }: { initiative: I
         }}
         data-initiative-name=""
       />
-      <Tip content="Delete">
+      <Tip content="删除">
         <button
           type="button"
           className="ib-iconbtn ib-inid-del"
-          aria-label={`Delete ${initiative.name}`}
+          aria-label={`删除 ${initiative.name}`}
           disabled={busy}
           // The second click of a double click would land on the row that moved up under the pointer.
           onClick={(event) => {

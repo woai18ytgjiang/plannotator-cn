@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { Check, ChevronDown, Loader2, Send } from 'lucide-react';
 import { Button } from './ui/button';
@@ -142,7 +143,7 @@ export const DecisionNoteField: React.FC<DecisionNoteFieldProps> = ({
   onTextChange,
   onSubmit,
   onCancel,
-  placeholder = 'Add a note...',
+  placeholder = '添加备注…',
   disabled = false,
   autoFocus = true,
   enterSubmits = false,
@@ -576,7 +577,7 @@ export const DecisionControl: React.FC<DecisionControlProps> = ({
         disabled={busy}
         aria-haspopup="menu"
         aria-expanded={popover !== null}
-        aria-label="More decisions"
+        aria-label="更多决策"
         data-decision-caret="true"
         className={cn('rounded-l-none px-1.5', spec.primary.muted && 'bg-muted text-foreground [@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted/70')}
       >
@@ -672,7 +673,7 @@ export const DecisionControl: React.FC<DecisionControlProps> = ({
           title={confirmItem.confirm.title}
           message={confirmItem.confirm.message}
           confirmText={confirmItem.confirm.confirmText}
-          cancelText="Cancel"
+          cancelText="取消"
           variant="warning"
           showCancel
         />

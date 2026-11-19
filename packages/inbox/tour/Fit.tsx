@@ -12,13 +12,13 @@
 import { HostMark, Icon } from '../icons';
 import { tourAssetUrl } from './assets';
 
-export const TOUR_FIT_TITLE = 'The Inbox works beside your agents';
+export const TOUR_FIT_TITLE = '收件箱与你的智能体协同工作';
 export const TOUR_FIT_LINES = [
-  'It doesn’t replace them: keep running Claude Code, Pi or OpenCode in your terminal or editor, as you do now.',
-  'When they need you, they send their questions, finished work and files here.',
-  'Your reply goes back into the same session, and it keeps working.',
+  '它不会取代它们：照常在你的终端或编辑器中运行 Claude Code、Pi 或 OpenCode。',
+  '当它们需要你时，会把问题、已完成的工作和文件发送到这里。',
+  '你的回复会回到同一个会话，它会继续工作。',
 ] as const;
-const PICTURE_ALT = 'Your agents keep running in your terminal and editor. They send questions, work and files to the Inbox; your reply goes back to the same session.';
+const PICTURE_ALT = '你的智能体继续在你的终端和编辑器中运行。它们把问题、工作和文件发送到收件箱；你的回复会回到同一个会话。';
 
 /** One of your agents, in one line: its mark, its name, and that you run it as normal. */
 function Session({ host, name, row }: { host: string; name: string; row: number }) {
@@ -27,8 +27,8 @@ function Session({ host, name, row }: { host: string; name: string; row: number 
       <HostMark host={host} />
       <b>{name}</b>
       <span className="tp-note">
-        <span className="tp-note-long">(you run this as normal)</span>
-        <span className="tp-note-short">(run as normal)</span>
+        <span className="tp-note-long">（你照常运行）</span>
+        <span className="tp-note-short">（照常运行）</span>
       </span>
     </div>
   );
@@ -42,7 +42,7 @@ function Link({ row, reply }: { row: number; reply?: boolean }) {
       {reply && (
         <>
           <i className="tp-back tp-ret-draw" />
-          <span className="tp-reply">your reply</span>
+          <span className="tp-reply">你的回复</span>
         </>
       )}
     </div>
@@ -61,25 +61,25 @@ export function TourFitPicture() {
         <Link row={3} />
         {/* A phone: the sessions on top, then the questions down and the reply up, side by side. */}
         <div className="tp-down" aria-hidden="true">
-          <span className="tp-dn">↓ questions, work, files</span>
-          <span className="tp-up">↑ your reply</span>
+          <span className="tp-dn">↓ 问题、工作、文件</span>
+          <span className="tp-up">↑ 你的回复</span>
         </div>
         <div className="tp-inbox">
           <div className="tp-ih">
             <Icon name="inbox" size={13} />
-            Inbox
+            收件箱
           </div>
           <div className="tp-row">
             <HostMark host="claude-code" />
-            <b>Which direction?</b>
-            <span className="tp-c">1 question</span>
+            <b>哪个方向？</b>
+            <span className="tp-c">1 个问题</span>
             {/* Not here: the row keeps its words, never a broken image. */}
             <img className="tp-th" src={tourAssetUrl('vs-a-thumb.webp')} alt="" onError={(event) => (event.currentTarget.style.display = 'none')} />
           </div>
           <div className="tp-row">
             <HostMark host="pi" />
-            <b>Checkout page is done</b>
-            <span className="tp-c">2 files</span>
+            <b>结账页已完成</b>
+            <span className="tp-c">2 个文件</span>
           </div>
         </div>
       </div>
@@ -116,7 +116,7 @@ export function TourIntro({ onGo }: { onGo: () => void }) {
           <TourFitText as="h2" id="ib-tour-intro-h" />
           <div className="ib-ti-acts">
             <button type="button" className="ib-btn ib-pri" onClick={onGo} data-tour-intro-go="">
-              Show me
+              给我看看
             </button>
           </div>
         </div>

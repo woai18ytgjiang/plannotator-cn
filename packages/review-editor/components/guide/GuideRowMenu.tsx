@@ -37,7 +37,7 @@ export function GuideRowMenu({ id, title, onRename, onDelete }: { id: string; ti
       <button
         ref={trigger}
         type="button"
-        aria-label={`More actions for ${title}`}
+        aria-label={`更多操作：${title}`}
         aria-haspopup="menu"
         aria-expanded={open}
         onPointerDown={(e) => {
@@ -71,13 +71,13 @@ export function GuideRowMenu({ id, title, onRename, onDelete }: { id: string; ti
                 <Download size={13} className="text-muted-foreground" /> Download portable guide
               </a>
             ) : (
-              <button type="button" role="menuitem" className={ITEM} disabled title="Its diff was not kept, so it cannot be exported">
+              <button type="button" role="menuitem" className={ITEM} disabled title="其差异未被保留，因此无法导出">
                 <Download size={13} /> Download portable guide
               </button>
             )}
             {share?.enabled && info && (
               <button type="button" role="menuitem" className={ITEM} onClick={pick(() => setShareOpen(true))}>
-                <Link2 size={13} className="text-muted-foreground" /> {share.existing ? 'Share link' : 'Create share link'}
+                <Link2 size={13} className="text-muted-foreground" /> {share.existing ? '分享链接' : '创建分享链接'}
               </button>
             )}
             <div className="my-1 h-px bg-border" />

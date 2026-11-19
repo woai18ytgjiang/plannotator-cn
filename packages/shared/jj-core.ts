@@ -97,8 +97,8 @@ export async function getJjContext(
         "jj-line": {
           fallbackDiffType: "jj-current",
           message: jjLineBase.kind === "ambiguous"
-            ? "Jujutsu found multiple possible line-of-work bases. Showing Current change instead."
-            : `${jjLineBase.reason} Showing Current change instead.`,
+            ? "Jujutsu 找到多个可能的工作线基准。改为显示「当前更改」。"
+            : `${jjLineBase.reason}改为显示「当前更改」。`,
           ...(jjLineBase.kind === "ambiguous" && {
             candidates: jjLineBase.candidates.map((candidate) => ({
               revision: candidate.commitId,
@@ -115,11 +115,11 @@ export async function getJjContext(
     currentBranch: "",
     defaultBranch: defaultTarget,
     diffOptions: [
-      { id: "jj-current", label: "Current change" },
-      { id: "jj-last", label: "Last change" },
-      { id: "jj-line", label: "Line of work" },
-      ...(evologs.length >= 2 ? [{ id: "jj-evolog", label: "Evolution diff" }] : []),
-      { id: "jj-all", label: "Every file" },
+      { id: "jj-current", label: "当前更改" },
+      { id: "jj-last", label: "上次更改" },
+      { id: "jj-line", label: "工作线" },
+      ...(evologs.length >= 2 ? [{ id: "jj-evolog", label: "演化差异" }] : []),
+      { id: "jj-all", label: "所有文件" },
     ],
     worktrees: [],
     availableBranches: targets,
@@ -127,13 +127,13 @@ export async function getJjContext(
       diffTypes: ["jj-line"],
       fallback: defaultTarget,
       picker: {
-        rowLabel: "from revision",
-        triggerLabel: "revision",
-        triggerTitlePrefix: "Compare against",
-        searchPlaceholder: "Search bookmarks...",
-        emptyText: "No bookmarks match.",
-        localGroupLabel: "Bookmarks",
-        remoteGroupLabel: "Remote bookmarks",
+        rowLabel: "起始修订",
+        triggerLabel: "修订",
+        triggerTitlePrefix: "对比基准",
+        searchPlaceholder: "搜索书签…",
+        emptyText: "没有匹配的书签。",
+        localGroupLabel: "书签",
+        remoteGroupLabel: "远程书签",
       },
     },
     repository: contextCwd ? { displayFallback: basename(contextCwd) } : undefined,
@@ -212,7 +212,7 @@ export async function resolveJjSnapshotEndpoint(
   for (let step = 0; step < endpoint.firstParentSteps; step += 1) {
     const parent = await resolveJjFirstParentCommitId(runtime, revision, cwd);
     if (!parent) {
-      throw new Error("This Jujutsu revision has no parent revision to compare against.");
+      throw new Error("该 Jujutsu 修订没有可用于对比的父修订。");
     }
     revision = parent;
   }
@@ -309,13 +309,13 @@ export async function runJjDiff(
   if (diffType === "jj-evolog" && defaultBranch.length === 0) {
     const evologs = await getJjEvoLogEntries(runtime, cwd);
     if (evologs.length < 2) {
-      return { patch: "", label: "Evolution diff", error: "No previous evolution found" };
+      return { patch: "", label: "演化差异", error: "找不到更早的演化记录" };
     }
     compareTarget = evologs[1].commitId;
   }
 
   const args = getJjDiffArgs(diffType, compareTarget, options);
-  if (!args) return { patch: "", label: "Unknown diff type" };
+  if (!args) return { patch: "", label: "未知的差异类型" };
 
   const result = await runtime.runJj(args.args, { cwd });
   if (result.exitCode !== 0) {
@@ -352,7 +352,7 @@ async function runJjCommitDiff(
   if (!fields || fields.length < 3) {
     return {
       patch: "",
-      label: `Commit ${commitId.slice(0, 12)}`,
+      label: `提交 ${commitId.slice(0, 12)}`,
       error: firstErrorLine(header.stderr) ?? "Jujutsu could not resolve this revision.",
     };
   }
@@ -628,25 +628,25 @@ export function getJjDiffArgs(
 
   switch (diffType) {
     case "jj-current":
-      return { args: ["diff", "--git", ...whitespaceArgs, "-r", "@"], label: "Current change" };
+      return { args: ["diff", "--git", ...whitespaceArgs, "-r", "@"], label: "当前更改" };
     case "jj-last":
-      return { args: ["diff", "--git", ...whitespaceArgs, "-r", "@-"], label: "Last change" };
+      return { args: ["diff", "--git", ...whitespaceArgs, "-r", "@-"], label: "上次更改" };
     case "jj-line":
       return {
         args: ["diff", "--git", ...whitespaceArgs, "--from", jjLineBaseRevset(compareTarget), "--to", "@"],
         // A frozen full commit id would render as 40+ hex chars in the
         // header label; show the short form like jj itself does.
-        label: `Line of work vs ${/^[0-9a-f]{40,64}$/.test(compareTarget) ? compareTarget.slice(0, 12) : compareTarget}`,
+        label: `工作线对比 ${/^[0-9a-f]{40,64}$/.test(compareTarget) ? compareTarget.slice(0, 12) : compareTarget}`,
       };
     case "jj-evolog":
       // compareTarget is the short commit ID of an older evolog entry.
       // Diff from that historical state to the current working copy.
       return {
         args: ["diff", "--git", ...whitespaceArgs, "--from", compareTarget, "--to", "@"],
-        label: `Evolution diff from ${compareTarget.slice(0, 8)}`,
+        label: `自 ${compareTarget.slice(0, 8)} 的演化差异`,
       };
     case "jj-all":
-      return { args: ["diff", "--git", ...whitespaceArgs, "--from", "root()", "--to", "@"], label: "Every file" };
+      return { args: ["diff", "--git", ...whitespaceArgs, "--from", "root()", "--to", "@"], label: "所有文件" };
     default:
       return null;
   }
@@ -660,7 +660,7 @@ export async function resolveJjLineBase(
   if (result.exitCode === 0) {
     const [revision] = parseJjLineBaseRecords(result.stdout);
     if (!revision || JJ_ROOT_COMMIT_ID.test(revision.commitId)) {
-      return { kind: "unavailable", reason: "The line of work starts at the repository root." };
+      return { kind: "unavailable", reason: "工作线从仓库根开始。" };
     }
     return { kind: "resolved", revision };
   }
@@ -680,7 +680,7 @@ export async function resolveJjLineBase(
     .filter((revision) => !JJ_ROOT_COMMIT_ID.test(revision.commitId));
   if (candidates.length > 1) return { kind: "ambiguous", candidates };
   if (candidates.length === 1) return { kind: "resolved", revision: candidates[0] };
-  return { kind: "unavailable", reason: "Jujutsu could not find a line-of-work base." };
+  return { kind: "unavailable", reason: "Jujutsu 无法找到工作线的基准。" };
 }
 
 export async function selectDefaultJjCompareTarget(

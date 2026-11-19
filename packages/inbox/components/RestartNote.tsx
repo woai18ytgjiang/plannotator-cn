@@ -25,13 +25,13 @@ import { Icon } from '../icons';
 
 /** How long Copy reads "Copied". */
 export const RESTART_COPIED_MS = 2000;
-export const RESTART_COPIED_ANNOUNCEMENT = 'Restart command copied.';
-export const UPDATE_COPIED_ANNOUNCEMENT = 'Update command copied.';
+export const RESTART_COPIED_ANNOUNCEMENT = '已复制重启命令。';
+export const UPDATE_COPIED_ANNOUNCEMENT = '已复制更新命令。';
 export const RELOAD_COMMAND = '/reload-plugins';
-export const RELOAD_COPIED_ANNOUNCEMENT = '/reload-plugins copied.';
+export const RELOAD_COPIED_ANNOUNCEMENT = '已复制 /reload-plugins。';
 
 /** Copy a command, with a short "Copied" and one polite announcement. */
-export function CopyCommand({ text, label, short = 'Copy', announcement = RESTART_COPIED_ANNOUNCEMENT }: { text: string; label: string; short?: string; announcement?: string }) {
+export function CopyCommand({ text, label, short = '复制', announcement = RESTART_COPIED_ANNOUNCEMENT }: { text: string; label: string; short?: string; announcement?: string }) {
   const [copied, setCopied] = useState(false);
   const [said, setSaid] = useState('');
   const timer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -47,7 +47,7 @@ export function CopyCommand({ text, label, short = 'Copy', announcement = RESTAR
           const ok = await copyTextToClipboard(text);
           setSaid('');
           // A fresh string each time, so a second copy is said again.
-          setTimeout(() => setSaid(ok ? announcement : "Couldn't copy the command."), 30);
+          setTimeout(() => setSaid(ok ? announcement : "无法复制命令。"), 30);
           if (!ok) return;
           setCopied(true);
           if (timer.current) clearTimeout(timer.current);
@@ -55,7 +55,7 @@ export function CopyCommand({ text, label, short = 'Copy', announcement = RESTAR
         }}
       >
         <Icon name={copied ? 'check' : 'copy'} />
-        <span>{copied ? 'Copied' : short}</span>
+        <span>{copied ? '已复制' : short}</span>
       </button>
       <span className="ib-sr" role="status" aria-live="polite" data-restart-live="">
         {said}
@@ -85,7 +85,7 @@ export const CLAUDE_RELOAD: ReloadSpec = { command: RELOAD_COMMAND, where: 'sess
 
 /** Copy the reload command (`/reload-plugins` by default). */
 export function ReloadCopy({ command = RELOAD_COMMAND }: { command?: string } = {}) {
-  return <CopyCommand text={command} label={`Copy ${command}`} announcement={`${command} copied.`} />;
+  return <CopyCommand text={command} label={`复制 ${command}`} announcement={`已复制 ${command}。`} />;
 }
 
 /**
@@ -99,7 +99,7 @@ export function ReloadLead({
   where,
   updateCommand,
   reload = CLAUDE_RELOAD,
-  what = "Plannotator's Claude Code plugin",
+  what = "Plannotator 的 Claude Code 插件",
 }: {
   where: string;
   updateCommand?: string | null;
@@ -107,19 +107,19 @@ export function ReloadLead({
   /** What the update command updates, for its Copy's name. */
   what?: string;
 }) {
-  const verb = reload.where === 'shell' ? 'run' : 'type';
-  const capital = verb === 'run' ? 'Run' : 'Type';
+  const verb = reload.where === 'shell' ? '运行' : '输入';
+  const capital = verb;
   if (updateCommand) {
     return (
       <ol className="ib-rl-lead ib-rl-two" data-reload-lead="update_plugin">
         <li>
-          <span>Update the {reload === CLAUDE_RELOAD ? 'plugin' : what.replace(/^Plannotator's /, '')}:</span>
-          <CommandLine text={updateCommand} label={`Copy the command that updates ${what}`} announcement={UPDATE_COPIED_ANNOUNCEMENT} />
+          <span>更新{reload === CLAUDE_RELOAD ? '插件' : what.replace(/^Plannotator 的 /, '')}：</span>
+          <CommandLine text={updateCommand} label={`复制更新 ${what} 的命令`} announcement={UPDATE_COPIED_ANNOUNCEMENT} />
         </li>
         <li>
           <div className="ib-rl-line">
             <span>
-              Then {verb} <code>{reload.command}</code> {where}.
+              然后{verb} <code>{reload.command}</code> {where}。
             </span>
             <ReloadCopy command={reload.command} />
           </div>
@@ -130,7 +130,7 @@ export function ReloadLead({
   return (
     <p className="ib-rl-lead ib-rl-line" data-reload-lead="restart" data-reload-command={reload.command}>
       <span>
-        {capital} <code>{reload.command}</code> {where}.
+        {capital} <code>{reload.command}</code> {where}。
       </span>
       <ReloadCopy command={reload.command} />
     </p>
@@ -144,14 +144,14 @@ export function reloadOf(note: RestartNote): ReloadSpec {
 
 /** What a runtime's update command updates, for its Copy's name. */
 export function updatedThing(runtime: RestartNote['runtime']): string {
-  if (runtime === 'opencode') return "Plannotator's OpenCode plugin";
-  if (runtime === 'pi' || runtime === 'oh-my-pi') return "Plannotator's extension";
-  return "Plannotator's Claude Code plugin";
+  if (runtime === 'opencode') return "Plannotator 的 OpenCode 插件";
+  if (runtime === 'pi' || runtime === 'oh-my-pi') return "Plannotator 的扩展";
+  return "Plannotator 的 Claude Code 插件";
 }
 
 /** "in that Pi to get Send now", or for a shell command "to get Send now". */
 function wherePhrase(note: RestartNote, name: string, purpose: string): string {
-  return note.reloadWhere === 'shell' ? purpose : `in that ${name} ${purpose}`;
+  return note.reloadWhere === 'shell' ? `，${purpose}` : `，在 ${name} 中${purpose}`;
 }
 
 /**
@@ -165,43 +165,43 @@ function ManualPath({ note, name }: { note: RestartNote; name: string }) {
   if (note.runtime === 'opencode') {
     if (!note.fallbackCommand || openCodeCommand(note) !== 'opencode2 reload') return null;
     return (
-      <Fold question="Still no Send now after reloading?">
+      <Fold question="重新加载后仍没有「立即发送」？">
         <div data-restart-fallback="">
-          Restart OpenCode's background server:
-          <CommandLine text={note.fallbackCommand} label="Copy the command that restarts OpenCode's background server" />
-          <p className="ib-rw-warn">It stops any turn an OpenCode session is working on.</p>
+          重启 OpenCode 的后台服务：
+          <CommandLine text={note.fallbackCommand} label="复制重启 OpenCode 后台服务的命令" />
+          <p className="ib-rw-warn">这会中断 OpenCode 会话正在进行的任何回合。</p>
         </div>
-        <p className="ib-rw-after">Your reply waits here.</p>
+        <p className="ib-rw-after">你的回复会在这里等待。</p>
       </Fold>
     );
   }
   if (note.runtime === 'pi') {
     return (
-      <Fold question="Still no Send now after reloading?">
+      <Fold question="重新加载后仍没有「立即发送」？">
         <div data-restart-fallback="">
-          Quit that Pi (<code>/quit</code>), then start it again in its folder with <code>pi --continue</code>.
-          <p className="ib-rw-warn">Quitting stops the turn it is working on.</p>
+          退出该 Pi（<code>/quit</code>），然后在它的文件夹中用 <code>pi --continue</code> 重新启动。
+          <p className="ib-rw-warn">退出会中断它正在进行的回合。</p>
         </div>
-        <p className="ib-rw-after">Your reply waits here.</p>
+        <p className="ib-rw-after">你的回复会在这里等待。</p>
       </Fold>
     );
   }
   return (
-    <Fold question="Still no Send now after reloading?">
+    <Fold question="重新加载后仍没有「立即发送」？">
       <div data-restart-fallback="">
         {note.command ? (
           <>
-            Type <code>/exit</code> in that {name}, then run:
-            <CommandLine text={note.command} label={`Copy the command that restarts this ${name} session`} />
+            在该 {name} 中输入 <code>/exit</code>，然后运行：
+            <CommandLine text={note.command} label={`复制重启该 ${name} 会话的命令`} />
           </>
         ) : (
           <>
-            Type <code>/exit</code> in that {name}, then run <code>claude --resume</code> in its folder and pick the session.
+            在该 {name} 中输入 <code>/exit</code>，然后在其文件夹中运行 <code>claude --resume</code> 并选择该会话。
           </>
         )}
-        <p className="ib-rw-warn">/exit stops the turn it is working on.</p>
+        <p className="ib-rw-warn">/exit 会中断它正在进行的回合。</p>
       </div>
-      <p className="ib-rw-after">Your reply waits here.</p>
+      <p className="ib-rw-after">你的回复会在这里等待。</p>
     </Fold>
   );
 }
@@ -212,8 +212,8 @@ export function openCodeCommand(note: Pick<RestartNote, 'fix' | 'updateCommand' 
 }
 
 /** `opencode2 reload` reloads every location of OpenCode's service: say, quietly, what it cancels. */
-export const OPENCODE_RELOAD_WARNING = 'Cancels any permission prompt OpenCode is showing.';
-export const OPENCODE_UPDATES_ALL = 'It updates every OpenCode plugin that has a newer version.';
+export const OPENCODE_RELOAD_WARNING = '会取消 OpenCode 当前显示的任何权限提示。';
+export const OPENCODE_UPDATES_ALL = '它会更新所有有更新版本的 OpenCode 插件。';
 
 /** The quiet lines under OpenCode's command: what a reload cancels; that an update with no target updates every plugin. */
 export function OpenCodeQuiet({ command, updatesAll, className = 'ib-rw-after ib-rl-quiet' }: { command: string; updatesAll: boolean; className?: string }) {
@@ -237,19 +237,19 @@ export function OpenCodeWords({ command, pinnedSpec, pinTo, tail = '' }: { comma
     const to = pinTo ?? '@plannotator/opencode@latest';
     return (
       <>
-        OpenCode's config pins <code className="ib-rl-wrap">{pinnedSpec}</code>: change it to <code className="ib-rl-wrap">{to}</code>{' '}
+        OpenCode 的配置固定了 <code className="ib-rl-wrap">{pinnedSpec}</code>：请将其改为 <code className="ib-rl-wrap">{to}</code>{' '}
         <span className="ib-rl-inline-copy">
           <ReloadCopy command={to} />
         </span>{' '}
-        then run <code className="ib-rl-wrap">{command}</code>
-        {tail}.
+        然后运行 <code className="ib-rl-wrap">{command}</code>
+        {tail}。
       </>
     );
   }
   return (
     <>
-      Run <code className="ib-rl-wrap">{command}</code>
-      {tail}.
+      运行 <code className="ib-rl-wrap">{command}</code>
+      {tail}。
     </>
   );
 }
@@ -280,7 +280,7 @@ export function RestartLine({ note, name }: { note: RestartNote; name: string })
       <div className="ib-rw-note" data-restart-note={note.fix} data-restart-runtime={note.runtime}>
         <p className="ib-rl-lead ib-rl-line" data-reload-lead={note.pinnedSpec ? 'pin' : 'restart'} data-reload-command={command}>
           <span>
-            <OpenCodeWords command={command} pinnedSpec={note.pinnedSpec} pinTo={note.pinTo} tail=" to get Send now" />
+            <OpenCodeWords command={command} pinnedSpec={note.pinnedSpec} pinTo={note.pinTo} tail=" 以获得「立即发送」" />
           </span>
           {!note.pinnedSpec && <ReloadCopy command={command} />}
         </p>
@@ -292,7 +292,7 @@ export function RestartLine({ note, name }: { note: RestartNote; name: string })
   return (
     <div className="ib-rw-note" data-restart-note={note.fix} data-restart-runtime={note.runtime}>
       <ReloadLead
-        where={wherePhrase(note, name, 'to get Send now')}
+        where={wherePhrase(note, name, '以获得「立即发送」')}
         updateCommand={updating ? note.updateCommand : null}
         reload={reloadOf(note)}
         what={updatedThing(note.runtime)}
@@ -315,13 +315,13 @@ export function StuckReason({ note, name }: { note: RestartNote | null; name: st
   if (!note) {
     return (
       <p className="ib-m-why" data-stuck-why="">
-        It can't go in sooner.
+        它无法更早进入。
       </p>
     );
   }
   const updating = note.fix === 'update_plugin' || note.fix === 'update_extension';
-  const what = note.runtime === 'pi' || note.runtime === 'oh-my-pi' ? 'extension' : 'plugin';
-  const verb = note.reloadWhere === 'shell' ? 'Run' : 'Type';
+  const what = note.runtime === 'pi' || note.runtime === 'oh-my-pi' ? '扩展' : '插件';
+  const verb = note.reloadWhere === 'shell' ? '运行' : '输入';
   if (note.runtime === 'opencode') {
     // One command (an update reloads by itself), or a pin to change first.
     const command = openCodeCommand(note);
@@ -329,8 +329,8 @@ export function StuckReason({ note, name }: { note: RestartNote | null; name: st
       <div className="ib-rw-note ib-m-whybox" data-restart-note={note.fix} data-restart-runtime={note.runtime}>
         <p className="ib-m-why" data-stuck-why="" data-reload-lead={note.pinnedSpec ? 'pin' : 'restart'} data-reload-command={command}>
           <span>
-            It can't go in sooner: this session runs an older Plannotator plugin.{' '}
-            <OpenCodeWords command={command} pinnedSpec={note.pinnedSpec} pinTo={note.pinTo} tail={note.pinnedSpec ? '' : ' to fix it'} />
+            它无法更早进入：此会话运行的是较旧的 Plannotator 插件。{' '}
+            <OpenCodeWords command={command} pinnedSpec={note.pinnedSpec} pinTo={note.pinTo} tail={note.pinnedSpec ? '' : ' 以修复它'} />
           </span>
           {!note.pinnedSpec && <ReloadCopy command={command} />}
         </p>
@@ -344,14 +344,14 @@ export function StuckReason({ note, name }: { note: RestartNote | null; name: st
       {updating ? (
         <>
           <p className="ib-m-why" data-stuck-why="">
-            It can't go in sooner: this session runs an older Plannotator {what}.
+            它无法更早进入：此会话运行的是较旧的 Plannotator {what}。
           </p>
-          <ReloadLead where={wherePhrase(note, name, 'to fix it')} updateCommand={note.updateCommand} reload={reloadOf(note)} what={updatedThing(note.runtime)} />
+          <ReloadLead where={wherePhrase(note, name, '以修复它')} updateCommand={note.updateCommand} reload={reloadOf(note)} what={updatedThing(note.runtime)} />
         </>
       ) : (
         <p className="ib-m-why" data-stuck-why="" data-reload-lead="restart" data-reload-command={note.reloadCommand}>
           <span>
-            It can't go in sooner: this session runs an older Plannotator {what}. {verb} <code>{note.reloadCommand}</code> {wherePhrase(note, name, 'to fix it')}.
+            它无法更早进入：此会话运行的是较旧的 Plannotator {what}。{verb} <code>{note.reloadCommand}</code>{wherePhrase(note, name, '以修复它')}。
           </span>
           <ReloadCopy command={note.reloadCommand} />
         </p>

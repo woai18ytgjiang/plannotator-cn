@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useLayoutEffect, useRef, useState } from 'react';
 import { ChevronDown, Check, Copy, ExternalLink, MoreHorizontal } from 'lucide-react';
 import { AppIcon } from './icons/AppIcon';
@@ -138,17 +139,17 @@ export const OpenInAppButton: React.FC<OpenInAppButtonProps> = ({
         })),
       });
       if (await noteServerSessionMismatch(res)) {
-        flashError('This review was replaced. Reload the page.');
+        flashError('此审查已被替换。请重新加载页面。');
         return;
       }
       const data = (await res.json().catch(() => null)) as
         | { ok: boolean; error?: string }
         | null;
       if (!res.ok || !data || data.ok === false) {
-        flashError(data?.error || 'Failed to open');
+        flashError(data?.error || '打开失败');
       }
     } catch {
-      flashError('Failed to open');
+      flashError('打开失败');
     } finally {
       setBusy(false);
     }
@@ -187,8 +188,8 @@ export const OpenInAppButton: React.FC<OpenInAppButtonProps> = ({
   const triggerClass = `pn-hit-target text-xs flex items-center py-1 transition-colors text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed ${
     menuOnly ? 'px-1.5 rounded justify-center' : openable ? 'px-1 rounded-r border-l border-border/50' : 'px-1.5 rounded'
   }`;
-  const triggerTitle = openable && !menuOnly ? 'Open in…' : 'File actions';
-  const triggerLabel = openable && !menuOnly ? 'Choose app to open in' : 'File actions';
+  const triggerTitle = openable && !menuOnly ? '打开方式…' : '文件操作';
+  const triggerLabel = openable && !menuOnly ? '选择用于打开的应用' : '文件操作';
   const triggerIcon = openable && !menuOnly ? <ChevronDown className="w-3 h-3" /> : <MoreHorizontal className="w-3.5 h-3.5" />;
 
   return (
@@ -204,7 +205,7 @@ export const OpenInAppButton: React.FC<OpenInAppButtonProps> = ({
               showLabel ? 'pl-2 pr-1.5' : 'px-1.5'
             }`}
             title={error ?? currentApp.label}
-            aria-label={`Open in ${currentApp.label}`}
+            aria-label={`在 ${currentApp.label} 中打开`}
           >
             {busy ? Spinner : quiet ? <ExternalLink className="w-3.5 h-3.5" aria-hidden="true" /> : <AppIcon id={currentApp.icon} className="w-3.5 h-3.5" />}
             {showLabel && <span className="whitespace-nowrap">{currentApp.label}</span>}
@@ -297,7 +298,7 @@ export const OpenInAppButton: React.FC<OpenInAppButtonProps> = ({
                 className="text-[13px]"
               >
                 <Copy className="w-4 h-4" />
-                <span className="flex-1">Copy path</span>
+                <span className="flex-1">复制路径</span>
               </DropdownMenuItem>
             )}
             {diffText && (
@@ -307,7 +308,7 @@ export const OpenInAppButton: React.FC<OpenInAppButtonProps> = ({
                 className="text-[13px]"
               >
                 <Copy className="w-4 h-4" />
-                <span className="flex-1">Copy file diff</span>
+                <span className="flex-1">复制文件差异</span>
               </DropdownMenuItem>
             )}
           </DropdownMenuContent>

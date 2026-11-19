@@ -144,10 +144,10 @@ export async function runCfAccessCommand(args: readonly string[], deps: CfAccess
       return 0;
     }
     if (!stored?.host) {
-      out("Cloudflare Access: not set up. See plannotator inbox cloudflare-access --help.");
+      out("Cloudflare Access：尚未设置。参见 plannotator inbox cloudflare-access --help。");
       return 0;
     }
-    out(`Cloudflare Access: ${stored.on ? "on" : "off"}, https://${stored.host}/ for ${(stored.allow ?? []).join(", ")}`);
+    out(`Cloudflare Access：${stored.on ? "已开启" : "已关闭"}，https://${stored.host}/，允许 ${(stored.allow ?? []).join(", ")}`);
     if (record) out(`  ${describeCfAccessRecord(record)}`);
     return 0;
   }
@@ -155,81 +155,81 @@ export async function runCfAccessCommand(args: readonly string[], deps: CfAccess
   if (sub === "setup") {
     const email = flag(args, "--email");
     if (!email) {
-      err("setup needs --email <the address you sign in with>: only that e-mail will get in.");
+      err("setup 需要 --email <你登录用的地址>：只有该邮箱可以进入。");
       return 2;
     }
     const binary = deps.binary === undefined ? findCloudflared(env) : deps.binary;
     if (!binary) {
-      err(`cloudflared is not installed. ${cloudflaredInstallHint()}`);
+      err(`cloudflared 未安装。${cloudflaredInstallHint()}`);
       return 1;
     }
     const token = await readToken();
     if (!token) {
-      err("No API token: set CLOUDFLARE_API_TOKEN or run setup in a terminal.");
+      err("没有 API 令牌：请设置 CLOUDFLARE_API_TOKEN，或在终端中运行 setup。");
       return 2;
     }
     const before = storedCfAccess(loadConfig());
     const wantedHost = flag(args, "--hostname")?.trim().toLowerCase().replace(/\.$/, "");
     if (before?.host && (before.tunnel || before.app || before.dnsRecord) && wantedHost && wantedHost !== before.host) {
-      err(`Already set up for ${before.host}. Run plannotator inbox cloudflare-access teardown first, then set up ${wantedHost}.`);
+      err(`已为 ${before.host} 设置好。请先运行 plannotator inbox cloudflare-access teardown，再设置 ${wantedHost}。`);
       return 2;
     }
     const portArg = flag(args, "--port");
     const port = portArg ? Number(portArg) : (before?.port ?? (deps.pickPort ?? freePort)());
     if (!Number.isInteger(port) || port < 1024 || port > 65535) {
-      err("--port must be from 1024 to 65535.");
+      err("--port 必须介于 1024 到 65535 之间。");
       return 2;
     }
     const flow = await runCfAccessSetupFlow(
       { dataDir: deps.dataDir, api: makeApi(token), binary, apply: () => tellInbox(readInboxRegistry(deps.dataDir)), edgeFetch: deps.edgeFetch, checkTimeoutMs: deps.checkTimeoutMs, connectTimeoutMs: deps.connectTimeoutMs },
       { email, port, account: flag(args, "--account") || undefined, zone: flag(args, "--zone") || undefined, hostname: flag(args, "--hostname") || before?.host || undefined },
       (step, state) => {
-        if (step === "checks" && state === "running") err("  Checking from outside that nothing gets in without your login…");
+        if (step === "checks" && state === "running") err("  正在从外部检查：未登录时无法进入…");
       },
       (step, detail) => err(`  ${SETUP_LINES[step]}${detail ? `: ${detail}` : ""}`),
     );
     if (!flow.ok) {
-      err(`Not turned on (${flow.step}): ${flow.message}`);
-      err(flow.leftover.length > 0 ? `Could not remove what setup made; delete in Cloudflare: ${flow.leftover.join(", ")}.` : "Nothing was left behind in Cloudflare.");
+      err(`未能开启（${flow.step}）：${flow.message}`);
+      err(flow.leftover.length > 0 ? `无法移除 setup 创建的内容；请在 Cloudflare 中删除：${flow.leftover.join(", ")}。` : "Cloudflare 中没有留下任何内容。");
       return 1;
     }
     const after = (await tellInbox(await deps.ensureRunning().catch(() => null))) ?? null;
     const url = `https://${flow.host}/`;
     out(url);
     writeUrlQr(url);
-    if (after?.error) err(`The Inbox could not open it yet: ${after.error}`);
-    err(`On. Open it on your device and sign in with ${email.trim().toLowerCase()}. Sessions: add --cloudflare-access to review, annotate or last; they open at https://${flow.sessionHost}/s/…`);
+    if (after?.error) err(`收件箱暂时无法打开它：${after.error}`);
+    err(`已开启。请在你的设备上打开它，并用 ${email.trim().toLowerCase()} 登录。会话：给 review、annotate 或 last 加上 --cloudflare-access；它们会在 https://${flow.sessionHost}/s/… 打开`);
     return 0;
   }
 
   if (sub === "teardown") {
     const stored = storedCfAccess(loadConfig());
     if (!stored?.host && !stored?.tunnel) {
-      out("Cloudflare Access: not set up.");
+      out("Cloudflare Access：尚未设置。");
       return 0;
     }
     saveConfig({ inboxCloudflareAccess: { ...stored, on: false } });
     await tellInbox(readInboxRegistry(deps.dataDir));
     if (args.includes("--local-only")) {
       rmSync(tunnelTokenPath(deps.dataDir), { force: true });
-      err("Off here. Left in Cloudflare (delete them in the dashboard, in this order):");
-      if (stored.dnsRecord) err(`  DNS record for ${stored.host}`);
-      if (stored.sessionDnsRecord) err(`  DNS record for ${stored.sessionHost}`);
-      if (stored.app) err(`  Access application ${stored.app}`);
-      if (stored.tunnel) err(`  Tunnel ${stored.tunnel}`);
+      err("已在本机关闭。以下内容仍留在 Cloudflare 中（请在控制台按此顺序删除）：");
+      if (stored.dnsRecord) err(`  ${stored.host} 的 DNS 记录`);
+      if (stored.sessionDnsRecord) err(`  ${stored.sessionHost} 的 DNS 记录`);
+      if (stored.app) err(`  Access 应用 ${stored.app}`);
+      if (stored.tunnel) err(`  隧道 ${stored.tunnel}`);
       return 0;
     }
     const token = await readToken();
     if (!token) {
-      err("No API token: set CLOUDFLARE_API_TOKEN, or use --local-only.");
+      err("没有 API 令牌：请设置 CLOUDFLARE_API_TOKEN，或使用 --local-only。");
       return 2;
     }
     const removed = await runCfAccessRemoveFlow({ dataDir: deps.dataDir, api: makeApi(token), apply: () => tellInbox(readInboxRegistry(deps.dataDir)) }, (step) => err(`  ${TEARDOWN_LINES[step]}`));
     if (!removed.ok) {
-      err(`Teardown stopped: ${removed.message}`);
+      err(`拆除已停止：${removed.message}`);
       return 1;
     }
-    out("Cloudflare Access: removed. Revoke the API token in Cloudflare (My Profile, API Tokens) if you no longer need it.");
+    out("Cloudflare Access：已移除。如果不再需要 API 令牌，请在 Cloudflare（My Profile、API Tokens）中吊销它。");
     return 0;
   }
 

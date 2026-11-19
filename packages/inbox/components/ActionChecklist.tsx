@@ -58,7 +58,7 @@ const CHIP: Record<ActionCardState, { label: string; className: string } | null>
   done: { label: 'Done', className: 'ib-badge ib-b-ok' },
   seen: { label: 'Done', className: 'ib-badge ib-b-ok' },
   cant: { label: "Can't do it", className: 'ib-badge ib-b-stop' },
-  'set-aside': { label: 'Set aside', className: 'ib-badge ib-b-mut' },
+  'set-aside': { label: '搁置', className: 'ib-badge ib-b-mut' },
   archived: { label: 'Closed', className: 'ib-badge ib-b-mut' },
   replaced: { label: 'Replaced', className: 'ib-badge ib-b-mut' },
 };
@@ -325,7 +325,7 @@ function ActionRow({ action, state, agent, refRepo, readOnly, open, onToggle, to
     if (state === 'seen' && result) return `${agent} saw it done, ${when}.`;
     if (state === 'set-aside') return `Set aside when you marked the thread read. ${agent} was told not to wait.`;
     if (state === 'replaced') return `${agent} replaced this action item.`;
-    if (state === 'archived') return 'Closed when the thread was archived.';
+    if (state === 'archived') return '话题归档时已关闭。';
     return null;
   })();
 
@@ -409,13 +409,13 @@ function ActionRow({ action, state, agent, refRepo, readOnly, open, onToggle, to
         {action.context && <ContextMarkdown className="ib-body ib-chk-why" data-action-why="" markdown={action.context} messageId={action.message_id} refRepo={refRepo} />}
         {live && action.stopped !== null && (
           <p className="ib-chk-holds" data-action-stopped="">
-            <b>Stopped</b>
+            <b>已停止</b>
             {action.stopped !== '' ? ` ${action.stopped}` : ''}
           </p>
         )}
         {live && action.holds_up.length > 0 && (
           <p className="ib-chk-holds" data-action-holds="">
-            <b>Holds up</b> {action.holds_up.join('; ')}
+            <b>阻塞</b> {action.holds_up.join('; ')}
           </p>
         )}
         {live && facts.where && !facts.where_url && (
@@ -433,13 +433,13 @@ function ActionRow({ action, state, agent, refRepo, readOnly, open, onToggle, to
         {live && facts.run && (
           <div className="ib-chk-run" data-action-run="">
             <div className="ib-chk-run-top">
-              <span className="ib-chk-run-l">Command</span>
+              <span className="ib-chk-run-l">命令</span>
               <button type="button" className="ib-btn ib-sm" data-action-copy="" onClick={() => void copy()}>
                 <Icon name={copied === 'ok' ? 'check' : 'copy'} />
                 {copied === 'ok' ? 'Copied' : copied === 'failed' ? "Couldn't copy" : 'Copy'}
               </button>
               <span className="ib-chk-sr" role="status" data-action-copy-status="">
-                {copied === 'ok' ? 'Command copied.' : copied === 'failed' ? "Couldn't copy the command." : ''}
+                {copied === 'ok' ? '已复制命令。' : copied === 'failed' ? "无法复制命令。" : ''}
               </span>
             </div>
             <code className="ib-chk-cmd" data-action-cmd="">
@@ -623,7 +623,7 @@ function DraftNote({
         }}
       />
       <p className="ib-chk-dline" data-action-draft-line="">
-        {seen ? (cant ? 'Your reason' : 'Your note') : cant ? "Can't do it" : 'Done'}
+        {seen ? (cant ? '你的原因' : '你的备注') : cant ? "无法完成" : '完成'}
         {seen ? '' : ` ${clockTime(mark.at)}`} · in your draft
       </p>
     </div>

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useState, type DragEventHandler, type ReactNode } from "react";
 
 import { motion, type MotionValue } from "motion/react";
@@ -66,7 +67,7 @@ export function DocumentRail({
 }) {
   return (
     <motion.aside
-      aria-label="Page rail"
+      aria-label="页面栏"
       data-document-rail=""
       className="hidden h-full shrink-0 flex-col overflow-hidden border-r border-frame-divider bg-card md:flex"
       style={{ width: outerWidth }}

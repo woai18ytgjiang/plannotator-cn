@@ -58,7 +58,7 @@ export function PickTidy({ rows, machines, anchor, phone, onClose }: { rows: rea
       <Popover.Portal container={portal ?? undefined}>
         {phone && <Popover.Backdrop className="ib-pm-scrim" />}
         <Popover.Positioner className="ib-tidy-pos" anchor={anchor} side="bottom" align="start" sideOffset={6} data-phone={phone ? '' : undefined}>
-          <Popover.Popup className="ib-tidy" aria-label="Tidy the selected threads" finalFocus={() => (anchor?.isConnected ? anchor : true)} data-tidy-popover="" data-pick-tidy-popover="">
+          <Popover.Popup className="ib-tidy" aria-label="整理所选话题" finalFocus={() => (anchor?.isConnected ? anchor : true)} data-tidy-popover="" data-pick-tidy-popover="">
             {open && <TidyPanel tidy={tidy} onDone={onClose} />}
           </Popover.Popup>
         </Popover.Positioner>

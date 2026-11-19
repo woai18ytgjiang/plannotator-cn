@@ -203,20 +203,20 @@ export function StarredPills(props: StarredPillsProps) {
         <div className="ib-pm-title" dir="auto" aria-hidden="true">
           {pill.label}
         </div>
-        <Menu.Item className="ib-pmi" label="Unstar" onClick={run('unpin')} data-pill-action="unpin">
+        <Menu.Item className="ib-pmi" label="取消星标" onClick={run('unpin')} data-pill-action="unpin">
           <Icon name="star" size={15} className="ib-star-on" />
           Unstar
         </Menu.Item>
-        <Menu.Item className="ib-pmi" label="Move left" disabled={pinEnds(pills.map((p) => p.row), at).first} onClick={run('up')} data-pill-action="left">
+        <Menu.Item className="ib-pmi" label="左移" disabled={pinEnds(pills.map((p) => p.row), at).first} onClick={run('up')} data-pill-action="left">
           <Icon name="back" size={15} />
           Move left
         </Menu.Item>
-        <Menu.Item className="ib-pmi" label="Move right" disabled={pinEnds(pills.map((p) => p.row), at).last} onClick={run('down')} data-pill-action="right">
+        <Menu.Item className="ib-pmi" label="右移" disabled={pinEnds(pills.map((p) => p.row), at).last} onClick={run('down')} data-pill-action="right">
           <Icon name="arrowRight" size={15} />
           Move right
         </Menu.Item>
         <Menu.Separator className="ib-pm-sep" />
-        <Menu.Item className="ib-pmi" label="Copy link" onClick={run('copy-link')} data-pill-action="copy-link">
+        <Menu.Item className="ib-pmi" label="复制链接" onClick={run('copy-link')} data-pill-action="copy-link">
           <Icon name="link" size={15} />
           Copy link
         </Menu.Item>
@@ -228,7 +228,7 @@ export function StarredPills(props: StarredPillsProps) {
     <nav
       ref={nav}
       className="ib-stars"
-      aria-label="Starred"
+      aria-label="星标"
       data-starred-pills=""
       data-phone={phone ? '' : undefined}
       data-edge={phone && edge ? '' : undefined}
@@ -282,7 +282,7 @@ export function StarredPills(props: StarredPillsProps) {
                     <PillState pill={pill} />
                   </button>
                 </Tip>
-                <Tip content={<span data-pill-unstar-tip="">Unstar</span>} side="top">
+                <Tip content={<span data-pill-unstar-tip="">取消星标</span>} side="top">
                   <button
                     type="button"
                     className="ib-star-x"
@@ -315,7 +315,7 @@ export function StarredPills(props: StarredPillsProps) {
         </ContextMenu.Trigger>
         <ContextMenu.Portal container={portal ?? undefined}>
           <ContextMenu.Positioner className="ib-pm-pos">
-            <ContextMenu.Popup className="ib-pm" aria-label={target?.label ?? 'Starred thread'} data-pill-menu={target?.row.thread_id} {...menu.popup}>
+            <ContextMenu.Popup className="ib-pm" aria-label={target?.label ?? '星标话题'} data-pill-menu={target?.row.thread_id} {...menu.popup}>
               {target && items(target, () => {})}
             </ContextMenu.Popup>
           </ContextMenu.Positioner>
@@ -333,7 +333,7 @@ export function StarredPills(props: StarredPillsProps) {
         <Menu.Portal container={portal ?? undefined}>
           {phone && <Menu.Backdrop className="ib-pm-scrim" />}
           <Menu.Positioner className="ib-pm-pos" side="bottom" align="start" sideOffset={4} anchor={() => (sheetId ? buttonFor(sheetId) : null)} data-phone={phone ? '' : undefined}>
-            <Menu.Popup className="ib-pm" aria-label={sheet?.label ?? 'Starred thread'} data-pill-sheet={sheet?.row.thread_id} finalFocus={() => (sheetId ? (buttonFor(sheetId) ?? true) : true)}>
+            <Menu.Popup className="ib-pm" aria-label={sheet?.label ?? '星标话题'} data-pill-sheet={sheet?.row.thread_id} finalFocus={() => (sheetId ? (buttonFor(sheetId) ?? true) : true)}>
               {sheet &&
                 items(sheet, () => {
                   sheetHeld.current = false;
@@ -459,7 +459,7 @@ function MorePills({
           <Menu.Popup
             ref={popup}
             className="ib-pm ib-star-menu"
-            aria-label="More starred"
+            aria-label="更多星标"
             data-pills-more-menu=""
             // "+N" itself goes with its last row: focus then goes to the last pill on screen.
             finalFocus={() => {
@@ -499,7 +499,7 @@ function MorePills({
                       <PillState pill={pill} />
                     </span>
                   </Menu.Item>
-                  <Tip content={<span data-pill-unstar-tip="">Unstar</span>} side="left">
+                  <Tip content={<span data-pill-unstar-tip="">取消星标</span>} side="left">
                     <button
                       type="button"
                       // One of the menu's items for a screen reader; reached with ← from its row, never with Tab.

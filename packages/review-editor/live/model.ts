@@ -49,11 +49,11 @@ const HOST_NAMES: Record<string, string> = {
 };
 
 export function hostName(host: string | null | undefined): string {
-  return (host && HOST_NAMES[host]) || 'Agent';
+  return (host && HOST_NAMES[host]) || '智能体';
 }
 
 export function authorName(message: LiveMessage): string {
-  if (message.author.kind === 'person') return 'You';
+  if (message.author.kind === 'person') return '你';
   const author = message.author as { host?: string | null; name?: string | null };
   return author.name || hostName(author.host);
 }
@@ -144,7 +144,7 @@ export function stepThread(order: readonly string[], current: string | null, dir
 }
 
 export function threadLines(now: ReviewThreadNow): string {
-  if (now.line_start === 0) return 'whole file';
+  if (now.line_start === 0) return '整个文件';
   return now.line_start === now.line_end ? `line ${now.line_start}` : `lines ${now.line_start}–${now.line_end}`;
 }
 

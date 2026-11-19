@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Copy for a review the agent closed (`POST /api/host/close`,
  * packages/shared/host-control.ts). The tab learns it from the
@@ -14,22 +15,22 @@
  *  - `changes`: code review, keyed by the patch (or the PR).
  */
 
-export const AGENT_CLOSED_TITLE = 'Closed by the Agent';
+export const AGENT_CLOSED_TITLE = '智能体已关闭';
 
 export type AgentClosedSurface = 'file' | 'folder' | 'document' | 'app' | 'changes';
 
 const RESTORE: Record<AgentClosedSurface, string> = {
-  file: 'Opening the file again brings it back, even after it is edited.',
-  folder: 'Opening the folder or its files again brings it back, even after they are edited.',
-  document: 'Reopening the same document, unchanged, brings it back.',
-  app: 'Opening the same app again brings it back.',
-  changes: 'Reopening a review of the same changes brings it back.',
+  file: '再次打开该文件即可恢复，即使文件已被编辑。',
+  folder: '再次打开该文件夹或其中的文件即可恢复，即使它们已被编辑。',
+  document: '重新打开同一份未改动的文档即可恢复。',
+  app: '再次打开同一个应用即可恢复。',
+  changes: '重新打开同一批更改的审查即可恢复。',
 };
 
 export function agentClosedSubtitle(unsentAnnotations: number, surface: AgentClosedSurface = 'document'): string {
-  if (unsentAnnotations <= 0) return 'The agent closed this review.';
-  const comments = unsentAnnotations === 1 ? 'Your comment is' : `Your ${unsentAnnotations} comments are`;
-  return `The agent closed this review. ${comments} saved as a draft. ${RESTORE[surface]}`;
+  if (unsentAnnotations <= 0) return '智能体已关闭此审查。';
+  const comments = unsentAnnotations === 1 ? '你的评论已保存为草稿。' : `你的 ${unsentAnnotations} 条评论已保存为草稿。`;
+  return `智能体已关闭此审查。${comments} ${RESTORE[surface]}`;
 }
 
 /**
@@ -38,13 +39,13 @@ export function agentClosedSubtitle(unsentAnnotations: number, surface: AgentClo
  * agent asked to close it. Neutral on purpose: it also runs on /reload and
  * session switches, after which plan mode may come back.
  */
-export const SESSION_CLOSED_TITLE = 'Review Closed';
+export const SESSION_CLOSED_TITLE = '审查已关闭';
 
 export function sessionClosedSubtitle(unsentAnnotations: number): string {
-  const ended = 'The agent session that opened this plan review ended.';
+  const ended = '打开此计划评审的智能体会话已结束。';
   if (unsentAnnotations <= 0) return ended;
-  const comments = unsentAnnotations === 1 ? 'Your comment is' : `Your ${unsentAnnotations} comments are`;
-  return `${ended} ${comments} saved.`;
+  const comments = unsentAnnotations === 1 ? '你的评论已保存。' : `你的 ${unsentAnnotations} 条评论已保存。`;
+  return `${ended} ${comments}`;
 }
 
 /** Title and subtitle for a closed review, by who closed it. */

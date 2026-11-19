@@ -243,7 +243,7 @@ export function useReplyFloaters(options: ReplyFloatersOptions): { layer: ReactN
         lead: 'Stays in Drafts',
         speech: 'It stopped floating. The reply stays in Drafts.',
         action: {
-          label: 'Drafts',
+          label: '草稿',
           onPress: () => {
             dismissToast();
             openDrafts();
@@ -273,7 +273,7 @@ export function useReplyFloaters(options: ReplyFloatersOptions): { layer: ReactN
         detail: `in ${row.project.name}`,
         speech: `Sent to ${agent} in ${row.project.name}.`,
         action: {
-          label: 'Open',
+          label: '未处理',
           onPress: () => {
             dismissToast();
             openThread(row.thread_id);
@@ -541,8 +541,8 @@ function PhoneCorner({ style, items, menu, setMenu, onAll }: StackProps) {
       {menu && (
         <div className="ib-rf-sheetwrap" role="dialog" aria-modal="true" aria-label={withAsk ? 'Ask AI and drafts' : 'Draft replies'} data-popover-layer="" data-chat-window="" data-rf-sheet="">
           <div className="ib-rf-sheethead">
-            <span className="ib-rf-sheettitle">{withAsk ? 'Ask AI and drafts' : 'Drafts'}</span>
-            <button type="button" className="ib-rf-ic" aria-label="Close" onClick={() => setMenu(false)} autoFocus>
+            <span className="ib-rf-sheettitle">{withAsk ? 'Ask AI and drafts' : '草稿'}</span>
+            <button type="button" className="ib-rf-ic" aria-label="关闭" onClick={() => setMenu(false)} autoFocus>
               <Icon name="x" size={18} />
             </button>
           </div>

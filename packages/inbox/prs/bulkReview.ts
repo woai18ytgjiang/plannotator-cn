@@ -76,10 +76,10 @@ export function reviewPlan(
   const failed: ReviewFailed[] = [];
   for (const group of byGroup.values()) {
     group.pulls.sort((x, y) => x.number - y.number);
-    if (group.projects.length === 0) failed.push({ pulls: group.pulls, why: `${group.label} is not a project.` });
+    if (group.projects.length === 0) failed.push({ pulls: group.pulls, why: `${group.label} 不是项目。` });
     else if (group.pulls.length > INBOX_PULL_OWNER_KEYS_MAX) {
       groups.push({ ...group, pulls: group.pulls.slice(0, INBOX_PULL_OWNER_KEYS_MAX) });
-      failed.push({ pulls: group.pulls.slice(INBOX_PULL_OWNER_KEYS_MAX), why: `one review thread takes at most ${INBOX_PULL_OWNER_KEYS_MAX}.` });
+      failed.push({ pulls: group.pulls.slice(INBOX_PULL_OWNER_KEYS_MAX), why: `一个审查话题最多包含 ${INBOX_PULL_OWNER_KEYS_MAX} 个。` });
     } else groups.push(group);
   }
   already.sort((x, y) => x.pull.number - y.pull.number);
@@ -88,17 +88,17 @@ export function reviewPlan(
 
 /** The bar's button: "Start review thread", or "Start 2 review threads" when the picks are in two repositories. */
 export function startButtonWords(threads: number): string {
-  return threads > 1 ? `Start ${threads} review threads` : 'Start review thread';
+  return threads > 1 ? `开始 ${threads} 个审查话题` : '开始审查话题';
 }
 
 /** "Starting 1 of 2…" while the threads start, one after another. */
 export function startingWords(done: number, total: number): string {
-  return `Starting ${done} of ${total}…`;
+  return `正在开始 ${done} / ${total}…`;
 }
 
 /** "Started 2 reviews": a phone's heading row over its threads' rows. */
 export function startedHeading(count: number): string {
-  return `Started ${count} ${count === 1 ? 'review' : 'reviews'}`;
+  return `已开始 ${count} 个审查`;
 }
 
 /** "Started 2 reviews: " before each thread's part. */
@@ -110,32 +110,32 @@ export function startedLead(count: number): string {
 export function groupPart(group: Pick<ReviewGroup, 'label' | 'pulls'>): string {
   const n = group.pulls.length;
   const noun = group.pulls[0]?.platform === 'gitlab' ? 'MR' : 'PR';
-  return `${group.label} (${n} ${noun}${n === 1 ? '' : 's'})`;
+  return `${group.label}（${n} 个${noun}）`;
 }
 
-export const ALREADY_HEADING = 'Already in review';
+export const ALREADY_HEADING = '已在审查中';
 export const ALREADY_LEAD = `${ALREADY_HEADING}: `;
 
 /** A pick that has its thread already, its link: "#1198 with Codex", or "#1198" when the thread's agent isn't known. */
 export function alreadyPart(already: ReviewAlready): string {
-  return `${inboxPullLabel(already.pull)}${already.agent ? ` with ${already.agent}` : ''}`;
+  return `${inboxPullLabel(already.pull)}${already.agent ? `（${already.agent}）` : ''}`;
 }
 
 /** "#5, #7 Not started: Mac mini cannot be reached now." */
 export function notStartedLine(failed: ReviewFailed): string {
-  return `${failed.pulls.map(inboxPullLabel).join(', ')} Not started: ${failed.why}`;
+  return `${failed.pulls.map(inboxPullLabel).join('、')} 未开始：${failed.why}`;
 }
 
 /** A thread that started whose PRs the Inbox could not keep for it: "#5, #7 Not tied to its thread: <why>". */
 export function untiedLine(pulls: readonly InboxPull[], why: string): string {
-  return `${pulls.map(inboxPullLabel).join(', ')} Not tied to its thread: ${why}`;
+  return `${pulls.map(inboxPullLabel).join('、')} 未关联到其话题：${why}`;
 }
 
 /** Why no thread could start in a repository: no agent free there to take it, and none this Inbox can start. */
-export const noAgentWhy = (label: string) => `no agent can start in ${label}.`;
+export const noAgentWhy = (label: string) => `${label} 中没有可以启动的智能体。`;
 
 /** The toast after a run that started only new agents ("Started 2 reviews", with Stop), and after its Stop. */
 export const startedToast = startedHeading;
 export function stoppedToast(count: number): string {
-  return `Stopped ${count}`;
+  return `已停止 ${count} 个`;
 }

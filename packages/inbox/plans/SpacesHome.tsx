@@ -208,7 +208,7 @@ export function SpacesHome(props: SpacesHomeProps) {
   if (mode === 'home' && recent.length) {
     sections.push(
       <section key="recent" className="ib-spc-sec" aria-labelledby={`${headId}-recent`} data-spaces-section="recent">
-        {head('Recent', `${headId}-recent`)}
+        {head('最近', `${headId}-recent`)}
         {items(recent.slice(0, list ? RECENT_ROWS : cols), 'regular', true)}
         <button type="button" className="ib-spc-more ib-spc-all" onClick={() => writeRoute({ page: 'plans', project: null, thread: null, planAll: true })} data-spaces-all="">
           All plans
@@ -218,7 +218,7 @@ export function SpacesHome(props: SpacesHomeProps) {
   } else if (mode === 'project' && recent.length) {
     sections.push(
       <section key="earlier" className="ib-spc-sec" aria-labelledby={now.length ? `${headId}-earlier` : undefined} aria-label={now.length ? undefined : project!.name} data-spaces-section="earlier">
-        {now.length > 0 && head('Earlier', `${headId}-earlier`)}
+        {now.length > 0 && head('更早', `${headId}-earlier`)}
         {items(recent, 'regular')}
       </section>,
     );
@@ -261,7 +261,7 @@ export function SpacesHome(props: SpacesHomeProps) {
 
   const crumbs =
     mode === 'project' || mode === 'all' ? (
-      <nav className="ib-spc-crumbs" aria-label="Where you are" data-spaces-crumbs="">
+      <nav className="ib-spc-crumbs" aria-label="你所在位置" data-spaces-crumbs="">
         <button type="button" onClick={home} data-spaces-home-crumb="">
           <Icon name="chevL" />
           Home
@@ -345,7 +345,7 @@ function Hearth({ headId, query, onQuery, view, scope }: { headId: string; query
                 </button>
               </span>
             )}
-            <input type="search" placeholder="Search plans" aria-label="Search plans" value={query} onChange={(e) => onQuery(e.target.value)} autoComplete="off" data-spaces-search="" />
+            <input type="search" placeholder="搜索计划" aria-label="搜索计划" value={query} onChange={(e) => onQuery(e.target.value)} autoComplete="off" data-spaces-search="" />
           </div>
           <ViewSwitch view={view} />
         </div>
@@ -382,10 +382,10 @@ const VIEW_MARKS: Record<SpacesView, ReactElement> = {
 /** Cards | List: two small buttons, the person's choice kept in config.json. */
 function ViewSwitch({ view }: { view: SpacesView }) {
   return (
-    <div className="ib-spc-vsw" role="group" aria-label="Show plans as" data-spaces-view-switch="">
+    <div className="ib-spc-vsw" role="group" aria-label="计划显示方式" data-spaces-view-switch="">
       {(['cards', 'list'] as const).map((v) => (
-        <Tip key={v} content={v === 'cards' ? 'Cards' : 'List'} side="bottom">
-          <button type="button" aria-label={v === 'cards' ? 'Cards' : 'List'} aria-pressed={view === v} onClick={() => view !== v && void setSpacesView(v)} data-spaces-view-pick={v}>
+        <Tip key={v} content={v === 'cards' ? '卡片' : '列表'} side="bottom">
+          <button type="button" aria-label={v === 'cards' ? '卡片' : '列表'} aria-pressed={view === v} onClick={() => view !== v && void setSpacesView(v)} data-spaces-view-pick={v}>
             {VIEW_MARKS[v]}
           </button>
         </Tip>
@@ -407,7 +407,7 @@ const SpaceItem = memo(function SpaceItem({ plan, work, size, list, secondary, p
   // A failed write puts the pin back and the window's toast says so (the store).
   const pin = () => void setPlanPin(plan.id, !pinned);
   const action = (
-    <Tip content={pinned ? 'Unpin' : 'Pin to sidebar'} side="bottom">
+    <Tip content={pinned ? '取消置顶' : 'Pin to sidebar'} side="bottom">
       <button type="button" className={`ib-spc-pin${pinned ? ' ib-spc-pinned' : ''}`} aria-label={pinned ? `Unpin ${plan.name}` : `Pin ${plan.name} to sidebar`} onClick={pin} data-space-pin-toggle={plan.id}>
         <Icon name={pinned ? 'pinOff' : 'pin'} size={15} />
       </button>
@@ -430,9 +430,9 @@ const SpaceItem = memo(function SpaceItem({ plan, work, size, list, secondary, p
       <ContextMenu.Portal container={portal ?? undefined}>
         <ContextMenu.Positioner className="ib-pm-pos">
           <ContextMenu.Popup className="ib-pm" aria-label={plan.name} data-space-menu={plan.id}>
-            <Menu.Item className="ib-pmi" label={pinned ? 'Unpin' : 'Pin to sidebar'} onClick={pin} data-space-menu-pin={pinned ? 'unpin' : 'pin'}>
+            <Menu.Item className="ib-pmi" label={pinned ? '取消置顶' : 'Pin to sidebar'} onClick={pin} data-space-menu-pin={pinned ? 'unpin' : 'pin'}>
               <Icon name={pinned ? 'pinOff' : 'pin'} size={15} />
-              {pinned ? 'Unpin' : 'Pin to sidebar'}
+              {pinned ? '取消置顶' : 'Pin to sidebar'}
             </Menu.Item>
           </ContextMenu.Popup>
         </ContextMenu.Positioner>

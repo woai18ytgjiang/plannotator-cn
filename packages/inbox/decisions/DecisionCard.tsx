@@ -103,7 +103,7 @@ export function cardPictures(decision: InboxDecision): CardPicture[] {
     const src = q.shows.src;
     const at = out.findIndex((picture) => picture.ref === src);
     const shown = at >= 0 ? out.splice(at, 1)[0]! : { attachmentId: '', name: '', ref: src, src: inboxMessageImageUrl(decision.message.id, src) };
-    out.unshift({ ...shown, name: q.shows.label || shown.name || 'Picture' });
+    out.unshift({ ...shown, name: q.shows.label || shown.name || '图片' });
   }
   return out;
 }
@@ -332,7 +332,7 @@ export function DecisionCard(props: DecisionCardProps) {
 
   const author = decision.message.author;
   const name = agentName(author);
-  const badge = q.stopped !== null ? <span className="ib-badge ib-b-stop">Stopped</span> : q.holds_up.length > 0 ? <span className="ib-badge ib-b-hold">Holds up {formatCount(q.holds_up.length)}</span> : null;
+  const badge = q.stopped !== null ? <span className="ib-badge ib-b-stop">已停止</span> : q.holds_up.length > 0 ? <span className="ib-badge ib-b-hold">阻塞 {formatCount(q.holds_up.length)} 项</span> : null;
   const heroRefs = pictures.map((p) => p.ref).filter((r): r is string => r !== null);
   const context = contextWithout(q.context ?? '', heroRefs);
   // A `Shows:` file leads the references: the attached file it names, else a web link, else the thread.
@@ -409,17 +409,17 @@ export function DecisionCard(props: DecisionCardProps) {
       {props.banner}
       {pictures.length > 0 && (
         <div className="ib-dm-pics" data-decision-pictures="">
-          <button type="button" className="ib-dm-hero" onClick={() => props.onImage(pictures, 0)} aria-label={`Open ${pictures[0]!.name} large`}>
+          <button type="button" className="ib-dm-hero" onClick={() => props.onImage(pictures, 0)} aria-label={`放大查看 ${pictures[0]!.name}`}>
             <img src={pictures[0]!.src} alt="" />
             <span className="ib-dm-zoom" aria-hidden="true">
               <Icon name="expand" size={14} />
-              Open large
+              查看大图
             </span>
           </button>
           {pictures.length > 1 && (
             <div className="ib-dm-thumbs">
               {pictures.slice(1).map((p, i) => (
-                <button key={p.attachmentId} type="button" className="ib-dm-thumb" onClick={() => props.onImage(pictures, i + 1)} aria-label={`Open ${p.name} large`}>
+                <button key={p.attachmentId} type="button" className="ib-dm-thumb" onClick={() => props.onImage(pictures, i + 1)} aria-label={`放大查看 ${p.name}`}>
                   <img src={p.src} alt="" />
                 </button>
               ))}
@@ -441,10 +441,10 @@ export function DecisionCard(props: DecisionCardProps) {
           <span>· {shortTime(decision.message.created_at)}</span>
           {badge}
           {facts.irreversible && (
-            <Tip content={facts.irreversible.why ? `Can't be undone: ${facts.irreversible.why}` : "Can't be undone"}>
+            <Tip content={facts.irreversible.why ? `无法撤销：${facts.irreversible.why}` : "无法撤销"}>
               <span className="ib-badge ib-b-oneway" data-decision-one-way="">
                 One-way
-                <span className="ib-sr">: can&rsquo;t be undone{facts.irreversible.why ? `, ${facts.irreversible.why}` : ''}</span>
+                <span className="ib-sr">：无法撤销{facts.irreversible.why ? `，${facts.irreversible.why}` : ''}</span>
               </span>
             </Tip>
           )}
@@ -464,13 +464,13 @@ export function DecisionCard(props: DecisionCardProps) {
         {q.stopped !== null && (
           <p className="ib-dm-stop" data-decision-stopped="">
             <Icon name="warn" size={16} />
-            <span>Stopped{q.stopped ? `: ${q.stopped}` : ''}</span>
+            <span>已停止{q.stopped ? `: ${q.stopped}` : ''}</span>
           </p>
         )}
         {q.holds_up.length > 0 && (
           <p className="ib-dm-hold">
             <Icon name="clock" size={16} />
-            <span>Holds up {q.holds_up.join(', ')}</span>
+            <span>阻塞 {q.holds_up.join(', ')}</span>
           </p>
         )}
         {decision.message.excerpt && <p className="ib-dm-excerpt">{decision.message.excerpt}</p>}
@@ -480,7 +480,7 @@ export function DecisionCard(props: DecisionCardProps) {
           markdown={context}
           messageId={decision.message.id}
           refRepo={refRepo}
-          onImage={(src, alt) => props.onImage([{ attachmentId: '', name: alt || 'image', ref: null, src }], 0)}
+          onImage={(src, alt) => props.onImage([{ attachmentId: '', name: alt || '图片', ref: null, src }], 0)}
         />
         <div className="ib-dm-refs">
           {facts.shows?.kind === 'link' &&
@@ -508,7 +508,7 @@ export function DecisionCard(props: DecisionCardProps) {
           ))}
           <button type="button" className="ib-dm-open" data-decision-open-thread="" onClick={() => props.onOpenThread()}>
             <Icon name="comment" size={15} />
-            Open the thread
+            打开话题
           </button>
         </div>
 
@@ -516,7 +516,7 @@ export function DecisionCard(props: DecisionCardProps) {
           <p className="ib-dm-sentline" data-decision-sent={props.sending && !props.sent ? undefined : ''} data-decision-sending={props.sending && !props.sent ? '' : undefined}>
             <Icon name={props.sending && !props.sent ? 'clock' : 'check'} size={16} />
             <span>
-              <b>{props.sending && !props.sent ? 'Sending' : 'Sent'}</b> · {kind === 'action' ? (q.action_result?.outcome === 'cant' ? "Can't do it" : 'Done') : answerWords(q.answer)}
+              <b>{props.sending && !props.sent ? '发送中' : '已发送'}</b> · {kind === 'action' ? (q.action_result?.outcome === 'cant' ? "无法完成" : '完成') : answerWords(q.answer)}
             </span>
           </p>
         )}
@@ -562,7 +562,7 @@ export function DecisionCard(props: DecisionCardProps) {
                 })}
                 renderBadges={(choice) => (
                   <>
-                    {choice.recommended && <span className="ib-dm-rec">Recommended</span>}
+                    {choice.recommended && <span className="ib-dm-rec">推荐</span>}
                   </>
                 )}
               />
@@ -603,7 +603,7 @@ export function DecisionCard(props: DecisionCardProps) {
                         </span>
                       )}
                       </span>
-                    {choice.recommended && <span className="ib-dm-rec">Recommended</span>}
+                    {choice.recommended && <span className="ib-dm-rec">推荐</span>}
                   </label>
                 );
               })}
@@ -631,7 +631,7 @@ export function DecisionCard(props: DecisionCardProps) {
                         </span>
                       )}
                       </span>
-                    {choice.recommended && <span className="ib-dm-rec">Recommended</span>}
+                    {choice.recommended && <span className="ib-dm-rec">推荐</span>}
                   </label>
                 );
               })}
@@ -639,12 +639,12 @@ export function DecisionCard(props: DecisionCardProps) {
           )}
           {kind === 'multi' && !confirming && (
             <button type="button" className="ib-btn ib-pri ib-dm-go" data-decision-answer="" disabled={selected.length === 0} onClick={() => commitChoice(selected)}>
-              Answer with {formatCount(selected.length)}
+              回答 {formatCount(selected.length)} 项
             </button>
           )}
           {kind === 'single' && !confirming && selected.length > 0 && !(saved && sameSet(saved.selected, selected) && !saved.other) && (
             <button type="button" className="ib-btn ib-pri ib-dm-go" data-decision-answer="" onClick={() => commitChoice(selected)}>
-              Answer
+              回答
             </button>
           )}
           {kind === 'text' && (
@@ -652,16 +652,16 @@ export function DecisionCard(props: DecisionCardProps) {
               {q.suggested_text && (
                 <div className="ib-dm-suggest">
                   <span>
-                    <b>Suggested:</b> {q.suggested_text}
+                    <b>建议：</b> {q.suggested_text}
                   </span>
                   <button type="button" className="ib-btn ib-sm" onClick={() => setText(q.suggested_text ?? '')}>
-                    Use
+                    使用
                   </button>
                 </div>
               )}
               <textarea className="ib-dm-ta" aria-labelledby={promptId} value={text} rows={3} onChange={(event) => setText(event.target.value)} />
               <button type="button" className="ib-btn ib-pri ib-dm-go" data-decision-answer="" disabled={!text.trim()} onClick={() => request(textAnswer(q, text, note))}>
-                Answer
+                回答
               </button>
             </div>
           )}
@@ -669,7 +669,7 @@ export function DecisionCard(props: DecisionCardProps) {
             <div className="ib-dm-action">
               {q.action?.where_url && (
                 <a className="ib-btn" href={q.action.where_url} target="_blank" rel="noopener noreferrer">
-                  Open {q.action.where ?? 'link'}
+                  打开 {q.action.where ?? '链接'}
                   <Icon name="external" size={14} />
                 </a>
               )}
@@ -677,26 +677,26 @@ export function DecisionCard(props: DecisionCardProps) {
                 <div className="ib-dm-run">
                   <code>{q.action.run}</code>
                   <button type="button" className="ib-btn ib-sm" onClick={() => void navigator.clipboard?.writeText(q.action?.run ?? '')}>
-                    Copy
+                    复制
                   </button>
                 </div>
               )}
               <div className="ib-dm-actbtns">
                 <button type="button" className="ib-btn ib-pri" data-decision-done="" onClick={() => props.onAction({ outcome: 'done' })}>
-                  Done
+                  完成
                 </button>
                 <button type="button" className="ib-btn" data-decision-cant="" aria-expanded={field === 'cant'} onClick={() => setField(field === 'cant' ? 'none' : 'cant')}>
-                  Can&apos;t do it…
+                  无法完成…
                 </button>
               </div>
               {field === 'cant' && (
                 <div className="ib-dm-field">
                   <label className="ib-dm-flabel" htmlFor={`${promptId}-cant`}>
-                    Why can&apos;t you? {name} gets this word for word.
+                    为什么无法完成？{name} 会原文看到这段话。
                   </label>
                   <textarea id={`${promptId}-cant`} className="ib-dm-ta" rows={2} value={reason} onChange={(event) => setReason(event.target.value)} autoFocus />
                   <button type="button" className="ib-btn ib-pri ib-sm" disabled={!reason.trim()} onClick={() => props.onAction({ outcome: 'cant', note: reason.trim() })}>
-                    Send
+                    发送
                   </button>
                 </div>
               )}
@@ -706,10 +706,10 @@ export function DecisionCard(props: DecisionCardProps) {
             <div className="ib-dm-confirm1" role="alertdialog" aria-labelledby={`${promptId}-confirm`} aria-describedby={`${promptId}-confirm-d`} data-decision-confirm-pick="">
               <span>
                 <b id={`${promptId}-confirm`}>{confirming.words}?</b>{' '}
-                <span id={`${promptId}-confirm-d`}>{facts.irreversible?.why ? `Can't be undone: ${facts.irreversible.why}` : "Can't be undone."}</span>
+                <span id={`${promptId}-confirm-d`}>{facts.irreversible?.why ? `无法撤销：${facts.irreversible.why}` : "无法撤销。"}</span>
               </span>
               <button type="button" className="ib-btn" ref={confirmCancelRef} data-decision-confirm-cancel="" onClick={cancelConfirm}>
-                Cancel
+                取消
               </button>
               <button
                 type="button"
@@ -728,7 +728,7 @@ export function DecisionCard(props: DecisionCardProps) {
           )}
           {facts.why && (
             <p className="ib-dm-why" data-decision-why="">
-              <b>{recommendedLabels.length > 0 || q.suggested_text ? `Why ${name} recommends it:` : 'Why:'}</b> <InlineMarkdown {...refProps} text={facts.why} />
+              <b>{recommendedLabels.length > 0 || q.suggested_text ? `${name} 为什么推荐它：` : '理由：'}</b> <InlineMarkdown {...refProps} text={facts.why} />
             </p>
           )}
           {/* Swipe is touch only, for a two-way choice, and always has its buttons (the choices above). */}
@@ -746,18 +746,18 @@ export function DecisionCard(props: DecisionCardProps) {
             {field === 'other' && kind !== 'text' && (
               <div className="ib-dm-field">
                 <label className="ib-dm-flabel" htmlFor={`${promptId}-other`}>
-                  Your own answer
+                  你的回答
                 </label>
                 <textarea id={`${promptId}-other`} className="ib-dm-ta" rows={2} value={other} onChange={(event) => setOther(event.target.value)} autoFocus />
                 <button type="button" className="ib-btn ib-pri ib-sm" data-decision-other-answer="" disabled={!other.trim()} onClick={() => request(otherAnswer(q, other, note))}>
-                  Answer
+                  回答
                 </button>
               </div>
             )}
             {field === 'note' && (
               <div className="ib-dm-field">
                 <label className="ib-dm-flabel" htmlFor={`${promptId}-note`}>
-                  A note with your answer
+                  回答附言
                 </label>
                 <textarea id={`${promptId}-note`} className="ib-dm-ta" rows={2} value={note} onChange={(event) => setNote(event.target.value)} autoFocus />
               </div>
@@ -765,18 +765,18 @@ export function DecisionCard(props: DecisionCardProps) {
             <div className="ib-dm-more">
               {kind !== 'text' && (
                 <button type="button" className="ib-dm-lnk" aria-expanded={field === 'other'} data-decision-other="" onClick={() => setField(field === 'other' ? 'none' : 'other')}>
-                  Other…
+                  其他…
                 </button>
               )}
               <button type="button" className="ib-dm-lnk" aria-expanded={field === 'note'} data-decision-note="" onClick={() => setField(field === 'note' ? 'none' : 'note')}>
-                Add a note
+                添加备注
               </button>
               <button type="button" className="ib-dm-lnk" data-decision-later="" onClick={props.onLater}>
                 <Icon name="clock" size={15} />
-                Later
+                稍后
               </button>
               <button type="button" className="ib-dm-lnk" data-decision-skip="" onClick={() => props.onAnswer(skipAnswer(q, note))}>
-                Skip
+                跳过
               </button>
             </div>
           </>
@@ -793,7 +793,7 @@ export function DecisionCard(props: DecisionCardProps) {
       {props.stamp && (
         <div className="ib-dm-stamp" aria-hidden="true">
           <Icon name="check" size={18} />
-          {props.stamp === 'done' ? 'Done' : props.stamp === 'cant' ? "Can't do it" : answerWords(props.stamp)}
+          {props.stamp === 'done' ? '完成' : props.stamp === 'cant' ? "无法完成" : answerWords(props.stamp)}
         </div>
       )}
     </article>

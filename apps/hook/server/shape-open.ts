@@ -117,7 +117,7 @@ export async function ensureShapeServer(deps: Pick<ShapeOpenDeps, "dataDir" | "s
   } finally {
     release?.();
   }
-  throw new Error(`The Shape page's server did not start; see ${join(shapesDirOf(deps.dataDir), SHAPE_SERVER_LOG)}.`);
+  throw new Error(`Shape 页面的服务器未能启动；请查看 ${join(shapesDirOf(deps.dataDir), SHAPE_SERVER_LOG)}。`);
 }
 
 /** `plannotator shape open [<shp_id>] [--json]`; the exit code. */
@@ -130,7 +130,7 @@ export async function runShapeOpen(argv: readonly string[], deps: ShapeOpenDeps)
     return 2;
   }
   if (parsed.id && (!isShapeId(parsed.id) || !createShapeStore({ dataDir: deps.dataDir }).get(parsed.id))) {
-    err(`not_found: No shape ${parsed.id}. List them with \`plannotator shape list\`.`);
+    err(`not_found：没有形状 ${parsed.id}。请用 \`plannotator shape list\` 列出。`);
     return 1;
   }
   let entry: RunningShapeServer;

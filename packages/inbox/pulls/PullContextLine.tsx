@@ -11,7 +11,7 @@ import { Icon } from '../icons';
 import { checksWords } from './model';
 
 /** Said while a guided review asked for in the thread is on its way (the launchpad's own words). */
-export const PULL_GUIDE_ON_THE_WAY = 'Guided review on the way';
+export const PULL_GUIDE_ON_THE_WAY = '引导式审查正在生成';
 
 export function PullContextLine({
   pr,

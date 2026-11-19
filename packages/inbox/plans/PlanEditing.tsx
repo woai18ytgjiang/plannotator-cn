@@ -325,7 +325,7 @@ export function usePlanEditing(p: { read: PlanRead; document: PlanDocument; docR
             <button
               type="button"
               className="ib-plans-quiet ib-plan-approval-x"
-              aria-label="Dismiss"
+              aria-label="忽略"
               onClick={() => {
                 storage.setItem(movedKey, String(moved.version_number));
                 setDismissed(String(moved.version_number));
@@ -381,7 +381,7 @@ export function usePlanEditing(p: { read: PlanRead; document: PlanDocument; docR
       <div className="ib-plan-banner" data-plan-banner={notice.kind} role={notice.alert ? 'alert' : 'status'}>
         <Icon name={notice.alert ? 'warn' : 'check'} />
         <p>{notice.words}</p>
-        <button type="button" className="ib-plans-quiet ib-plan-approval-x" aria-label="Dismiss" onClick={() => setNotice(null)} data-plan-notice-dismiss="">
+        <button type="button" className="ib-plans-quiet ib-plan-approval-x" aria-label="忽略" onClick={() => setNotice(null)} data-plan-notice-dismiss="">
           <Icon name="x" />
         </button>
       </div>

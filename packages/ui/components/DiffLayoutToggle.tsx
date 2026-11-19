@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Split / Unified as one button (approval "diff-controls-headers": "One
  * button, like DiffsHub"). The mark shows the layout on screen; a click
@@ -33,7 +34,7 @@ export function DiffLayoutIcon({ layout, size = 15 }: { layout: DiffLayout; size
 
 /** The words a tooltip shows for the button: the layout on screen, then what a click does. */
 export function diffLayoutToggleTip(layout: DiffLayout): string {
-  return layout === 'split' ? 'Split view. Click for Unified' : 'Unified view. Click for Split';
+  return layout === 'split' ? '并排视图。点击切换到统一视图' : '统一视图。点击切换到并排视图';
 }
 
 export interface DiffLayoutToggleProps extends Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, 'value' | 'onChange'> {
@@ -44,7 +45,7 @@ export interface DiffLayoutToggleProps extends Omit<React.ButtonHTMLAttributes<H
   splitTooNarrow?: boolean;
 }
 
-const SPLIT_TOO_NARROW_TIP = 'Split needs a wider pane. Showing Unified.';
+const SPLIT_TOO_NARROW_TIP = '并排视图需要更宽的面板。当前显示统一视图。';
 
 /** Other button props (a tooltip trigger's handlers) and the ref reach the button. */
 export const DiffLayoutToggle = React.forwardRef<HTMLButtonElement, DiffLayoutToggleProps>(function DiffLayoutToggle(
@@ -63,7 +64,7 @@ export const DiffLayoutToggle = React.forwardRef<HTMLButtonElement, DiffLayoutTo
         onClick?.(event);
         if (!event.defaultPrevented) onChange(next);
       }}
-      aria-label={tooNarrow ? SPLIT_TOO_NARROW_TIP : next === 'unified' ? 'Switch to Unified view' : 'Switch to Split view'}
+      aria-label={tooNarrow ? SPLIT_TOO_NARROW_TIP : next === 'unified' ? '切换到统一视图' : '切换到并排视图'}
       title={nativeTitle ? (tooNarrow ? SPLIT_TOO_NARROW_TIP : diffLayoutToggleTip(value)) : undefined}
       data-diff-layout-toggle={value}
       data-split-too-narrow={tooNarrow || undefined}

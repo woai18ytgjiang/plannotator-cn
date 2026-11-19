@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { ReactElement, ReactNode } from "react";
 
 import { Button } from "../primitives/button";
@@ -142,7 +143,7 @@ export function ReadingLine({
       {end ? (
         <>
           {older === null && approved !== null && <span className="flex min-w-0">{approved}</span>}
-          {older !== null && <span role="status">You are looking at an older version.</span>}
+          {older !== null && <span role="status">你正在查看较旧的版本。</span>}
         </>
       ) : (
         <span className={cn("flex min-w-0 flex-wrap items-baseline gap-x-2", older !== null && "max-md:basis-full")}>
@@ -150,7 +151,7 @@ export function ReadingLine({
           {older !== null && (
             <>
               <span aria-hidden="true">·</span>
-              <span role="status">You are looking at an older version.</span>
+              <span role="status">你正在查看较旧的版本。</span>
             </>
           )}
         </span>

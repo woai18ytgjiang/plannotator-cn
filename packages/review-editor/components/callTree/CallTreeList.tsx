@@ -104,8 +104,8 @@ export function CallTreeList({
           {searchOpen ? (
             <CallFlowSearchControls
               inputRef={inputRef}
-              label="Search call paths"
-              placeholder="Find calls or files"
+              label="搜索调用路径"
+              placeholder="查找调用或文件"
               query={query}
               currentMatchIndex={currentIndex}
               matchCount={total}
@@ -122,8 +122,8 @@ export function CallTreeList({
               type="button"
               className="call-flow-icon-button"
               onClick={() => setSearchOpen(true)}
-              aria-label="Search call paths"
-              title="Search call paths (Cmd/Ctrl+F)"
+              aria-label="搜索调用路径"
+              title="搜索调用路径（Cmd/Ctrl+F）"
             >
               <Search aria-hidden="true" size={14} />
             </button>

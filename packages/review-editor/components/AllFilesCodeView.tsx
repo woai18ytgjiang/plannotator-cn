@@ -3979,7 +3979,7 @@ export const AllFilesCodeView: React.FC<AllFilesCodeViewProps> = ({
     // updateItem BEFORE React commits state, so read the session's refs.
     const isEditingThis = editEnabled && editSession.editingItemIdRef.current === item.id;
     const editDisabledReason = editEnabled
-      ? (previewed ? 'Switch to Source to edit this file' : editSession.editUnavailableRef.current.get(filePath) ?? null)
+      ? (previewed ? '切换到源码以编辑此文件' : editSession.editUnavailableRef.current.get(filePath) ?? null)
       : null;
 
     return (
@@ -4046,7 +4046,7 @@ export const AllFilesCodeView: React.FC<AllFilesCodeViewProps> = ({
             data-pn-touch-target={compactTouchLayout || undefined}
             data-pn-touch-target-icon={compactTouchLayout || undefined}
             className="flex items-center justify-center w-6 h-6 rounded hover:bg-foreground/10 transition-colors flex-shrink-0"
-            title={collapsed ? 'Expand diff' : 'Collapse diff'}
+            title={collapsed ? '展开差异' : '折叠差异'}
           >
             <svg
               className={`w-3 h-3 transition-transform ${collapsed ? '' : 'rotate-90'}`}

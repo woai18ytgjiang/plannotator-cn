@@ -102,21 +102,21 @@ export function SelectionChooser({
       ref={toolbarRef}
       className="review-selpop"
       role="toolbar"
-      aria-label="Selected lines"
+      aria-label="选中的行"
       {...(gone ? {} : { 'data-selection-chooser': '' })}
       style={{ position: 'fixed', ...placed, zIndex: 1000, ...(looked && !gone ? {} : { visibility: 'hidden' as const }) }}
     >
       <button type="button" className="review-selpop-btn" onClick={onComment} data-selection-action="comment">
-        Comment
+        评论
       </button>
       {actions.onAsk && (
         <button type="button" className="review-selpop-btn" onClick={onAsk} data-selection-action="ask">
-          Ask
+          询问
         </button>
       )}
       {actions.onShowMe && (
         <button type="button" className="review-selpop-btn review-selpop-show" onClick={onShowMe} data-selection-action="show-me">
-          Show me
+          展示
         </button>
       )}
     </div>

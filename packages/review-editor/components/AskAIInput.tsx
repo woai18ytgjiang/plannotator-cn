@@ -51,7 +51,7 @@ export const AskAIInput: React.FC<AskAIInputProps> = ({
         <button
           onClick={onCancel}
           className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-          title="Close"
+          title="关闭"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -62,7 +62,7 @@ export const AskAIInput: React.FC<AskAIInputProps> = ({
       <textarea
         value={question}
         onChange={(e) => setQuestion(e.target.value)}
-        placeholder="Ask about this code..."
+        placeholder="询问这段代码…"
         className="w-full px-3 py-2 bg-background border border-border rounded-lg text-xs placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-1 focus:ring-primary/50"
         rows={2}
         autoFocus
@@ -86,7 +86,7 @@ export const AskAIInput: React.FC<AskAIInputProps> = ({
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
             </svg>
-            Comment
+            评论
           </button>
         )}
 
@@ -95,17 +95,17 @@ export const AskAIInput: React.FC<AskAIInputProps> = ({
           onClick={handleSubmit}
           disabled={!question.trim() || isLoading}
           className="review-toolbar-btn primary disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-1 ml-auto"
-          title={`Ask (${submitHint})`}
+          title={`询问（${submitHint}）`}
         >
           {isLoading ? (
             <>
               <span className="ai-streaming-cursor" />
-              Asking...
+              询问中…
             </>
           ) : (
             <>
               <SparklesIcon className="w-3 h-3" />
-              Ask
+              询问
             </>
           )}
         </button>

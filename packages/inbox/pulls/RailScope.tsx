@@ -18,16 +18,16 @@ const pill = (active: boolean) =>
 /** The review app's Changes | All files pills: Changes with its count, All files without. */
 export function RailScopeSwitch({ scope, changed, onSelect }: { scope: TreeScope; changed: number; onSelect: (scope: TreeScope) => void }) {
   return (
-    <div className="flex min-w-0 items-center ib-prp-scope" role="group" aria-label="Files shown in the tree" data-tree-scope-switch="">
+    <div className="flex min-w-0 items-center ib-prp-scope" role="group" aria-label="文件树中显示的文件" data-tree-scope-switch="">
       <button
         type="button"
         aria-pressed={scope === 'changes'}
         onClick={() => onSelect('changes')}
         data-tree-scope="changes"
-        title="The files this review changes"
+        title="本次审查更改的文件"
         className={`flex-shrink-0 px-2 ${pill(scope === 'changes')}`}
       >
-        <span>Changes</span>
+        <span>更改</span>
         <span className="tabular-nums text-[11px] font-normal text-muted-foreground">{changed.toLocaleString('en-US')}</span>
       </button>
       <button
@@ -35,10 +35,10 @@ export function RailScopeSwitch({ scope, changed, onSelect }: { scope: TreeScope
         aria-pressed={scope === 'all'}
         onClick={() => onSelect('all')}
         data-tree-scope="all"
-        title="Every file of the repository at the revision the diff reads"
+        title="差异所读版本中仓库的全部文件"
         className={`relative min-w-0 pl-1.5 pr-3 ${pill(scope === 'all')}`}
       >
-        <span className="truncate">All files</span>
+        <span className="truncate">所有文件</span>
       </button>
     </div>
   );

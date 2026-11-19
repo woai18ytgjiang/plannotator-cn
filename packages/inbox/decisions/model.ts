@@ -348,14 +348,14 @@ export function afterSendOf(row: InboxListRow | undefined, sentAt: string, busy:
 export const AFTER_SEND_ORDER: readonly AfterSend[] = ['sending', 'undelivered', 'stopped', 'queued', 'saved', 'delivered', 'working', 'replied'];
 
 export const AFTER_SEND_WORDS: Record<AfterSend, string> = {
-  sending: 'Sending',
+  sending: '发送中',
   stopped: INBOX_STOPPED_REPLY_TEXT,
-  queued: 'Queued',
-  saved: 'Saved',
-  undelivered: 'Not delivered',
-  delivered: 'Delivered',
-  working: 'Working',
-  replied: 'Replied',
+  queued: '排队中',
+  saved: '已保存',
+  undelivered: '未送达',
+  delivered: '已送达',
+  working: '处理中',
+  replied: '已回复',
 };
 
 /** A session key as an attribute value (the key holds a NUL between host and session). */
@@ -405,7 +405,7 @@ export function sessionChips(state: QueueState): SessionChip[] {
     const count = (seen.get(chip.name) ?? 0) + 1;
     seen.set(chip.name, count);
     if (count === 1) return chip;
-    return { ...chip, name: count === 2 ? `${chip.name} (another session)` : `${chip.name} (another session ${count})` };
+    return { ...chip, name: count === 2 ? `${chip.name}（另一个会话）` : `${chip.name}（另一个会话 ${count}）` };
   });
 }
 
@@ -416,13 +416,13 @@ export { baseAnswer, choiceAnswer, otherAnswer, skipAnswer, textAnswer } from '@
 
 /** The answer in the person's words, for the stamp, the live region and the review: "Retry with the same key", "Skipped". */
 export function answerWords(answer: QuestionAnswer | null): string {
-  if (!answer) return 'No answer';
-  if (answer.skipped) return 'Skipped';
+  if (!answer) return '未回答';
+  if (answer.skipped) return '已跳过';
   // A picked label as its plain words (`plainLabel`): "15% off", not its markdown.
   const parts = answer.selected.map(plainLabel);
   if (answer.other?.trim()) parts.push(answer.other.trim());
   if (answer.text?.trim()) parts.push(answer.text.trim());
-  const words = parts.join(', ') || (answer.note ? 'A note' : 'No answer');
+  const words = parts.join(', ') || (answer.note ? '一条备注' : '未回答');
   return words.length > 120 ? `${words.slice(0, 119)}…` : words;
 }
 
@@ -438,7 +438,7 @@ export function swipeChoices(question: InboxQuestion): [string, string] | null {
 
 /** The swipe's hint under the card, the labels as their words; a swipe still commits the label as written. */
 export function swipeHint(choices: readonly [string, string]): string {
-  return `Swipe right for ${plainLabel(choices[0])}, left for ${plainLabel(choices[1])}.`;
+  return `向右滑选择 ${plainLabel(choices[0])}，向左滑选择 ${plainLabel(choices[1])}。`;
 }
 
 /**
@@ -469,5 +469,5 @@ export function headLine(state: QueueState): string {
   const waiting = new Set(
     state.order.filter((id) => !isHandled(state, id)).map((id) => state.cache.get(id)?.session.key).filter((k): k is string => !!k),
   ).size;
-  return `${at} of ${live.length} · ${waiting} ${waiting === 1 ? 'agent' : 'agents'} waiting`;
+  return `${at} / ${live.length} · ${waiting} 个智能体在等待`;
 }

@@ -92,8 +92,8 @@ export const CompactPlanStage: React.FC<CompactPlanStageProps> = ({
           data-pn-touch-target="true"
           data-pn-touch-target-icon="true"
           className="flex h-11 w-11 flex-shrink-0 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors [@media(hover:hover)_and_(pointer:fine)]:hover:bg-muted [@media(hover:hover)_and_(pointer:fine)]:hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
-          aria-label={`Close ${title}`}
-          title={`Close ${title}`}
+          aria-label={`关闭 ${title}`}
+          title={`关闭 ${title}`}
         >
           <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

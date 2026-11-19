@@ -52,7 +52,7 @@ export const CommitDescriptionHeader: React.FC<{ info: CommitDiffInfo }> = ({ in
                 onClick={() => setExpanded((v) => !v)}
                 className="mt-1.5 text-xs text-primary/80 underline underline-offset-2 decoration-primary/40 hover:text-primary transition-colors"
               >
-                {expanded ? 'Show less' : 'Show more'}
+                {expanded ? '收起' : '显示更多'}
               </button>
             )}
           </>

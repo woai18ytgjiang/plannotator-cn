@@ -63,8 +63,8 @@ export function CallFlowSearchControls({
         className="call-flow-icon-button"
         onClick={() => onMoveMatch(-1)}
         disabled={matchCount === 0}
-        aria-label="Previous match"
-        title="Previous match (Shift+Enter)"
+        aria-label="上一个匹配"
+        title="上一个匹配（Shift+Enter）"
       >
         <ChevronUp aria-hidden="true" size={14} />
       </button>
@@ -73,8 +73,8 @@ export function CallFlowSearchControls({
         className="call-flow-icon-button"
         onClick={() => onMoveMatch(1)}
         disabled={matchCount === 0}
-        aria-label="Next match"
-        title="Next match (Enter)"
+        aria-label="下一个匹配"
+        title="下一个匹配（Enter）"
       >
         <ChevronDown aria-hidden="true" size={14} />
       </button>
@@ -82,7 +82,7 @@ export function CallFlowSearchControls({
         type="button"
         className="call-flow-icon-button"
         onClick={onClose}
-        aria-label="Close search"
+        aria-label="关闭搜索"
       >
         <X aria-hidden="true" size={14} />
       </button>

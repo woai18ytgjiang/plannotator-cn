@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { ReactNode } from "react";
 
 import { Sheet, SheetContent } from "../primitives/sheet";
@@ -28,7 +29,7 @@ export function CommentsSheet({
       <SheetContent
         side="bottom"
         closeButton={false}
-        aria-label="Comments"
+        aria-label="评论"
         data-comments-sheet=""
         initialFocus={firstFocus}
         className="h-[85dvh] gap-0 overflow-hidden p-0 [&_[data-comments-panel]]:min-h-0 [&_[data-comments-panel]]:flex-1"

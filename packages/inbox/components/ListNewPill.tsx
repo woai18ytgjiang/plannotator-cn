@@ -135,7 +135,7 @@ export function ListNewPill({ unseen, covered, onGo, stays = LIST_NEW_PILL_STAYS
         data-fading={on && fading ? '' : undefined}
         tabIndex={on ? 0 : -1}
         aria-hidden={!on}
-        aria-label={`${words}, go there`}
+        aria-label={`${words}，前往那里`}
         onPointerEnter={() => hold(true)}
         onPointerLeave={() => hold(false)}
         onFocus={() => hold(true)}

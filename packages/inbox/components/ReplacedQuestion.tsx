@@ -35,11 +35,11 @@ export type JumpTarget = { kind: 'question' | 'action'; messageId: string; key: 
 
 /** The answer's words, as the card's "Your pick" shows them; a picked label as its plain words (`plainLabel`). */
 export function pickWords(answer: QuestionAnswer): string {
-  if (answer.skipped) return 'Skipped';
+  if (answer.skipped) return '已跳过';
   const parts = answer.selected.map(plainLabel);
   if (answer.other) parts.push(answer.other);
   if (answer.text) parts.push(answer.text);
-  return parts.join(', ');
+  return parts.join('，');
 }
 
 /** A question's replacement in its thread, or null while it stands. */
@@ -94,7 +94,7 @@ export function ReplacedTag({ replaced }: { replaced: boolean }) {
   return (
     <span className="ib-tag ib-t-repl" data-replaced-tag="">
       <Icon name="turnDown" size={10} />
-      {replaced ? 'Replaced' : 'No longer applies'}
+      {replaced ? '已被替换' : '不再适用'}
     </span>
   );
 }
@@ -139,7 +139,7 @@ export function ReplacedQuestionCard({
     >
       <div className="ib-q-top">
         <span className="ib-q-eye">
-          Question {number} of {total}
+          第 {number} 题，共 {total} 题
         </span>
         <span className="ib-q-tags">
           <ReplacedTag replaced={replacement.by !== null} />
@@ -152,29 +152,29 @@ export function ReplacedQuestionCard({
         <Icon name="turnDown" size={14} />
         {replacement.by ? (
           <span>
-            Replaced at {at} by{' '}
+            于 {at} 被替换为{' '}
             <JumpLink arrow="↓" onJump={() => onJump({ kind: 'question', messageId: replacement.by!.message_id, key: replacement.by!.key })}>
               {replacement.by.prompt}
             </JumpLink>
           </span>
         ) : (
           <span>
-            {agentName(replacement.message.author)} said at {at} that this no longer applies.{' '}
+            {agentName(replacement.message.author)} 于 {at} 表示此项不再适用。{' '}
             <JumpLink arrow="↓" onJump={() => onJump({ kind: 'message', messageId: replacement.message.id })}>
-              Read why
+              查看原因
             </JumpLink>
           </span>
         )}
       </div>
       {answer && (
         <p className="ib-q-unsent" data-unsent-pick="">
-          Your pick: <b>{pickWords(answer)}</b>
-          <span className="ib-tag ib-t-notsent">Not sent</span>
+          你的选择：<b>{pickWords(answer)}</b>
+          <span className="ib-tag ib-t-notsent">未发送</span>
         </p>
       )}
       <button type="button" className="ib-q-disclose" aria-expanded={open} aria-controls={panelId} onClick={() => setOpen((v) => !v)}>
         <Icon name={open ? 'chevD' : 'chevR'} size={13} />
-        {open ? 'Hide the old options' : 'Show the old options'}
+        {open ? '隐藏旧选项' : '显示旧选项'}
       </button>
       <div id={panelId} hidden={!open} data-old-options="">
         {question.context && <QuestionContext id={`${id}-ctx`} markdown={question.context} />}
@@ -195,7 +195,7 @@ export function ReplacedQuestionCard({
                         — <InlineMarkdown text={choice.description} {...repo} />
                       </span>
                     )}
-                    {on && <span className="ib-tag ib-t-notsent">Not sent</span>}
+                    {on && <span className="ib-tag ib-t-notsent">未发送</span>}
                   </span>
                 </label>
               );
@@ -218,21 +218,21 @@ export function ReplacesLine({ old, onJump }: { old: readonly InboxQuestion[]; o
         Replaces{' '}
         {old.map((q, index) => (
           <span key={`${q.message_id}/${q.key}`}>
-            {index > 0 && (index === old.length - 1 ? ' and ' : ', ')}
+            {index > 0 && (index === old.length - 1 ? ' 和 ' : '、')}
             <JumpLink arrow="↑" onJump={() => onJump({ kind: 'question', messageId: q.message_id, key: q.key })}>
               {q.prompt}
             </JumpLink>
           </span>
         ))}
-        {dropped > 0 ? (dropped === 1 && old.length === 1 ? '. Your pick there was not sent.' : `. Your ${dropped === 1 ? 'pick' : 'picks'} there ${dropped === 1 ? 'was' : 'were'} not sent.`) : '.'}
+        {dropped > 0 ? (dropped === 1 && old.length === 1 ? '。那里的选择未发送。' : `。那里的 ${dropped} 个选择未发送。`) : '。'}
       </span>
     </p>
   );
 }
 
-/** "Question 1" (its number in its own message), or "question 1" mid-sentence. */
-function questionName(question: InboxQuestion, capital = true): string {
-  return `${capital ? 'Question' : 'question'} ${question.position + 1}`;
+/** "问题 1"（它在自己消息中的编号）。 */
+function questionName(question: InboxQuestion): string {
+  return `问题 ${question.position + 1}`;
 }
 
 /**
@@ -255,20 +255,20 @@ export function ChangedNotice({
   const agent = agentName(replacement.message.author);
   const at = whenTime(replacement.message.created_at);
   const many = questions.length > 1;
-  const which = many ? `${questions.length} questions you picked on` : questionName(first, false);
+  const which = many ? `${questions.length} 个你选择过的问题` : questionName(first);
   return (
     <div className="ib-q-changed" role="status" data-replaced-notice="">
       <Icon name="warn" size={15} />
       <span>
-        {replacement.by ? `${agent} replaced ${which} at ${at}. ` : `${agent} said at ${at} that ${which} no longer ${many ? 'apply' : 'applies'}. `}
-        {many ? "Your picks on them won't be sent. " : "Your pick on it won't be sent. "}
+        {replacement.by ? `${agent} 于 ${at} 替换了${which}。 ` : `${agent} 于 ${at} 表示${which}不再适用。 `}
+        {many ? '你在这些问题上的选择不会发送。 ' : '你在该问题上的选择不会发送。 '}
         {replacement.by ? (
           <button type="button" className="ib-vlink" onClick={() => onJump({ kind: 'question', messageId: replacement.by!.message_id, key: replacement.by!.key })}>
-            See the new question
+            查看新问题
           </button>
         ) : (
           <button type="button" className="ib-vlink" onClick={() => onJump({ kind: 'message', messageId: replacement.message.id })}>
-            Read why
+            查看原因
           </button>
         )}
       </span>
@@ -315,12 +315,12 @@ export function StaleGuard({
   const first = questions[0]!;
   const firstReplacement = replacementOf(thread.messages, first);
   const rest = [
-    words ? 'your words' : '',
-    otherPicks > 0 ? `${otherPicks} other ${otherPicks === 1 ? 'pick' : 'picks'}` : '',
-    annotations > 0 ? `${annotations} ${annotations === 1 ? 'comment' : 'comments'}` : '',
+    words ? '你的文字' : '',
+    otherPicks > 0 ? `${otherPicks} 个其他选择` : '',
+    annotations > 0 ? `${annotations} 条评论` : '',
   ].filter(Boolean);
-  const restText = rest.length > 1 ? `${rest.slice(0, -1).join(', ')} and ${rest.at(-1)}` : (rest[0] ?? '');
-  const heading = questions.length === 1 ? `${questionName(first)} changed before you sent` : `${questions.length} questions changed before you sent`;
+  const restText = rest.length > 1 ? `${rest.slice(0, -1).join('、')}和${rest.at(-1)}` : (rest[0] ?? '');
+  const heading = questions.length === 1 ? `${questionName(first)} 在你发送前已变更` : `${questions.length} 个问题在你发送前已变更`;
   return (
     <div
       className="ib-guard"
@@ -357,29 +357,29 @@ export function StaleGuard({
             <p key={`${q.message_id}/${q.key}`}>
               {replacement.by ? (
                 <>
-                  {agent} replaced <b>{q.prompt}</b> at {at}.
+                  {agent} 于 {at} 替换了 <b>{q.prompt}</b>。
                 </>
               ) : (
                 <>
-                  {agent} said at {at} that <b>{q.prompt}</b> no longer applies.
+                  {agent} 于 {at} 表示 <b>{q.prompt}</b> 不再适用。
                 </>
               )}{' '}
               {q.answer ? (
                 <>
-                  Your pick, <b>{pickWords(q.answer)}</b>, will not be sent.
+                  你的选择 <b>{pickWords(q.answer)}</b> 将不会发送。
                 </>
               ) : (
-                'Your pick on it will not be sent.'
+                '你在该问题上的选择将不会发送。'
               )}
             </p>
           );
         })}
         <p className="ib-mut">
           {words
-            ? 'Your words still go if you send. They were written for the old question, so check they still fit.'
+            ? '如果你发送，你的文字仍会发出。它们是为旧问题写的，请确认仍然合适。'
             : rest.length > 0
-              ? 'The rest of this reply still goes if you send.'
-              : 'Nothing else is in this reply yet.'}
+              ? '如果你发送，此回复的其余内容仍会发出。'
+              : '此回复中还没有其他内容。'}
         </p>
       </div>
       <div className="ib-acts">
@@ -391,21 +391,21 @@ export function StaleGuard({
             onClick={() => onAnswerNew({ kind: 'question', messageId: firstReplacement.by!.message_id, key: firstReplacement.by!.key })}
           >
             <Icon name="arrowDown" size={15} />
-            Answer the new question
+            回答新问题
           </button>
         ) : firstReplacement ? (
           <button type="button" className="ib-btn ib-pri" data-guard-answer-new="" onClick={() => onAnswerNew({ kind: 'message', messageId: firstReplacement.message.id })}>
             <Icon name="arrowDown" size={15} />
-            Read why
+            查看原因
           </button>
         ) : null}
         {rest.length > 0 && (
           <button type="button" className="ib-btn" data-guard-send-rest="" onClick={onSendAnyway}>
-            Send {restText} only
+            仅发送{restText}
           </button>
         )}
         <button type="button" className="ib-btn ib-ghost" data-guard-keep-editing="" onClick={onKeepEditing}>
-          Keep editing
+          继续编辑
         </button>
       </div>
     </div>

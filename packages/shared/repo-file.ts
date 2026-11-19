@@ -122,7 +122,7 @@ export async function readFileCapped(path: string, options: RepoFileReadOptions 
 			length += bytesRead;
 		}
 		if (length > maxBytes) {
-			return { ok: false, reason: "too-large", message: "File is too large to preview", size: length, maxBytes };
+			return { ok: false, reason: "too-large", message: "文件过大，无法预览", size: length, maxBytes };
 		}
 		const bytes = buffer.subarray(0, length);
 		return { ok: true, content: await (options.decode ?? decodeUtf8)(bytes), size: length };

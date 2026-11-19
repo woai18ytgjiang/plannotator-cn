@@ -16,6 +16,7 @@
  */
 
 import {
+  FEEDBACK_MESSAGE_REQUIRED,
   FEEDBACK_UNAVAILABLE,
   feedbackAgentNames,
   feedbackInputError,
@@ -117,7 +118,7 @@ export function createInboxFeedback(options: {
     const fields = body as Record<string, unknown>;
     const unknown = Object.keys(fields).find((key) => !BODY_KEYS.has(key));
     if (unknown) return json({ error: `Unknown field: ${unknown.slice(0, 40)}`, code: "validation_error" }, 400);
-    if (typeof fields.message !== "string") return json({ error: "Write your feedback first.", code: "validation_error" }, 400);
+    if (typeof fields.message !== "string") return json({ error: FEEDBACK_MESSAGE_REQUIRED, code: "validation_error" }, 400);
     if (fields.category != null && typeof fields.category !== "string") return json({ error: "category: a string.", code: "validation_error" }, 400);
     if (fields.contact != null && typeof fields.contact !== "string") return json({ error: "contact: a string.", code: "validation_error" }, 400);
     const input = { message: fields.message, category: (fields.category ?? null) as FeedbackCategory | null, contact: (fields.contact ?? null) as string | null };

@@ -51,7 +51,7 @@ export function RailScopeRows({ layer, alone, scope, rangeName, counts, before, 
       {sinceSha && (
         <button type="button" className={`ib-prp-row ib-prp-all${since ? ' ib-on' : ''}`} aria-pressed={!!since} onClick={() => !since && onLayer(layer.key, `since:${sinceSha}`)} data-pull-since={sinceSha}>
           <span className="ib-prp-sincedot" aria-hidden="true" />
-          <span className="ib-prp-rowtitle">Since you looked</span>
+          <span className="ib-prp-rowtitle">自你上次查看后</span>
           {since && counts && <Counts add={counts.add} del={counts.del} />}
         </button>
       )}

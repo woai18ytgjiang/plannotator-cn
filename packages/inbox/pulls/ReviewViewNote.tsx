@@ -47,7 +47,7 @@ function BranchAsk({ note }: { note: NonNullable<ReviewView['branch']> }) {
       await inboxApi.reply(replyTo, { idempotency_key: newKey(), words: withSkillsBlock(words, skills), questions: [] });
       setState({ asked: replyTo, sending: false, error: null });
     } catch (cause) {
-      setState({ asked: null, sending: false, error: cause instanceof Error ? cause.message : 'The request could not be sent.' });
+      setState({ asked: null, sending: false, error: cause instanceof Error ? cause.message : '请求未能发送。' });
     }
   };
   return (
@@ -59,14 +59,14 @@ function BranchAsk({ note }: { note: NonNullable<ReviewView['branch']> }) {
       )}
       {note.canAsk && !asked && (
         <button type="button" className="ib-btn ib-pri" onClick={() => void ask()} disabled={state.sending || !replyTo} data-review-branch-ask="">
-          {state.sending ? 'Asking…' : 'Ask for a guided review'}
+          {state.sending ? '正在请求…' : '请求引导式审查'}
         </button>
       )}
       {note.canRank && ranking !== 'started' && (
         <p className="ib-rvbranch-reach" data-review-branch-rank="">
           Not ranked at this commit.{' '}
           <button type="button" className="ib-btn" onClick={() => void rank()} disabled={ranking === 'asking'} data-review-branch-rank-button="">
-            {ranking === 'asking' ? 'Ranking…' : 'Rank'}
+            {ranking === 'asking' ? '评估中…' : '评估'}
           </button>
           {ranking === 'not' && ' It could not start. Check the risk agent in Set risk rules.'}
         </p>

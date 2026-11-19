@@ -181,7 +181,7 @@ export function ArchivedBlock({ refreshKey, onUnarchive }: ArchivedBlockProps) {
           Nothing archived. Archive a thread from its header to move it here.
         </div>
       )}
-      {loaded && loaded.rows.length > 0 && !grouped && renderRows(loaded.rows, 'Archived threads')}
+      {loaded && loaded.rows.length > 0 && !grouped && renderRows(loaded.rows, '已归档话题')}
       {loaded &&
         grouped &&
         groupByProject(loaded.rows).map((group) => {

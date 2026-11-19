@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /// <reference path="../globals.d.ts" />
 import React, { useEffect, useRef } from 'react';
 import { createPortal } from 'react-dom';
@@ -32,15 +33,15 @@ const LOOK_OPTIONS: {
     key: 'grid',
     value: true,
     img: lookGridImg,
-    title: 'Grid',
-    desc: 'A floating plan card on grid paper.',
+    title: '网格',
+    desc: '网格纸上的浮动计划卡片。',
   },
   {
     key: 'clean',
     value: false,
     img: lookFlatImg,
-    title: 'Clean',
-    desc: 'A simple, edge-to-edge document.',
+    title: '简洁',
+    desc: '简单、通栏的文档。',
   },
 ];
 
@@ -137,20 +138,20 @@ export const LookAndFeelAnnouncementDialog: React.FC<LookAndFeelAnnouncementDial
             id="plan-look-choice-title"
             className="text-balance text-xl font-semibold tracking-tight sm:text-2xl"
           >
-            {variant === 'moved' ? 'Plans now open in Clean' : 'Choose how plans look'}
+            {variant === 'moved' ? '计划现在以「简洁」样式打开' : '选择计划的显示样式'}
           </h2>
           <p
             id="plan-look-choice-description"
             className="mt-1 text-sm leading-relaxed text-muted-foreground"
           >
             {variant === 'moved'
-              ? "Grid is one switch away in Settings, or pick it here."
-              : "Pick a starting view. You can change it anytime in Settings."}
+              ? '在「设置」中一个开关即可切回网格样式，也可以在这里选择。'
+              : '选一个初始视图。之后可随时在「设置」中修改。'}
           </p>
         </header>
 
         <div className="min-h-0 overflow-y-auto p-3 sm:p-5">
-          <div className="grid grid-cols-2 gap-2.5 sm:gap-4" role="group" aria-label="Plan appearance">
+          <div className="grid grid-cols-2 gap-2.5 sm:gap-4" role="group" aria-label="计划外观">
             {LOOK_OPTIONS.map((option) => {
               const selected = gridEnabled === option.value;
               return (
@@ -199,7 +200,7 @@ export const LookAndFeelAnnouncementDialog: React.FC<LookAndFeelAnnouncementDial
             onClick={onDismiss}
             className="min-h-11 w-full rounded-lg bg-primary px-5 text-sm font-medium text-primary-foreground outline-none transition-opacity motion-reduce:transition-none hover:opacity-90 focus-visible:ring-2 focus-visible:ring-primary focus-visible:ring-offset-2 focus-visible:ring-offset-card sm:w-auto"
           >
-            Continue
+            继续
           </button>
         </footer>
       </div>

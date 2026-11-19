@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Stack badges on a Shape board (approval "stack-show-me", addendum 2026-11-06: take C and the card of round 2, take
  * 1). Only with `ShapeSurface`'s `stackBadges`, and only on a board whose data names two or more PRs (`stack`).
@@ -6,7 +7,7 @@
  *    bright and fades the rest; a second click restores them.
  *  - A tag per PR on each part it changed (`StackBadgeLayer`, on the Picture and How it works drawings).
  *  - A tag opens its card by it: "#2547 What it shows" (the PR's link), "In <part>", the agent's words, a row per
- *    file with its counts, "Also changed here by #2546" (switches the card) and "Read it in the review ›" (the
+ *    file with its counts, "此处也被以下修改 #2546" (switches the card) and "Read it in the review ›" (the
  *    review's chapter for that PR, narrowed to the part's files: `review.open({ step, narrow })`). On a phone the card
  *    is a sheet at the bottom.
  *  - A file opens its lines in the code popup: "‹ <part>" (back to the card), "from #2547 What it shows", and
@@ -166,7 +167,7 @@ export function useShapeStack({
   }, []);
 
   const row = on ? (
-    <div className="shp-stk-row" role="group" aria-label="Pull requests in this stack" data-shp-stack-row="">
+    <div className="shp-stk-row" role="group" aria-label="此堆栈中的 PR" data-shp-stack-row="">
       <span className="shp-stk-row-l">Stack of {stack!.pulls.length}</span>
       {stack!.pulls.map((p) => (
         <button
@@ -367,7 +368,7 @@ function StackCard({
       {phone && <div className="shp-stk-grip" aria-hidden="true" />}
       <div className="shp-stk-card-h">
         <PrName stack={stack} n={pull.n} />
-        <button type="button" className="shp-icon-btn shp-stk-x" onClick={() => onClose()} aria-label="Close">
+        <button type="button" className="shp-icon-btn shp-stk-x" onClick={() => onClose()} aria-label="关闭">
           ×
         </button>
       </div>
@@ -394,7 +395,7 @@ function StackCard({
         <div className="shp-stk-card-foot">
           {others.length > 0 && (
             <span className="shp-stk-also">
-              <span>Also changed here by</span>
+              <span>此处也被以下修改</span>
               {others.map((p) => (
                 <button key={p.n} type="button" className="shp-stk-pr" style={hueOf(stack, p.n)} onClick={() => onSwitch(p.n)} data-shp-stack-switch={p.n}>
                   <PrIcon />#{p.n}
@@ -474,13 +475,13 @@ function StackFile({
       <PrName stack={stack} n={card.pull.n} title={!phone} />
       {total > 1 && (
         <span className="shp-stk-pager">
-          <button type="button" className="shp-stk-pg" disabled={index === 0} onClick={() => onGo(index - 1)} aria-label="Previous file">
+          <button type="button" className="shp-stk-pg" disabled={index === 0} onClick={() => onGo(index - 1)} aria-label="上一个文件">
             <Chevron back />
           </button>
           <span>
             {index + 1} of {total} files
           </span>
-          <button type="button" className="shp-stk-pg" disabled={index === total - 1} onClick={() => onGo(index + 1)} aria-label="Next file">
+          <button type="button" className="shp-stk-pg" disabled={index === total - 1} onClick={() => onGo(index + 1)} aria-label="下一个文件">
             <Chevron />
           </button>
         </span>

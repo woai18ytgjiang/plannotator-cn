@@ -73,11 +73,11 @@ export async function runInboxStepsCommand(argv: readonly string[], deps: CallCo
   try {
     steps = JSON.parse(text.replace(/^﻿/, ""));
   } catch (error) {
-    err(`invalid_json: The list is not JSON: ${error instanceof Error ? error.message : String(error)}\n`);
+    err(`invalid_json：列表不是 JSON：${error instanceof Error ? error.message : String(error)}\n`);
     return 2;
   }
   if (!Array.isArray(steps)) {
-    err("invalid_json: The list must be a JSON array of { step, status, note? }.\n");
+    err("invalid_json：列表必须是 { step, status, note? } 的 JSON 数组。\n");
     return 2;
   }
   const call = JSON.stringify({ thread_id: parsed.thread, steps });

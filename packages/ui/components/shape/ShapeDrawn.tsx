@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 // A drawn view (Picture, How it works): the agent's HTML and SVG, sanitized,
 // in its own shadow root so its CSS reaches nothing else and the board's
 // reaches it only through the frame's variables. The board's motion (parts
@@ -173,7 +174,7 @@ ${SHARP} svg .obj { filter: none; }
 ${SHARP} svg svg[data-draw] [stroke-width] { stroke-width: 1.25px; vector-effect: non-scaling-stroke; }
 ${SHARP} svg svg[data-draw] rect { rx: 2px; ry: 2px; }
 ${SHARP} svg svg[data-icon] { stroke-width: 1.5; }
-/* Follow an example's light over a line (followPainter): as thin as the line, a touch heavier so it reads. */
+/* 跟着一个示例走's light over a line (followPainter): as thin as the line, a touch heavier so it reads. */
 ${SHARP} svg .shp-ex-lit { stroke-width: 1.5px; vector-effect: non-scaling-stroke; stroke-linecap: butt; stroke-linejoin: miter; }
 ${SHARP} .pick { border-radius: 3px; border-width: 1px; }
 ${SHARP} .mk { border-radius: 2px; }
@@ -472,7 +473,7 @@ export interface ShapeDrawnProps {
   /**
    * The drawing's `.board`, each time it is drawn afresh (new content, or the
    * wide and tall layouts swapping), and null once it is gone. For a layer
-   * that works on the drawing itself ("Follow an example").
+   * that works on the drawing itself ("跟着一个示例走").
    */
   onBoard?: (board: HTMLElement | null) => void;
   /**

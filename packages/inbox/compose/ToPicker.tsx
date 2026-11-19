@@ -24,8 +24,8 @@ import { asleepSince, HERE, inParts, pickable, toItemOn, toItems, type ToItem, t
  * the auto-fill compose dropped); typing or an arrow key highlights the first row.
  * Focus stays in the filter (`aria-activedescendant`).
  *
- * Launch on (`start`), or `machines` (approval "inbox-launcher-machine-switch", `toMachines.ts`): "Running" then
- * "Start new", one row per agent kind ("+ Claude Code in kiln-render"); with two or more machines a switch on top
+ * Launch on (`start`), or `machines` (approval "inbox-launcher-machine-switch", `toMachines.ts`): "运行中" then
+ * "新建", one row per agent kind ("+ Claude Code in kiln-render"); with two or more machines a switch on top
  * shows one machine at a time, each running row ends in its state, and typing looks across every machine.
  */
 export function ToPicker({
@@ -185,8 +185,8 @@ export function ToPicker({
           aria-autocomplete="list"
           aria-controls={`ib-cp-list-${uid}`}
           aria-activedescendant={hl >= 0 && options[hl] ? optionId(hl) : undefined}
-          aria-label="Find an agent or project"
-          placeholder="Find an agent or project"
+          aria-label="查找智能体或项目"
+          placeholder="查找智能体或项目"
           autoComplete="off"
           spellCheck={false}
           value={query}
@@ -199,10 +199,10 @@ export function ToPicker({
         className="ib-cp-list"
         role="listbox"
         id={`ib-cp-list-${uid}`}
-        aria-label="Live agent sessions"
+        aria-label="运行中的智能体会话"
         data-session-labels={items.some((item) => item.type === 'session' && item.row.target.label) ? '' : undefined}
       >
-        {items.length === 0 && <div className="ib-cp-none">{typing && parts ? `Nothing matches “${query.trim()}”` : 'No live session matches.'}</div>}
+        {items.length === 0 && <div className="ib-cp-none">{typing && parts ? `没有匹配「${query.trim()}」的内容` : '没有匹配的运行中会话。'}</div>}
         {items.map((item) => {
           if (item.type === 'cap') {
             return (

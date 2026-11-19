@@ -214,7 +214,7 @@ export function StackedStage(props: {
           ? {
               role: 'slider',
               tabIndex: 0,
-              'aria-label': 'Swipe between before and after',
+              'aria-label': '在前后之间滑动',
               'aria-valuemin': 0,
               'aria-valuemax': 100,
               'aria-valuenow': Math.round(props.position * 100),
@@ -258,8 +258,8 @@ export function StackedStage(props: {
           style={swipe ? { clipPath: `inset(0 0 0 ${clipX}px)` } : { opacity: props.opacity }}
         />
         {props.mask && <DifferenceOverlay mask={props.mask} stage={layout.stage} color={props.maskColor} />}
-        {overlayLabels && <StageLabel side="left">Before</StageLabel>}
-        {overlayLabels && <StageLabel side="right">After</StageLabel>}
+        {overlayLabels && <StageLabel side="left">之前</StageLabel>}
+        {overlayLabels && <StageLabel side="right">之后</StageLabel>}
         {swipe && (
           <div aria-hidden="true" data-swipe-divider="" className="pointer-events-none absolute top-0 bottom-0" style={{ left: clipX }}>
             <div className="absolute inset-y-0 -left-px w-0.5 bg-primary" />

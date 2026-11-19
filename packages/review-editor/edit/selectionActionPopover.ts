@@ -55,7 +55,7 @@ export function buildSelectionActionElement(
   button.type = 'button';
   button.style.cssText = BUTTON_STYLE;
   button.innerHTML = `${ICON_COMMENT_SVG}<span>Make annotation</span>`;
-  button.title = 'Create a Plannotator comment on the selected lines';
+  button.title = '在选中的行上创建 Plannotator 评论';
   button.dataset.testid = 'edit-selection-make-annotation';
 
   button.addEventListener('mouseenter', () => {

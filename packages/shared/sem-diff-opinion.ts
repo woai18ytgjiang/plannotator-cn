@@ -84,7 +84,7 @@ export async function opinionSettings(dataDir: string): Promise<OpinionSettings>
 
 export async function saveOpinionKey(dataDir: string, body: unknown, fetchImpl: Fetch = fetch): Promise<KeySaveReply> {
   const secret = parseSecret(body);
-  if (!secret) return { ok: false, failure: "missing", reason: "Enter a key for Jev, or an account ID and token for Clef." };
+  if (!secret) return { ok: false, failure: "missing", reason: "请输入 Jev 的密钥，或 Clef 的账号 ID 与令牌。" };
   const check =
     secret.provider === "jev"
       ? await checkKey({ provider: "jev", apiKey: secret.apiKey }, fetchImpl)
@@ -95,9 +95,9 @@ export async function saveOpinionKey(dataDir: string, body: unknown, fetchImpl: 
 }
 
 function plainReason(reason: string): { failure: KeySaveFailure; reason: string } {
-  if (/no credit/i.test(reason)) return { failure: "noCredit", reason: "The account has no credit left." };
-  if (/refused/i.test(reason)) return { failure: "refused", reason: "The key was refused." };
-  return { failure: "noAnswer", reason: "The provider did not answer. Try again in a moment." };
+  if (/no credit/i.test(reason)) return { failure: "noCredit", reason: "该账户已无可用额度。" };
+  if (/refused/i.test(reason)) return { failure: "refused", reason: "密钥被拒绝。" };
+  return { failure: "noAnswer", reason: "服务商没有响应。请稍后重试。" };
 }
 
 function parseCandidates(body: unknown): Candidate[] | null {
@@ -131,7 +131,7 @@ function askerFor(secret: OpinionSecret, fetchImpl: Fetch): (cs: Candidate[]) =>
 
 export async function askOpinion(dataDir: string, body: unknown, fetchImpl: Fetch = fetch): Promise<OpinionReply> {
   const candidates = parseCandidates(body);
-  if (!candidates) return { ok: false, state: "failed", reason: "The question was not understood." };
+  if (!candidates) return { ok: false, state: "failed", reason: "无法理解该问题。" };
   const secret = await readOpinionSecret(dataDir);
   if (!secret) return { ok: false, state: "off", reason: "Power Up has no key." };
   try {
@@ -139,10 +139,10 @@ export async function askOpinion(dataDir: string, body: unknown, fetchImpl: Fetc
   } catch (e) {
     if (e instanceof OpinionKeyError) {
       return e.status === 402
-        ? { ok: false, state: "noCredit", reason: "The account has no credit left." }
-        : { ok: false, state: "refusedKey", reason: "The key was refused." };
+        ? { ok: false, state: "noCredit", reason: "该账户已无可用额度。" }
+        : { ok: false, state: "refusedKey", reason: "密钥被拒绝。" };
     }
-    return { ok: false, state: "failed", reason: "The provider did not answer." };
+    return { ok: false, state: "failed", reason: "服务商没有响应。" };
   }
 }
 

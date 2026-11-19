@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Reusable confirmation dialog component
  */
@@ -26,8 +27,8 @@ export const ConfirmDialog: React.FC<ConfirmDialogProps> = ({
   title,
   message,
   subMessage,
-  confirmText = 'Got it',
-  cancelText = 'Cancel',
+  confirmText = '知道了',
+  cancelText = '取消',
   variant = 'info',
   showCancel = false,
   wide = false,

@@ -684,19 +684,19 @@ export async function startAnnotateServer(
   /** `thisMachine`: the reader may share an HTML document from anywhere, as /api/doc serves it (#2291). */
   async function loadShareHtml(pathParam: string | null, thisMachine: boolean): Promise<Response> {
     if (/^https?:\/\//i.test(filePath)) {
-      return Response.json({ error: "Raw HTML sharing is unavailable for URL annotations" }, { status: 400 });
+      return Response.json({ error: "URL 批注无法使用原始 HTML 分享" }, { status: 400 });
     }
 
     const sourcePath = resolvePath(filePath);
     const requestedPath = pathParam ? resolvePath(pathParam) : sourcePath;
     if (!/\.html?$/i.test(requestedPath)) {
-      return Response.json({ error: "Share HTML is only available for HTML documents" }, { status: 400 });
+      return Response.json({ error: "分享 HTML 仅适用于 HTML 文档" }, { status: 400 });
     }
     const isRoot = rootHtmlSourcePath !== null && requestedPath === rootHtmlSourcePath;
     // The same gate as /api/doc: the reference roots for a reader off this
     // machine, a document anywhere for a page on it, the real file's type.
     if (!isRoot && !isDocServeAllowed(requestedPath, null, getReferenceRootPaths(), thisMachine)) {
-      return Response.json({ error: "Access denied" }, { status: 403 });
+      return Response.json({ error: "访问被拒绝" }, { status: 403 });
     }
 
     try {
@@ -704,19 +704,19 @@ export async function startAnnotateServer(
       if (isRoot) {
         const read = await readRootHtml();
         if (read?.kind === "snapshot" && read.reason === "too-large") {
-          return Response.json({ error: "File too large to share (max 2MB)" }, { status: 413 });
+          return Response.json({ error: "文件过大，无法分享（最大 2MB）" }, { status: 413 });
         }
         html = read?.kind === "current" ? read.html : rawHtml!;
       } else {
         const state = htmlAssetFileState(requestedPath, MAX_ANNOTATABLE_FILE_BYTES);
-        if (state === "missing") return Response.json({ error: "File not found" }, { status: 404 });
-        if (state === "not-file") return Response.json({ error: "Not a regular file" }, { status: 403 });
-        if (state === "too-large") return Response.json({ error: "File too large to share (max 2MB)" }, { status: 413 });
+        if (state === "missing") return Response.json({ error: "未找到文件" }, { status: 404 });
+        if (state === "not-file") return Response.json({ error: "不是常规文件" }, { status: 403 });
+        if (state === "too-large") return Response.json({ error: "文件过大，无法分享（最大 2MB）" }, { status: 413 });
         html = await Bun.file(requestedPath).text();
       }
       return Response.json({ shareHtml: htmlAssets.inlineHtml(html, requestedPath) });
     } catch {
-      return Response.json({ error: "Failed to prepare share HTML" }, { status: 500 });
+      return Response.json({ error: "准备分享 HTML 失败" }, { status: 500 });
     }
   }
 
@@ -848,7 +848,7 @@ export async function startAnnotateServer(
   const serverSession = createServerSessionNonce();
   const sessionMismatch = () => Response.json(serverSessionMismatchBody(), { status: 409 });
   const alreadyDecided = () =>
-    Response.json({ error: "This review session has already been decided.", code: "already_decided" }, { status: 409 });
+    Response.json({ error: "此次审查会话已有结论。", code: "already_decided" }, { status: 409 });
 
   // Last-client abandonment lease: once the tab's client-lease stream
   // disconnects (as reported by the transport) and stays disconnected for the
@@ -946,10 +946,10 @@ export async function startAnnotateServer(
             if (agentTerminal.capability.enabled && agentTerminal.upgrade(req, server)) {
               return;
             }
-            return new Response("Agent terminal is unavailable", { status: 404 });
+            return new Response("智能体终端不可用", { status: 404 });
           }
           if (isAgentTerminalWsRoute(url.pathname)) {
-            return new Response("Agent terminal is unavailable", { status: 404 });
+            return new Response("智能体终端不可用", { status: 404 });
           }
 
           // API: Get plan content (reuse /api/plan so the plan editor UI works)
@@ -1095,26 +1095,26 @@ export async function startAnnotateServer(
                 anyPath: isThisMachineRequest(req),
               });
               if (resolved.kind === "denied") {
-                return Response.json({ error: "Access denied: path is outside project root" }, { status: 403 });
+                return Response.json({ error: "访问被拒绝：路径超出项目根目录" }, { status: 403 });
               }
               slug = deriveAnnotateHistorySlug(resolved.path);
               if (getVersionCount(annotateProjectName, slug) === 0) {
-                return Response.json({ error: "No version history" }, { status: 404 });
+                return Response.json({ error: "没有版本历史" }, { status: 404 });
               }
             } else {
               if (!annotateHistory) {
-                return Response.json({ error: "No version history" }, { status: 404 });
+                return Response.json({ error: "没有版本历史" }, { status: 404 });
               }
               slug = annotateHistory.slug;
             }
             const vParam = url.searchParams.get("v");
             const v = vParam ? parseInt(vParam, 10) : NaN;
             if (isNaN(v) || v < 1) {
-              return new Response("Invalid version number", { status: 400 });
+              return new Response("版本号无效", { status: 400 });
             }
             const content = getPlanVersion(annotateProjectName, slug, v);
             if (content === null) {
-              return Response.json({ error: "Version not found" }, { status: 404 });
+              return Response.json({ error: "未找到版本" }, { status: 404 });
             }
             return Response.json({ plan: content, version: v });
           }
@@ -1130,7 +1130,7 @@ export async function startAnnotateServer(
                 anyPath: isThisMachineRequest(req),
               });
               if (resolved.kind === "denied") {
-                return Response.json({ error: "Access denied: path is outside project root" }, { status: 403 });
+                return Response.json({ error: "访问被拒绝：路径超出项目根目录" }, { status: 403 });
               }
               const slug = deriveAnnotateHistorySlug(resolved.path);
               const versions = listVersions(annotateProjectName, slug);
@@ -1199,7 +1199,7 @@ export async function startAnnotateServer(
           if (url.pathname === "/api/open-in" && req.method === "POST") {
             if (/^https?:\/\//i.test(filePath)) {
               return Response.json(
-                { ok: false, error: "Open in app is unavailable for this source" },
+                { ok: false, error: "此来源无法使用「在应用中打开」" },
                 { status: 400 },
               );
             }
@@ -1224,14 +1224,14 @@ export async function startAnnotateServer(
           // API: Update user config (write-back to ~/.plannotator/config.json)
           if (url.pathname === "/api/config" && req.method === "POST") {
             if (!isSameOriginOrNoOrigin(req.headers.get("origin"), url.host, req.headers.get("sec-fetch-site"))) {
-              return Response.json({ error: "Cross-origin config writes are not allowed" }, { status: 403 });
+              return Response.json({ error: "不允许跨源写入配置" }, { status: 403 });
             }
             try {
               const body = (await req.json()) as { agentSwitch?: unknown; displayName?: string; diffOptions?: Record<string, unknown>; theme?: Record<string, unknown>; favicon?: FaviconStyle; autoUpdate?: unknown; updateCheck?: unknown; agentTool?: unknown; conventionalComments?: boolean; conventionalLabels?: unknown[] | null; agentTerminalSide?: unknown; agentTerminalDefaultAgent?: unknown };
               const toSave: Record<string, unknown> = {};
               // OpenCode's agent switch (#1390): a known shape or nothing is saved.
               const agentSwitch = agentSwitchConfigToSave(body);
-              if (agentSwitch === null) return Response.json({ error: "Invalid agentSwitch" }, { status: 400 });
+              if (agentSwitch === null) return Response.json({ error: "agentSwitch 无效" }, { status: 400 });
               if (agentSwitch !== undefined) toSave.agentSwitch = agentSwitch;
               if (body.displayName !== undefined) toSave.displayName = body.displayName;
               if (body.diffOptions !== undefined) toSave.diffOptions = body.diffOptions;
@@ -1249,11 +1249,11 @@ export async function startAnnotateServer(
               // refused in remote mode and --tailscale sessions.
               const cookieHostWrite = cookieHostConfigWrite((body as { cookieHost?: unknown }).cookieHost, isRemote || options.tailnetPublished === true);
               if (cookieHostWrite && cookieHostWrite.status !== 200) return Response.json(cookieHostWrite.body, { status: cookieHostWrite.status });
-              if (Object.keys(toSave).length > 0 && !saveConfig(toSave as Parameters<typeof saveConfig>[0])) return Response.json({ error: "config.json could not be saved; nothing changed. A config.json that is not valid JSON is never written over: fix or remove it." }, { status: 500 });
-              if (agentToolSaveFailed(toSave)) return Response.json({ error: "Could not save the setting to config.json." }, { status: 500 });
+              if (Object.keys(toSave).length > 0 && !saveConfig(toSave as Parameters<typeof saveConfig>[0])) return Response.json({ error: "config.json 无法保存；未做任何更改。内容不是有效 JSON 的 config.json 绝不会被覆盖：请修复或删除它。" }, { status: 500 });
+              if (agentToolSaveFailed(toSave)) return Response.json({ error: "无法将设置保存到 config.json。" }, { status: 500 });
               return Response.json(cookieHostWrite ? cookieHostWrite.body : { ok: true });
             } catch {
-              return Response.json({ error: "Invalid request" }, { status: 400 });
+              return Response.json({ error: "请求无效" }, { status: 400 });
             }
           }
 
@@ -1482,12 +1482,12 @@ export async function startAnnotateServer(
               try {
                 body = await req.json();
               } catch {
-                return Response.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
+                return Response.json({ ok: false, error: "JSON 无效" }, { status: 400 });
               }
               const result = annotateDrafts.saveDocuments(body, url.searchParams.get("client"), isThisMachineRequest(req));
               return Response.json(result.body, { status: result.status });
             }
-            return Response.json({ error: "Method not allowed" }, { status: 405 });
+            return Response.json({ error: "不允许使用该方法" }, { status: 405 });
           }
 
           // API: Client-lease SSE — see packages/shared/annotate-client-lease.ts.
@@ -1496,7 +1496,7 @@ export async function startAnnotateServer(
           // for the whole server above, so no per-connection opt-out is needed).
           if (url.pathname === ANNOTATE_CLIENT_LEASE_STREAM_PATH && req.method === "GET") {
             if (!clientLeaseSupported) {
-              return new Response("Client lease unavailable", { status: 404 });
+              return new Response("客户端租约不可用", { status: 404 });
             }
 
             const encoder = new TextEncoder();
@@ -1539,7 +1539,7 @@ export async function startAnnotateServer(
               if (url.pathname.slice("/api/ai/".length) === "capabilities" && req.method === "GET") {
                 return Response.json({ available: false, providers: [] });
               }
-              return Response.json({ error: "AI backend not available" }, { status: 503 });
+              return Response.json({ error: "AI 后端不可用" }, { status: 503 });
             }
             const handler = aiRuntime.endpoints[url.pathname as keyof AIEndpoints];
             if (handler) {
@@ -1592,7 +1592,7 @@ export async function startAnnotateServer(
               (body.codeAnnotations !== undefined && !Array.isArray(body.codeAnnotations)) ||
               (body.draftGeneration !== undefined && typeof body.draftGeneration !== "number")
             ) {
-              return Response.json({ error: "Invalid approval body." }, { status: 400 });
+              return Response.json({ error: "批准请求体无效。" }, { status: 400 });
             }
             if (checkServerSession(body, serverSession) === "mismatch") return sessionMismatch();
 

@@ -140,7 +140,7 @@ function SemanticDiffChangeRow({
 }) {
   const range = lineSelectionForChange(change);
   const linked = change.origin === 'second-opinion';
-  const band = change.band === 'very-likely' ? 'Very likely' : change.band === 'likely' ? 'Likely' : '';
+  const band = change.band === 'very-likely' ? '很可能' : change.band === 'likely' ? '可能' : '';
   const model = change.model?.split(' ')[0]?.replace(/^jev.*/, 'Jev').replace(/^clef.*/, 'Clef') ?? 'the model';
   const sourcePath = change.changeType === 'deleted' ? change.oldFilePath ?? change.filePath : change.filePath;
   const sourcePreview = useHoverPreview<ReviewFileSource>(
@@ -202,7 +202,7 @@ function SemanticDiffChangeRow({
                   onReject(change.candidateId!);
                 }}
               >
-                Not moved
+                未移动
               </button>
             )}
             {onOpenFile && (<button
@@ -214,7 +214,7 @@ function SemanticDiffChangeRow({
                 onOpenFile(sourcePath, range.start);
               }}
             >
-              Open file
+              打开文件
             </button>)}
             </>
           ) : undefined}
@@ -275,7 +275,7 @@ export function SemanticDiffRows({
             title={change.filePath}
           >
             <ChangeIcon changeType={status} />
-            <span className="semantic-diff-kind">binary</span>
+            <span className="semantic-diff-kind">二进制</span>
             <span className="semantic-diff-name">{getBinaryDisplayName(change)}</span>
             <span className="semantic-diff-status">{status}</span>
           </button>

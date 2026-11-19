@@ -7,10 +7,10 @@ import { Modal } from './Updates';
 
 /** The words (approved by the owner, 2026-11-13). */
 export const PERSONAL_AGENTS_COPY = {
-  title: 'Your personal agents are welcome here',
-  body: 'Hermes Agent, OpenClaw, Muse and Grok Bot can message you here and ask you questions, next to your coding agents.',
-  settings: 'Connect one',
-  done: 'Got it',
+  title: '你的个人智能体在这里同样受欢迎',
+  body: 'Hermes Agent、OpenClaw、Muse 和 Grok Bot 可以在这里给你发消息、向你提问，与你的编程智能体并列。',
+  settings: '连接一个',
+  done: '知道了',
 } as const;
 
 /** The banner probe gives up after this long: the dialog then shows without it. */

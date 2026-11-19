@@ -240,10 +240,10 @@ function HtmlCommentCard({
         {pin && (
           <>
             {/* Pressing one keeps focus in the field, so the keyboard stays up. */}
-            <button type="button" className="ib-fvb" onMouseDown={(event) => event.preventDefault()} onClick={() => onStep('parent')} aria-label="Comment on the element around it" data-html-comment-step="parent">
+            <button type="button" className="ib-fvb" onMouseDown={(event) => event.preventDefault()} onClick={() => onStep('parent')} aria-label="对包含它的外层元素添加评论" data-html-comment-step="parent">
               <Icon name="arrowUp" size={18} />
             </button>
-            <button type="button" className="ib-fvb" onMouseDown={(event) => event.preventDefault()} onClick={() => onStep('child')} aria-label="Comment on the element inside it" data-html-comment-step="child">
+            <button type="button" className="ib-fvb" onMouseDown={(event) => event.preventDefault()} onClick={() => onStep('child')} aria-label="对其内部元素添加评论" data-html-comment-step="child">
               <Icon name="arrowDown" size={18} />
             </button>
           </>
@@ -261,7 +261,7 @@ function HtmlCommentCard({
               event.stopPropagation();
               onSubmit();
             }}
-            placeholder="Comment on this…"
+            placeholder="对此添加评论…"
             ariaLabel={`Comment on ${name}: ${target}`}
             destination="your comment"
             tags={tags}
@@ -381,7 +381,7 @@ export function HtmlPageCommentRow({
               event.stopPropagation();
               void submit();
             }}
-            placeholder="Comment on this page…"
+            placeholder="对此页面添加评论…"
             ariaLabel={`Comment on ${name}`}
             destination="your comment"
             tags={fieldTags}

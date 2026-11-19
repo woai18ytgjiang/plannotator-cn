@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useCallback, useEffect, useState } from 'react';
 import { configStore, useConfigValue } from '../../config';
 import { AnalysisLayerToggle } from '../AnalysisLayerToggle';
@@ -9,14 +10,14 @@ type Check = { kind: 'idle' } | { kind: 'checking' } | { kind: 'ok'; ms: number 
 const ROUTE = '/api/sem-diff/opinion/settings';
 export const POWER_UP_CHANGED_EVENT = 'plannotator:power-up-changed';
 const PROVIDER_NAME: Record<Provider, string> = { jev: 'Jev', clef: 'Clef' };
-const ADD_KEY: Record<Provider, string> = { jev: 'Paste the key from your TypeSafe account', clef: 'Your Cloudflare account ID and a Workers AI token' };
+const ADD_KEY: Record<Provider, string> = { jev: '粘贴你 TypeSafe 账户中的密钥', clef: '你的 Cloudflare 账户 ID 和 Workers AI 令牌' };
 
 function failureText(provider: Provider, failure: Failure): string {
   const name = PROVIDER_NAME[provider];
-  if (failure === 'missing') return provider === 'jev' ? 'Add your TypeSafe key' : 'Add your account ID and token';
-  if (failure === 'refused') return provider === 'jev' ? 'Jev refused this key' : 'Clef refused this token';
-  if (failure === 'noCredit') return `No credit left on this ${name} account`;
-  return `${name} did not answer. Try again in a moment.`;
+  if (failure === 'missing') return provider === 'jev' ? '添加你的 TypeSafe 密钥' : '添加你的账户 ID 和令牌';
+  if (failure === 'refused') return provider === 'jev' ? 'Jev 拒绝了此密钥' : 'Clef 拒绝了此令牌';
+  if (failure === 'noCredit') return `此 ${name} 账户已无可用额度`;
+  return `${name} 未响应。请稍后重试。`;
 }
 
 const KEY_MESSAGE_ID = 'power-up-key-message';
@@ -163,24 +164,24 @@ export function SemanticDiffsTab() {
         ? provider === 'jev'
           ? 'Add your TypeSafe key'
           : !accountId
-            ? 'Add your account ID'
-            : 'Add your token'
+            ? '添加你的账户 ID'
+            : '添加你的令牌'
         : null;
   const complete = provider === 'jev' ? apiKey.trim() !== '' : accountId.trim() !== '' && apiToken.trim() !== '';
   return (
     <div className="space-y-4" data-semantic-diffs-settings="">
       <div>
-        <div className="text-sm font-semibold">Semantic diffs</div>
-        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">Labels what each change really is: moved, renamed, reformatted, extracted.</p>
+        <div className="text-sm font-semibold">语义差异</div>
+        <p className="mt-1 text-xs leading-relaxed text-muted-foreground">标明每个更改的真实性质：移动、重命名、重新格式化、提取。</p>
       </div>
       <AnalysisLayerToggle
         checked={semantic && semanticDiffEnabled}
         disabled={!semanticDiffEnabled}
         onChange={(on) => configStore.set('diffSemantic', on)}
-        label="Show moved & renamed code"
+        label="显示移动和重命名的代码"
         description={semanticDiffEnabled
-          ? 'Draw moved, renamed, reformatted, extracted and inlined code as what it is.'
-          : 'Off while Semantic changes is off in Settings › Analysis.'}
+          ? '将移动、重命名、重新格式化、提取和内联的代码按真实性质呈现。'
+          : '当「设置 › 分析」中的语义变更关闭时不可用。'}
       />
       <div data-power-up-settings="">
         <div className="border-t border-border pt-3">
@@ -191,30 +192,30 @@ export function SemanticDiffsTab() {
               configStore.set('diffPowerUp', on);
               changed();
             }}
-            label="Power Up"
+            label="增强"
             description={
               configured
-                ? 'A model takes a second look at changes the engine could not label on its own. When it is on, every semantic diff gets that second look.'
-                : 'A model takes a second look at changes the engine could not label on its own. Add a key below to turn it on.'
+                ? '由模型复核引擎无法自行标注的更改。开启后，每个语义差异都会经过这次复核。'
+                : '由模型复核引擎无法自行标注的更改。在下方添加密钥即可开启。'
             }
           />
         </div>
         {available === false ? (
-          <Row title="Model" hint="This review host cannot keep a key." />
+          <Row title="模型" hint="此审查宿主无法保存密钥。" />
         ) : (
           <>
             <Row
-              title="Model"
+              title="模型"
               hint={
                 configured && savedProvider && savedProvider !== provider
-                  ? `${PROVIDER_NAME[savedProvider]} keeps powering up until ${provider === 'clef' ? 'a Clef token' : 'a Jev key'} works.`
+                  ? `在 ${provider === 'clef' ? 'Clef 令牌' : 'Jev 密钥'}可用之前，${PROVIDER_NAME[savedProvider]} 会继续负责增强。`
                   : provider === 'jev'
-                    ? 'Jev is the faster one, about 0.2 s a file.'
-                    : 'Clef runs on your Cloudflare account.'
+                    ? 'Jev 更快，每个文件约 0.2 秒。'
+                    : 'Clef 运行在你的 Cloudflare 账户上。'
               }
             >
               <Segmented
-                label="Model"
+                label="模型"
                 value={provider}
                 options={[['jev', 'Jev'], ['clef', 'Clef']]}
                 onChange={(v) => {
@@ -225,16 +226,16 @@ export function SemanticDiffsTab() {
               />
             </Row>
             <Row
-              title={provider === 'jev' ? 'Jev key' : 'Workers AI'}
+              title={provider === 'jev' ? 'Jev 密钥' : 'Workers AI'}
               hint={
                 check.kind === 'ok' ? (
-                  `✓ Key works · ${check.ms} ms`
+                  `✓ 密钥可用 · ${check.ms} ms`
                 ) : check.kind === 'error' && check.failure === 'noAnswer' ? (
                   <span className="text-warning" data-power-up-key-failure="noAnswer">{failureText(provider, check.failure)}</span>
                 ) : check.kind === 'checking' ? (
-                  'Checking…'
+                  '检查中…'
                 ) : saved ? (
-                  'Kept on this computer'
+                  '已保存在本机'
                 ) : (
                   ADD_KEY[provider]
                 )
@@ -256,7 +257,7 @@ export function SemanticDiffsTab() {
                   {provider === 'jev' ? (
                     <KeyField
                       className="w-full"
-                      label="TypeSafe API key"
+                      label="TypeSafe API 密钥"
                       value={apiKey}
                       onChange={setApiKey}
                       secret
@@ -269,25 +270,25 @@ export function SemanticDiffsTab() {
                     <>
                       <KeyField
                         className="w-[96px] shrink-0"
-                        caption="Account ID"
-                        label="Cloudflare account ID"
+                        caption="账户 ID"
+                        label="Cloudflare 账户 ID"
                         value={accountId}
                         onChange={setAccountId}
                         secret={false}
                         flagged={failure === 'missing' && !accountId}
-                        message={failure === 'missing' && !accountId ? 'Add your account ID' : undefined}
+                        message={failure === 'missing' && !accountId ? '添加你的账户 ID' : undefined}
                         saved={saved}
                         onFocus={() => setEditing(true)}
                       />
                       <KeyField
                         className="min-w-0 flex-1"
-                        caption="Token"
-                        label="Workers AI token"
+                        caption="令牌"
+                        label="Workers AI 令牌"
                         value={apiToken}
                         onChange={setApiToken}
                         secret
                         flagged={failure === 'refused' || failure === 'noCredit' || (failure === 'missing' && !apiToken)}
-                        message={failure === 'refused' || failure === 'noCredit' ? failureText('clef', failure) : failure === 'missing' && !apiToken ? 'Add your token' : undefined}
+                        message={failure === 'refused' || failure === 'noCredit' ? failureText('clef', failure) : failure === 'missing' && !apiToken ? '添加你的令牌' : undefined}
                         saved={saved}
                         onFocus={() => setEditing(true)}
                       />
@@ -301,7 +302,7 @@ export function SemanticDiffsTab() {
                       disabled={check.kind === 'checking' || (saved && !complete)}
                       data-power-up-key-save=""
                     >
-                      {check.kind === 'checking' ? 'Checking…' : saved && !complete ? 'Saved' : 'Check and save'}
+                      {check.kind === 'checking' ? '检查中…' : saved && !complete ? 'Saved' : 'Check and save'}
                     </button>
                   </span>
                   {saved && !complete && (
@@ -322,11 +323,11 @@ export function SemanticDiffsTab() {
                 )}
               </form>
             </Row>
-            <Row title="Motion" hint="Stream moves the bands slowly. It is experimental: it costs some smoothness while you scroll. Both follow your system's reduce-motion setting.">
-              <Segmented label="Motion" value={motion} options={[['still', 'Still'], ['stream', 'Stream']]} onChange={(v) => configStore.set('diffPowerUpMotion', v)} />
+            <Row title="动效" hint="「流动」会让色带缓慢移动。这是实验性功能：可能影响滚动流畅度。两者都遵循系统的「减少动态效果」设置。">
+              <Segmented label="动效" value={motion} options={[['still', '静止'], ['stream', '流动']]} onChange={(v) => configStore.set('diffPowerUpMotion', v)} />
             </Row>
             <p className="pt-1 text-xs text-muted-foreground">
-              Your key, your account; code is sent to {PROVIDER_NAME[provider]}. Only the functions the engine asks about are sent, never the rest of the repository.
+              你的密钥、你的账户；代码会发送给 {PROVIDER_NAME[provider]}。只会发送引擎所询问的函数，绝不会发送仓库的其他内容。
             </p>
           </>
         )}

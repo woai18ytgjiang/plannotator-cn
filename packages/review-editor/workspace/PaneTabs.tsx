@@ -144,7 +144,7 @@ export const PaneTabs: React.FC<{
     <div
       ref={listRef}
       role="tablist"
-      aria-label={paneIndex === 0 ? 'Open files' : 'Open files beside'}
+      aria-label={paneIndex === 0 ? '打开文件' : '在侧边打开文件'}
       data-pane-tabs=""
       onKeyDown={onKeyDown}
       onScroll={(event) => { event.currentTarget.scrollLeft = 0; }}

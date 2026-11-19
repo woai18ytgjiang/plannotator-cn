@@ -38,7 +38,7 @@ export function ThreadTagLine({ threadId, phone }: { threadId: string; phone: bo
       <span className="ib-ttags-mark">
         <TagIcon size={15} />
       </span>
-      <ul className="ib-ttags-list" aria-label="Tags">
+      <ul className="ib-ttags-list" aria-label="标签">
         {tags.map((tag) => (
           <li key={tag.id}>
             <a className="ib-ttag" href={tagHref(tag.id)} dir="auto" data-thread-tag={tag.id}>
@@ -49,18 +49,18 @@ export function ThreadTagLine({ threadId, phone }: { threadId: string; phone: bo
       </ul>
       {host.can(threadId) && (
         <Menu.Root open={open} onOpenChange={setOpen} modal={phone}>
-          <Tip content="Add tag">
-            <Menu.Trigger ref={add} className="ib-ttags-add" aria-label="Add tag" onKeyDown={openByKey} data-thread-tags-add="">
+          <Tip content="添加标签">
+            <Menu.Trigger ref={add} className="ib-ttags-add" aria-label="添加标签" onKeyDown={openByKey} data-thread-tags-add="">
               <Icon name="plus" size={15} />
             </Menu.Trigger>
           </Tip>
           <Menu.Portal container={portal ?? undefined}>
             {phone && <Menu.Backdrop className="ib-pm-scrim" />}
             <Menu.Positioner className="ib-pm-pos" side="bottom" align="start" sideOffset={4} data-phone={phone ? '' : undefined}>
-              <Menu.Popup className="ib-pm" aria-label="Add tag" data-thread-tags-menu="">
+              <Menu.Popup className="ib-pm" aria-label="添加标签" data-thread-tags-menu="">
                 {phone && (
                   <div className="ib-pm-title" aria-hidden="true">
-                    Add tag
+                    添加标签
                   </div>
                 )}
                 <AddTagList threadId={threadId} />

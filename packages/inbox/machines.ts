@@ -77,11 +77,11 @@ export function machineTakes(row: Pick<InboxListRow, 'machine'>, model: Machines
 export function awayLine(machine: Pick<MachineView, 'name' | 'state' | 'since' | 'version'>, now: Date = new Date()): string | null {
   // A machine this Inbox just updated is restarting, not asleep.
   const phase = (machine as Pick<MachineView, 'update'>).update?.phase;
-  if (phase === 'restarting') return `${machine.name} is restarting to finish its update`;
+  if (phase === 'restarting') return `${machine.name} 正在重启以完成更新`;
   // Nor is one that did not come back: "asleep" says to wait.
-  if (phase === 'not_back') return `${machine.name} has not come back after restarting`;
-  if (machine.state === 'offline') return `${machine.name} asleep since ${shortTime(machine.since, now)}`;
-  if (machine.state === 'needs_update') return `Update Plannotator on ${machine.name} to see its threads here`;
+  if (phase === 'not_back') return `${machine.name} 重启后尚未恢复`;
+  if (machine.state === 'offline') return `${machine.name} 自 ${shortTime(machine.since, now)} 起休眠`;
+  if (machine.state === 'needs_update') return `请更新 ${machine.name} 上的 Plannotator 以在此查看其话题`;
   return null;
 }
 
@@ -89,7 +89,7 @@ export function awayLine(machine: Pick<MachineView, 'name' | 'state' | 'since' |
 export function threadAwayLine(machine: MachineView | undefined, now: Date = new Date()): string | null {
   const line = machine ? awayLine(machine, now) : null;
   if (!line) return null;
-  return machine!.state === 'offline' ? `${line}. This thread opens when it is back.` : `${line}.`;
+  return machine!.state === 'offline' ? `${line}。此话题会在它恢复后打开。` : `${line}。`;
 }
 
 /** What a linked machine's update says, in the sidebar and in Settings → Machines. Null: nothing to say. */
@@ -107,26 +107,26 @@ export interface MachineNotice {
 export function machineNotice(machine: Pick<MachineView, 'name' | 'self' | 'update' | 'state'>): MachineNotice | null {
   const u = machine.update;
   if (machine.self || !u) return null;
-  const to = u.target ?? 'the newest version';
+  const to = u.target ?? '最新版本';
   const name = machine.name;
   switch (u.phase) {
     case 'behind':
-      if (!u.can_update && u.asked) return { kind: 'too_old', word: 'Asked', line: `${to} is out`, tip: `You asked ${u.asked.agent} on ${name} to update it.`, busy: false };
-      if (!u.can_update) return { kind: 'too_old', word: 'Update', line: `${to} is out`, tip: `${name} runs an older Plannotator (${u.from}). See how to update it.`, busy: false };
-      if (!u.self_update) return { kind: 'by_hand', word: 'Update', line: `${to} is out`, tip: `${name} runs an older Plannotator (${u.from}). See how to update it.`, busy: false };
-      return { kind: 'update', word: 'Update', line: `${to} is out`, tip: `${name} runs an older Plannotator (${u.from}). Update it to ${to}.`, busy: false };
+      if (!u.can_update && u.asked) return { kind: 'too_old', word: '已请求', line: `有 ${to} 可用`, tip: `你已请求 ${name} 上的 ${u.asked.agent} 更新它。`, busy: false };
+      if (!u.can_update) return { kind: 'too_old', word: '更新', line: `有 ${to} 可用`, tip: `${name} 运行的是较旧的 Plannotator（${u.from}）。查看如何更新。`, busy: false };
+      if (!u.self_update) return { kind: 'by_hand', word: '更新', line: `有 ${to} 可用`, tip: `${name} 运行的是较旧的 Plannotator（${u.from}）。查看如何更新。`, busy: false };
+      return { kind: 'update', word: '更新', line: `有 ${to} 可用`, tip: `${name} 运行的是较旧的 Plannotator（${u.from}）。将其更新到 ${to}。`, busy: false };
     case 'updating':
-      return { kind: 'updating', word: 'Updating', line: `updating to ${to}`, tip: `Updating ${name} to ${to}`, busy: true };
+      return { kind: 'updating', word: '更新中', line: `正在更新到 ${to}`, tip: `正在将 ${name} 更新到 ${to}`, busy: true };
     case 'ready':
-      return { kind: 'ready', word: 'Restart', line: `${to} is installed, Inbox still on ${u.from}`, tip: `${to} is installed on ${name}. Its Inbox needs a restart.`, busy: false };
+      return { kind: 'ready', word: '重启', line: `${to} 已安装，收件箱仍运行 ${u.from}`, tip: `${name} 上已安装 ${to}。其收件箱需要重启。`, busy: false };
     case 'restarting':
-      return { kind: 'restarting', word: 'Restarting', line: `restarting on ${to}`, tip: `${name} is restarting on ${to}`, busy: true };
+      return { kind: 'restarting', word: '重启中', line: `正在 ${to} 上重启`, tip: `${name} 正在 ${to} 上重启`, busy: true };
     case 'not_back':
-      return { kind: 'not_back', word: 'Not back', line: `has not come back after restarting`, tip: `${name} has not come back after restarting`, busy: false };
+      return { kind: 'not_back', word: '未回来', line: `重启后尚未恢复`, tip: `${name} 重启后尚未恢复`, busy: false };
     case 'updated':
-      return { kind: 'updated', word: 'Updated', line: `updated from ${u.from}`, tip: `${name} is on ${to}`, busy: false };
+      return { kind: 'updated', word: '已更新', line: `已从 ${u.from} 更新`, tip: `${name} 已运行 ${to}`, busy: false };
     case 'failed':
-      return { kind: 'failed', word: 'Failed', line: `update to ${to} didn't install`, tip: `The update to ${to} didn't install on ${name}`, busy: false };
+      return { kind: 'failed', word: '失败', line: `到 ${to} 的更新未安装`, tip: `${name} 上到 ${to} 的更新未安装`, busy: false };
   }
 }
 
@@ -142,15 +142,15 @@ export function machineStatus(machine: MachineView, now: Date = new Date()): str
   const version = machine.version ? ` · Plannotator ${machine.version}` : '';
   switch (machine.state) {
     case 'online':
-      return `Online${version}`;
+      return `在线${version}`;
     case 'connecting':
-      return 'Connecting…';
+      return '正在连接…';
     case 'offline':
-      return `Asleep · last seen ${shortTime(machine.since, now)}${version}`;
+      return `休眠 · 最后出现于 ${shortTime(machine.since, now)}${version}`;
     case 'needs_update':
-      return `Needs update${machine.version ? ` · runs ${machine.version}` : ''}`;
+      return `需要更新${machine.version ? ` · 运行 ${machine.version}` : ''}`;
     case 'revoked':
-      return 'Removed on that machine';
+      return '已在该设备上移除';
   }
 }
 
@@ -252,22 +252,22 @@ export function outboxPending(entry: Pick<OutboxView, 'state'>): boolean {
  * why it did not land. Null once it landed (the reply is then in the thread itself).
  */
 export function outboxLine(entry: OutboxView, machine: Pick<MachineView, 'name' | 'state'> | null): { tone: 'waiting' | 'failed'; text: string } | null {
-  const name = machine?.name ?? 'the other machine';
+  const name = machine?.name ?? '另一台设备';
   if (outboxPending(entry)) {
     // Online or still connecting: on its way. Asleep or out of date: it waits for the machine.
-    if (!machine || machine.state === 'online' || machine.state === 'connecting') return { tone: 'waiting', text: `Sending to ${name}…` };
-    if (machine.state === 'needs_update') return { tone: 'waiting', text: `Will send when ${name} is updated` };
-    return { tone: 'waiting', text: `Will send when ${name} is back` };
+    if (!machine || machine.state === 'online' || machine.state === 'connecting') return { tone: 'waiting', text: `正在发送到 ${name}…` };
+    if (machine.state === 'needs_update') return { tone: 'waiting', text: `${name} 更新后将发送` };
+    return { tone: 'waiting', text: `${name} 回来后发送` };
   }
   if (entry.dismissed || !entry.notice) return null;
   switch (entry.notice.kind) {
     case 'refused': {
       const why = entry.answer && typeof entry.answer === 'object' ? (entry.answer as { error?: unknown }).error : null;
-      return { tone: 'failed', text: `Not delivered: ${typeof why === 'string' && why ? why.replace(/\.$/, '') : `${name} refused it`}.` };
+      return { tone: 'failed', text: `未送达：${typeof why === 'string' && why ? why.replace(/\.$/, '') : `${name} 拒绝了它`}。` };
     }
     case 'not_delivered':
-      return { tone: 'failed', text: `Not delivered: ${name} was unlinked before it went.` };
+      return { tone: 'failed', text: `未送达：${name} 在发送前已取消关联。` };
     case 'may_have_been_delivered':
-      return { tone: 'failed', text: `May have been delivered. Check on ${name}.` };
+      return { tone: 'failed', text: `可能已送达。请在 ${name} 上确认。` };
   }
 }

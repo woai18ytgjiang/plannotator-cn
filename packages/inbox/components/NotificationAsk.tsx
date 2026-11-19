@@ -73,7 +73,7 @@ export function NotificationAsk({
       <AskShell
         className="ib-askline ib-askquiet"
         icon="bell"
-        label="Desktop notifications"
+        label="桌面通知"
         data={{ 'data-notification-ask': kind }}
         actions={
           <>
@@ -98,7 +98,7 @@ export function NotificationAsk({
     <AskShell
       className={kind === 'moved' ? 'ib-askline ib-askmoved' : 'ib-askline'}
       icon={kind === 'moved' ? 'warn' : 'bell'}
-      label="Desktop notifications"
+      label="桌面通知"
       data={{ 'data-notification-ask': kind }}
       actions={
         <>
@@ -147,7 +147,7 @@ export function TabSleptLine({ slept, onDismiss }: { slept: Exclude<TabSlept, nu
     <AskShell
       className="ib-askline ib-askquiet"
       icon="info"
-      label="Notifications paused"
+      label="通知已暂停"
       data={{ 'data-tab-slept': slept }}
       actions={
         <button type="button" className="ib-btn ib-ghost ib-sm" onClick={onDismiss}>

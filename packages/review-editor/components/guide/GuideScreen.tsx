@@ -218,7 +218,7 @@ export const GuideScreen: React.FC<GuideScreenProps> = ({
         failure={{
           jobId: failedGuideJob.id,
           engine: failedGuideJob.engine,
-          error: failedGuideJob.error ?? 'Guide generation failed.',
+          error: failedGuideJob.error ?? '引导生成失败。',
         }}
         onOpenFixedGuide={onOpenFixedGuide}
         onOpenSavedGuide={onOpenSavedGuide}
@@ -358,7 +358,7 @@ function ActiveGuide({
     try {
       await launchJob({
         provider: 'guide',
-        label: 'Guide Repair',
+        label: '引导修复',
         repairOf: failedJob.id,
         ...(failedJob.engine ? { engine: failedJob.engine } : {}),
       });
@@ -366,7 +366,7 @@ function ActiveGuide({
       // running-job branch takes over from here automatically (same as
       // GuideEmptyState's handleFixOutput).
     } catch (err) {
-      setRepairError(err instanceof Error ? err.message : 'Could not start the repair.');
+      setRepairError(err instanceof Error ? err.message : '无法启动修复。');
     } finally {
       setRepairing(false);
     }
@@ -382,7 +382,7 @@ function ActiveGuide({
         failure={{
           jobId: failedJob.id,
           engine: failedJob.engine,
-          error: failedJob.error ?? 'Guide generation failed.',
+          error: failedJob.error ?? '引导生成失败。',
         }}
         onOpenFixedGuide={onOpenFixedGuide}
         onOpenSavedGuide={onOpenSavedGuide}
@@ -393,7 +393,7 @@ function ActiveGuide({
   const showStrip = !!failedJob && !dismissedRef.current.has(failedJob.id);
   const failureStrip = showStrip && failedJob ? (
     <div className="flex items-center gap-3 border-b border-destructive/20 bg-destructive/10 px-4 py-1.5 text-xs text-destructive">
-      <span className="min-w-0 flex-1 truncate">{(failedJob.error ?? 'Guide generation failed.').split('\n')[0]}</span>
+      <span className="min-w-0 flex-1 truncate">{(failedJob.error ?? '引导生成失败。').split('\n')[0]}</span>
       {repairError && <span className="shrink-0 truncate text-destructive/70">{repairError}</span>}
       <button
         type="button"
@@ -401,10 +401,10 @@ function ActiveGuide({
         disabled={repairing}
         className="shrink-0 font-medium underline-offset-2 hover:underline disabled:cursor-not-allowed disabled:opacity-50"
       >
-        {repairing ? 'Starting repair…' : 'Fix output'}
+        {repairing ? '正在启动修复…' : '修复输出'}
       </button>
       <button type="button" onClick={() => setShowRecovery(true)} className="shrink-0 text-destructive/80 underline-offset-2 hover:underline">
-        Details
+        详情
       </button>
       <button
         type="button"
@@ -412,7 +412,7 @@ function ActiveGuide({
           dismissedRef.current.add(failedJob.id);
           bumpDismissTick((t) => t + 1);
         }}
-        aria-label="Dismiss guide failure notice"
+        aria-label="忽略引导失败提示"
         className="shrink-0 text-destructive/60 hover:text-destructive"
       >
         ×
@@ -439,9 +439,9 @@ function ActiveGuide({
       <div className="w-full">
         {failureStrip}
         <div className="px-10 py-16 text-center">
-          <p className="text-sm text-muted-foreground">{error ?? 'Guide not found'}</p>
+          <p className="text-sm text-muted-foreground">{error ?? '未找到引导'}</p>
           <button onClick={retry} className="mt-3 text-xs text-primary hover:text-primary/80 transition-colors">
-            Retry
+            重试
           </button>
         </div>
       </div>

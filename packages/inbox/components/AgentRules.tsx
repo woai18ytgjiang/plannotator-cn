@@ -30,7 +30,7 @@ export function AgentRulesSection({
 
   return (
     <section className="ib-sgroup ib-sgroup-first" aria-labelledby={`${id}-h`} data-rules-section="">
-      <h2 id={`${id}-h`}>Rules for your agents</h2>
+      <h2 id={`${id}-h`}>智能体规则</h2>
       <p>Your own words, added to what agents are told. Plannotator's text stays.</p>
       <div className="ib-card">
         {set.length === 0 ? (
@@ -39,7 +39,7 @@ export function AgentRulesSection({
               <Icon name="prompt" size={17} />
             </span>
             <span className="ar-t">
-              <span className="ar-l">No rules yet</span>
+              <span className="ar-l">暂无规则</span>
             </span>
             <button type="button" className="ib-btn ib-sm ib-pri" onClick={() => setEditing('shared')} data-rules-add="">
               Add rules
@@ -154,14 +154,14 @@ function RulesEditor({ rules, first, onClose, onPrompts }: { rules: Rules; first
   return (
     <Modal labelledBy="ar-ed-title" describedBy="ar-ed-desc" testId="rules-editor" onClose={onClose} ownKeys initialFocus=".pm-area" className={`ib-bi ar-ed${phone ? ' ib-bi-phone' : ''}`}>
       <div className="ib-bi-text">
-        <h2 id="ar-ed-title">Rules for your agents</h2>
+        <h2 id="ar-ed-title">智能体规则</h2>
         <p id="ar-ed-desc">Added to what agents are told about your Inbox. Plannotator's own text stays.</p>
         <textarea
           ref={field}
           className="pm-area ar-area"
           value={draft}
           rows={4}
-          placeholder="Write your rules, one per line"
+          placeholder="编写你的规则，每行一条"
           aria-label={`Rules for ${slotName(slot).toLowerCase()}`}
           aria-invalid={over || undefined}
           onChange={(event) => setDraft(event.target.value)}

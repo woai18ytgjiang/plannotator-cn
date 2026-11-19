@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Portable Guided Review format — the versioned snapshot document plus the
  * pure `(snapshot) → HTML` renderer every producer shares (Plannotator UI,
@@ -974,7 +975,7 @@ ${genLine ? `<p class="meta">${genLine}</p>` : ""}
 ${g.overview ? `<pre class="prose">${escapeHtmlText(g.overview.text)}</pre>\n` : ""}</header>
 ${sections}
 ${unplaced}
-<footer class="meta">This is the plain-text version of a Plannotator Guided Review. Connect to the internet to load the full diff viewer.</footer>
+<footer class="meta">这是 Plannotator 引导式审查的纯文本版本。连接互联网后可加载完整的差异查看器。</footer>
 </article>`;
 }
 
@@ -1015,7 +1016,7 @@ export function createGuideHtml(snapshot: GuideSnapshot, options: GuideHtmlOptio
   });
   const serialized = escapeJsonForHtmlScript(JSON.stringify(snapshot));
   return `<!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 ${head.head}
 </head>
@@ -1046,19 +1047,19 @@ export interface GuideShellHtmlOptions {
 export function createGuideShellHtml(options: GuideShellHtmlOptions): string {
   const head = buildGuideHead({
     viewer: options.viewer,
-    title: "Guided Review",
-    description: "A Plannotator Guided Review. The guide is end-to-end encrypted; the key travels in the link.",
+    title: "引导式审查",
+    description: "Plannotator 引导式审查。引导内容端到端加密；密钥随链接一起传递。",
     languages: [],
     hosted: options.hosted,
     payloadUrl: options.payloadUrl,
   });
   return `<!doctype html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
 ${head.head}
 </head>
 <body class="pgr-fallback-body">
-<div id="root"><article class="pgr-fallback"><header><h1>Guided Review</h1><p class="meta">This guide is encrypted. Open the full link (including the part after <code>#</code>) in a browser with JavaScript enabled to read it.</p></header></article></div>
+<div id="root"><article class="pgr-fallback"><header><h1>引导式审查</h1><p class="meta">本引导内容已加密。请在启用了 JavaScript 的浏览器中打开完整链接（包括 <code>#</code> 之后的部分）以阅读。</p></header></article></div>
 ${head.script}
 </body>
 </html>
@@ -1131,7 +1132,7 @@ function buildGuideHead(input: GuideHeadInput): { head: string; script: string }
     `<meta name="${GUIDE_EXPORT_META_NAME}" content="v${input.version ?? GUIDE_SNAPSHOT_VERSION}">`,
     `<meta http-equiv="Content-Security-Policy" content="${csp}">`,
     referrerMeta,
-    `<title>${escapeHtmlText(input.title)} · Guided Review</title>`,
+    `<title>${escapeHtmlText(input.title)} · 引导式审查</title>`,
     hostedMeta,
     payloadMeta,
     `<link rel="stylesheet" href="${escapeHtmlAttribute(cssUrl)}"${integrityAttr(input.viewer.cssIntegrity)} crossorigin="anonymous">`,

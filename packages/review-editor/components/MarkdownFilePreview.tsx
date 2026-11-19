@@ -187,9 +187,9 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
     const files = reviewFilePaths ?? (state ? new Set(state.files.map((file) => file.path)) : undefined);
     const open = onOpenReviewFile ?? state?.openDiffFile;
     if (target !== null && open && files?.has(target)) {
-      return { kind: 'open', open: () => open(target), title: `Open ${target} in this review` };
+      return { kind: 'open', open: () => open(target), title: `在本次审查中打开 ${target}` };
     }
-    return { kind: 'unavailable', title: 'Not in this review' };
+    return { kind: 'unavailable', title: '不在本次审查中' };
   }, [docPath, reviewFilePaths, onOpenReviewFile, state]);
 
   const snapshot = imageSnapshotId ?? state?.snapshotId;
@@ -204,7 +204,7 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
         : { kind: 'src', src: src.trim() };
     }
     if (isExternalImageSource(src)) return null;
-    if (!canLoadImages) return { kind: 'unavailable', title: 'Images are not shown for this review' };
+    if (!canLoadImages) return { kind: 'unavailable', title: '本次审查不显示图片' };
     // The patch names the file by its display path (a deletion's is its old
     // one). The source goes as written: the route normalizes it the same way
     // it reads the file's references.
@@ -404,10 +404,10 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
         className="mx-auto max-w-3xl rounded-md border border-border/60 bg-muted/20 p-4 text-sm text-muted-foreground"
       >
         {loading
-          ? 'Loading the full Markdown file…'
+          ? '正在加载完整的 Markdown 文件…'
           : isStale
-            ? 'This file changed after the diff was captured. Refresh the diff to preview it.'
-            : 'The full file content is unavailable for this review. Switch back to Source to review the available changes.'}
+            ? '此文件在捕获差异之后发生了变更，请刷新差异后预览。'
+            : '本次审查无法获取完整文件内容，请切换回源码以查看可用的更改。'}
       </div>
     );
   } else if (tooLarge) {
@@ -418,7 +418,7 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
         className="mx-auto flex max-w-3xl flex-wrap items-center justify-between gap-3 rounded-md border border-border/60 bg-muted/20 p-4 text-sm text-muted-foreground"
       >
         <span>
-          <span className="font-medium text-foreground">Too large to preview here</span>
+          <span className="font-medium text-foreground">文件过大，无法在此预览</span>
           {' · '}{Math.round(bytes / 1024)} KB. Rendering it may slow the page.
         </span>
         <button
@@ -427,7 +427,7 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
           className="rounded px-2 py-1 text-xs text-foreground bg-muted/60 hover:bg-muted"
           onClick={() => setAcceptedLarge(true)}
         >
-          Preview anyway
+          仍要预览
         </button>
       </div>
     );
@@ -471,7 +471,7 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
   // The header's status letter and the green or red rail already say "new"
   // or "deleted"; only a rename with no change needs a word.
   const renamedNote = ready && !tooLarge && unchangedRename
-    ? (oldPath ? `Renamed from ${oldPath} · contents unchanged.` : 'Renamed · contents unchanged.')
+    ? (oldPath ? `Renamed from ${oldPath} · contents unchanged.` : '已重命名 · 内容未变。')
     : null;
   const bothViews = !!ready && !tooLarge && !singleSide && !unchangedRename;
   const unanchoredCount = fileComments.filter((ann) => unanchored.has(ann.id)).length;
@@ -504,7 +504,7 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
             className="text-primary hover:underline focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-primary/60 rounded"
             onClick={() => setRemoteImagesLoaded(true)}
           >
-            Load remote images
+            加载远程图片
           </button>
         </div>
       )}
@@ -518,7 +518,7 @@ export const MarkdownFilePreview: React.FC<MarkdownFilePreviewProps> = ({
               className="ml-1 text-primary hover:underline"
               onClick={() => setView(effectiveView === 'diff' ? 'whole' : 'diff')}
             >
-              {effectiveView === 'diff' ? 'Show in Read' : 'Show in Changes'}
+              {effectiveView === 'diff' ? '在阅读视图中显示' : '在更改视图中显示'}
             </button>
           )}
         </div>

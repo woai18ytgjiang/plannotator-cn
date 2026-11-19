@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { lazy, Suspense, useCallback, useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import { buildDiagramAnchorValue, type DiagramAnchor, type DiagramKind, type DiagramTarget } from '@plannotator/core/diagram-anchor';
 import { cn } from '../../lib/utils';
@@ -354,10 +355,10 @@ export function DiagramViewer({
             ) : (
               <div className="flex h-full items-center justify-center p-4 text-xs text-muted-foreground" aria-live="polite">
                 {render.error !== null
-                  ? `The diagram does not parse${render.error.line === null ? '' : ` (line ${render.error.line})`}: ${render.error.message}`
+                  ? `图表无法解析${render.error.line === null ? '' : `（第 ${render.error.line} 行）`}：${render.error.message}`
                   : render.pending
-                    ? 'Rendering diagram…'
-                    : 'Nothing to render yet.'}
+                    ? '正在渲染图表…'
+                    : '暂无可渲染内容。'}
               </div>
             )}
           </div>
@@ -382,11 +383,11 @@ export function DiagramViewer({
                 className="absolute inset-x-3 top-3 z-10 rounded-md border border-warning/40 bg-card/95 px-3 py-2 text-xs shadow-lg backdrop-blur"
               >
                 <div className="font-medium text-foreground">
-                  {render.error.line === null ? 'The diagram does not parse' : `The diagram does not parse (line ${render.error.line})`}
+                  {render.error.line === null ? '图表无法解析' : `图表无法解析（第 ${render.error.line} 行）`}
                 </div>
                 <div className="mt-0.5 text-muted-foreground">
                   {render.error.message}
-                  {' The last good render stays below.'}
+                  {' 下方仍保留上次渲染成功的结果。'}
                 </div>
               </div>
             )}
@@ -398,7 +399,7 @@ export function DiagramViewer({
                 data-diagram-preview-state=""
                 className="absolute left-3 top-3 z-10 rounded-sm border border-border bg-card/85 px-1.5 py-0.5 text-[10px] text-muted-foreground backdrop-blur"
               >
-                Draft preview · unsaved
+                草稿预览 · 未保存
               </span>
             )}
           </DiagramCanvas>

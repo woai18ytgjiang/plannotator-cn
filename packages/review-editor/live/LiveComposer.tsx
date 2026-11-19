@@ -10,8 +10,8 @@ export function liveMentionSource(agents: readonly LiveAgent[]): MentionSource {
   return {
     people: agents.map((agent) => ({ id: `${agent.host}:${agent.session}`, kind: 'agent' as const, label: agentLabel(agent), mark: <LiveHostMark host={agent.host} />, detail: agent.here ? null : agent.project, canOpen: true })),
     kinds: ['agent'],
-    emptyNotice: 'No agent is connected to the Inbox.',
-    heading: 'Agents',
+    emptyNotice: '没有智能体连接到收件箱。',
+    heading: '智能体',
   };
 }
 
@@ -82,7 +82,7 @@ export function LiveComposer(props: {
       <div className="flex items-center justify-end gap-1">
         {props.onCancel ? (
           <button type="button" onClick={props.onCancel} className="h-7 rounded px-2.5 text-[12px] text-muted-foreground hover:bg-muted hover:text-foreground">
-            Cancel
+            取消
           </button>
         ) : null}
         <button
@@ -91,7 +91,7 @@ export function LiveComposer(props: {
           onClick={() => void send()}
           className="h-7 rounded px-2.5 text-[12px] font-medium bg-primary text-primary-foreground disabled:opacity-40"
         >
-          {busy ? 'Sending…' : props.sendLabel}
+          {busy ? '发送中…' : props.sendLabel}
         </button>
       </div>
     </div>

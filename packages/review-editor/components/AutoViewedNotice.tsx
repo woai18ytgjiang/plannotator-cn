@@ -9,11 +9,11 @@ export const AutoViewedNotice: React.FC<{ notice: AutoViewedNoticeState; onTurnO
         <>
           Viewed as you scroll ·{' '}
           <button type="button" onClick={onTurnOff} className="rounded-sm text-foreground underline-offset-2 hover:underline focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring/50">
-            Turn off
+            关闭
           </button>
         </>
       ) : (
-        'Viewed as you scroll is off. Turn it on from the list options.'
+        '滚动时自动标记已查看已关闭。可在列表选项中开启。'
       )}
     </p>
   );

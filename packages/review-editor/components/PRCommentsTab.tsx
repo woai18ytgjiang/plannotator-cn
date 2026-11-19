@@ -21,7 +21,7 @@ const HIDE_BOTS_KEY = 'plannotator-pr-hide-bots';
 function BotTag() {
   return (
     <span className="shrink-0 text-xs font-semibold px-1 py-px rounded bg-muted text-muted-foreground/70">
-      bot
+      机器人
     </span>
   );
 }
@@ -59,10 +59,10 @@ type TimelineEntry =
   | { kind: 'thread'; data: PRReviewThread };
 
 const REVIEW_STATE_STYLES: Record<string, { bg: string; text: string; label: string }> = {
-  APPROVED: { bg: 'bg-success/15', text: 'text-success', label: 'Approved' },
-  CHANGES_REQUESTED: { bg: 'bg-destructive/15', text: 'text-destructive', label: 'Changes Requested' },
-  COMMENTED: { bg: 'bg-muted', text: 'text-muted-foreground', label: 'Commented' },
-  DISMISSED: { bg: 'bg-muted', text: 'text-muted-foreground/60', label: 'Dismissed' },
+  APPROVED: { bg: 'bg-success/15', text: 'text-success', label: '已批准' },
+  CHANGES_REQUESTED: { bg: 'bg-destructive/15', text: 'text-destructive', label: '已请求修改' },
+  COMMENTED: { bg: 'bg-muted', text: 'text-muted-foreground', label: '已评论' },
+  DISMISSED: { bg: 'bg-muted', text: 'text-muted-foreground/60', label: '已忽略' },
 };
 
 // ---------------------------------------------------------------------------
@@ -77,7 +77,7 @@ function formatRelativeTime(iso: string): string {
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
-  if (minutes < 1) return 'just now';
+  if (minutes < 1) return '刚刚';
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days < 30) return `${days}d ago`;
@@ -299,7 +299,7 @@ export const PRCommentsTab: React.FC<PRCommentsTabProps> = React.memo(({ context
   if (baseTimeline.length === 0) {
     return (
       <PanelEmptyState>
-        <p>No comments on this PR yet.</p>
+        <p>此 PR 上还没有评论。</p>
       </PanelEmptyState>
     );
   }
@@ -327,7 +327,7 @@ export const PRCommentsTab: React.FC<PRCommentsTabProps> = React.memo(({ context
             value={searchQuery}
             onChange={(e) => setSearchQuery(e.target.value)}
             onKeyDown={handleSearchKeyDown}
-            placeholder="Search comments..."
+            placeholder="搜索评论…"
             className="w-full h-7 pl-8 pr-20 bg-muted rounded-md text-xs text-foreground placeholder:text-muted-foreground/40 focus:outline-none focus:ring-1 focus:ring-primary/50"
           />
           <div className="absolute right-2.5 top-1/2 -translate-y-1/2 flex items-center gap-1.5">
@@ -356,7 +356,7 @@ export const PRCommentsTab: React.FC<PRCommentsTabProps> = React.memo(({ context
                 <button
                   type="button"
                   className="inline-flex items-center gap-1 h-7 px-2 text-xs rounded-md bg-muted text-muted-foreground hover:text-foreground transition-colors data-popup-open:bg-background data-popup-open:text-foreground data-popup-open:shadow-sm"
-                  title="Filter comments"
+                  title="筛选评论"
                 />
               }
             >
@@ -377,25 +377,25 @@ export const PRCommentsTab: React.FC<PRCommentsTabProps> = React.memo(({ context
               <Popover.Positioner align="start" sideOffset={6} className="z-50">
                 <Popover.Popup className="w-56 bg-popover text-popover-foreground border border-border rounded-lg shadow-lg origin-[var(--transform-origin)] transition-opacity data-starting-style:opacity-0 data-ending-style:opacity-0">
                 <div className="p-2 space-y-1">
-                  <div className="text-xs text-muted-foreground/70 px-1">Show</div>
+                  <div className="text-xs text-muted-foreground/70 px-1">显示</div>
                   {hasBots && (
-                    <FilterSwitch label="Bot comments" checked={!hideBots} onChange={toggleHideBots} />
+                    <FilterSwitch label="机器人评论" checked={!hideBots} onChange={toggleHideBots} />
                   )}
-                  <FilterSwitch label="Resolved threads" checked={!hideResolved} onChange={() => setHideResolved((v) => !v)} />
-                  <FilterSwitch label="Outdated threads" checked={!hideOutdated} onChange={() => setHideOutdated((v) => !v)} />
+                  <FilterSwitch label="已解决的话题" checked={!hideResolved} onChange={() => setHideResolved((v) => !v)} />
+                  <FilterSwitch label="已过时的话题" checked={!hideOutdated} onChange={() => setHideOutdated((v) => !v)} />
 
                   {humanAuthors.length > 0 && (
                     <>
                       <div className="border-t border-border/50 my-1" />
                       <div className="flex items-center justify-between px-1">
-                        <span className="text-xs text-muted-foreground/70">Authors</span>
+                        <span className="text-xs text-muted-foreground/70">作者</span>
                         <div className="flex items-center gap-1.5 text-xs">
                           <button
                             type="button"
                             onClick={() => setExcludedAuthors(new Set())}
                             className="text-primary hover:underline"
                           >
-                            All
+                            全部
                           </button>
                           <span className="text-muted-foreground/30">·</span>
                           <button
@@ -403,7 +403,7 @@ export const PRCommentsTab: React.FC<PRCommentsTabProps> = React.memo(({ context
                             onClick={() => setExcludedAuthors(new Set(humanAuthors))}
                             className="text-primary hover:underline"
                           >
-                            None
+                            无
                           </button>
                         </div>
                       </div>
@@ -435,12 +435,12 @@ export const PRCommentsTab: React.FC<PRCommentsTabProps> = React.memo(({ context
               onClick={() => setSortNewestFirst((v) => !v)}
               className="h-7 px-2 inline-flex items-center text-xs rounded-md bg-muted text-muted-foreground hover:text-foreground transition-colors"
             >
-              {sortNewestFirst ? 'Newest' : 'Oldest'}
+              {sortNewestFirst ? '最新' : '最早'}
             </button>
             <button
               onClick={() => allCollapsed ? expandAll() : collapseAll()}
               className="h-7 w-7 inline-flex items-center justify-center rounded-md bg-muted text-muted-foreground hover:text-foreground transition-colors"
-              title={allCollapsed ? 'Expand all' : 'Collapse all'}
+              title={allCollapsed ? '全部展开' : '全部折叠'}
             >
               <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d={allCollapsed ? 'M4 6h16M4 12h16M4 18h16' : 'M4 14h16M4 10h16'} />
@@ -456,9 +456,9 @@ export const PRCommentsTab: React.FC<PRCommentsTabProps> = React.memo(({ context
         <div className="space-y-3 max-w-2xl">
         {displayTimeline.length === 0 ? (
           <div className="text-center py-8">
-            <p className="text-xs text-muted-foreground mb-2">No comments match your filters.</p>
+            <p className="text-xs text-muted-foreground mb-2">没有符合筛选条件的评论。</p>
             <button onClick={clearFilters} className="text-xs text-primary hover:underline">
-              Clear filters
+              清除筛选
             </button>
           </div>
         ) : (
@@ -619,12 +619,12 @@ function ThreadCard({ thread, isSelected, isCollapsed, onSelect, onToggleCollaps
           )}
           {thread.isOutdated && (
             <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-warning/15 text-warning flex-shrink-0">
-              Outdated
+              已过时
             </span>
           )}
           {thread.isResolved && (
             <span className="text-xs font-medium px-1.5 py-0.5 rounded bg-success/15 text-success flex-shrink-0">
-              Resolved
+              已解决
             </span>
           )}
           {thread.path && (
@@ -743,7 +743,7 @@ function PRCommentLinkActions({ url, body, commentId, author, onAnnotate }: {
           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4v-4z" />
           </svg>
-          Annotate
+          添加批注
         </button>
       )}
       {url && (
@@ -757,10 +757,10 @@ function PRCommentLinkActions({ url, body, commentId, author, onAnnotate }: {
           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M10 6H6a2 2 0 00-2 2v10a2 2 0 002 2h10a2 2 0 002-2v-4M14 4h6m0 0v6m0-6L10 14" />
           </svg>
-          {url.includes('gitlab') ? 'View on GitLab' : url.includes('bitbucket.org') ? 'View on Bitbucket' : 'View on GitHub'}
+          {url.includes('gitlab') ? '在 GitLab 上查看' : url.includes('bitbucket.org') ? '在 Bitbucket 上查看' : '在 GitHub 上查看'}
         </a>
       )}
-      <CopyButton text={body} variant="inline" label="Copy" />
+      <CopyButton text={body} variant="inline" label="复制" />
     </div>
   );
 }

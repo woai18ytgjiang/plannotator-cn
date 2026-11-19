@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   Check,
@@ -421,7 +422,7 @@ const InterviewSurface = React.forwardRef<GoalSetupSurfaceHandle, {
         onClose={() => setShowIncompleteWarning(false)}
         onConfirm={doSubmit}
         variant="warning"
-        title="Submit with incomplete answers?"
+        title="答案不完整也提交？"
         message={
           <>
             {skippedQuestions.length > 0 && (
@@ -430,7 +431,7 @@ const InterviewSurface = React.forwardRef<GoalSetupSurfaceHandle, {
             {incompleteQuestions.length > 0 && (
               <span>{incompleteQuestions.length} required question{incompleteQuestions.length !== 1 ? 's' : ''} {incompleteQuestions.length !== 1 ? 'are' : 'is'} still unanswered. </span>
             )}
-            <span>The agent will work with whatever you've provided.</span>
+            <span>智能体将基于你已提供的内容继续。</span>
           </>
         }
         confirmText="Submit anyway"
@@ -454,13 +455,13 @@ const InterviewSurface = React.forwardRef<GoalSetupSurfaceHandle, {
                 onClick={copyInterviewJson}
                 copied={copied === 'interview-json'}
                 format="JSON"
-                title="Copy all questions and answers as raw JSON"
+                title="将所有问答复制为原始 JSON"
               />
               <GoalCopyButton
                 onClick={copyInterviewMarkdown}
                 copied={copied === 'interview-markdown'}
                 format="Markdown"
-                title="Copy all questions and answers as markdown"
+                title="将所有问答复制为 Markdown"
               />
             </div>
             <div className="font-mono text-[11px] text-muted-foreground">
@@ -668,7 +669,7 @@ const QuestionAnswerControls: React.FC<{
       {(question.recommendedAnswer || question.recommendedOptionIds?.length) && !hasAnyAnswer && (
         <div className="mb-2.5 flex items-start gap-2.5 rounded-md bg-muted/30 px-3 py-2">
           <div className="min-w-0 flex-1">
-            <RecommendedBadge label="Recommended" />
+            <RecommendedBadge label="推荐" />
             <p className="mt-1 text-[13px] leading-relaxed text-muted-foreground">
               {question.recommendedAnswer || question.recommendedOptionIds!.map((id) =>
                 question.options?.find((o) => o.id === id)?.label ?? id
@@ -747,7 +748,7 @@ const QuestionAnswerControls: React.FC<{
               <input
                 value={answer.customAnswer}
                 onChange={(event) => updateCustomOption(event.target.value)}
-                placeholder="Other…"
+                placeholder="其他…"
                 className="goal-answer-focus goal-custom-input min-w-0 flex-1 bg-transparent text-[13px] leading-snug text-foreground outline-none placeholder:text-muted-foreground/50"
               />
               <kbd className="goal-shortcut-pill ml-1 flex h-4 w-4 shrink-0 items-center justify-center rounded border border-border/40 bg-muted/40 font-mono text-[10px] text-muted-foreground">/</kbd>
@@ -778,8 +779,8 @@ const QuestionAnswerControls: React.FC<{
                   onNoteOpenChange(false);
                 }}
                 className="inline-flex h-6 w-6 items-center justify-center rounded text-muted-foreground hover:bg-muted hover:text-foreground"
-                title="Remove note"
-                aria-label="Remove note"
+                title="移除备注"
+                aria-label="移除备注"
               >
                 <X className="h-3.5 w-3.5" />
               </button>
@@ -787,7 +788,7 @@ const QuestionAnswerControls: React.FC<{
             <Textarea
               value={answer.note || ''}
               onChange={(event) => onChange({ note: event.target.value })}
-              placeholder="Add context, constraints, or questions for the agent"
+              placeholder="为智能体补充上下文、约束或问题"
               className="goal-note-textarea min-h-16 border-0 bg-transparent focus:ring-0"
             />
             <div className="mt-2 flex justify-end">
@@ -955,18 +956,18 @@ const FactsSurface = React.forwardRef<GoalSetupSurfaceHandle, {
                 onClick={copyFactsJson}
                 copied={copied === 'facts-json'}
                 format="JSON"
-                title="Copy all facts as raw JSON"
+                title="将所有事实复制为原始 JSON"
               />
               <GoalCopyButton
                 onClick={copyFactsMarkdown}
                 copied={copied === 'facts-markdown'}
                 format="Markdown"
-                title="Copy all facts as markdown"
+                title="将所有事实复制为 Markdown"
               />
               <GoalHeaderButton
                 onClick={acceptAllFacts}
                 disabled={liveFacts.length === 0 || submitState === 'submitting'}
-                title="Accept every visible fact"
+                title="接受所有可见事实"
                 className="gap-1.5 text-success hover:bg-success/10 hover:text-success"
               >
                 <Check className="h-3.5 w-3.5" />
@@ -982,7 +983,7 @@ const FactsSurface = React.forwardRef<GoalSetupSurfaceHandle, {
         <ConfirmDialog
           isOpen={showHelp}
           onClose={() => setShowHelp(false)}
-          title="Fact actions"
+          title="事实操作"
           variant="info"
           wide
           confirmText="Got it"
@@ -1073,7 +1074,7 @@ const FactsSurface = React.forwardRef<GoalSetupSurfaceHandle, {
                     else commentButtons.current.delete(fact.id);
                   }}
                   onClick={() => setCommentingId(fact.id)}
-                  title="Comment"
+                  title="评论"
                   className={cx(
                     'inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors',
                     fact.comment ? 'bg-primary/10 text-primary' : 'hover:bg-muted hover:text-foreground'
@@ -1095,7 +1096,7 @@ const FactsSurface = React.forwardRef<GoalSetupSurfaceHandle, {
                 <button
                   type="button"
                   onClick={() => updateFact(fact.id, { removed: true, accepted: false })}
-                  title="Remove"
+                  title="移除"
                   className="inline-flex h-7 w-7 items-center justify-center rounded-md text-muted-foreground transition-colors hover:bg-destructive/10 hover:text-destructive"
                 >
                   <Trash2 className="h-3.5 w-3.5" />
@@ -1188,14 +1189,14 @@ const GoalCopyButton: React.FC<{
 const GoalShortcutPill: React.FC = () => (
   <div
     role="status"
-    aria-label="Keyboard shortcuts"
+    aria-label="键盘快捷键"
     className="goal-shortcut-pill pointer-events-none fixed bottom-4 left-1/2 z-30 flex -translate-x-1/2 items-center gap-2 rounded-lg border border-border/50 bg-popover/85 px-3 py-1.5 text-[10px] text-muted-foreground shadow-xl backdrop-blur-md"
   >
     <kbd>tab</kbd>
     <span>next</span>
     <span className="text-muted-foreground/40">·</span>
     <span className="flex"><kbd>ctrl</kbd><kbd>u</kbd></span>
-    <span>use rec</span>
+    <span>使用推荐</span>
     <span className="text-muted-foreground/40">·</span>
     <span className="flex"><kbd>ctrl</kbd><kbd>k</kbd></span>
     <span>skip</span>
@@ -1204,7 +1205,7 @@ const GoalShortcutPill: React.FC = () => (
     <span>note</span>
     <span className="text-muted-foreground/40">·</span>
     <span className="flex"><kbd>cmd</kbd><kbd>enter</kbd></span>
-    <span>submit</span>
+    <span>提交</span>
   </div>
 );
 

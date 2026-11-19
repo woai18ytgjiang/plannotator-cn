@@ -50,7 +50,7 @@ export function useSheetPulls(enabled: boolean): SheetPullsState {
         })
         .catch((cause: unknown) => {
           if (controller.signal.aborted) return;
-          setError(cause instanceof Error ? cause.message : 'The pull requests could not be read.');
+          setError(cause instanceof Error ? cause.message : '无法读取 PR。');
         })
         .finally(() => {
           if (inFlight.current === controller) {

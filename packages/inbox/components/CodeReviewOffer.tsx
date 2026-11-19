@@ -18,33 +18,33 @@ export function CodeReviewOffer({ phone, onClose, onTurnOn }: { phone: boolean; 
     <Modal labelledBy="ib-cro-title" describedBy="ib-cro-feats" testId="code-review-offer" onClose={onClose} ownKeys fallbackFocus={pageHeading} className={`ib-cro${phone ? ' ib-cro-phone' : ''}`}>
       <CodeReviewOfferArt phone={phone} />
       <div className="ib-cro-body">
-        <h2 id="ib-cro-title">A new way to review</h2>
+        <h2 id="ib-cro-title">一种全新的审查方式</h2>
         <ul className="ib-cro-feats" id="ib-cro-feats">
           <li>
             <RiskIcon />
-            <span>Filter PRs by your own risk rules</span>
+            <span>按你自己的风险规则筛选 PR</span>
           </li>
           <li>
             <MapIcon />
-            <span>A review curator walks you through each change</span>
+            <span>审查引导会带你逐一了解每处更改</span>
           </li>
           <li>
             <BoardIcon />
             <span>
-              See each change as a <b className="ib-cro-name">Shape</b>, and where it lands in your <b className="ib-cro-name">System</b>
+              将每处更改视为 <b className="ib-cro-name">Shape</b>，并查看它在你的 <b className="ib-cro-name">System</b> 中的位置
             </span>
           </li>
         </ul>
         <div className="ib-cro-acts">
           <button type="button" className="ib-btn ib-ghost" onClick={onClose} data-code-review-offer-close="">
-            Not now
+            暂不
           </button>
           <span className="ib-bsp" />
           <button type="button" className="ib-btn ib-pri" onClick={onTurnOn} data-code-review-offer-on="">
-            Turn on code review
+            开启代码审查
           </button>
         </div>
-        <p className="ib-cro-note">You can change this in Settings.</p>
+        <p className="ib-cro-note">之后可在「设置」中修改。</p>
       </div>
     </Modal>
   );

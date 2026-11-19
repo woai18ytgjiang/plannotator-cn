@@ -44,7 +44,7 @@ export function StackPage(props: StackPageProps) {
   // Choosing a range: `null` while not; else the ends picked so far.
   const [picked, setPicked] = useState<string[] | null>(null);
   const crumb = (
-    <nav className="ib-prst-crumb" aria-label="Breadcrumb">
+    <nav className="ib-prst-crumb" aria-label="面包屑导航">
       <SidebarTrigger />
       <button type="button" className="ib-bback" onClick={props.onBack} data-pr-stack-back="">
         <Icon name="chevL" size={15} />
@@ -62,8 +62,8 @@ export function StackPage(props: StackPageProps) {
             <div className="ib-prs-loading" aria-busy="true" />
           ) : (
             <div className="ib-prs-empty">
-              <h1 id={titleId}>This stack isn’t open any more</h1>
-              <p>Its layers merged or closed, or the list no longer has them.</p>
+              <h1 id={titleId}>此堆叠已不再打开</h1>
+              <p>它的各层已合并或关闭，或列表中已不再包含它们。</p>
             </div>
           )}
         </div>
@@ -141,7 +141,7 @@ export function StackPage(props: StackPageProps) {
             const open = inboxPullIsOpen(pull);
             const lands = next?.key === pull.key;
             const other = pull.author && pull.author !== owner ? pull.author : null;
-            const said: Words = lands && open && statusWords(pull, now) === 'Approved · ready to land' ? ['Approved · lands next'] : statusParts(pull, now);
+            const said: Words = lands && open && statusWords(pull, now) === '已批准 · 可以落地' ? ['已批准 · 接下来落地'] : statusParts(pull, now);
             const status = wordsText(said);
             const moved = !!changedSince(pull, looked);
             const ends = picked?.includes(pull.key) ?? false;
@@ -163,7 +163,7 @@ export function StackPage(props: StackPageProps) {
                     if (picked || (event.shiftKey && open && rangeable)) pick(pull);
                     else props.onOpenLayer(pull);
                   }}
-                  aria-label={`Layer ${at}: ${inboxPullLabel(pull)} ${pull.title}, ${status}${checksLabel(pull.checks) && open ? `, ${checksLabel(pull.checks)}` : ''}${moved ? ', changed since you looked' : ''}.${picked ? '' : ' Open it.'}`}
+                  aria-label={`第 ${at} 层：${inboxPullLabel(pull)} ${pull.title}，${status}${checksLabel(pull.checks) && open ? `，${checksLabel(pull.checks)}` : ''}${moved ? '，自你上次查看后有更改' : ''}。${picked ? '' : '打开它。'}`}
                   data-pr-layer={pull.key}
                   data-pr-layer-changed={moved ? '' : undefined}
                 >
@@ -193,7 +193,7 @@ export function StackPage(props: StackPageProps) {
               </li>
             );
           })}
-          <li className="ib-prst-li ib-prst-base" aria-label={`${stack.base}, the base branch`}>
+          <li className="ib-prst-li ib-prst-base" aria-label={`${stack.base}，基础分支`}>
             <span className="ib-prst-at" />
             <span className="ib-prst-node" data-base="" aria-hidden="true" />
             <span className="ib-prst-basen">

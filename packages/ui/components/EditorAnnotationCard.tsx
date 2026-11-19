@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import type { EditorAnnotation } from '../types';
 import { cn } from '../lib/utils';
@@ -35,7 +36,7 @@ export const EditorAnnotationCard: React.FC<EditorAnnotationCardProps> = ({ anno
     >
       {/* Header: type word + file:line + delete */}
       <div className="mb-1.5 flex items-center gap-1.5">
-        <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400">Editor</span>
+        <span className="text-[11px] font-medium text-amber-600 dark:text-amber-400">编辑器</span>
         <span className="text-[10px] font-mono text-muted-foreground/50 truncate" title={annotation.filePath}>
           {annotation.filePath}:{lineRange}
         </span>
@@ -43,7 +44,7 @@ export const EditorAnnotationCard: React.FC<EditorAnnotationCardProps> = ({ anno
           <button
             onClick={(e) => { e.stopPropagation(); onDelete(); }}
             className="ml-auto relative rounded-md p-1.5 text-muted-foreground transition-colors before:absolute before:-inset-1.5 before:content-[''] opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 hover:text-destructive"
-            title="Delete annotation"
+            title="删除批注"
           >
             <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />

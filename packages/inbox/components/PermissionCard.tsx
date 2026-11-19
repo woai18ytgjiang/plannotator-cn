@@ -60,7 +60,10 @@ const upFirst = (text: string) => (text.startsWith('`') ? text : text.charAt(0).
  */
 const agentNameOf = (author: InboxMessageWire['author'], short = false) => {
   const named = inboxAgentName(author);
-  const name = named === 'An agent' ? 'Claude Code' : named;
+  // `inboxAgentName` falls back to an anonymous word for a person, or for an agent with neither a
+  // name nor a host; this card names the asking CLI, Claude Code, in exactly those cases.
+  const anonymous = author.kind !== 'agent' || (!author.name && !author.host);
+  const name = anonymous ? 'Claude Code' : named;
   return short && name === 'Claude Code' ? 'Claude' : name;
 };
 /** "Claude Code wants to write a file" → "write a file". */
@@ -157,7 +160,7 @@ function RequestBody({ read, kind, phone }: { read: InboxPermissionBody; kind: K
   );
   const rest = leftover && (
     <>
-      <p className="pc-why">Also in the request:</p>
+      <p className="pc-why">请求中还包含：</p>
       <pre className="pc-code" data-perm-leftover="">
         <code>{leftover}</code>
       </pre>
@@ -199,7 +202,7 @@ function RequestBody({ read, kind, phone }: { read: InboxPermissionBody; kind: K
           </pre>
           {lines.length > cap && (
             <button type="button" className="pc-more" onClick={() => setAll((a) => !a)} aria-expanded={all}>
-              {all ? 'Show less' : `Show ${plural(lines.length - cap, 'more line', 'more lines')}`}
+              {all ? '收起' : `再显示 ${lines.length - cap} 行`}
             </button>
           )}
         </div>
@@ -225,7 +228,7 @@ function RequestBody({ read, kind, phone }: { read: InboxPermissionBody; kind: K
     <>
       {unsandboxed && (
         <p className="pc-warn" data-perm-unsandboxed="">
-          <Icon name="warn" size={14} /> Runs outside the sandbox
+          <Icon name="warn" size={14} /> 在沙箱之外运行
         </p>
       )}
       <pre className="pc-code" data-perm-detail="">
@@ -237,7 +240,7 @@ function RequestBody({ read, kind, phone }: { read: InboxPermissionBody; kind: K
           {purpose && <span>{purpose.replace(/\.$/, '')}. </span>}
           {folder && (
             <span>
-              Runs in <span className="pc-path">{folder}</span>
+              在 <span className="pc-path">{folder}</span> 中运行
             </span>
           )}
         </p>
@@ -258,8 +261,8 @@ function Reason({ who, busy, onDeny, onCancel }: { who: string; busy: boolean; o
         ref={ref}
         rows={2}
         value={text}
-        placeholder={`Tell ${who} what to do instead`}
-        aria-label={`Why you deny this, for ${who}`}
+        placeholder={`告诉 ${who} 该怎么做`}
+        aria-label={`你拒绝此请求的原因（给 ${who}）`}
         onChange={(e) => setText(e.target.value)}
         onKeyDown={(e) => {
           if (e.key === 'Enter' && !e.shiftKey && text.trim()) {
@@ -271,10 +274,10 @@ function Reason({ who, busy, onDeny, onCancel }: { who: string; busy: boolean; o
       />
       <div className="pc-acts">
         <button type="button" className="ib-btn ib-ghost" onClick={onCancel}>
-          Cancel
+          取消
         </button>
         <button type="button" className="ib-btn" disabled={busy || !text.trim()} onClick={() => onDeny(text.trim())} data-perm-deny-send="">
-          Deny and send
+          拒绝并发送
         </button>
       </div>
     </div>
@@ -287,14 +290,14 @@ function Record({ message, q, outcome, read, title, time, kind, followUp, run, t
   const labels = q.choices.map((c) => c.label);
   // The person's click, as a fact (never a promise about the agent): the run line says what it did.
   const verb: ReactNode =
-    outcome === 'once' ? 'You chose Allow once'
-    : outcome === 'session' ? <>You chose <Ticks text={sessionLabelOf(labels) ?? ''} /></>
-    : outcome === 'auto' ? 'You chose Allow and switch to Auto mode'
-    : outcome === 'full' ? 'You chose Allow and switch to Full permissions'
-    : outcome === 'deny' ? 'You chose Deny'
-    : outcome === 'terminal' ? 'You chose Approve in Terminal'
-    : outcome === 'closed' ? 'Not answered'
-    : (followUp ?? 'No longer waiting').replace(/\.$/, '');
+    outcome === 'once' ? '你选择了仅允许一次'
+    : outcome === 'session' ? <>你选择了 <Ticks text={sessionLabelOf(labels) ?? ''} /></>
+    : outcome === 'auto' ? '你选择了允许并切换到自动模式'
+    : outcome === 'full' ? '你选择了允许并切换到完全权限'
+    : outcome === 'deny' ? '你选择了拒绝'
+    : outcome === 'terminal' ? '你选择了在终端中批准'
+    : outcome === 'closed' ? '未回答'
+    : (followUp ?? '不再等待').replace(/\.$/, '');
   // After Approve in Terminal: the host's line, and on a phone (no Open in Terminal) Copy attach command until the
   // run line, which carries the same command, shows the session on its dialog. One set of Terminal actions at a time.
   const copyHere = outcome === 'terminal' && !terminal?.open && terminal?.copyAttach && run?.state !== 'waiting_terminal' ? terminal.copyAttach : null;
@@ -441,7 +444,7 @@ export function PermissionCard({
       await onChanged();
       return true;
     } catch (cause) {
-      setError(cause instanceof InboxApiError ? cause.message : 'Your answer was not sent. Try again.');
+      setError(cause instanceof InboxApiError ? cause.message : '你的回答未发送。请重试。');
       setBusy(false);
       return false;
     }
@@ -493,11 +496,11 @@ export function PermissionCard({
               void inboxApi
                 .launchStop(run.launch_id, machine?.id ?? null)
                 .then(() => onChanged())
-                .catch(() => setError('Stop did not work; try again.'))
+                .catch(() => setError('停止未生效，请重试。'))
                 .finally(() => setStopping(false));
             }}
           >
-            Stop
+            停止
           </button>
         )}
       </header>
@@ -511,16 +514,16 @@ export function PermissionCard({
         {mode === 'reason' ? (
           <Reason who={agentNameOf(message.author, true)} busy={busy} onDeny={(text) => void answer(null, text)} onCancel={() => setMode('answers')} />
         ) : mode === 'confirmFull' ? (
-          <div className="pc-confirm" role="group" aria-label="Switch to Full permissions" data-perm-confirm-full="">
+          <div className="pc-confirm" role="group" aria-label="切换到完全权限" data-perm-confirm-full="">
             <p>
-              <span className="pc-strong">Switch this session to Full permissions?</span> {agentNameOf(message.author)} will run commands, edit files and open pages without asking, until this session ends.
+              <span className="pc-strong">将此会话切换到完全权限？</span> {agentNameOf(message.author)} 将无需询问即可运行命令、编辑文件并打开页面，直到本会话结束。
             </p>
             <div className="pc-acts">
               <button type="button" className="ib-btn ib-ghost" disabled={busy} onClick={() => setMode('answers')}>
-                Cancel
+                取消
               </button>
               <button type="button" className="ib-btn" disabled={busy} onClick={act(() => void answer(INBOX_PERMISSION_FULL, undefined, true))} data-perm-full-confirm="">
-                Allow and switch
+                允许并切换
               </button>
             </div>
           </div>
@@ -529,24 +532,24 @@ export function PermissionCard({
             {/* Another machine's agent: only its own dialog, on that machine's screen, can approve. No Terminal from here. */}
             {machine && (
               <p className="pc-modes" data-perm-elsewhere="">
-                Only {agentNameOf(message.author)} can approve this, on {machine.name}'s screen. Deny it here, or approve it at {machine.name}.
+                只有 {agentNameOf(message.author)} 能在 {machine.name} 的屏幕上批准此请求。你可以在这里拒绝，或到 {machine.name} 上批准。
               </p>
             )}
             <div className="pc-row">
               <button type="button" className="ib-btn" disabled={busy} onClick={act(() => void answer(INBOX_PERMISSION_DENY))} data-perm="deny">
-                Deny
+                拒绝
               </button>
               <button type="button" className="ib-btn ib-ghost" disabled={busy} onClick={act(() => setMode('reason'))} data-perm="reason">
-                Deny with a reason
+                拒绝并说明原因
               </button>
               {!machine ? (
                 <button type="button" className="ib-btn" disabled={busy} onClick={handOff} data-perm="terminal">
-                  Approve in Terminal
+                  在终端中批准
                 </button>
               ) : (
                 terminal?.copyAttach && (
                   <button type="button" className="ib-btn ib-ghost" disabled={busy} onClick={terminal.copyAttach} data-perm="copy-attach">
-                    Copy attach command
+                    复制附加命令
                   </button>
                 )
               )}
@@ -561,7 +564,7 @@ export function PermissionCard({
           <>
             <div className="pc-row">
               <button ref={onceRef} type="button" className="ib-btn ib-pri" disabled={busy} onClick={act(() => void answer(INBOX_PERMISSION_ALLOW_ONCE))} data-perm="once">
-                Allow once
+                仅允许一次
               </button>
               {session && (
                 <button type="button" className="ib-btn pc-session" disabled={busy} onClick={act(() => void answer(session))} data-perm="session">
@@ -571,22 +574,22 @@ export function PermissionCard({
                 </button>
               )}
               <button type="button" className="ib-btn" disabled={busy} onClick={act(() => void answer(INBOX_PERMISSION_DENY))} data-perm="deny">
-                Deny
+                拒绝
               </button>
               <button type="button" className="ib-btn ib-ghost" disabled={busy} onClick={act(() => setMode('reason'))} data-perm="reason">
-                Deny with a reason
+                拒绝并说明原因
               </button>
             </div>
             {labels.includes(INBOX_PERMISSION_AUTO) && (
               <p className="pc-modes">
-                <span>{phone ? 'Or allow and switch to' : 'Or allow this and switch the session to'}</span>
+                <span>{phone ? '或允许并切换到' : '或允许此次请求并将会话切换到'}</span>
                 <button type="button" className="pc-link" disabled={busy} onClick={act(() => void answer(INBOX_PERMISSION_AUTO))} data-perm-mode="auto">
-                  Auto mode
+                  自动模式
                 </button>
                 {/* Only a launch whose person accepted Claude Code's bypass notice offers Full (its choices say so). */}
                 {fullOn && (
                   <button type="button" className="pc-link" disabled={busy} onClick={act(full)} data-perm-mode="full">
-                    Full permissions
+                    完全权限
                   </button>
                 )}
               </p>
@@ -594,7 +597,7 @@ export function PermissionCard({
             {toTerminal && !machine && (
               <p className="pc-modes">
                 <button type="button" className="pc-link pc-quiet" disabled={busy} onClick={handOff} data-perm="terminal">
-                  Approve in Terminal
+                  在终端中批准
                 </button>
               </p>
             )}

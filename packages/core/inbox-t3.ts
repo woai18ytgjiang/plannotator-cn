@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The T3 Code wake's pure parts (packages/server/inbox-t3-wake.ts runs it).
  *
@@ -91,10 +92,10 @@ export function inboxT3WaitLine(reason: InboxT3WaitReason): { text: string; comm
     case "sign_in":
       return { text: `Waiting for T3 Code. ${INBOX_T3_SIGN_IN_TEXT}`, command: INBOX_T3_LOGIN_COMMAND };
     case "sign_in_again":
-      return { text: "Waiting for T3 Code. Your T3 sign-in ran out. Sign in again and this goes in by itself:", command: INBOX_T3_LOGIN_COMMAND };
+      return { text: "正在等待 T3 Code。你的 T3 登录已过期。重新登录后，这条消息会自动发送：", command: INBOX_T3_LOGIN_COMMAND };
     case "access":
-      return { text: "Waiting for T3 Code. Your T3 sign-in can't send into this thread. Sign in again and choose at least the thread's mode:", command: INBOX_T3_LOGIN_COMMAND };
+      return { text: "正在等待 T3 Code。你的 T3 登录无法向本话题发送消息。请重新登录，并至少选择该话题的模式：", command: INBOX_T3_LOGIN_COMMAND };
     case "closed":
-      return { text: "Waiting for T3 Code. T3 isn't answering. Open T3 and this goes in by itself.", command: null };
+      return { text: "正在等待 T3 Code。T3 没有响应。打开 T3 后，这条消息会自动发送。", command: null };
   }
 }

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Personal agents, for the Inbox's one-time "personal agents" dialog (reveals.ts `personal_agents`): the agents that
  * act for the person rather than in a code project. The agents pages and the dialog's banner name four (Hermes
@@ -43,4 +44,4 @@ export const PERSONAL_AGENTS_BANNER = {
 } as const;
 
 /** The words baked into the banner, for its alt text. */
-export const PERSONAL_AGENTS_BANNER_WORDS = "Your personal agents are welcome here.";
+export const PERSONAL_AGENTS_BANNER_WORDS = "你的个人智能体在这里受到欢迎。";

@@ -1355,16 +1355,16 @@ export function handleUpdateRoute(
 ): Promise<Response> | null {
   if (url.pathname !== "/api/update") return null;
   return (async () => {
-    if (req.method !== "POST") return Response.json({ error: "Use POST." }, { status: 405 });
+    if (req.method !== "POST") return Response.json({ error: "请使用 POST。" }, { status: 405 });
     if (!isLoopbackHostHeader(req.headers.get("host"), ctx.port, ctx.localHostname)) {
-      return Response.json({ error: "Update answers only this computer.", code: "forbidden_host" }, { status: 403 });
+      return Response.json({ error: "更新请求仅响应本机。", code: "forbidden_host" }, { status: 403 });
     }
     if (!isSameOriginOrNoOrigin(req.headers.get("origin"), url.host, req.headers.get("sec-fetch-site"))) {
-      return Response.json({ error: "Cross-origin requests are not accepted." }, { status: 403 });
+      return Response.json({ error: "不接受跨源请求。" }, { status: 403 });
     }
     if (ctx.exposed) {
       return Response.json(
-        { error: "This session is reachable from other devices, so it does not start the installer. Run the install command instead.", code: "update_exposed" },
+        { error: "此会话可被其他设备访问，因此不会启动安装程序。请改为运行安装命令。", code: "update_exposed" },
         { status: 403 },
       );
     }
@@ -1376,15 +1376,15 @@ export function handleUpdateRoute(
     const result = startManualUpdateForThisBinary(noticeVersion);
     if (result.outcome === "launched") return Response.json({ ok: true, version: result.version });
     const refused: Record<string, string> = {
-      locked: "An update is already running.",
-      unmanaged: "This copy of Plannotator was not installed by the install script, so it can't update itself.",
-      "dev-build": "This is a development build; there is nothing to update.",
-      "no-release": "No newer release is known yet.",
-      "up-to-date": "Plannotator is up to date.",
-      "launch-failed": "The install script could not be started; see update.log.",
+      locked: "更新已在运行。",
+      unmanaged: "这份 Plannotator 不是由安装脚本安装的，因此无法自行更新。",
+      "dev-build": "这是开发构建，无需更新。",
+      "no-release": "尚未发现更新的版本。",
+      "up-to-date": "Plannotator 已是最新版本。",
+      "launch-failed": "无法启动安装脚本；请查看 update.log。",
     };
     return Response.json(
-      { error: refused[result.outcome] ?? "The update could not start.", code: `update_${result.outcome.replace(/-/g, "_")}` },
+      { error: refused[result.outcome] ?? "更新无法启动。", code: `update_${result.outcome.replace(/-/g, "_")}` },
       { status: 409 },
     );
   })();

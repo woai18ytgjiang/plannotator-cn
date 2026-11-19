@@ -338,7 +338,7 @@ export function DecisionMode(props: DecisionModeProps) {
       const old = state.cache.get(id);
       setQueue((current) => markReplaced(current, question));
       if (state.current === id) {
-        setBanner({ agent: old ? agentLabel(old) : 'The agent', withdrawn: replacement === null });
+        setBanner({ agent: old ? agentLabel(old) : '智能体', withdrawn: replacement === null });
         if (replacement) {
           pendingSwap.current = { old: id, replacement };
           setSwapPending(true);
@@ -503,7 +503,7 @@ export function DecisionMode(props: DecisionModeProps) {
       try {
         [draft, model] = await Promise.all([inboxApi.replyDraft(first.thread.id), inboxApi.thread(first.thread.id)]);
       } catch {
-        setSend(key, { kind: 'failed', error: "Couldn't check the thread for a draft reply, so nothing was sent." });
+        setSend(key, { kind: 'failed', error: "无法检查话题的回复草稿，因此未发送任何内容。" });
         return 'failed';
       }
       const reply = draft.draft !== null && draft.draft !== undefined;
@@ -547,11 +547,11 @@ export function DecisionMode(props: DecisionModeProps) {
         setCarried((current) => new Map(current).set(key, new Set([...(current.get(key) ?? []), ...ids])));
       }
       setSend(key, { kind: 'sent', at: sentAt ?? new Date().toISOString() });
-      setSaid(`Sent ${agentLabel(first)} your answers.`);
+      setSaid(`已把你的回答发送给 ${agentLabel(first)}。`);
       props.refresh();
       return 'sent';
     } catch (cause) {
-      setSend(key, { kind: 'failed', error: cause instanceof InboxApiError ? cause.message : 'The reply was not sent.' });
+      setSend(key, { kind: 'failed', error: cause instanceof InboxApiError ? cause.message : '回复未发送。' });
       props.refresh();
       return 'failed';
     }
@@ -611,7 +611,7 @@ export function DecisionMode(props: DecisionModeProps) {
     setStamp({ id, value });
     setBanner(null);
     const left = leftCount(queueRef.current) - (isHandled(queueRef.current, id) ? 0 : 1);
-    setSaid(`Answered: ${words}. ${left === 0 ? 'Nothing left.' : `${formatCount(Math.max(0, left))} left.`}`);
+    setSaid(`已回答：${words}。${left === 0 ? '没有剩余。' : `剩余 ${formatCount(Math.max(0, left))} 项。`}`);
     setTimeout(
       () => {
         setStamp((current) => (current?.id === id ? null : current));
@@ -646,7 +646,7 @@ export function DecisionMode(props: DecisionModeProps) {
           });
         }
       } catch (cause) {
-        if (!isSuperseded(cause)) setError(cause instanceof InboxApiError ? cause.message : 'The pick was not saved.');
+        if (!isSuperseded(cause)) setError(cause instanceof InboxApiError ? cause.message : '选择未保存。');
         props.refresh();
       } finally {
         pendingPicks.current.delete(id);
@@ -657,7 +657,7 @@ export function DecisionMode(props: DecisionModeProps) {
   const answer = (id: string, value: QuestionAnswer) => {
     const decision = queueRef.current.cache.get(id);
     if (!decision) return;
-    if (sendingNow(decision)) return setSaid('Its reply is on its way; this answer is not changed.');
+    if (sendingNow(decision)) return setSaid('它的回复正在发送中；这个回答不会被更改。');
     setUndo((stack) => [...stack, { id, kind: 'pick', before: decision.question.state === 'picked' ? decision.question.answer : null, at: Date.now() }]);
     touchDecision(decision, 1);
     savePick(id, value);
@@ -680,20 +680,20 @@ export function DecisionMode(props: DecisionModeProps) {
       try {
         await inboxApi.markAction(decision.message.id, decision.question.key, mark);
       } catch (cause) {
-        setError(cause instanceof InboxApiError ? cause.message : 'That was not saved.');
+        setError(cause instanceof InboxApiError ? cause.message : '未能保存。');
         props.refresh();
       } finally {
         pendingPicks.current.delete(id);
       }
     });
-    land(id, mark.outcome, mark.outcome === 'done' ? 'Done' : "Can't do it");
+    land(id, mark.outcome, mark.outcome === 'done' ? '完成' : "无法完成");
   };
 
   const later = (id: string) => {
     setUndo((stack) => [...stack, { id, kind: 'later', before: null, at: Date.now() }]);
     setBanner(null);
     setQueue((current) => putOff(current, id));
-    setSaid('Put off until the end.');
+    setSaid('已推迟到最后。');
   };
 
   /** Whether the last step can still be undone: not once its reply went, and an action item only inside its window. */
@@ -714,7 +714,7 @@ export function DecisionMode(props: DecisionModeProps) {
     const decision = queueRef.current.cache.get(entry!.id)!;
     if (entry!.kind === 'action') {
       // The card reopens only once the server took the Undo back: past its window it refuses, and says why.
-      setSaid('Undoing…');
+      setSaid('正在撤销…');
       pickChain.current = pickChain.current.then(async () => {
         try {
           await inboxApi.markAction(decision.message.id, decision.question.key, null);
@@ -730,10 +730,10 @@ export function DecisionMode(props: DecisionModeProps) {
           touchDecision(decision, -1);
           setStamp(null);
           setError(null);
-          setSaid('Undone.');
+          setSaid('已撤销。');
         } catch (cause) {
-          setError(cause instanceof InboxApiError ? `Not undone: ${cause.message}` : 'Not undone: it has gone to the agent.');
-          setSaid('Not undone.');
+          setError(cause instanceof InboxApiError ? `未撤销：${cause.message}` : '未撤销：它已发送给智能体。');
+          setSaid('未撤销。');
           props.refresh();
         }
       });
@@ -746,7 +746,7 @@ export function DecisionMode(props: DecisionModeProps) {
     if (entry!.kind === 'later') setQueue((current) => ({ ...current, later: new Set([...current.later].filter((l) => l !== entry!.id)) }));
     setStamp(null);
     setQueue((current) => ({ ...current, current: entry!.id }));
-    setSaid('Undone.');
+    setSaid('已撤销。');
   };
 
   // An action item's Undo goes away when its window ends.
@@ -821,7 +821,7 @@ export function DecisionMode(props: DecisionModeProps) {
     const failed = results.filter((r) => r === 'failed').length;
     if (failed > 0) {
       setConfirm(false);
-      setError(`${failed === 1 ? 'A reply was' : `${formatCount(failed)} replies were`} not sent. Try again from the chip, or close and keep the answers as a draft.`);
+      setError(`${failed === 1 ? '有 1 条回复' : `有 ${formatCount(failed)} 条回复`}未发送。请从会话标签重试，或关闭并把回答保留为草稿。`);
       return;
     }
     props.onClose();
@@ -887,7 +887,7 @@ export function DecisionMode(props: DecisionModeProps) {
       }}
     >
       <div className="ib-dm-head">
-        <h1 id="ib-dm-title">Decide</h1>
+        <h1 id="ib-dm-title">决策</h1>
         {props.scope && (
           <Tip content={props.scope} cut>
             <span className="ib-dm-scope" dir="auto" data-decision-scope="">
@@ -896,22 +896,22 @@ export function DecisionMode(props: DecisionModeProps) {
           </Tip>
         )}
         <span className="ib-dm-count" data-decision-head="">
-          {loaded ? headLine(queue) : 'Reading what waits on you…'}
+          {loaded ? headLine(queue) : '正在读取等待你处理的事项…'}
         </span>
         <span className="ib-dm-headacts">
           {undoable && (
             <button type="button" className="ib-dm-lnk" data-decision-undo="" onClick={undoLast}>
               <Icon name="reply" size={15} />
-              Undo
+              撤销
             </button>
           )}
           {!done && loaded && (
             <button type="button" className="ib-dm-lnk" aria-pressed={overview} data-decision-overview="" onClick={() => setOverview((v) => !v)}>
-              All
+              全部
             </button>
           )}
-          <Tip content="Close">
-            <button type="button" className="ib-dm-x" aria-label="Close decision mode" data-decision-close="" onClick={requestClose}>
+          <Tip content="关闭">
+            <button type="button" className="ib-dm-x" aria-label="关闭决策模式" data-decision-close="" onClick={requestClose}>
               <Icon name="x" size={18} />
             </button>
           </Tip>
@@ -971,14 +971,14 @@ export function DecisionMode(props: DecisionModeProps) {
                   <div className="ib-dm-banner" role="status" data-decision-replaced="">
                     <Icon name="warn" size={16} />
                     <span>
-                      <b>{banner.withdrawn ? `${banner.agent} withdrew the last question.` : `${banner.agent} replaced this question just now.`}</b> Your pick, if any, wasn&apos;t sent.
+                       <b>{banner.withdrawn ? `${banner.agent} 撤回了上一个问题。` : `${banner.agent} 刚刚替换了这个问题。`}</b> 你的选择（如果有）未被发送。
                     </span>
                   </div>
                 ) : startTarget ? (
                   <div className="ib-dm-banner" role="status" data-decision-start-banner="">
                     <Icon name="warn" size={16} />
                     <span>
-                      <b>{agentLabel(startTarget)} is stopped on you:</b> {startTarget.question.prompt} ·{' '}
+                      <b>{agentLabel(startTarget)} 正在等待你处理：</b> {startTarget.question.prompt} ·{' '}
                       <button
                         type="button"
                         className="ib-dm-lnk"
@@ -988,9 +988,9 @@ export function DecisionMode(props: DecisionModeProps) {
                           setQueue((state) => ({ ...state, current: startTarget.id }));
                         }}
                       >
-                        Go to it
+                        前往处理
                       </button>{' '}
-                      (what you typed here stays)
+                      （你在这里输入的内容会保留）
                     </span>
                   </div>
                 ) : undefined
@@ -1015,13 +1015,13 @@ export function DecisionMode(props: DecisionModeProps) {
                 }}
               >
                 <Icon name="back" size={15} />
-                Previous
+                上一个
               </button>
-              <span className="ib-dm-after">{after === 0 ? 'The last one' : `${formatCount(after)} more after this`}</span>
+              <span className="ib-dm-after">{after === 0 ? '最后一个' : `此后还有 ${formatCount(after)} 个`}</span>
             </div>
           </div>
         ) : (
-          <div className="ib-dm-loading">Reading what waits on you…</div>
+          <div className="ib-dm-loading">正在读取等待你处理的事项…</div>
         )}
       </div>
       {confirm && <CloseConfirm reasons={closeReasons()} closing={closing} onKeep={keepDeciding} onKeepDraft={keepDraft} onSend={sendAnswered} />}
@@ -1061,8 +1061,8 @@ interface CloseReasons {
   words: boolean;
 }
 
-const agents = (n: number) => (n === 1 ? '1 agent' : `${formatCount(n)} agents`);
-const replies = (n: number) => (n === 1 ? '1 reply' : `${formatCount(n)} replies`);
+const agents = (n: number) => (n === 1 ? '1 个智能体' : `${formatCount(n)} 个智能体`);
+const replies = (n: number) => (n === 1 ? '1 条回复' : `${formatCount(n)} 条回复`);
 
 /**
  * The close question, in the words of what is left: agents half answered
@@ -1074,30 +1074,30 @@ function CloseConfirm({ reasons, closing, onKeep, onKeepDraft, onSend }: { reaso
   const sendable = reasons.half + reasons.ready + reasons.failed;
   const nothing = sendable + reasons.drafts + reasons.sending === 0 && !reasons.words;
   const title = nothing
-    ? 'Nothing is left to send'
+    ? '没有待发送的内容'
     : reasons.failed > 0
       ? reasons.failed === 1
-        ? "A reply didn't send"
-        : "Some replies didn't send"
+        ? "有 1 条回复未发送"
+        : "有回复未发送"
       : reasons.half > 0
-        ? 'Some agents are half answered'
+        ? '部分智能体只回答了一半'
         : reasons.ready > 0
           ? reasons.ready === 1
-            ? 'A reply is waiting to send'
-            : 'Replies are waiting to send'
+            ? '有 1 条回复等待发送'
+            : '有回复等待发送'
           : reasons.drafts > 0
-            ? 'Your answers wait in a thread'
+            ? '你的回答在某个话题中等待'
             : reasons.sending > 0
-              ? 'A reply is on its way'
-              : "What you typed isn't saved";
+              ? '有 1 条回复正在发送'
+              : "你输入的内容尚未保存";
   const lines: string[] = [];
-  if (reasons.failed > 0) lines.push(`${replies(reasons.failed)} failed to send. Your answers are saved in the thread.`);
-  if (reasons.half > 0) lines.push(`${agents(reasons.half)} half answered: what you picked is saved, the rest still waits on you.`);
-  if (reasons.ready > 0) lines.push(`${replies(reasons.ready)} answered and not sent yet.`);
-  if (reasons.sending > 0) lines.push(`${replies(reasons.sending)} still sending: closing waits for ${reasons.sending === 1 ? 'it' : 'them'}, and says so if one fails.`);
-  if (nothing) lines.push('Every reply has gone.');
-  if (reasons.drafts > 0) lines.push(`${reasons.drafts === 1 ? 'A thread has' : `${formatCount(reasons.drafts)} threads have`} a draft reply: send ${reasons.drafts === 1 ? 'it' : 'them'} from the thread, with your answers.`);
-  if (reasons.words) lines.push("The words you typed on this card aren't saved, and closing loses them.");
+  if (reasons.failed > 0) lines.push(`${replies(reasons.failed)}未能发送。你的回答已保存在话题中。`);
+  if (reasons.half > 0) lines.push(`${agents(reasons.half)}只回答了一半：你选择的内容已保存，其余仍在等待你处理。`);
+  if (reasons.ready > 0) lines.push(`${replies(reasons.ready)}已回答但尚未发送。`);
+  if (reasons.sending > 0) lines.push(`${replies(reasons.sending)}仍在发送中：关闭时会等待${reasons.sending === 1 ? '它' : '它们'}，若有失败会提示。`);
+  if (nothing) lines.push('所有回复都已发出。');
+  if (reasons.drafts > 0) lines.push(`${reasons.drafts === 1 ? '有 1 个话题' : `有 ${formatCount(reasons.drafts)} 个话题`}存在回复草稿：请在话题中发送，并带上你的回答。`);
+  if (reasons.words) lines.push("你在此卡片上输入的内容尚未保存，关闭后会丢失。");
   return (
     <div className="ib-dm-confirm" role="alertdialog" aria-labelledby="ib-dm-confirm-t" aria-describedby="ib-dm-confirm-d" data-decision-confirm="">
       <h2 id="ib-dm-confirm-t">{title}</h2>
@@ -1105,18 +1105,18 @@ function CloseConfirm({ reasons, closing, onKeep, onKeepDraft, onSend }: { reaso
         {lines.map((line) => (
           <p key={line}>{line}</p>
         ))}
-        {sendable > 0 && <p>Send what you answered now, or keep it as a draft in each thread: nothing you picked is lost either way.</p>}
+        {sendable > 0 && <p>现在发送已回答的内容，或在各话题中保留为草稿：无论哪种方式，你选择的内容都不会丢失。</p>}
       </div>
       <div className="ib-dm-confirm-acts">
         <button type="button" className="ib-btn" autoFocus={sendable === 0} onClick={onKeep}>
-          Keep deciding
+          继续决策
         </button>
         <button type="button" className="ib-btn" data-decision-keep-draft="" disabled={closing} onClick={onKeepDraft}>
-          {closing && sendable === 0 ? 'Waiting for the reply…' : sendable > 0 ? 'Keep as a draft' : 'Close'}
+          {closing && sendable === 0 ? '正在等待回复…' : sendable > 0 ? '保留为草稿' : '关闭'}
         </button>
         {sendable > 0 && (
           <button type="button" className="ib-btn ib-pri" data-decision-send-answered="" disabled={closing} autoFocus onClick={onSend}>
-            {closing ? 'Sending…' : 'Send what you answered'}
+            {closing ? '发送中…' : '发送已回答的内容'}
           </button>
         )}
       </div>
@@ -1141,7 +1141,7 @@ function chipSend(chip: SessionChip, sends: ReadonlyMap<string, GroupSend>, rows
   }
   const sent = chip.groups.map((key) => ({ key, state: sends.get(key) })).filter((g) => g.state?.kind === 'sent' || g.state?.kind === 'sending');
   if (sent.length === 0) return { kind: 'none' };
-  if (sent.some((g) => g.state!.kind === 'sending')) return { kind: 'words', text: 'Sending', tone: 'quiet' };
+  if (sent.some((g) => g.state!.kind === 'sending')) return { kind: 'words', text: '发送中', tone: 'quiet' };
   const stages = sent.map((g) => {
     const first = groupIds(queue, g.key).map((id) => queue.cache.get(id)).find(Boolean);
     return afterSendOf(first ? rows.get(first.thread.id) : undefined, (g.state as { at: string }).at, busy.get(g.key) ?? null);
@@ -1166,7 +1166,7 @@ function Strip(props: {
   byAgent?: boolean;
 }) {
   return (
-    <ol className="ib-dm-strip" aria-label="Agents waiting" data-decision-strip="">
+    <ol className="ib-dm-strip" aria-label="等待中的智能体" data-decision-strip="">
       {props.chips.map((chip) => {
         const send = chipSend(chip, props.sends, props.rows, props.busy, props.queue, props.now);
         const on = chip.dots.some((d) => d.state === 'current');
@@ -1176,45 +1176,45 @@ function Strip(props: {
             <HostMark host={chip.host} />
             {/* Scoped to one thread, the project is the same for every chip: the agent names it. */}
             <span className="ib-dm-chipname">{props.byAgent ? chip.name : chip.label}</span>
-            <span className="ib-dm-dots" role="img" aria-label={`${chip.name}: ${formatCount(handled)} of ${formatCount(chip.dots.length)} answered`}>
+            <span className="ib-dm-dots" role="img" aria-label={`${chip.name}：已回答 ${formatCount(handled)} / ${formatCount(chip.dots.length)}`}>
               {chip.dots.map((dot) => (
                 <i key={dot.id} data-state={dot.state} />
               ))}
             </span>
             {send.kind === 'hold' && (
               <span className="ib-dm-hold-l" data-decision-hold="">
-                {send.paused ? `Waiting · sends ${send.seconds} s after you finish ·` : `Sending in ${send.seconds} s ·`}{' '}
+                {send.paused ? `等待中 · 你结束后 ${send.seconds} 秒发送 ·` : `${send.seconds} 秒后发送 ·`}{' '}
                 <button type="button" className="ib-dm-lnk" onClick={() => props.onHold(send.key)}>
-                  Hold
+                  暂停
                 </button>
               </span>
             )}
             {send.kind === 'held' && (
               <span className="ib-dm-hold-l" data-decision-held="">
-                Held ·{' '}
+                已暂停 ·{' '}
                 <button type="button" className="ib-dm-lnk" onClick={() => props.onSendNow(send.key)}>
-                  Send
+                  发送
                 </button>
               </span>
             )}
             {send.kind === 'draft' && (
               <span className="ib-dm-hold-l" data-decision-draft="">
-                This thread has a draft reply; send it from the thread ·{' '}
+                此话题有回复草稿；请在话题中发送 ·{' '}
                 <button type="button" className="ib-dm-lnk" onClick={() => props.onOpenThread(send.key)}>
-                  Open the thread
+                  打开话题
                 </button>
               </span>
             )}
             {(send.kind === 'hold' || send.kind === 'held') && props.ended.has(send.key) && (
               <span className="ib-dm-hold-l" data-decision-ended="">
-                Its session ended: the reply waits for the next agent that reads the thread.
+                其会话已结束：回复将等待下一个读取该话题的智能体。
               </span>
             )}
             {send.kind === 'failed' && (
               <span className="ib-dm-hold-l ib-dm-bad">
-                Not sent ·{' '}
+                未发送 ·{' '}
                 <button type="button" className="ib-dm-lnk" onClick={() => props.onSendNow(send.key)}>
-                  Try again
+                  重试
                 </button>
               </span>
             )}
@@ -1244,7 +1244,7 @@ function Overview({ queue, onPick }: { queue: QueueState; onPick: (id: string) =
           <ul>
             {chip.dots.map((dot) => {
               const d = queue.cache.get(dot.id)!;
-              const state = queue.gone.get(dot.id) === 'sent' || d.question.state === 'sent' ? 'Sent' : isHandled(queue, dot.id) ? answerWordsOf(d) : queue.later.has(dot.id) ? 'Later' : d.question.stopped !== null ? 'Stopped' : 'Open';
+              const state = queue.gone.get(dot.id) === 'sent' || d.question.state === 'sent' ? '已发送' : isHandled(queue, dot.id) ? answerWordsOf(d) : queue.later.has(dot.id) ? '稍后' : d.question.stopped !== null ? '已停止' : '待处理';
               return (
                 <li key={dot.id}>
                   <button type="button" className="ib-dm-allrow" data-on={dot.state === 'current' ? '' : undefined} onClick={() => onPick(dot.id)}>
@@ -1262,7 +1262,7 @@ function Overview({ queue, onPick }: { queue: QueueState; onPick: (id: string) =
 }
 
 function answerWordsOf(decision: InboxDecision): string {
-  if (isActionDecision(decision)) return decision.question.action_result?.outcome === 'cant' ? "Can't do it" : 'Done';
+  if (isActionDecision(decision)) return decision.question.action_result?.outcome === 'cant' ? "无法完成" : '完成';
   return answerWords(decision.question.answer);
 }
 
@@ -1281,10 +1281,10 @@ function EndScreen(props: { queue: QueueState; sends: ReadonlyMap<string, GroupS
         <Icon name="check" size={28} />
       </span>
       <h2 ref={ref} tabIndex={-1}>
-        Nothing waits on you
+        没有等待你处理的事项
       </h2>
       <p>
-        {formatCount(handled)} {handled === 1 ? 'decision' : 'decisions'}. Each agent gets one reply per thread.
+        {formatCount(handled)} 项决策。每个智能体在每个话题收到一条回复。
       </p>
       {chips.length > 0 && (
         <ul className="ib-dm-endlist">
@@ -1294,14 +1294,14 @@ function EndScreen(props: { queue: QueueState; sends: ReadonlyMap<string, GroupS
               send.kind === 'words'
                 ? send.text
                 : send.kind === 'hold'
-                  ? `Sending in ${send.seconds} s`
+                  ? `${send.seconds} 秒后发送`
                   : send.kind === 'held'
-                    ? 'Held'
+                    ? '已暂停'
                     : send.kind === 'draft'
-                      ? 'Send it from the thread (draft reply)'
+                      ? '在话题中发送（回复草稿）'
                       : send.kind === 'failed'
-                        ? 'Not sent'
-                        : 'Nothing to send';
+                        ? '未发送'
+                        : '无内容可发送';
             return (
               <li key={chip.key} data-decision-end-row={chipDomKey(chip.key)}>
                 <HostMark host={chip.host} />
@@ -1315,7 +1315,7 @@ function EndScreen(props: { queue: QueueState; sends: ReadonlyMap<string, GroupS
         </ul>
       )}
       <button type="button" className="ib-btn ib-pri" data-decision-back="" onClick={props.onClose}>
-        Back to the Inbox
+        返回收件箱
       </button>
     </div>
   );

@@ -24,25 +24,23 @@ import { newUuid } from '../uuid';
 const CONNECTED_HOSTS = new Set(['claude-code', 'claude', 'pi', 'opencode']);
 /** How often the open thread re-reads its project's live sessions, so the button greys when none is left. */
 const REFRESH_MS = 10_000;
-const COUNT_WORDS = ['No', 'One', 'Two', 'Three', 'Four', 'Five', 'Six', 'Seven', 'Eight', 'Nine', 'Ten'];
 
 export const hostName = (host: string): string => INBOX_HOST_NAMES[host] ?? host;
 
 /** "Two Pi sessions are live in ledger", or "Three sessions are live in ledger" when the hosts differ. */
 function pickerHeading(sessions: readonly LiveSession[], project: string): string {
-  const count = COUNT_WORDS[sessions.length] ?? String(sessions.length);
   const hosts = new Set(sessions.map((s) => hostName(s.host)));
-  const which = hosts.size === 1 ? `${[...hosts][0]} sessions` : 'sessions';
-  return `${count} ${which} are live in ${project}`;
+  const which = hosts.size === 1 ? `${[...hosts][0]} 会话` : '会话';
+  return `${project} 中有 ${sessions.length} 个${which}在线`;
 }
 
 /** "Wrote this thread. Idle since 10:05 AM." / "Working now; takes it when the turn ends." */
 export function sessionWords(session: LiveSession): string {
   const parts: string[] = [];
-  if (session.wrote_thread) parts.push('Wrote this thread.');
-  if (session.busy === true) parts.push('Working now; takes it when the turn ends.');
-  else if (session.busy === false && session.idle_since) parts.push(`Idle since ${whenTime(session.idle_since)}.`);
-  else if (!session.wrote_thread) parts.push(`Seen ${whenTime(session.last_seen_at)}.`);
+  if (session.wrote_thread) parts.push('发起过此话题。');
+  if (session.busy === true) parts.push('正在工作；当前回合结束后接收。');
+  else if (session.busy === false && session.idle_since) parts.push(`自 ${whenTime(session.idle_since)} 起空闲。`);
+  else if (!session.wrote_thread) parts.push(`最后出现于 ${whenTime(session.last_seen_at)}。`);
   return parts.join(' ');
 }
 
@@ -97,12 +95,12 @@ export function NewMessageButton({ live, mode, onClick }: { live: LiveSessionsMo
       data-live={none ? 'none' : live ? 'some' : undefined}
       aria-expanded={mode?.kind === 'pick' || mode?.kind === 'none'}
       data-new-message=""
-      aria-label="New message"
+      aria-label="新消息"
       onClick={onClick}
     >
       <Icon name="compose" size={15} />
       {/* A phone's reply foot keeps only the icon (inbox.css); the name stays on the button. */}
-      <span className="ib-btn-l">New message</span>
+      <span className="ib-btn-l">新消息</span>
     </button>
   );
 }
@@ -236,7 +234,7 @@ export function NewMessagePopover({
           >
             <HostMark host={session.host} agent={session.session} />
             <span>
-              <span className="ib-t">Started {whenTime(session.started_at)}</span>
+              <span className="ib-t">开始于 {whenTime(session.started_at)}</span>
               <span className="ib-d">{sessionWords(session)}</span>
             </span>
           </button>
@@ -249,17 +247,17 @@ export function NewMessagePopover({
     const path = tildePath(thread.project.root, live?.home);
     const connected = askerHost !== null && CONNECTED_HOSTS.has(askerHost);
     return (
-      <div className="ib-state ib-nmpop" ref={ref} role="dialog" aria-label="No live session" data-not-running="">
-        <h5>{connected ? `${asker} is not running in ${thread.project.name}` : `No agent is running in ${thread.project.name}`}</h5>
+      <div className="ib-state ib-nmpop" ref={ref} role="dialog" aria-label="没有在线会话" data-not-running="">
+        <h5>{connected ? `${asker} 未在 ${thread.project.name} 中运行` : `${thread.project.name} 中没有运行中的智能体`}</h5>
         <p>
           {connected
-            ? `A new message goes to a live session. Start ${asker} in ${path} and press New message again, or reply here: ${replyTo} reads replies when it next checks the Inbox.`
-            : `A new message goes to a live Claude Code, Pi or OpenCode session with Plannotator. Start one in ${path} and press New message again, or reply here: ${replyTo} reads replies when it next checks the Inbox.`}
+            ? `新消息会发送到在线会话。请在 ${path} 中启动 ${asker} 并再次点击「新消息」，或在此回复：${replyTo} 下次检查收件箱时会读取回复。`
+            : `新消息会发送到带有 Plannotator 的在线 Claude Code、Pi 或 OpenCode 会话。请在 ${path} 中启动一个会话并再次点击「新消息」，或在此回复：${replyTo} 下次检查收件箱时会读取回复。`}
         </p>
         <div className="ib-acts">
           <button type="button" className="ib-btn ib-sm" onClick={onReplyInstead}>
             <Icon name="reply" size={14} />
-            Reply instead
+            改为回复
           </button>
         </div>
       </div>
@@ -294,7 +292,7 @@ export function NewMessageComposer({
     if (sending || voice.busy) return;
     const body = text.trim();
     if (!body) {
-      setError('Write a message first.');
+      setError('请先写一条消息。');
       return;
     }
     setSending(true);
@@ -305,7 +303,7 @@ export function NewMessageComposer({
       await inboxApi.newMessage(thread.thread_id, { session: target.session, body: withSkillsBlock(body, skills), idempotency_key: key.current });
       await onSent();
     } catch (cause) {
-      setError(cause instanceof InboxApiError ? cause.message : 'The message was not sent. Send again to retry.');
+      setError(cause instanceof InboxApiError ? cause.message : '消息未发送。请再次发送以重试。');
     } finally {
       setSending(false);
     }
@@ -314,17 +312,17 @@ export function NewMessageComposer({
   return (
     <>
       <div className="ib-reply-l" data-new-message-to={target.session}>
-        New message to {name} in {thread.project.name}{' '}
+        新消息：发给 {thread.project.name} 中的 {name}{' '}
         {/* A host that reports nothing about its turns (busy null) is never called idle. */}
-        <span className="ib-mut">(live session{target.busy === true ? ', working' : target.busy === false ? ', idle' : ''})</span>
+        <span className="ib-mut">（在线会话{target.busy === true ? '，工作中' : target.busy === false ? '，空闲' : ''}）</span>
       </div>
       <div className="ib-rbox">
         <InboxComposerField
           textareaRef={textRef}
           voice={voice}
-          ariaLabel={`New message to ${name}`}
-          placeholder="Write a message"
-          destination="your message"
+          ariaLabel={`发送给 ${name} 的新消息`}
+          placeholder="写一条消息"
+          destination="你的消息"
           value={text}
           onChange={setText}
           onKeyDown={(event) => {
@@ -342,10 +340,10 @@ export function NewMessageComposer({
       <div className="ib-acts">
         <button type="button" className="ib-btn ib-pri" onClick={() => void send()} disabled={sending || voice.busy}>
           <Icon name="send" size={15} />
-          Send
+          发送
         </button>
         <button type="button" className="ib-btn ib-ghost" onClick={onCancel}>
-          Cancel
+          取消
         </button>
       </div>
       {error && (

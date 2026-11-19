@@ -9,7 +9,7 @@ export const HeaderTotals: React.FC<{ files: ReadonlyArray<{ additions: number; 
     <span
       className="flex-shrink-0 flex items-center gap-1.5 text-[12px] tabular-nums"
       data-header-totals=""
-      title={`${plural(files.length, 'file')}: ${plural(additions, 'line')} added, ${formatCount(deletions)} removed`}
+      title={`${files.length} 个文件：新增 ${additions} 行，删除 ${formatCount(deletions)} 行`}
     >
       {additions > 0 && <span className="text-success">+{formatCount(additions)}</span>}
       {deletions > 0 && <span className="text-destructive">−{formatCount(deletions)}</span>}

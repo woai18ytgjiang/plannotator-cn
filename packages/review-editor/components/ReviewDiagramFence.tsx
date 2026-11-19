@@ -78,7 +78,7 @@ export const ReviewDiagramFence: React.FC<ReviewDiagramFenceProps> = ({ block, k
         <p data-review-diagram-note="" className="mt-1 mb-4 text-xs text-muted-foreground">
           The diagram renderer did not load, so this diagram shows as code.{' '}
           <button type="button" onClick={retry} className="underline underline-offset-2 hover:text-foreground">
-            Retry
+            重试
           </button>
         </p>
       )}

@@ -53,7 +53,7 @@ export function LaunchSettingsFile({
               className="ib-agpath"
               type="text"
               aria-label={label}
-              placeholder="None"
+              placeholder="无"
               autoComplete="off"
               spellCheck={false}
               autoFocus

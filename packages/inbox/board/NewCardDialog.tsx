@@ -105,21 +105,21 @@ export function NewCardDialog({
   const target = sessions ? findTarget(sessions.projects, chosen) : null;
   const anyLive = (sessions?.projects ?? []).some((g) => g.sessions.length > 0);
 
-  const action = mode === 'send' ? (target ? `Send to ${hostLabel(target.host)}` : 'Send to an agent') : 'Add to Backlog';
+  const action = mode === 'send' ? (target ? `发送给 ${hostLabel(target.host)}` : '发送给智能体') : '添加到待办池';
   const submit = async () => {
     const text = title.replace(/\s+/g, ' ').trim();
     if (!text) {
-      setError('Give the card a title.');
+      setError('请为卡片填写标题。');
       titleRef.current?.focus();
       return;
     }
     if (mode === 'send' && !target) {
-      setError(anyLive ? 'Choose an agent to send it to.' : 'No agent is running. Add it to Backlog, and send it from the card when one is.');
+      setError(anyLive ? '请选择要发送给的智能体。' : '没有正在运行的智能体。可以先添加到待办池，等有智能体运行后再从卡片发送。');
       (toRef.current ?? titleRef.current)?.focus();
       return;
     }
     if (mode !== 'send' && !project) {
-      setError('A card needs a project: an agent’s first message makes one.');
+      setError('卡片需要归属一个项目：智能体的第一条消息会创建项目。');
       return;
     }
     setBusy(true);
@@ -161,16 +161,16 @@ export function NewCardDialog({
         <div className="ib-ncd-head">
           {phone && (
             <button type="button" className="ib-ncd-bar" onClick={onClose}>
-              Cancel
+              取消
             </button>
           )}
-          <h2 id={`ib-ncd-t-${uid}`}>{fixed ? 'Send to an agent' : 'New card'}</h2>
+          <h2 id={`ib-ncd-t-${uid}`}>{fixed ? '发送给智能体' : '新建卡片'}</h2>
           {phone ? (
             <button type="submit" className="ib-ncd-bar ib-strong" disabled={busy} data-new-card-add="">
-              {mode === 'send' ? 'Send' : 'Add'}
+              {mode === 'send' ? '发送' : '添加到'}
             </button>
           ) : (
-            <button type="button" className="ib-ncd-x" aria-label="Close" onClick={onClose}>
+            <button type="button" className="ib-ncd-x" aria-label="关闭" onClick={onClose}>
               <Icon name="x" size={16} />
             </button>
           )}
@@ -186,7 +186,7 @@ export function NewCardDialog({
               ref={titleRef}
               className="ib-ncd-title"
               type="text"
-              placeholder="Title"
+              placeholder="标题"
               value={title}
               maxLength={INBOX_CARD_TITLE_MAX}
               onChange={(event) => {
@@ -214,7 +214,7 @@ export function NewCardDialog({
               id={`ib-ncd-notes-${uid}`}
               ref={notesRef}
               className="ib-ncd-notes"
-              placeholder={mode === 'send' ? 'Notes: what the agent should do. They are the message it gets.' : 'Notes (optional)'}
+              placeholder={mode === 'send' ? '备注：智能体要做的事。这就是它收到的消息。' : '备注（可选）'}
               value={notes}
               onChange={(event) => {
                 setNotes(event.target.value);
@@ -235,11 +235,11 @@ export function NewCardDialog({
           {fixed === null && (
           <label className="ib-ncd-links">
             <Icon name="link" size={15} />
-            <span className="ib-sr">Links</span>
+            <span className="ib-sr">链接</span>
             <input
               type="text"
               // Any web link, or GitHub's owner/repo#123; a phone's narrow field keeps the short form whole.
-              placeholder={phone ? 'Paste links' : 'Paste links, or owner/repo#123'}
+              placeholder={phone ? '粘贴链接' : '粘贴链接，或 owner/repo#123'}
               value={links}
               onChange={(event) => setLinks(event.target.value)}
               data-new-card-links=""
@@ -250,11 +250,11 @@ export function NewCardDialog({
         <div className="ib-ncd-row">
           {mode === 'send' ? (
             <>
-              <span className="ib-ncd-l">To</span>
+              <span className="ib-ncd-l">发送给</span>
               {sessions && !anyLive ? (
                 <span className="ib-ncd-none" data-new-card-to="none">
                   <Icon name="info" size={15} />
-                  No agent is running
+                  没有正在运行的智能体
                 </span>
               ) : (
                 <button
@@ -264,7 +264,7 @@ export function NewCardDialog({
                   data-compose-to={target ? target.session : 'choose'}
                   aria-haspopup="listbox"
                   aria-expanded={picker}
-                  aria-label={target ? `To: ${hostLabel(target.host)}${target.label ? `, ${target.label},` : ''} in ${target.project.name}. Change` : sessions ? 'To: choose an agent' : 'To: looking for live agents'}
+                  aria-label={target ? `发送给：${hostLabel(target.host)}，项目 ${target.project.name}。更改` : sessions ? '发送给：选择智能体' : '发送给：正在查找在线智能体'}
                   onClick={() => sessions && setPicker((open) => !open)}
                 >
                   {target ? (
@@ -274,7 +274,7 @@ export function NewCardDialog({
                       <SessionDetail name={target.project.name} root={target.project.root} label={target.label} />
                     </>
                   ) : (
-                    <span className="ib-cp-tod">{sessions ? 'Choose an agent' : 'Looking for live agents…'}</span>
+                    <span className="ib-cp-tod">{sessions ? '选择智能体' : '正在查找在线智能体…'}</span>
                   )}
                   <Icon name="chevD" size={14} />
                 </button>
@@ -282,7 +282,7 @@ export function NewCardDialog({
             </>
           ) : (
             <>
-              <span className="ib-ncd-l">In</span>
+              <span className="ib-ncd-l">项目</span>
               <ProjectPicker projects={projects} project={projectRow} home={home} onPick={setProject} />
             </>
           )}
@@ -293,7 +293,7 @@ export function NewCardDialog({
               <span className="ib-bflt-tok-l" dir="auto">
                 {initiativeName}
               </span>
-              <button type="button" className="ib-bflt-tok-x" aria-label={`Not in ${initiativeName}`} onClick={() => setInitiative(null)} data-new-card-initiative-clear="">
+              <button type="button" className="ib-bflt-tok-x" aria-label={`不在 ${initiativeName} 中`} onClick={() => setInitiative(null)} data-new-card-initiative-clear="">
                 <Icon name="x" size={12} />
               </button>
             </span>
@@ -326,16 +326,16 @@ export function NewCardDialog({
         )}
         <div className="ib-ncd-foot">
           {fixed === null && (
-            <div className="ib-ncd-modes" role="radiogroup" aria-label="Where it goes">
-              {modeButton('backlog', 'board', 'Backlog', 'Backlog')}
-              {modeButton('send', 'send', 'Send to an agent', 'Agent')}
+            <div className="ib-ncd-modes" role="radiogroup" aria-label="去向">
+              {modeButton('backlog', 'board', '待办池', '待办池')}
+              {modeButton('send', 'send', '发送给智能体', '智能体')}
             </div>
           )}
           {!phone && (
             <>
               <span className="ib-bsp" />
               <button type="button" className="ib-btn ib-ghost" onClick={onClose}>
-                Cancel
+                取消
               </button>
               <button type="submit" className="ib-btn ib-pri" disabled={busy} data-new-card-add="">
                 {mode === 'send' && <Icon name="send" size={15} />}
@@ -352,7 +352,7 @@ export function NewCardDialog({
 /** The project a Backlog card goes in: a menu of the sidebar's projects. */
 function ProjectPicker({ projects, project, home, onPick }: { projects: readonly ProjectFolder[]; project: ProjectFolder | null; home: string | null; onPick: (id: string) => void }) {
   const [open, setOpen] = useState(false);
-  if (!project) return <span className="ib-ncd-none">No project yet</span>;
+  if (!project) return <span className="ib-ncd-none">还没有项目</span>;
   const label = (
     <>
       <Icon name="folder" size={15} />
@@ -365,13 +365,13 @@ function ProjectPicker({ projects, project, home, onPick }: { projects: readonly
   if (projects.length < 2) return <span className="ib-ncd-proj">{label}</span>;
   return (
     <Menu.Root open={open} onOpenChange={setOpen} modal={false}>
-      <Menu.Trigger className="ib-cp-tobtn" aria-label={`Project: ${project.name}. Change`} data-new-card-project={project.id}>
+      <Menu.Trigger className="ib-cp-tobtn" aria-label={`项目：${project.name}。更改`} data-new-card-project={project.id}>
         {label}
         <Icon name="chevD" size={14} />
       </Menu.Trigger>
       <Menu.Portal container={typeof document !== 'undefined' ? (document.querySelector('dialog[data-dialog="new-card"]') as HTMLElement | null) ?? undefined : undefined}>
         <Menu.Positioner className="ib-pm-pos" side="top" align="start" sideOffset={4}>
-          <Menu.Popup className="ib-pm" aria-label="Project">
+          <Menu.Popup className="ib-pm" aria-label="项目">
             {projects.map((p) => (
               <Menu.Item key={p.id} className="ib-pmi" label={p.name} onClick={() => onPick(p.id)}>
                 <Icon name={p.id === project.id ? 'check' : 'folder'} size={15} />

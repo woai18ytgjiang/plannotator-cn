@@ -74,12 +74,12 @@ export function layerBaseWords(pull: InboxPull, stack: InboxPullStack): string |
   if (under && isOpen(under)) {
     // Siblings by number: the first is "After", every other one "Also on" (a fork, not a chain).
     const first = stack.layers.find((l) => isOpen(l) && stack.parents[l.key] === under.key);
-    return first && first.key !== pull.key ? `Also on ${inboxPullLabel(under)}` : `After ${inboxPullLabel(under)}`;
+    return first && first.key !== pull.key ? `也在 ${inboxPullLabel(under)} 上` : `在 ${inboxPullLabel(under)} 之后`;
   }
   if (under) return `On ${inboxPullLabel(under)}, merged`;
   if (!isOpen(pull) || inboxPullLandsNext(stack)?.key !== pull.key) return null;
-  if (stack.layers.length > 1) return `Based on ${pull.base}`;
-  return pull.default_branch && pull.base !== pull.default_branch ? `Based on ${pull.base}` : null;
+  if (stack.layers.length > 1) return `基于 ${pull.base}`;
+  return pull.default_branch && pull.base !== pull.default_branch ? `基于 ${pull.base}` : null;
 }
 
 /** A row's chain of marks: every layer up to five; past that the first two, "+N", and the last two. */

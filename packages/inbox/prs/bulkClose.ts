@@ -13,20 +13,20 @@ export type BulkVerb = 'merge' | 'close' | 'reopen';
 
 /** "Merging 2 of 3…", "Closing 2 of 3…", "Reopening 2 of 3…". */
 export function runningWords(verb: BulkVerb, done: number, total: number): string {
-  const ing = verb === 'merge' ? 'Merging' : verb === 'close' ? 'Closing' : 'Reopening';
-  return `${ing} ${done} of ${total}…`;
+  const ing = verb === 'merge' ? '正在合并' : verb === 'close' ? '正在关闭' : '正在重新打开';
+  return `${ing} ${done} / ${total}…`;
 }
 
 /** The report's first line: "Merged #1198, #391.", "Closed #1190, #1182.", "Reopened #1190." Null when none went. */
 export function doneLine(verb: BulkVerb, pulls: readonly InboxPull[]): string | null {
   if (pulls.length === 0) return null;
-  const ed = verb === 'merge' ? 'Merged' : verb === 'close' ? 'Closed' : 'Reopened';
-  return `${ed} ${pulls.map(inboxPullLabel).join(', ')}.`;
+  const ed = verb === 'merge' ? '已合并' : verb === 'close' ? '已关闭' : '已重新打开';
+  return `${ed} ${pulls.map(inboxPullLabel).join('、')}。`;
 }
 
 /** The toast after Close ("Closed 3", with Undo) and after its Undo ("Reopened 3"). */
 export function toastLead(verb: 'close' | 'reopen', count: number): string {
-  return `${verb === 'close' ? 'Closed' : 'Reopened'} ${count}`;
+  return `${verb === 'close' ? '已关闭' : '已重新打开'} ${count}`;
 }
 
 /** How long Close's toast, and so its Undo, stays. */

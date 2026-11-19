@@ -900,7 +900,7 @@ export function createAgentJobHandler(options: AgentJobHandlerOptions): AgentJob
           // buildCommand can refuse a launch (e.g. PR checkout unavailable) —
           // surface its message instead of mislabeling it a JSON error.
           if (err instanceof SyntaxError) {
-            return Response.json({ error: "Invalid JSON" }, { status: 400 });
+            return Response.json({ error: "JSON 无效" }, { status: 400 });
           }
           const message = err instanceof Error ? err.message : "Failed to launch agent";
           return Response.json({ error: message }, { status: 503 });
@@ -911,11 +911,11 @@ export function createAgentJobHandler(options: AgentJobHandlerOptions): AgentJob
       if (url.pathname.startsWith(JOBS + "/") && url.pathname !== JOBS_STREAM && req.method === "DELETE") {
         const id = url.pathname.slice(JOBS.length + 1);
         if (!id) {
-          return Response.json({ error: "Missing job ID" }, { status: 400 });
+          return Response.json({ error: "缺少任务 ID" }, { status: 400 });
         }
         const found = killJob(id);
         if (!found) {
-          return Response.json({ error: "Job not found or already terminal" }, { status: 404 });
+          return Response.json({ error: "未找到任务，或任务已结束" }, { status: 404 });
         }
         return Response.json({ ok: true });
       }

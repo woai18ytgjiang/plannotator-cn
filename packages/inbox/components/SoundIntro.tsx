@@ -58,44 +58,44 @@ export function SoundIntroDialog({ line, playing, onPlay, onTurnOnNotifications,
       fallbackFocus={pageHeading}
     >
       <div className="ib-dlg-head" data-notif={line}>
-        <h2 id="ib-sound-title">The Inbox can ring now</h2>
+        <h2 id="ib-sound-title">收件箱现在可以响铃了</h2>
         <button type="button" className="ib-btn ib-sm" data-sound-play="" onClick={onPlay}>
           <Icon name="play" />
-          <span>{playing ? 'Playing…' : 'Play'}</span>
+          <span>{playing ? '播放中…' : '播放'}</span>
         </button>
       </div>
       <p className="ib-sum" id="ib-sound-desc">
-        A soft doorbell when an agent asks you something and this tab is hidden.
+        当智能体向你提问、而这个标签页又隐藏时，会响起轻柔的门铃声。
       </p>
       <div aria-live="polite" ref={wrap}>
         {line === 'not-allowed' && (
           <div className="ib-nline" data-sound-nline="not-allowed" tabIndex={-1}>
-            Notifications aren&apos;t allowed yet.
+            通知尚未被允许。
             <button type="button" className="ib-lnk" onClick={onTurnOnNotifications}>
-              Allow
+              允许
             </button>
           </div>
         )}
         {line === 'off' && (
           <div className="ib-nline" data-sound-nline="off" tabIndex={-1}>
-            Notifications are off.
+            通知已关闭。
             <button type="button" className="ib-lnk" onClick={onTurnOnNotifications}>
-              Turn on
+              开启
             </button>
           </div>
         )}
         {line === 'blocked' && (
           <div className="ib-nline" data-sound-nline="blocked" tabIndex={-1}>
-            Notifications are blocked. Allow them from the address bar.
+            通知已被阻止。请从地址栏允许通知。
           </div>
         )}
       </div>
       <div className="ib-acts-row">
         <button type="button" className="ib-btn ib-ghost ib-left" data-sound-off="" onClick={onTurnOff}>
-          Turn it off
+          关闭通知
         </button>
         <button type="button" className="ib-btn ib-pri" data-sound-keep="" onClick={onKeep}>
-          Keep it on
+          保持开启
         </button>
       </div>
     </Modal>

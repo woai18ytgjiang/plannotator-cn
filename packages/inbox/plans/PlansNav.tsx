@@ -33,7 +33,7 @@ export function PlansNav({ on, onClick, pick = (go) => go, phone = false }: { on
         )}
       </button>
       {pinned.length > 0 && (
-        <div className="ib-pins ib-space-pins" role="list" aria-label="Pinned spaces" data-space-pins="">
+        <div className="ib-pins ib-space-pins" role="list" aria-label="已置顶的 Spaces" data-space-pins="">
           {pinned.map((plan, index) => (
             <PinnedSpace key={plan.id} plan={plan} on={open === plan.id} first={index === 0} last={index === pinned.length - 1} index={index} phone={phone} onOpen={pick(() => writeRoute({ page: 'plans', project: null, thread: null, plan: plan.id }))} />
           ))}
@@ -88,15 +88,15 @@ function PinnedSpace({ plan, on, first, last, index, phone, onOpen }: { plan: Pl
       <div className="ib-pm-title" dir="auto" aria-hidden="true">
         {plan.name}
       </div>
-      <Menu.Item className="ib-pmi" label="Unpin" onClick={() => act('unpin')} data-space-pin-action="unpin">
+      <Menu.Item className="ib-pmi" label="取消置顶" onClick={() => act('unpin')} data-space-pin-action="unpin">
         <Icon name="pinOff" size={15} />
         Unpin
       </Menu.Item>
-      <Menu.Item className="ib-pmi" label="Move up" disabled={first} onClick={() => act('up')} data-space-pin-action="up">
+      <Menu.Item className="ib-pmi" label="上移" disabled={first} onClick={() => act('up')} data-space-pin-action="up">
         <Icon name="arrowUp" size={15} />
         Move up
       </Menu.Item>
-      <Menu.Item className="ib-pmi" label="Move down" disabled={last} onClick={() => act('down')} data-space-pin-action="down">
+      <Menu.Item className="ib-pmi" label="下移" disabled={last} onClick={() => act('down')} data-space-pin-action="down">
         <Icon name="arrowDown" size={15} />
         Move down
       </Menu.Item>

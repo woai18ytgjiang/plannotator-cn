@@ -182,8 +182,8 @@ export function PostEnding({ pull, agent, comments: all, readComments, anchor, b
   if (!target || !rules || !spec)
     return agent ? (
       <>
-        <Tip content={`Send to ${agent.name}`}>
-          <span className="ib-rv-dest-lone" role="img" aria-label={`Your verdict goes to ${agent.name}`} data-review-going="agent">
+        <Tip content={`发送给 ${agent.name}`}>
+          <span className="ib-rv-dest-lone" role="img" aria-label={`你的结论将发送给 ${agent.name}`} data-review-going="agent">
             <RowAgentTiles participants={undefined} agent={{ kind: 'agent', host: agent.host ?? null }} tip={false} />
           </span>
         </Tip>
@@ -193,9 +193,9 @@ export function PostEnding({ pull, agent, comments: all, readComments, anchor, b
 
   const forgeMark = target.platform === 'github' ? <Icon name="github" size={15} className="ib-rv-dest-mark" /> : <PRPlatformIcon platform={target.platform} className="ib-rv-dest-mark" />;
   const choice = agent && (
-    <div className="ib-seg ib-seg-sm ib-rv-dest" role="radiogroup" aria-label="Where your review goes" data-review-destination={destination}>
+    <div className="ib-seg ib-seg-sm ib-rv-dest" role="radiogroup" aria-label="你的审查发往何处" data-review-destination={destination}>
       {(['forge', 'agent'] as const).map((value) => {
-        const words = value === 'forge' ? `Post to the ${rules.mrLabel} on ${rules.label}` : `Send to ${agent.name}`;
+        const words = value === 'forge' ? `发布到 ${rules.label} 上的${rules.mrLabel}` : `发送给 ${agent.name}`;
         return (
           <Tip key={value} content={words}>
             <label className="ib-seg-o" data-on={destination === value ? '' : undefined} data-review-destination-choice={value}>
@@ -212,8 +212,8 @@ export function PostEnding({ pull, agent, comments: all, readComments, anchor, b
     <>
       {choice}
       {!agent && (
-        <Tip content={`${isDone ? 'Posted' : 'Posts'} to the ${rules.mrLabel} on ${rules.label}${note ? `. ${note}` : ''}`}>
-          <span className="ib-rv-dest-lone" role="img" aria-label={`Your review goes to the ${rules.mrLabel} on ${rules.label}`} data-review-going="forge">
+        <Tip content={`${isDone ? '已发布' : '发布'}到 ${rules.label} 上的${rules.mrLabel}${note ? `。${note}` : ''}`}>
+          <span className="ib-rv-dest-lone" role="img" aria-label={`你的审查将发到 ${rules.label} 上的${rules.mrLabel}`} data-review-going="forge">
             {forgeMark}
           </span>
         </Tip>

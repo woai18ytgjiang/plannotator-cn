@@ -6,11 +6,11 @@ import { accountsFailure, SELF, useAccounts, type AccountsFailure, type AccountS
 import { CodeBox } from './ConnectPicker';
 
 export const FAILURE_TEXT: Record<AccountsFailure, string> = {
-  timed_out: 'claude-swap timed out.',
-  run_failed: 'claude-swap failed.',
-  bad_output: 'claude-swap gave an unreadable answer.',
-  unknown_schema: 'Update Plannotator and claude-swap.',
-  unreachable: 'The Inbox did not answer.',
+  timed_out: 'claude-swap 超时。',
+  run_failed: 'claude-swap 执行失败。',
+  bad_output: 'claude-swap 返回了无法识别的结果。',
+  unknown_schema: '请更新 Plannotator 和 claude-swap。',
+  unreachable: '收件箱没有响应。',
 };
 
 /**
@@ -32,7 +32,7 @@ const CLAUDE_CODE: AccountsTool = { host: 'claude-code', name: 'Claude Code', sw
 
 /** What an account is called: its alias, else the start of its address, else it has neither and is an API key. */
 function accountLabel(account: InboxAccount): string {
-  return account.alias || account.email?.split('@')[0] || 'API key';
+  return account.alias || account.email?.split('@')[0] || 'API 密钥';
 }
 
 /** A personal Claude organization is named after the address: it says nothing, and showing it would show the address. */
@@ -106,32 +106,32 @@ const NEEDS_A_PERSON = new Set(['relogin_required', 'no_credentials', 'foreign_c
 const trusted = (account: InboxAccount) => !isStale(account) && account.usageStatus !== 'relogin_required';
 
 function usageErrorText(kind: string | null): string {
-  if (kind === 'network') return 'Could not reach Anthropic';
-  if (kind === 'timeout') return 'Anthropic timed out';
-  if (kind === 'http-429') return 'Anthropic rate limit';
-  if (kind?.startsWith('http-')) return 'Anthropic refused';
-  return 'Usage check failed';
+  if (kind === 'network') return '无法连接 Anthropic';
+  if (kind === 'timeout') return 'Anthropic 超时';
+  if (kind === 'http-429') return 'Anthropic 频率限制';
+  if (kind?.startsWith('http-')) return 'Anthropic 拒绝';
+  return '用量检查失败';
 }
 
 /** Why an account has no reading, in plain words (`cswap`'s statuses, json_output.py). */
 function noReadingReason(account: InboxAccount): string {
   switch (account.usageStatus) {
     case 'ok':
-      return 'No limits reported';
+      return '未报告限制';
     case 'token_expired':
-      return 'Login renewing';
+      return '登录续期中';
     case 'keychain_unavailable':
-      return 'Keychain unreadable';
+      return '钥匙串无法读取';
     case 'relogin_required':
-      return 'Sign in again';
+      return '重新登录';
     case 'foreign_credential':
-      return 'Signed in to another account';
+      return '已登录到其他账户';
     case 'no_credentials':
-      return 'No saved login';
+      return '没有已保存的登录';
   }
   const reason = usageErrorText(account.usageError);
   const retry = account.usageRetryAt ? new Date(account.usageRetryAt) : null;
-  return retry && retry.getTime() > Date.now() ? `${reason}. Try again after ${retry.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}` : reason;
+  return retry && retry.getTime() > Date.now() ? `${reason}。请在 ${retry.toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })} 后重试` : reason;
 }
 
 /** When a limit resets, in the person's own clock: a time today, a weekday this week, else a date. */
@@ -205,15 +205,15 @@ export function mostRoom(inUse: InboxAccount | null, others: InboxAccount[]): In
  * the nearest one resets, an old reading's age, "most room", and "API key".
  */
 function rowDetail(account: InboxAccount, best: boolean): string {
-  if (account.usageStatus === 'api_key') return 'API key, billed per token';
+  if (account.usageStatus === 'api_key') return 'API 密钥，按令牌计费';
   const meters = accountMeters(account);
   const meter = tightest(account);
   const resets = meter ? resetText(meter.window) : null;
   return [
     meters.map(({ label, window }) => `${label} ${shownPct(window)}%`).join(' · '),
     resets ? `${meter!.label} resets ${resets}` : null,
-    isStale(account) ? `Last read ${ageText(account.usageAgeSeconds!)} ago` : null,
-    best ? 'Most room' : null,
+    isStale(account) ? `上次读取于 ${ageText(account.usageAgeSeconds!)}前` : null,
+    best ? '余量最多' : null,
   ]
     .filter(Boolean)
     .join('\n');
@@ -237,20 +237,20 @@ function UsageCluster({ account, inUse }: { account: InboxAccount; inUse: boolea
 
 /** Why the last switch did not show in the read after it, in the page's few words. */
 function switchLineText(line: SwitchLine, label: string): string {
-  if (line === 'still_switching') return `Still switching to ${label}. Refresh in a moment.`;
-  if (line === 'unconfirmed') return `Switched to ${label}. Refresh to see it.`;
+  if (line === 'still_switching') return `仍在切换到 ${label}。请稍后刷新。`;
+  if (line === 'unconfirmed') return `已切换到 ${label}。刷新即可看到。`;
   const why: Record<Exclude<SwitchLine, 'still_switching' | 'unconfirmed'>, string> = {
-    run_failed: 'claude-swap failed.',
-    timed_out: 'claude-swap timed out.',
-    bad_output: 'claude-swap gave an unreadable answer.',
-    unknown_schema: 'Update Plannotator and claude-swap.',
-    changed: 'The accounts changed. Pick again.',
-    renumbered: 'The accounts changed during the switch. The list shows the one in use.',
-    busy: 'Another switch is going.',
-    not_installed: 'claude-swap is not installed.',
-    unreachable: 'The Inbox did not answer.',
+    run_failed: 'claude-swap 执行失败。',
+    timed_out: 'claude-swap 超时。',
+    bad_output: 'claude-swap 返回了无法识别的结果。',
+    unknown_schema: '请更新 Plannotator 和 claude-swap。',
+    changed: '账户已变更，请重新选择。',
+    renumbered: '切换期间账户已变更。列表显示当前使用的账户。',
+    busy: '另一个切换正在进行。',
+    not_installed: '未安装 claude-swap。',
+    unreachable: '收件箱没有响应。',
   };
-  return `Couldn't switch to ${label}. ${why[line]}`;
+  return `无法切换到 ${label}。${why[line]}`;
 }
 
 /** A tool's name kept on one line, as the mock sets it: a wrap never breaks "claude-swap" at its hyphen. */
@@ -293,7 +293,7 @@ function SwitchConfirm({ title, label, billed, onCancel, onSwitch }: { title: st
     <div className="ib-acct-confirm" role="dialog" aria-label={label} data-accounts-confirm="">
       <div>
         <b>{title}</b>
-        {billed && <small data-accounts-billed="">Billed per token</small>}
+        {billed && <small data-accounts-billed="">按令牌计费</small>}
       </div>
       <div className="ib-acct-confirm-acts">
         <button type="button" className="ib-btn ib-ghost ib-sm" ref={cancel} onClick={onCancel} data-accounts-cancel="">
@@ -338,10 +338,10 @@ function rowOfLogin(accounts: InboxAccount[], login: Login): InboxAccount | null
 const RESTART_NOTE_MS = 6_000;
 
 /** What this machine is called until the Inbox knows its name. */
-const THIS_MACHINE = 'This machine';
+const THIS_MACHINE = '本机';
 
 /** A machine as a sentence names it. */
-const sayMachine = (machine: PageMachine) => (machine.key === SELF && machine.name === THIS_MACHINE ? 'this machine' : machine.name);
+const sayMachine = (machine: PageMachine) => (machine.key === SELF && machine.name === THIS_MACHINE ? '本机' : machine.name);
 
 /** A machine's list says this in place of rows. */
 function Quiet({ children, state }: { children: ReactNode; state: string }) {
@@ -353,8 +353,8 @@ function Quiet({ children, state }: { children: ReactNode; state: string }) {
 }
 
 const QUIET_WORDS: Record<string, string> = {
-  offline: 'Asleep',
-  needs_update: 'Update Plannotator',
+  offline: '休眠中',
+  needs_update: '更新 Plannotator',
 };
 
 /** Whether `account` is the login a switch named. */
@@ -434,7 +434,7 @@ function ToolList({
         </div>
         <CodeBox text={tool.install} />
         {/* The Inbox looks only on the PATH it started with, so a Refresh can't find what was installed after that. */}
-        <small>Already installed? Restart the Inbox there.</small>
+        <small>已安装？请在该设备上重启收件箱。</small>
       </div>
     );
   } else if (read.state === 'offline' || read.state === 'needs_update') {
@@ -473,7 +473,7 @@ function ToolList({
       const to = spokenName(nameOf(account));
       return (
         <SwitchConfirm
-          title={`Switch to ${to}?`}
+          title={`切换到 ${to}？`}
           label={`Switch ${tool.name} on ${sayMachine(machine)} to ${to}?`}
           billed={account.usageStatus === 'api_key'}
           onCancel={() => {
@@ -507,7 +507,7 @@ function ToolList({
                 ...(name.organization ? [name.organization] : []),
                 ...(NEEDS_A_PERSON.has(status) || (!meter && status !== 'api_key') ? [noReadingReason(account)] : []),
                 // A phone has no hover to say a named row is a key: it says so here, quietly.
-                ...(phone && status === 'api_key' && name.label !== 'API key' ? ['API key'] : []),
+                ...(phone && status === 'api_key' && name.label !== 'API 密钥' ? ['API 密钥'] : []),
               ],
               on: on.length > 0 ? `on ${names(on)}` : null,
             };
@@ -639,7 +639,7 @@ function AccountRow({
       {state.going ? (
         <span className="ib-acct-sw" data-going="">
           <span className="ib-spin" aria-hidden="true" />
-          {!phone && <span>Switching…</span>}
+          {!phone && <span>切换中…</span>}
         </span>
       ) : (
         // The quiet "Switch" that hover shows: a phone has no hover, and its whole row is the tap target.

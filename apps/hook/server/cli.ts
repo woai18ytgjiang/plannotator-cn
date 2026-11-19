@@ -44,7 +44,7 @@ export function parseUninstallOptions(
       if (dryRun) throw new Error("--dry-run may only be specified once");
       dryRun = true;
     } else {
-      throw new Error(`Unknown uninstall option: ${arg}`);
+      throw new Error(`未知的 uninstall 选项：${arg}`);
     }
   }
 
@@ -87,7 +87,7 @@ export function parseStrictAnnotateOptions(
       }
       const value = args[index + 1];
       if (!value || value.startsWith("--")) {
-        throw new Error("Missing value for --result-file");
+        throw new Error("--result-file 缺少值");
       }
       resultFile = value;
       index += 1;
@@ -149,7 +149,7 @@ export function parseTitleOption(args: string[]): ParsedTitleOption {
     seen = true;
     const value = args[index + 1];
     // Like --result-file: a following flag is a forgotten value, not a title.
-    if (value === undefined || value.startsWith("--")) throw new Error("Missing value for --title");
+    if (value === undefined || value.startsWith("--")) throw new Error("--title 缺少值");
     const collapsed = value.replace(/\s+/g, " ").trim();
     if (collapsed) title = collapsed;
     index += 1;
@@ -1153,10 +1153,10 @@ export function formatSubcommandHelp(subcommand: string): string {
 
 export function formatInteractiveNoArgClarification(): string {
   return [
-    "plannotator (without arguments) is usually launched automatically by Claude Code hooks.",
-    "It expects hook JSON on stdin.",
+    "不带参数的 plannotator 通常由 Claude Code 钩子自动启动。",
+    "它会从 stdin 读取 hook JSON。",
     "",
-    "For interactive use, try:",
+    "如需交互式使用，请尝试：",
     "  plannotator review",
     "  plannotator annotate <file.md | file.txt | file.html | https://...>",
     "  plannotator setup-goal interview bundle.json --json",
@@ -1167,6 +1167,6 @@ export function formatInteractiveNoArgClarification(): string {
     "  plannotator update",
     "  plannotator uninstall",
     "",
-    "Run 'plannotator --help' for top-level usage.",
+    "运行 'plannotator --help' 查看顶层用法。",
   ].join("\n");
 }

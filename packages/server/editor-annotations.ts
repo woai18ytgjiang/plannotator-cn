@@ -36,7 +36,7 @@ export function createEditorAnnotationHandler(): EditorAnnotationHandler {
           };
 
           if (!body.filePath || !body.selectedText || !body.lineStart || !body.lineEnd) {
-            return Response.json({ error: "Missing required fields" }, { status: 400 });
+            return Response.json({ error: "缺少必填字段" }, { status: 400 });
           }
 
           const annotation: EditorAnnotation = {
@@ -52,7 +52,7 @@ export function createEditorAnnotationHandler(): EditorAnnotationHandler {
           annotations.push(annotation);
           return Response.json({ id: annotation.id });
         } catch {
-          return Response.json({ error: "Invalid JSON" }, { status: 400 });
+          return Response.json({ error: "JSON 无效" }, { status: 400 });
         }
       }
 
@@ -60,7 +60,7 @@ export function createEditorAnnotationHandler(): EditorAnnotationHandler {
       if (url.pathname === "/api/editor-annotation" && req.method === "DELETE") {
         const id = url.searchParams.get("id");
         if (!id) {
-          return Response.json({ error: "Missing id parameter" }, { status: 400 });
+          return Response.json({ error: "缺少 id 参数" }, { status: 400 });
         }
         const idx = annotations.findIndex((a) => a.id === id);
         if (idx !== -1) {

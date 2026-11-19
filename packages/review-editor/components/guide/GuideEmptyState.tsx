@@ -21,7 +21,7 @@ function formatSavedAge(savedAt: number): string {
   const minutes = Math.floor(diff / 60000);
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
-  if (minutes < 1) return 'just now';
+  if (minutes < 1) return '刚刚';
   if (minutes < 60) return `${minutes}m ago`;
   if (hours < 24) return `${hours}h ago`;
   if (days < 30) return `${days}d ago`;
@@ -212,14 +212,14 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
     try {
       await launchJob({
         provider: 'guide',
-        label: 'Guide Repair',
+        label: '引导修复',
         repairOf: failure.jobId,
         ...(failure.engine ? { engine: failure.engine } : {}),
       });
       // A successful launch lands as a new running guide job — GuideScreen's
       // existing running-job branch takes over from here automatically.
     } catch (err) {
-      setLaunchError(err instanceof Error ? err.message : 'Could not start the repair.');
+      setLaunchError(err instanceof Error ? err.message : '无法启动修复。');
     } finally {
       setRepairing(false);
     }
@@ -240,9 +240,9 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
         return;
       }
       const data = await res.json().catch(() => ({}));
-      setSubmitError(typeof data.error === 'string' ? data.error : 'Could not submit the fixed output.');
+      setSubmitError(typeof data.error === 'string' ? data.error : '无法提交修复后的输出。');
     } catch (err) {
-      setSubmitError(err instanceof Error ? err.message : 'Could not submit the fixed output.');
+      setSubmitError(err instanceof Error ? err.message : '无法提交修复后的输出。');
     } finally {
       setSubmitting(false);
     }
@@ -265,7 +265,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
   const { catalogs } = launch;
   // While the engine's catalog settles, show a loading entry instead of an
   // empty picker (Generate is held until it does).
-  const loadingPicker = { value: '', options: [{ value: '', label: 'Loading models…' }], onChange: () => {} };
+  const loadingPicker = { value: '', options: [{ value: '', label: '正在加载模型…' }], onChange: () => {} };
   const modelPicker: { value: string; options: Option[]; onChange: (v: string) => void } =
     engine === 'claude'
       ? catalogs.claude.settled
@@ -295,7 +295,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
     try {
       await launchJob(params);
     } catch (err) {
-      setLaunchError(err instanceof Error ? err.message : 'Could not start the guide.');
+      setLaunchError(err instanceof Error ? err.message : '无法启动引导。');
     } finally {
       setLaunching(false);
     }
@@ -305,7 +305,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
   const savedSection = savedGuides && savedGuides.length > 0 ? (
     <div className="mt-10 max-w-[820px]">
       <div className="mb-2.5 font-mono text-xs text-muted-foreground/60">
-        Previous guides
+        之前的引导
       </div>
       <div className="divide-y divide-border/30 overflow-hidden rounded-lg border border-border/50 bg-card/50">
         {savedGuides.map((entry) => (
@@ -329,15 +329,15 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
                 {entry.progress.reviewed}/{entry.progress.total}
               </span>
               {entry.moved && (
-                <span className="shrink-0 font-mono text-xs text-amber-600/80 dark:text-amber-500/70" title="The diff has changed since this guide was generated">
-                  diff changed
+                <span className="shrink-0 font-mono text-xs text-amber-600/80 dark:text-amber-500/70" title="自生成此引导以来差异已变更">
+                  差异已变更
                 </span>
               )}
             </button>
             <button
               type="button"
               onClick={() => handleDeleteSaved(entry.id)}
-              aria-label={`Delete saved guide "${entry.title}"`}
+              aria-label={`删除已保存的引导「${entry.title}」`}
               className="shrink-0 rounded px-1 text-sm leading-none text-muted-foreground/40 transition-colors hover:text-destructive"
             >
               ×
@@ -351,9 +351,9 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
   if (launchOff) {
     return (
       <div className="w-full px-10 py-8">
-        <h1 className="text-[22px] font-semibold tracking-tight text-foreground">Saved guides</h1>
+        <h1 className="text-[22px] font-semibold tracking-tight text-foreground">已保存的引导</h1>
         <p className="mt-2 max-w-[72ch] text-[13px] leading-relaxed text-muted-foreground">
-          AI features are off, so a new guide can't be started here. Your saved guides still open.
+          AI 功能已关闭，因此无法在此启动新的引导。你保存的引导仍可打开。
         </p>
         {savedSection}
         <button
@@ -361,7 +361,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
           onClick={onBack}
           className="mt-6 rounded-md border border-border/50 px-3 py-2 text-[12.5px] text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground"
         >
-          Back to diff
+          返回差异
         </button>
       </div>
     );
@@ -371,12 +371,9 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
     // Full-width page: this content sits in the header zone (where the guide
     // title lands once generated) rather than a centered island.
     <div className="w-full px-10 py-8">
-      <h1 className="text-[22px] font-semibold tracking-tight text-foreground">Start a guided review?</h1>
+      <h1 className="text-[22px] font-semibold tracking-tight text-foreground">要开始引导式审查吗？</h1>
       <p className="mt-2 max-w-[72ch] text-[13px] leading-relaxed text-muted-foreground">
-        Large changesets are hard to even start reading. A guide orders this one by
-        importance — the core of the change first, glue and low-signal edits last — so
-        you can understand it in one sitting. Each chapter tells you what changed, why
-        it exists, and what it implies, right next to the diffs, ready to annotate.
+        大型变更集甚至让人难以开始阅读。引导会按重要性为这次变更排序——先讲变更核心，最后是胶水代码和低信号改动——让你一次就能理解。每一章都会说明改了什么、为什么存在、意味着什么，紧挨着差异展示，随时可以添加批注。
       </p>
 
       {failure && (
@@ -393,7 +390,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
                 disabled={repairing}
                 className="rounded-md border border-border/50 px-2.5 py-1.5 text-xs font-medium text-foreground transition-colors hover:bg-muted/40 disabled:cursor-not-allowed disabled:opacity-50"
               >
-                {repairing ? 'Starting repair…' : 'Fix output'}
+                {repairing ? '正在启动修复…' : '修复输出'}
               </button>
               <button
                 type="button"
@@ -402,7 +399,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
                 className="flex items-center gap-1 rounded-md px-2 py-1.5 text-xs text-muted-foreground/70 transition-colors hover:text-foreground"
               >
                 <ChevronRight className={`transition-transform ${showOutput ? 'rotate-90' : ''}`} size={12} />
-                {showOutput ? 'Hide output' : 'Show output'}
+                {showOutput ? '隐藏输出' : '显示输出'}
               </button>
             </div>
           )}
@@ -422,7 +419,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
                   disabled={submitting}
                   className="rounded-md bg-primary px-3 py-1.5 text-xs font-semibold text-primary-foreground transition-colors hover:bg-primary/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
                 >
-                  {submitting ? 'Submitting…' : 'Submit fixed output'}
+                  {submitting ? '提交中…' : '提交修复后的输出'}
                 </button>
               </div>
               {submitError && <p className="mt-1.5 text-xs leading-snug text-destructive/80">{submitError}</p>}
@@ -433,30 +430,30 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
 
       {!guideAvailable || availableEngines.length === 0 ? (
         <p className="mt-8 text-xs text-muted-foreground/70">
-          Guided review needs an agent CLI (Claude, Codex, Cursor, OpenCode, Pi, or Copilot) available on this machine.
+          引导式审查需要本机有可用的智能体 CLI（Claude、Codex、Cursor、OpenCode、Pi 或 Copilot）。
         </p>
       ) : (
         <>
           <div className="mt-6 w-fit max-w-full rounded-lg border border-border/50 bg-card/50 px-4 py-3.5">
             <div className="mb-2.5 font-mono text-xs text-muted-foreground/60">
-              Model defaults
+              模型默认值
             </div>
             <div className="flex flex-wrap items-center gap-2">
               <InlinePicker
-                label="Engine"
+                label="引擎"
                 value={engine}
                 options={availableEngines.map((e) => ({ value: e, label: REVIEW_ENGINE_LABEL[e] }))}
                 onChange={(v) => setGuideEngine(v as ReviewEngine)}
               />
-              <InlinePicker label="Model" {...modelPicker} />
+              <InlinePicker label="模型" {...modelPicker} />
               {engine === 'claude' && effortSelectOptions(catalogs.claude.models, guideClaudeModel).length > 0 && (
-                <InlinePicker label="Effort" value={guideClaudeEffort} options={effortSelectOptions(catalogs.claude.models, guideClaudeModel)} onChange={setGuideClaudeEffort} />
+                <InlinePicker label="投入" value={guideClaudeEffort} options={effortSelectOptions(catalogs.claude.models, guideClaudeModel)} onChange={setGuideClaudeEffort} />
               )}
               {engine === 'codex' && effortSelectOptions(catalogs.codex.models, guideCodexModel).length > 0 && (
-                <InlinePicker label="Reasoning" value={guideCodexReasoning} options={effortSelectOptions(catalogs.codex.models, guideCodexModel)} onChange={setGuideCodexReasoning} />
+                <InlinePicker label="推理" value={guideCodexReasoning} options={effortSelectOptions(catalogs.codex.models, guideCodexModel)} onChange={setGuideCodexReasoning} />
               )}
               {engine === 'pi' && (
-                <InlinePicker label="Thinking" value={guidePiThinking} options={PI_THINKING} onChange={setGuidePiThinking} />
+                <InlinePicker label="思考" value={guidePiThinking} options={PI_THINKING} onChange={setGuidePiThinking} />
               )}
             </div>
             {(engine === 'claude' || engine === 'codex') && catalogs[engine].settled && (
@@ -467,7 +464,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
               />
             )}
             <p className="mt-2.5 text-xs leading-snug text-muted-foreground/60">
-              Newer models with lower effort are recommended — guides generate quicker.
+              建议使用推理强度较低的新模型——引导生成更快。
             </p>
           </div>
 
@@ -479,7 +476,7 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
               className="flex items-center gap-1 rounded-md px-1 py-1 text-xs text-muted-foreground/70 transition-colors hover:text-foreground"
             >
               <ChevronRight className={`transition-transform ${showInstructions ? 'rotate-90' : ''}`} size={12} />
-              Custom instructions
+                  自定义指令
               {hasInstructions && !showInstructions && (
                 <span className="ml-1 rounded border border-border/50 bg-muted/40 px-1 py-px font-mono text-xs text-muted-foreground/60">
                   on
@@ -494,11 +491,11 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
                   maxLength={GUIDE_EXTRA_INSTRUCTIONS_MAX_CHARS}
                   rows={3}
                   spellCheck={false}
-                  placeholder={'Standing preferences for guide generation, e.g. "prefer product vocabulary over internal codenames".'}
+                  placeholder={'引导生成的固定偏好，例如「优先使用产品词汇而非内部代号」。'}
                   className="w-full resize-y rounded-md border border-border/50 bg-background p-2.5 text-xs leading-relaxed text-foreground outline-none placeholder:text-muted-foreground/40 focus:border-border"
                 />
                 <p className="mt-1 text-xs leading-snug text-muted-foreground/60">
-                  Added on top of the built-in guide methodology for every guide you generate. Saved for next time.
+                  会附加在内置的引导方法之上，用于你生成的每个引导。会保存供下次使用。
                   {instructions.length >= GUIDE_EXTRA_INSTRUCTIONS_MAX_CHARS - 1000 && (
                     <span data-guide-instructions-count="" className="ml-1 whitespace-nowrap tabular-nums">
                       {instructions.length.toLocaleString('en-US')} / {GUIDE_EXTRA_INSTRUCTIONS_MAX_CHARS.toLocaleString('en-US')}
@@ -516,14 +513,14 @@ export const GuideEmptyState: React.FC<GuideEmptyStateProps> = ({ capabilities, 
               disabled={!canLaunch}
               className="rounded-md bg-primary px-4 py-2 text-[12.5px] font-semibold text-primary-foreground transition-colors hover:bg-primary/90 active:scale-[0.98] disabled:cursor-not-allowed disabled:opacity-50"
             >
-              {launching ? 'Starting…' : failure ? 'Regenerate guide' : 'Generate guide'}
+              {launching ? '正在启动…' : failure ? '重新生成引导' : '生成引导'}
             </button>
             <button
               type="button"
               onClick={onBack}
               className="rounded-md border border-border/50 px-3 py-2 text-[12.5px] text-muted-foreground transition-colors hover:bg-muted/40 hover:text-foreground"
             >
-              Back to diff
+              返回差异
             </button>
           </div>
           {launchError && <p className="mt-2 text-xs leading-snug text-destructive/80">{launchError}</p>}

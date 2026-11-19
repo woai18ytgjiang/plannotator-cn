@@ -30,9 +30,9 @@ export function SoundRow({ sound }: { sound: InboxSound }) {
       <div className="ib-prow" data-settings-sound={enabled ? 'on' : 'off'}>
         <span className="ib-txt">
           <span className="ib-l" id="ib-sound-label">
-            Play a sound
+            播放提示音
           </span>
-          <span className="ib-desc">When an agent asks you, while no Inbox tab is in front</span>
+          <span className="ib-desc">当智能体向你提问且没有收件箱标签页在前台时</span>
         </span>
         <span className="ib-ctl">
           <input
@@ -43,15 +43,15 @@ export function SoundRow({ sound }: { sound: InboxSound }) {
             max={INBOX_SOUND_MAX_VOLUME}
             step={10}
             value={live}
-            aria-label="Volume"
-            aria-valuetext={`${live} percent`}
+            aria-label="音量"
+            aria-valuetext={`${live}%`}
             disabled={!enabled}
             onChange={(event) => setLive(Number(event.target.value))}
           />
           <button
             type="button"
             className="ib-btn ib-sm ib-icon"
-            aria-label={sound.playing ? 'Playing…' : 'Play the sound'}
+            aria-label={sound.playing ? '正在播放…' : '播放提示音'}
             data-sound-play=""
             onClick={() => sound.preview(live)}
           >
@@ -63,7 +63,7 @@ export function SoundRow({ sound }: { sound: InboxSound }) {
       {enabled && !sound.armed && (
         <div className="ib-callout ib-in-card" role="status" data-sound-click-hint="">
           <Icon name="clickHere" />
-          <span>Click once in this tab to allow sound.</span>
+          <span>在此标签页点击一次即可允许播放声音。</span>
         </div>
       )}
     </>

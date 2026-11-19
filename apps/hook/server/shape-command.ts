@@ -51,18 +51,18 @@ export function runShapeSwitch(
   const err = deps.stderr ?? ((text: string) => process.stderr.write(`${text}\n`));
   const which = argv[0];
   if (which !== "on" && which !== "off") {
-    err("shape: on or off.");
+    err("shape：on 或 off。");
     return 2;
   }
   if (argv.length > 1) {
-    err(`shape ${which} takes no arguments.`);
+    err(`shape ${which} 不接受参数。`);
     return 2;
   }
   if (!setShapeSwitch(which === "on")) {
     err(`config_not_saved: ${SHAPE_SWITCH_NOT_SAVED}`);
     return 1;
   }
-  out(which === "on" ? "Shape is on." : "Shape is off.");
+  out(which === "on" ? "Shape 已开启。" : "Shape 已关闭。");
   return 0;
 }
 
@@ -365,7 +365,7 @@ export async function runShapeCommand(argv: readonly string[], deps: ShapeComman
       const notes = waiting.map((n) => (n.picture ? { ...n, picture: store.filePath(id, n.picture) ?? n.picture } : n));
       await out(JSON.stringify({ shape: record, version, notes }, null, 2));
     } catch (error) {
-      err(`output_failed: the notes were not handed over and still wait: ${(error as Error).message}`);
+      err(`output_failed：备注尚未交付，仍在等待：${(error as Error).message}`);
       return 1;
     }
     store.markDelivered(id, waiting.map((n) => n.id));

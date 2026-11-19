@@ -400,7 +400,7 @@ export function useEditSession(params: UseEditSessionParams): EditSessionApi {
       const handle = viewerRef.current;
       const item = handle?.getItem(itemId);
       if (handle == null || item == null || item.type !== 'diff') {
-        return { ok: false, reason: 'File is not available' };
+        return { ok: false, reason: '文件不可用' };
       }
       if (item.fileDiff.isPartial !== true) return { ok: true };
 
@@ -419,12 +419,12 @@ export function useEditSession(params: UseEditSessionParams): EditSessionApi {
       } catch {
         data = null;
       }
-      if (fileSetKeyRef.current !== generation) return { ok: false, reason: 'Diff changed' };
+      if (fileSetKeyRef.current !== generation) return { ok: false, reason: '差异已变更' };
       if (!data || data.newContent == null) {
-        return { ok: false, reason: 'Full file content unavailable' };
+        return { ok: false, reason: '无法获取完整文件内容' };
       }
       if (!isContentConsistentWithPatch(file.patch, data.oldContent, data.newContent)) {
-        return { ok: false, reason: 'File changed since the diff was captured' };
+        return { ok: false, reason: '自捕获差异以来文件已变更' };
       }
 
       let augmented: FileDiffMetadata | null = null;
@@ -440,12 +440,12 @@ export function useEditSession(params: UseEditSessionParams): EditSessionApi {
       } catch {
         augmented = null;
       }
-      if (!augmented) return { ok: false, reason: 'Full file content unavailable' };
+      if (!augmented) return { ok: false, reason: '无法获取完整文件内容' };
 
       const liveHandle = viewerRef.current;
       const liveItem = liveHandle?.getItem(itemId);
       if (liveHandle == null || liveItem == null || liveItem.type !== 'diff') {
-        return { ok: false, reason: 'File is not available' };
+        return { ok: false, reason: '文件不可用' };
       }
       augmented.cacheKey = `${generation}::${itemId}#edit-full`;
       liveItem.fileDiff = augmented;
@@ -474,7 +474,7 @@ export function useEditSession(params: UseEditSessionParams): EditSessionApi {
     const file = itemIdToFileRef.current.get(itemId);
     if (!file) return;
     if (file.status === 'deleted') {
-      markUnavailable(file.path, 'Deleted files have no content to edit');
+      markUnavailable(file.path, '已删除的文件没有可编辑的内容');
       refreshItem(itemId);
       return;
     }
@@ -484,7 +484,7 @@ export function useEditSession(params: UseEditSessionParams): EditSessionApi {
       try {
         await loadPierreEdit();
       } catch {
-        markUnavailable(file.path, 'Editor failed to load');
+        markUnavailable(file.path, '编辑器加载失败');
         refreshItem(itemId);
         return;
       }
@@ -505,7 +505,7 @@ export function useEditSession(params: UseEditSessionParams): EditSessionApi {
       try {
         pristine = cloneFileDiff(item.fileDiff);
       } catch {
-        markUnavailable(file.path, 'This diff cannot be edited');
+        markUnavailable(file.path, '此差异无法编辑');
         refreshItem(itemId);
         return;
       }

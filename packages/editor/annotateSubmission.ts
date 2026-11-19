@@ -37,7 +37,7 @@ export interface AnnotateApprovalBodyInput {
  * note…" can never read as a change request.
  */
 export const ANNOTATE_NO_FEEDBACK_SENTENCE =
-  "User reviewed the document and has no feedback.";
+  "用户已查看文档，没有反馈。";
 
 export function buildAnnotateApprovalBody(
   input: AnnotateApprovalBodyInput,

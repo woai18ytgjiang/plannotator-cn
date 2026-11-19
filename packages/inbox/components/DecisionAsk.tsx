@@ -82,7 +82,7 @@ export function DecisionAsk() {
           void ask();
         }}
       >
-        <input aria-label="Ask about a decision" placeholder="Why did we drop DockView?" value={text} onChange={(event) => change(event.target.value)} />
+        <input aria-label="询问决策" placeholder="为什么我们放弃了 DockView？" value={text} onChange={(event) => change(event.target.value)} />
         {agent ? (
           <button type="submit" className="ib-btn ib-sm" disabled={!question || busy} data-ask-go="">
             <HostMark host={agent.host} agent={agent.session} />
@@ -105,7 +105,7 @@ export function DecisionAsk() {
       </form>
       {sessions && sessions.length > 1 && (
         <div className="ib-dd-who">
-          <select aria-label="Which agent" value={agent?.session ?? ''} onChange={(event) => setChosen(event.target.value)} data-ask-who="">
+          <select aria-label="哪个智能体" value={agent?.session ?? ''} onChange={(event) => setChosen(event.target.value)} data-ask-who="">
             {sessions.map((session) => (
               <option key={session.session} value={session.session}>
                 {session.label ? `${session.label} · ` : ''}

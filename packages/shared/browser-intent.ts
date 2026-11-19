@@ -62,5 +62,5 @@ export function resolveBrowserIntent(
 
 /** The sentence said instead of opening a browser: `Not opening a browser (PLANNOTATOR_BROWSER=none).` */
 export function browserNoneReason(intent: { value: string }): string {
-  return `Not opening a browser (PLANNOTATOR_BROWSER=${intent.value}).`;
+  return `不打开浏览器（PLANNOTATOR_BROWSER=${intent.value}）。`;
 }

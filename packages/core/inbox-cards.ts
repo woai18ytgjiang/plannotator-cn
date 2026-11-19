@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Plannotator Inbox: the Board's cards (approval "inbox-board", 2026-10-20).
  *
@@ -66,12 +67,12 @@ export const INBOX_CARD_AUTO_SHIP_COLUMNS: readonly InboxCardColumn[] = ["todo",
 
 /** How the Board names each column. Dropped is "Cancelled" to the person; its id stays, so an older Inbox still reads it. */
 export const INBOX_CARD_COLUMN_LABELS: Readonly<Record<InboxCardColumn, string>> = {
-  backlog: "Backlog",
-  todo: "Todo",
-  in_progress: "In progress",
-  in_review: "In review",
-  done: "Done",
-  dropped: "Cancelled",
+  backlog: "待办池",
+  todo: "待办",
+  in_progress: "进行中",
+  in_review: "待审核",
+  done: "已完成",
+  dropped: "已取消",
 };
 
 /**

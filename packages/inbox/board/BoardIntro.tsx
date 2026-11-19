@@ -49,11 +49,11 @@ export function BoardIntro({ mcpCommand, phone, onClose, onTurnOn }: { mcpComman
         <BoardIntroText prompt={false} />
         <div className="ib-bi-acts">
           <button type="button" className="ib-btn ib-ghost" onClick={onClose} data-board-intro-close="">
-            Not now
+            暂不
           </button>
           <span className="ib-bsp" />
           <button type="button" className="ib-btn ib-pri ib-bi-copy" onClick={onTurnOn} data-board-intro-on="">
-            Turn it on
+            开启
           </button>
         </div>
       </Modal>
@@ -65,16 +65,16 @@ export function BoardIntro({ mcpCommand, phone, onClose, onTurnOn }: { mcpComman
       <BoardIntroText prompt />
       <div className="ib-bi-acts">
         <button type="button" className="ib-btn ib-ghost" onClick={onClose} data-board-intro-close="">
-          {copiedOnce ? 'Done' : 'Not now'}
+          {copiedOnce ? '完成' : '暂不'}
         </button>
         <span className="ib-bsp" />
         <button type="button" className="ib-btn ib-pri ib-bi-copy" onClick={() => void copy()} data-board-intro-copy="" data-copied={state === 'copied' ? '' : undefined}>
           <Icon name={state === 'copied' ? 'check' : 'copy'} size={15} />
-          {state === 'copied' ? 'Copied' : 'Copy prompt'}
+          {state === 'copied' ? '已复制' : '复制提示词'}
         </button>
       </div>
       <div className="ib-sr" aria-live="polite" data-board-intro-live="">
-        {state === 'copied' ? 'Board prompt copied.' : state === 'failed' ? 'The prompt could not be copied.' : ''}
+        {state === 'copied' ? '已复制 Board 提示词。' : state === 'failed' ? '无法复制提示词。' : ''}
       </div>
     </Modal>
   );
@@ -84,9 +84,9 @@ export function BoardIntro({ mcpCommand, phone, onClose, onTurnOn }: { mcpComman
 function BoardIntroText({ prompt }: { prompt: boolean }) {
   return (
     <div className="ib-bi-text">
-      <h2 id="ib-bi-title">Your Board</h2>
-      <p id="ib-bi-desc">Work in flight, by stage. Agents keep their cards current.</p>
-      {prompt && <p className="ib-bi-q">The prompt asks an agent to add the work it knows about.</p>}
+      <h2 id="ib-bi-title">你的看板</h2>
+      <p id="ib-bi-desc">进行中的工作，按阶段排列。智能体会让卡片保持最新。</p>
+      {prompt && <p className="ib-bi-q">提示词会让智能体把它了解的工作添加进来。</p>}
     </div>
   );
 }
@@ -98,7 +98,7 @@ const LANES: { col: string; cards: { host: string | null; you?: boolean; w: [num
   { col: 'in_review', cards: [{ host: 'pi', you: true, w: [78, 58] }, { host: 'codex', you: true, w: [66, 50] }] },
   { col: 'done', cards: [{ host: 'claude-code', w: [70, 40] }] },
 ];
-const NAMES: Record<string, string> = { backlog: 'Backlog', todo: 'Todo', in_progress: 'In progress', in_review: 'In review', done: 'Done' };
+const NAMES: Record<string, string> = { backlog: '待办池', todo: '待办', in_progress: '进行中', in_review: '待审核', done: '已完成' };
 
 /** The picture: a small board, one card walking through its stages. Decoration only (aria-hidden). */
 function BoardIntroArt() {

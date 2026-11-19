@@ -399,7 +399,7 @@ function ReviewLine({ link, onOpen, of }: { link: PullReviewLink; onOpen: (link:
       <span className="ib-prpop-rv-ic" aria-hidden="true">
         <Icon name="questionBubble" size={14} />
       </span>
-      <span className="ib-prpop-rv-w">Open review thread</span>
+      <span className="ib-prpop-rv-w">打开审查话题</span>
       {link.kind === 'thread' && link.agent && (
         <span className="ib-prpop-rv-with">
           {' · with'}
@@ -578,7 +578,7 @@ export function PullsCard({
           <PullProblems problems={pullProblems(pulls)} onRetry={onRetry} retrying={retrying} touch={sheet} />
         </div>
       ) : answer ? (
-        <div className="ib-prpop-empty">No pull requests on this thread.</div>
+        <div className="ib-prpop-empty">此话题没有拉取请求。</div>
       ) : failed ? (
         // The read got no answer: said plainly, never "Loading…" for ever. Hovering again reads again.
         <div className="ib-prpop-empty" role="status" data-pr-failed="">
@@ -628,8 +628,8 @@ export function PullsCard({
               setText(e.target.value);
               setError(null);
             }}
-            placeholder="Add a PR: owner/repo#123 or its link"
-            aria-label="Add a pull request to this thread"
+            placeholder="添加 PR：owner/repo#123 或其链接"
+            aria-label="为此话题添加拉取请求"
             aria-invalid={error ? true : undefined}
             spellCheck={false}
             autoCapitalize="off"
@@ -637,7 +637,7 @@ export function PullsCard({
             data-pr-add-input=""
           />
           <button type="submit" className="ib-prpop-tbtn" disabled={busy || text.trim() === ''} data-pr-add="">
-            Add
+            添加
           </button>
         </form>
         {error && (

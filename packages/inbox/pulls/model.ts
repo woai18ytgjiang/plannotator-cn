@@ -23,7 +23,7 @@ import {
 } from '@plannotator/core/inbox-types';
 import { agentName } from '../tags';
 import { stackLink, startLayer } from './topology';
-import { person, possessiveTail, wordsText, type Words } from './words';
+import { person, wordsText, type Words } from './words';
 
 export { inboxPullLabel };
 
@@ -36,10 +36,10 @@ export type PullFilter = 'all' | 'mine' | 'review' | 'others';
 
 /** The views in the menu's order, with their words. */
 export const PULL_FILTERS: readonly (readonly [PullFilter, string])[] = [
-  ['all', 'All'],
-  ['mine', 'Mine'],
-  ['review', 'To review'],
-  ['others', 'Others'],
+  ['all', '全部'],
+  ['mine', '我的'],
+  ['review', '待审查'],
+  ['others', '其他人'],
 ];
 
 export function pullFilterWords(filter: PullFilter): string {
@@ -90,11 +90,11 @@ export function pullCount(answer: InboxPullsAnswer, project: string | null, filt
 export function pullFilterEmptyWords(filter: Exclude<PullFilter, 'all'>): { head: string; line: string } {
   switch (filter) {
     case 'mine':
-      return { head: 'Nothing of yours open', line: 'Pull requests you opened show here.' };
+      return { head: '你没有打开的 PR', line: '你打开的 PR 会显示在这里。' };
     case 'review':
-      return { head: 'Nothing to review', line: 'Pull requests where your review is asked for, or that are assigned to you, show here.' };
+      return { head: '没有待审查的 PR', line: '请求你审查或分配给你的 PR 会显示在这里。' };
     case 'others':
-      return { head: 'Nothing else open', line: 'Open pull requests by others in your projects show here.' };
+      return { head: '没有其他打开的 PR', line: '你项目中其他人打开的 PR 会显示在这里。' };
   }
 }
 
@@ -416,7 +416,7 @@ function stackAuthors(layers: readonly InboxPull[]): string {
 }
 
 /** A PR the person's review was asked for (the owner's words): "Review requested · tomas's PR", or "Review requested" with no author. */
-export const requestedParts = (author: string | null | undefined): Words => (author ? ['Review requested · ', person(author, "'s"), ' PR'] : ['Review requested']);
+export const requestedParts = (author: string | null | undefined): Words => (author ? ['已请求审查 · ', person(author, ' 的'), 'PR'] : ['已请求审查']);
 
 export const requestedWords = (author: string | null | undefined): string => wordsText(requestedParts(author));
 
@@ -432,34 +432,34 @@ export function reasonParts(item: Pick<InboxPullItem, 'reason' | 'focus'>, link:
     case 'requested':
       return requestedParts(pull.author);
     case 'assigned':
-      return ['Assigned to you'];
+      return ['分配给你'];
     case 'agent_ready': {
       // Its review thread (the person's ask, or the agent's own thread that names it); the agent unnamed, only the ask.
       const name = linkAgentName(link);
-      return [name ? `${agentThreadWords(name, link?.agent?.ended === true)} · your review` : 'Your review'];
+      return [name ? `${agentThreadWords(name, link?.agent?.ended === true)} · 你的审查` : '你的审查'];
     }
     case 'running':
-      return ['Checks running'];
+      return ['检查运行中'];
     case 'changes':
-      return ['Changes requested'];
+      return ['已请求修改'];
     case 'failing':
-      return ['Checks failed'];
+      return ['检查失败'];
     case 'conflicts':
-      return ['Has conflicts'];
+      return ['存在冲突'];
     case 'approved':
-      return [...(pull.approved_by ? [person(pull.approved_by), ' approved'] : ['Approved']), ...(pull.checks === 'success' ? [' · checks passed'] : [])];
+      return [...(pull.approved_by ? [person(pull.approved_by), ' 已批准'] : ['已批准']), ...(pull.checks === 'success' ? [' · 检查通过'] : [])];
     case 'approved_running':
-      return ['Approved · checks running'];
+      return ['已批准 · 检查运行中'];
     case 'draft':
-      return ['Draft'];
+      return ['草稿'];
     case 'review':
-      return pull.reviewers[0] ? ['Waiting on ', person(pull.reviewers[0], possessiveTail(pull.reviewers[0])), ' review'] : ['Waiting on review'];
+      return pull.reviewers[0] ? ['等待 ', person(pull.reviewers[0], ' 的'), '审查'] : ['等待审查'];
     case 'others':
-      return pull.author ? ['Waiting on ', person(pull.author)] : ['Waiting on others'];
+      return pull.author ? ['等待 ', person(pull.author)] : ['等待其他人'];
     case 'merged':
-      return ['Merged'];
+      return ['已合并'];
     case 'closed':
-      return ['Closed'];
+      return ['已关闭'];
   }
 }
 
@@ -476,7 +476,7 @@ export interface RowMeta {
  * The same whether the person asked for the review or the agent's own thread names the PR: one thread either way.
  */
 export function agentThreadWords(name: string, ended: boolean): string {
-  return ended ? `${name} ended` : `Review thread with ${name}`;
+  return ended ? `${name} 已结束` : `与 ${name} 的审查话题`;
 }
 
 /**
@@ -487,13 +487,13 @@ export function rowMeta(item: InboxPullItem, link: InboxPullLink | null): RowMet
   const name = link?.agent ? linkAgentName(link) : null;
   const agent = name && link?.agent ? { name, host: link.agent.host, words: agentThreadWords(name, link.agent.ended === true) } : null;
   // Mid-line the reason starts lower case, but never an agent's name.
-  const why = item.reason === 'agent_ready' ? (agent ? 'your review' : reasonWords(item, link)) : reasonWords(item, link).replace(/^./, (c) => c.toLowerCase());
+  const why = item.reason === 'agent_ready' ? (agent ? '你的审查' : reasonWords(item, link)) : reasonWords(item, link).replace(/^./, (c) => c.toLowerCase());
   if (item.stack.layers.length === 1) return { lead: inboxPullLabel(item.focus), agent, rest: why };
   const open = openLayers(item.stack);
   const merged = item.stack.layers.filter((l) => l.state === 'merged').length;
-  const counts = `${open.length} open${merged > 0 ? `, ${merged} merged` : ''}`;
+  const counts = `${open.length} 个打开${merged > 0 ? `，${merged} 个已合并` : ''}`;
   const start = startLayer(item.stack);
-  return { lead: counts, agent, rest: item.move === 'on_you' && start ? `start at ${inboxPullLabel(start)}` : why };
+  return { lead: counts, agent, rest: item.move === 'on_you' && start ? `从 ${inboxPullLabel(start)} 开始` : why };
 }
 
 /** The row's third line as one string (what a screen reader and the tests read). */
@@ -505,30 +505,30 @@ export function rowLine(item: InboxPullItem, link: InboxPullLink | null): string
 /** A layer's status pill in the stack view, or null for none. */
 export function layerPill(pull: InboxPull): { text: string; tone: 'you' | 'ok' | 'quiet' | 'bad' } | null {
   if (pull.state === 'merged' || pull.state === 'closed') return null;
-  if (pull.state === 'draft') return { text: 'Draft', tone: 'quiet' };
-  if (pull.requested && !pull.mine) return { text: 'Your review', tone: 'you' };
-  if (pull.assigned && !pull.mine) return { text: 'Assigned to you', tone: 'you' };
-  if (pull.review === 'changes_requested') return { text: 'Changes requested', tone: 'bad' };
-  if (pull.conflicts === true) return { text: 'Conflicts', tone: 'bad' };
-  if (pull.review === 'approved') return { text: 'Approved', tone: 'ok' };
-  if (pull.mine) return { text: 'Your review', tone: 'you' };
-  return { text: 'No reviews yet', tone: 'quiet' };
+  if (pull.state === 'draft') return { text: '草稿', tone: 'quiet' };
+  if (pull.requested && !pull.mine) return { text: '你的审查', tone: 'you' };
+  if (pull.assigned && !pull.mine) return { text: '分配给你', tone: 'you' };
+  if (pull.review === 'changes_requested') return { text: '已请求修改', tone: 'bad' };
+  if (pull.conflicts === true) return { text: '冲突', tone: 'bad' };
+  if (pull.review === 'approved') return { text: '已批准', tone: 'ok' };
+  if (pull.mine) return { text: '你的审查', tone: 'you' };
+  return { text: '还没有审查', tone: 'quiet' };
 }
 
 /** The checks in words, or null when none ran. */
 export function checksWords(pull: Pick<InboxPull, 'checks'>): string | null {
-  return pull.checks === 'success' ? 'Checks passed' : pull.checks === 'failure' ? 'Checks failed' : pull.checks === 'pending' ? 'Checks running' : null;
+  return pull.checks === 'success' ? '检查通过' : pull.checks === 'failure' ? '检查失败' : pull.checks === 'pending' ? '检查运行中' : null;
 }
 
 /** "pull request" / "merge request". */
-export function pullNounWord(platform: InboxPull['platform']): 'pull request' | 'merge request' {
-  return platform === 'gitlab' ? 'merge request' : 'pull request';
+export function pullNounWord(platform: InboxPull['platform']): string {
+  return platform === 'gitlab' ? '合并请求' : 'PR';
 }
 
 /** The stack view's ladder heading: "Landing order" for more than one layer, else "Pull request" / "Merge request". */
 export function ladderHeading(stack: InboxPullStack): string {
-  if (stack.layers.length > 1) return 'Landing order';
-  return stack.platform === 'gitlab' ? 'Merge request' : 'Pull request';
+  if (stack.layers.length > 1) return '落地顺序';
+  return stack.platform === 'gitlab' ? '合并请求' : 'PR';
 }
 
 /** The stack (and its row) holding a PR or a stack id. */

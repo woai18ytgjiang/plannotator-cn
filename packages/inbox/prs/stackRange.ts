@@ -37,7 +37,7 @@ export function rangeOf(stack: Stack, a: string, b: string): StackRange | null {
 
 /** "Layers 6–9": the stack page's numbers for the range's ends. */
 export function rangeName(stack: Stack, range: Pick<StackRange, 'first' | 'last'>): string {
-  return `Layers ${stack.layers.indexOf(range.first) + 1}–${stack.layers.indexOf(range.last) + 1}`;
+  return `第 ${stack.layers.indexOf(range.first) + 1}–${stack.layers.indexOf(range.last) + 1} 层`;
 }
 
 /** What a range opens: the layer and the PR page's view of it. */

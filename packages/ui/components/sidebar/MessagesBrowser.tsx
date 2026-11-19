@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * MessagesBrowser — Sidebar list of recent assistant messages.
  *
@@ -52,7 +53,7 @@ export const MessagesBrowser: React.FC<MessagesBrowserProps> = ({
   if (messages.length === 0) {
     return (
       <div className="p-4 text-xs text-muted-foreground text-center">
-        No recent assistant messages found.
+        没有找到最近的助手消息。
       </div>
     );
   }
@@ -60,7 +61,7 @@ export const MessagesBrowser: React.FC<MessagesBrowserProps> = ({
   return (
     <div className="p-2">
       <div className="px-2 pt-1 pb-2 text-[10px] font-medium text-muted-foreground uppercase tracking-wider">
-        Recent messages — newest first
+        最近的消息 — 最新在前
       </div>
       <div className="space-y-0.5">
         {messages.map((msg, idx) => {
@@ -95,7 +96,7 @@ export const MessagesBrowser: React.FC<MessagesBrowserProps> = ({
               {annotationCount > 0 && (
                 <span
                   className="shrink-0 min-w-5 h-5 px-1 rounded-full bg-primary/10 text-primary border border-primary/30 text-[10px] font-semibold inline-flex items-center justify-center"
-                  title={`${annotationCount} annotation${annotationCount === 1 ? "" : "s"}`}
+                  title={`${annotationCount} 条批注`}
                 >
                   {annotationCount}
                 </span>

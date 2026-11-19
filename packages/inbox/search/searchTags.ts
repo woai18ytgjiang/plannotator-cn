@@ -20,5 +20,5 @@ export const pickedTags = <T extends ListTag>(tags: readonly T[], picks: readonl
 /** The chip's words: "Any tag", "Tagged Release", "Tagged Release or Windows". */
 export function tagChipText(tags: readonly InboxInitiative[], picks: readonly string[]): string {
   const names = pickedTags(tags, picks).map((tag) => tag.name);
-  return names.length === 0 ? 'Any tag' : `Tagged ${names.join(' or ')}`;
+  return names.length === 0 ? '任何标签' : `标签：${names.join(' 或 ')}`;
 }

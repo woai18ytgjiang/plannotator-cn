@@ -9,7 +9,7 @@
  */
 
 /** The new thread's name. */
-export const ANIMATE_THREAD_NAME = 'Animate an agent icon';
+export const ANIMATE_THREAD_NAME = '为智能体图标制作动画';
 
 export function animatePrompt(requestId: string): string {
   return `Please animate the picture attached to this message. It is the icon of one of my agents in my Plannotator Inbox.

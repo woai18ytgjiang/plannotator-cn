@@ -25,7 +25,7 @@ export interface AgentsGroup {
 }
 
 /** An agent's host in words ("Claude Code"); "An agent" when nothing said. */
-export const agentHostName = (host: string | null): string => (host ? (INBOX_HOST_NAMES[host] ?? host) : 'An agent');
+export const agentHostName = (host: string | null): string => (host ? (INBOX_HOST_NAMES[host] ?? host) : '智能体');
 
 const rowName = (row: InboxListRow) => (row.thread_name ?? row.subject ?? '').trim();
 
@@ -180,18 +180,18 @@ export function filterAgentRows(sections: readonly InboxListSection[], filter: A
 
 /** What a Rex pane blocked on the person waits for (OSC 7501's `kind`), after "waiting on you in Rex". */
 export const REX_WAITING_WORDS: Record<'permission' | 'question' | 'auth' | 'other', string> = {
-  permission: ': a permission prompt',
-  question: ': a question',
-  auth: ': a sign-in',
+  permission: '：权限请求',
+  question: '：一个问题',
+  auth: '：登录',
   other: '',
 };
 
 /** Its Rex pane's word, where the Inbox had none of its own (the server folded it into `state`); null otherwise. */
 function rexStateWords(agent: InboxAgent): string | null {
   const rex = agent.rex_status;
-  if (agent.state === 'waiting' && agent.waiting === 0 && rex?.state === 'blocked') return `Waiting on you in Rex${REX_WAITING_WORDS[rex.kind ?? 'other']}`;
-  if (agent.state === 'idle' && rex?.state === 'done') return 'Done';
-  if (agent.state === 'idle' && rex?.state === 'error') return 'Stopped on an error';
+  if (agent.state === 'waiting' && agent.waiting === 0 && rex?.state === 'blocked') return `Rex 中等待你处理${REX_WAITING_WORDS[rex.kind ?? 'other']}`;
+  if (agent.state === 'idle' && rex?.state === 'done') return '已完成';
+  if (agent.state === 'idle' && rex?.state === 'error') return '因错误停止';
   return null;
 }
 
@@ -199,7 +199,7 @@ function rexStateWords(agent: InboxAgent): string | null {
  * A live agent whose host reports nothing about its turns (`turns_unknown`: Codex, Qwen Code, T3 Code, Antigravity, an
  * MCP-only agent): the card says so instead of "Idle", which the Inbox cannot know.
  */
-export const TURNS_UNKNOWN_WORDS = "Doesn't say when it's working";
+export const TURNS_UNKNOWN_WORDS = "不报告工作状态";
 
 /** What an agent's hover card says, line by line; a fact the window does not have is left out. */
 export interface AgentFacts {
@@ -219,22 +219,22 @@ export function agentFacts(entry: AgentEntry, machine: MachineView | null, now: 
     rexStateWords(agent) ??
     (agent.state === 'waiting'
       ? agent.waiting > 1
-        ? `${agent.waiting} threads waiting on you`
-        : 'Waiting on you'
+        ? `有 ${agent.waiting} 个话题等待你处理`
+        : '等待你处理'
       : agent.state === 'working'
-        ? 'Working'
+        ? '工作中'
         : agent.state === 'idle'
           ? agent.turns_unknown
             ? TURNS_UNKNOWN_WORDS
-            : 'Idle'
-          : 'Ended');
+            : '空闲'
+          : '已结束');
   const rows: [string, string][] = [];
-  if (agent.started_at) rows.push(['Started', agent.launch ? `From the Inbox, ${whenTime(agent.started_at, now)}` : whenTime(agent.started_at, now)]);
-  else if (agent.launch) rows.push(['Started', 'From the Inbox']);
-  if (agent.last_seen_at) rows.push(['Last heard', whenTime(agent.last_seen_at, now)]);
+  if (agent.started_at) rows.push(['开始', agent.launch ? `来自收件箱，${whenTime(agent.started_at, now)}` : whenTime(agent.started_at, now)]);
+  else if (agent.launch) rows.push(['开始', '来自收件箱']);
+  if (agent.last_seen_at) rows.push(['最后收到', whenTime(agent.last_seen_at, now)]);
   // Where it lives (a Rex pane, as Rex named it at the last read): a row of its own.
-  if (agent.place?.line) rows.push(['Where', agent.place.line]);
-  if (entry.thread?.subject && entry.thread.subject !== entry.name) rows.push(['Thread', entry.thread.subject]);
+  if (agent.place?.line) rows.push(['位置', agent.place.line]);
+  if (entry.thread?.subject && entry.thread.subject !== entry.name) rows.push(['话题', entry.thread.subject]);
   return { title: entry.name, sub, state, rows };
 }
 

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useLayoutEffect, useMemo, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { ensureHighlight, highlightToHtml } from "../utils/codeHighlight";
@@ -181,7 +182,7 @@ export const CodeSnippetPreview: React.FC<CodeSnippetPreviewProps> = ({
         {/* A sheet is narrow: the whole label on its own line, the controls under it. */}
         <span className={sheet ? 'w-full [overflow-wrap:anywhere]' : 'min-w-0 truncate'}>{label}</span>
         <span className={`flex items-center gap-2 ${sheet ? 'w-full' : 'flex-shrink-0'}`}>
-          <span className={`opacity-60 ${sheet ? 'mr-auto' : ''}`}>{lineEnd && lineEnd !== line ? `lines ${line}–${lineEnd}` : `line ${line}`}</span>
+          <span className={`opacity-60 ${sheet ? 'mr-auto' : ''}`}>{lineEnd && lineEnd !== line ? `第 ${line}–${lineEnd} 行` : `第 ${line} 行`}</span>
           {actions}
         </span>
       </div>

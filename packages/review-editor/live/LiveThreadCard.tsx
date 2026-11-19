@@ -22,7 +22,7 @@ export function LiveMessageRow({ message, messages, onTakeBack, tail }: { messag
             {delivery ? <span className="shrink-0" data-live-delivery={delivery}>· {delivery}</span> : null}
             {delivery === 'Queued' && onTakeBack ? (
               <button type="button" className={`${QUIET} shrink-0`} data-live-take-back data-pn-touch-target onClick={() => onTakeBack(message.id)}>
-                Take back
+                撤回
               </button>
             ) : null}
           </span>
@@ -55,9 +55,9 @@ export function LiveThreadCard({ thread, messages, actions }: { thread: PlacedTh
   if (resolved && !open) {
     return (
       <div className="live-thread mx-2 my-1 flex items-center gap-2 rounded border border-border bg-card px-3 py-1 text-[12px] leading-5 text-muted-foreground" data-live-thread={conversation.id} data-resolved>
-        <span>Resolved</span>
+        <span>已解决</span>
         <span className="min-w-0 flex-1 truncate">{first.body}</span>
-        <button type="button" className={QUIET} data-pn-touch-target onClick={() => setOpen(true)}>Show</button>
+        <button type="button" className={QUIET} data-pn-touch-target onClick={() => setOpen(true)}>显示</button>
       </div>
     );
   }
@@ -67,7 +67,7 @@ export function LiveThreadCard({ thread, messages, actions }: { thread: PlacedTh
   const controls = (
     <>
       <button ref={replyButton} type="button" className={QUIET} data-live-reply data-pn-touch-target onClick={() => setReplying(true)}>
-        Reply
+        回复
       </button>
       <span aria-hidden="true">·</span>
       <button
@@ -80,16 +80,16 @@ export function LiveThreadCard({ thread, messages, actions }: { thread: PlacedTh
           setOpen(false);
         }}
       >
-        {resolved ? 'Reopen' : 'Resolve'}
+        {resolved ? '重新打开' : '解决'}
       </button>
       {actions.current.postToPR ? (
         actions.current.posted.has(conversation.id) ? (
-          <span className="px-1">· On the forge</span>
+          <span className="px-1">· 在代码平台上</span>
         ) : (
           <>
             <span aria-hidden="true">·</span>
             <button type="button" className={QUIET} data-live-post data-pn-touch-target onClick={() => void actions.current.postToPR?.([conversation.id]).catch(() => {})}>
-              Post
+              发布
             </button>
           </>
         )
@@ -134,8 +134,8 @@ export function LiveThreadCard({ thread, messages, actions }: { thread: PlacedTh
         <div className="mt-1 border-t border-border px-3 pb-1 pt-2">
           <LiveComposer
             agents={actions.current.agents}
-            placeholder="Reply, or @ an agent"
-            sendLabel="Reply"
+            placeholder="回复，或 @ 一个智能体"
+            sendLabel="回复"
             autoFocus
             onFocus={actions.current.loadAgents}
             onCancel={() => setReplying(false)}

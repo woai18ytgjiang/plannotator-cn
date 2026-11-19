@@ -15,9 +15,9 @@ import { inboxUrl } from '../inboxUrl';
 import { inboxAgentsNow, onInboxAgentsRead, subscribeInboxAgents } from '../agentsList';
 
 /** The switch's words (Settings' row and the ⋮ menu's item). */
-export const AGENT_STATUS_LABEL = 'Show agent status';
+export const AGENT_STATUS_LABEL = '显示智能体状态';
 /** Settings' row only, under its label. */
-export const AGENT_STATUS_DESC = 'A mark on each agent: working, or waiting on you in the Inbox or in the agent. Also in the ⋮ menu.';
+export const AGENT_STATUS_DESC = '在每个智能体上显示标记：工作中，或在收件箱/智能体中等待你处理。⋮ 菜单中也有。';
 
 /** Pressed here and not yet in a list read: what the switch shows meanwhile. */
 let pending: boolean | null = null;

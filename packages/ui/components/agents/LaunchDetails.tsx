@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { GUIDE_ENGINE_LABEL, GUIDE_EXTRA_INSTRUCTIONS_MAX_CHARS } from '@plannotator/core/guide';
 import { cn } from '../../lib/utils';
@@ -66,8 +67,8 @@ export function LaunchDetails({
   return (
     <div className="space-y-2 pb-3 pl-8 pr-1 pt-1" data-launch-details={side.kind}>
       {side.engines.length > 1 && (
-        <Field label="Engine">
-          <div role="radiogroup" aria-label="Engine" className="flex flex-wrap gap-1">
+        <Field label="引擎">
+          <div role="radiogroup" aria-label="引擎" className="flex flex-wrap gap-1">
             {engineChoices.map(({ value, label }) => {
               const Icon = ENGINE_ICON[value];
               const on = side.engine === value;
@@ -92,7 +93,7 @@ export function LaunchDetails({
           </div>
         </Field>
       )}
-      <Field label="Model">
+      <Field label="模型">
         {side.models ? (
           <OptionPicker trigger="field" value={side.model} options={side.models} onChange={side.setModel} />
         ) : (
@@ -105,36 +106,36 @@ export function LaunchDetails({
         </Field>
       )}
       {side.fast && (
-        <Field label="Speed">
+        <Field label="速度">
           <Segments
-            label="Speed"
-            options={[{ value: 'standard', label: 'Standard' }, { value: 'fast', label: 'Fast' }]}
+            label="速度"
+            options={[{ value: 'standard', label: '标准' }, { value: 'fast', label: '快速' }]}
             value={side.fast.value ? 'fast' : 'standard'}
             onChange={(v) => side.fast?.set(v === 'fast')}
           />
         </Field>
       )}
       {side.kind === 'review' && (
-        <Field label="Focus">
+        <Field label="关注点">
           <OptionPicker
             trigger="field"
             value={config.profileId}
             options={config.profiles.map((p) => ({ value: p.id, label: p.label }))}
             onChange={config.setProfileId}
-            {...(onAddReview ? { footerAction: { label: 'Add a review skill', onClick: onAddReview } } : {})}
+            {...(onAddReview ? { footerAction: { label: '添加审查技能', onClick: onAddReview } } : {})}
           />
         </Field>
       )}
       {side.kind === 'guide' && onInstructions && (
-        <Field label="Notes">
+        <Field label="备注">
           <textarea
             value={instructions ?? ''}
             onChange={(e) => onInstructions(e.target.value)}
             maxLength={GUIDE_EXTRA_INSTRUCTIONS_MAX_CHARS}
             rows={2}
             spellCheck={false}
-            aria-label="Standing instructions for every guide"
-            placeholder="Standing instructions for every guide"
+            aria-label="每次引导都适用的常驻指令"
+            placeholder="每次引导都适用的常驻指令"
             className="block w-full resize-y rounded-md border border-border/60 bg-background px-2 py-1.5 text-[12px] leading-5 text-foreground outline-none placeholder:text-muted-foreground focus:border-border"
           />
         </Field>
@@ -143,7 +144,7 @@ export function LaunchDetails({
         <div className="space-y-0.5 pl-[80px] text-[12px] leading-5 text-muted-foreground">
           {side.notice && <p data-model-fallback-notice="">{side.notice}</p>}
           {side.catalogEngine && <ModelSourceHint tool={side.catalogEngine} info={config.catalogs[side.catalogEngine]} />}
-          {side.experimental && side.kind === 'review' && <p>Findings from this engine follow the prompt, not a schema.</p>}
+          {side.experimental && side.kind === 'review' && <p>此引擎的发现遵循提示词，而非固定结构。</p>}
         </div>
       )}
     </div>

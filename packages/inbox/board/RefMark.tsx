@@ -36,17 +36,17 @@ function pathOf(kind: 'pr' | 'issue', state: InboxCardMarkState): string {
 export function markStateWords(kind: 'pr' | 'issue', state: InboxCardMarkState): string | null {
   switch (state) {
     case 'open':
-      return 'open';
+      return '打开';
     case 'draft':
-      return 'draft';
+      return '草稿';
     case 'merged':
-      return 'merged';
+      return '已合并';
     case 'closed':
-      return kind === 'pr' ? 'closed without merging' : 'closed';
+      return kind === 'pr' ? '已关闭（未合并）' : '已关闭';
     case 'completed':
-      return 'closed';
+      return '已关闭';
     case 'not_planned':
-      return 'closed as not planned';
+      return '已关闭（未计划）';
     default:
       return null;
   }
@@ -55,7 +55,7 @@ export function markStateWords(kind: 'pr' | 'issue', state: InboxCardMarkState):
 /** What a card's name adds for its mark: "Pull request #12, merged" ("Issue #11" while unknown). */
 export function markLabel(mark: Pick<InboxCardMark, 'kind' | 'ref' | 'state'>): string {
   const words = markStateWords(mark.kind, mark.state);
-  return `${mark.kind === 'issue' ? 'Issue' : 'Pull request'} ${shortRef(mark.ref)}${words ? `, ${words}` : ''}`;
+  return `${mark.kind === 'issue' ? '问题' : 'PR'} ${shortRef(mark.ref)}${words ? `，${words}` : ''}`;
 }
 
 export function RefMarkIcon({ kind, state, size = 14 }: { kind: 'pr' | 'issue'; state: InboxCardMarkState; size?: number }) {

@@ -71,7 +71,7 @@ export function useGuideData(jobId: string): UseGuideDataReturn {
 
     fetch(`/api/guide/${jobId}`)
       .then((res) => {
-        if (!res.ok) throw new Error(res.status === 404 ? 'Guide not found' : `HTTP ${res.status}`);
+        if (!res.ok) throw new Error(res.status === 404 ? '未找到引导' : `HTTP ${res.status}`);
         return res.json();
       })
       .then((data: CodeGuideData) => {

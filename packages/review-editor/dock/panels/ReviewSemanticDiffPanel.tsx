@@ -23,10 +23,10 @@ type LoadState =
   | { status: 'error'; error: Error };
 
 const UNREAD_REASON: Record<string, string> = {
-  generated: 'generated file, skipped',
-  'too-large': 'too large to read',
-  unreadable: 'could not be loaded',
-  'timed-out': 'took too long',
+  generated: '生成文件，已跳过',
+  'too-large': '文件过大，无法读取',
+  unreadable: '无法加载',
+  'timed-out': '耗时过长',
 };
 
 function unreadLine(data: SemanticDiffOkResponse): { text: string; detail: string } | null {
@@ -52,7 +52,7 @@ function formatSummary(data: SemanticDiffOkResponse): string {
 }
 
 function formatLoadError(error: Error): string {
-  return error.message || 'Semantic diff failed.';
+  return error.message || '语义差异失败。';
 }
 
 
@@ -135,7 +135,7 @@ export function ReviewSemanticDiffPanel() {
     return (
       <div className="semantic-diff-panel">
         <div className="semantic-diff-terminal" aria-live="polite">
-          <div className="semantic-diff-loading">Running semantic diff...</div>
+          <div className="semantic-diff-loading">正在运行语义差异…</div>
         </div>
       </div>
     );
@@ -153,7 +153,7 @@ export function ReviewSemanticDiffPanel() {
             className="semantic-diff-retry"
             onClick={() => setRetryCount((count) => count + 1)}
           >
-            ↻ retry
+            ↻ 重试
           </button>
         </div>
       </div>
@@ -166,7 +166,7 @@ export function ReviewSemanticDiffPanel() {
 
   return (
     <div className="semantic-diff-panel">
-      <div className="semantic-diff-terminal" aria-label="Semantic diff">
+      <div className="semantic-diff-terminal" aria-label="语义差异">
         {groupedChanges.map((group) => (
           <section className="semantic-diff-file" key={group.filePath}>
             <header className="semantic-diff-file-header">
@@ -189,7 +189,7 @@ export function ReviewSemanticDiffPanel() {
 
         {loadState.status === 'empty' && (
           <div className="semantic-diff-empty">
-            {data.unreadFiles?.length ? 'No moved, renamed, reformatted, extracted or inlined code in the files that could be read.' : 'No moved, renamed, reformatted, extracted or inlined code.'}
+            {data.unreadFiles?.length ? '在可读取的文件中没有发现移动、重命名、重新格式化、提取或内联的代码。' : '没有移动、重命名、重新格式化、提取或内联的代码。'}
           </div>
         )}
         {loadState.status !== 'empty' && <div className="semantic-diff-summary">{formatSummary(data)}</div>}

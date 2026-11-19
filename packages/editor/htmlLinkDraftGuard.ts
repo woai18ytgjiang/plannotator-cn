@@ -15,8 +15,8 @@ export function typedCommentDraft(doc: Document = document): HTMLTextAreaElement
   return null;
 }
 
-export const LINK_WAITS_FOR_DRAFT_TITLE = 'Your comment is not saved yet';
+export const LINK_WAITS_FOR_DRAFT_TITLE = '你的评论尚未保存';
 
 export function linkWaitsForDraftDescription(target: string): string {
-  return `Save or discard it, then follow the link to ${target}.`;
+  return `请先保存或放弃这条评论，然后再打开指向 ${target} 的链接。`;
 }

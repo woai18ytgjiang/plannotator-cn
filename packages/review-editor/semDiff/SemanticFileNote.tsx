@@ -30,14 +30,14 @@ export function semanticNoteLabel(summary: ReviewSummary): string {
 export const SemanticFileNote: React.FC<{ state: SemanticFileState; onToggle: () => void }> = ({ state, onToggle }) => {
   if (state.status === 'working') {
     return (
-      <span data-semantic-note="working" className="flex-none text-[11px] text-muted-foreground/60 px-1 select-none @max-[479px]/file-header:hidden" title="Looking for moved and renamed code">
-        reading…
+      <span data-semantic-note="working" className="flex-none text-[11px] text-muted-foreground/60 px-1 select-none @max-[479px]/file-header:hidden" title="正在查找移动和重命名的代码">
+        读取中…
       </span>
     );
   }
   const all = semanticNoteParts(state.summary).join(', ');
   const on = state.status === 'semantic';
-  const title = on ? `${all}. Click to show the plain diff.` : `Plain diff. Click to show ${all}.`;
+  const title = on ? `${all}。点击以显示普通差异。` : `普通差异。点击以显示 ${all}。`;
   return (
     <button
       type="button"

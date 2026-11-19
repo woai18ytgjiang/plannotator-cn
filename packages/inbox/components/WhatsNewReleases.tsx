@@ -83,7 +83,7 @@ export function KnownLine({ row, loading }: { row: WhatsNewRelease | null; loadi
   }
   if (!loading) return <div className="ib-wn-tldr ib-wn-tldr-empty" aria-hidden="true" />;
   return (
-    <section className="ib-wn-tldr" aria-busy="true" aria-label="TL;DR">
+    <section className="ib-wn-tldr" aria-busy="true" aria-label="摘要">
       <h2>TL;DR</h2>
       {[64, 52, 58].map((w) => (
         <span key={w} className="ib-wn-sk" style={{ width: `${w}%` }} />
@@ -120,7 +120,7 @@ function VersionLine({ row, current }: { row: WhatsNewRelease; current: string }
       {mine && <Dot kind="yours" />}
       <span className="ib-wn-rv">
         {row.version}
-        {mine && <small className="ib-wn-yours">You have this</small>}
+        {mine && <small className="ib-wn-yours">你已有此版本</small>}
       </span>
       <span className="ib-wn-rd">{shortDate(row.published_at) ?? ''}</span>
     </>
@@ -148,7 +148,7 @@ function ReleasesList({ releases, showing, onOpen }: ReleasesListProps) {
   return (
     <>
       <div className="ib-wn-sub ib-wn-sub-first">
-        <span>Latest</span>
+        <span>最新</span>
       </div>
       <a
         href={`#whats-new=${top.version}`}
@@ -177,7 +177,7 @@ function ReleasesList({ releases, showing, onOpen }: ReleasesListProps) {
       {rest.length > 0 && (
         <>
           <div className="ib-wn-sub">
-            <span>Earlier releases</span>
+            <span>更早的版本</span>
             <span className="ib-wn-mono ib-wn-n">{formatCount(rest.length)}</span>
           </div>
           <ul className="ib-wn-rlist">
@@ -232,7 +232,7 @@ export function ReleasesPanel(props: ReleasesListProps & { scrollRef?: RefObject
   return (
     <aside className="ib-wn-panel" aria-labelledby="ib-wn-rel-h" data-whats-new-panel="">
       <div className="ib-wn-phead">
-        <h2 id="ib-wn-rel-h">Releases</h2>
+        <h2 id="ib-wn-rel-h">版本</h2>
         <span className="ib-wn-mono ib-wn-n">{formatCount(props.releases.releases.length)}</span>
       </div>
       <div className="ib-wn-pscroll" ref={scroller}>
@@ -254,8 +254,8 @@ export function ReleasesSheet(props: ReleasesListProps & { onClose: () => void; 
       <div className="ib-wn-sheet-in" tabIndex={-1} data-whats-new-sheet="">
         <div className="ib-wn-grab" aria-hidden="true" />
         <div className="ib-wn-phead">
-          <h2 id="ib-wn-sheet-h">Releases</h2>
-          <button type="button" className="ib-wn-sheet-x" aria-label="Close" onClick={props.onClose}>
+          <h2 id="ib-wn-sheet-h">版本</h2>
+          <button type="button" className="ib-wn-sheet-x" aria-label="关闭" onClick={props.onClose}>
             <Icon name="x" />
           </button>
         </div>
@@ -297,12 +297,12 @@ export function NotesMissing({
         The notes for <span className="ib-wn-mono">{version}</span> aren&apos;t on this computer yet. They load the next time you open this release online.
       </>
     );
-  } else body = message ?? 'These release notes are not saved on this computer.';
+  } else body = message ?? '这些发布说明未保存在本机。';
   return (
     <section className="ib-wn-off" role="status" data-whats-new-missing={unreachable ? 'unreachable' : 'not-found'}>
-      <span className="ib-wn-tl">Not saved</span>
+      <span className="ib-wn-tl">未保存</span>
       <div>
-        <h2>{unreachable ? "Can't reach GitHub" : 'Not on this computer'}</h2>
+        <h2>{unreachable ? "无法连接 GitHub" : '不在本机'}</h2>
         <p>{body}</p>
         <div className="ib-wn-btns">
           {unreachable && onRetry && (

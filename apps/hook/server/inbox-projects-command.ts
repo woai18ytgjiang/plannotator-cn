@@ -122,7 +122,7 @@ export async function runInboxProjectsCommand(argv: readonly string[], deps: Pro
   // A name is the likely slip: the list prints both, and only an id is one project for sure.
   const notAnId = (parsed.op === "combine" ? [parsed.project, parsed.into] : parsed.op === "undo" ? [parsed.project] : []).find((id) => !isInboxId("prj", id));
   if (notAnId !== undefined) {
-    err(`validation_error: ${notAnId} is not a project id. Run '${self} inbox projects' for the ids (prj_…).\n`);
+    err(`validation_error：${notAnId} 不是项目 id。运行 '${self} inbox projects' 查看 id（prj_…）。\n`);
     return 1;
   }
   const print = (json: unknown, text: string) => out(deps.json ? `${JSON.stringify(json, null, 2)}\n` : text);
@@ -157,7 +157,7 @@ export async function runInboxProjectsCommand(argv: readonly string[], deps: Pro
     const listed = await request("/api/inbox/projects");
     const folders = listed.body?.projects as Folder[] | undefined;
     if (listed.status !== 200 || !folders) {
-      err("Plannotator Inbox did not list its projects.\n");
+      err("Plannotator 收件箱未能列出项目。\n");
       return 1;
     }
     if (parsed.op === "list") {
@@ -200,7 +200,7 @@ export async function runInboxProjectsCommand(argv: readonly string[], deps: Pro
     await print({ project: shown, changed: true }, `${shown.name} is its own project again${kept ? `, with ${kept} still combined into it` : ""}.\n`);
     return 0;
   } catch (error) {
-    err(`Plannotator Inbox did not answer: ${error instanceof Error ? error.message : String(error)}\n`);
+    err(`Plannotator 收件箱没有响应：${error instanceof Error ? error.message : String(error)}\n`);
     return 1;
   }
 }

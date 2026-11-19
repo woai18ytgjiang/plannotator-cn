@@ -689,7 +689,7 @@ export function createVcsApi(providers: readonly VcsProvider[]): VcsApi {
     async stageFile(diffType: string, filePath: string, cwd?: string): Promise<void> {
       const provider = await getProviderForOperation(diffType, cwd);
       if (!provider.stageFile || !(provider.canStageFiles?.(diffType) ?? false)) {
-        throw new Error(`Staging not available for ${provider.id}`);
+        throw new Error(`不支持暂存：${provider.id}`);
       }
       return provider.stageFile(filePath, cwd);
     },
@@ -697,7 +697,7 @@ export function createVcsApi(providers: readonly VcsProvider[]): VcsApi {
     async unstageFile(diffType: string, filePath: string, cwd?: string): Promise<void> {
       const provider = await getProviderForOperation(diffType, cwd);
       if (!provider.unstageFile || !(provider.canStageFiles?.(diffType) ?? false)) {
-        throw new Error(`Unstaging not available for ${provider.id}`);
+        throw new Error(`不支持取消暂存：${provider.id}`);
       }
       return provider.unstageFile(filePath, cwd);
     },
@@ -901,7 +901,7 @@ async function materializeGitSnapshot(
   if (diffType === "local-vs-remote") {
     const upstream = await getCurrentUpstreamBranch(runtime, cwd);
     if (!upstream) {
-      throw new Error("The current branch does not have a remote tracking branch.");
+      throw new Error("当前分支没有远程跟踪分支。");
     }
     const from = await resolveCommit(runtime, cwd, upstream);
     return createSyntheticSnapshot(runtime, cwd, from, [patch]);

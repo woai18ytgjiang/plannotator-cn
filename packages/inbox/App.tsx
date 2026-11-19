@@ -97,7 +97,7 @@ import {
   stopSettle,
   type SettleSnapshot,
 } from './settle';
-import { plural, shortAgentName, tildePath } from './format';
+import { shortAgentName, tildePath } from './format';
 import { copyMarkdown, threadMarkdown } from './copyMarkdown';
 import { shellLine, type ConnectContext } from './harnesses';
 import { Sidebar } from './components/Sidebar';
@@ -1853,8 +1853,8 @@ function Inbox() {
             showToast(
               {
                 icon: 'warn',
-                lead: `Not sent to ${entry.machine_name}: it is no longer linked.`,
-                detail: 'Settings → Machines keeps the words.',
+                lead: `未发送给 ${entry.machine_name}：它已不再关联。`,
+                detail: '内容仍保留在「设置」→「设备」中。',
                 wrap: true,
               },
               UNSENT_TOAST_MS,
@@ -2335,13 +2335,13 @@ function Inbox() {
       {
         icon: 'check',
         // A launch (New <agent> session) starts the agent; its thread's run line says the rest.
-        lead: sent.launched ? `Starting ${hostLabel(sent.host)}` : `Sent to ${hostLabel(sent.host)}`,
+        lead: sent.launched ? `正在启动 ${hostLabel(sent.host)}` : `已发送给 ${hostLabel(sent.host)}`,
         // The thread's own line says Queued / Sending / Delivered. A long project name is cut on screen (Toast.tsx), never in speech.
-        detail: `in ${sent.projectName}`,
+        detail: `在 ${sent.projectName}`,
         speech: sent.launched
-          ? `Starting ${hostLabel(sent.host)} in ${sent.projectName}. Your message is its first turn.`
-          : `Sent to ${hostLabel(sent.host)} in ${sent.projectName}. It takes it as its next turn.`,
-        action: { label: 'Open', onPress: () => {
+          ? `正在启动 ${hostLabel(sent.host)}，位于 ${sent.projectName}。你的消息就是它的第一轮。`
+          : `已发送给 ${hostLabel(sent.host)}，位于 ${sent.projectName}。它会把这条消息作为下一轮处理。`,
+        action: { label: '打开', onPress: () => {
           dismissToast();
           go({ page: 'inbox', project: routeRef.current.page === 'inbox' ? routeRef.current.project : null, thread: sent.threadId });
         } },
@@ -2356,7 +2356,7 @@ function Inbox() {
     void refreshList(false);
     if (joined.draftId) void refreshDrafts();
     go({ page: 'inbox', project: routeRef.current.page === 'inbox' ? routeRef.current.project : null, thread: joined.threadId });
-    showToast({ icon: 'check', lead: `Sent to ${joined.agent}`, detail: `in ${joined.threadName}`, speech: `Sent to ${joined.agent} in the thread ${joined.threadName}.` }, 5000);
+    showToast({ icon: 'check', lead: `已发送给 ${joined.agent}`, detail: `在 ${joined.threadName}`, speech: `已发送给 ${joined.agent}，位于话题 ${joined.threadName}。` }, 5000);
   };
   /**
    * Remote launch: a new session for a linked machine waits in this Inbox's outbox (the machine is asleep, or slow to
@@ -2384,12 +2384,12 @@ function Inbox() {
     void refreshDrafts();
     showToast({
       icon: 'check',
-      lead: 'Draft saved',
+      lead: '草稿已保存',
       // Closing compose keeps what was written (approval "inbox-compose-escape-keeps"): Reopen brings it back as it
       // was. One line on a phone too (design record "inbox-toasts-break-fixes").
-      detail: 'It never sends itself',
-      speech: 'Draft saved. It waits under Drafts and never sends itself.',
-      action: { label: 'Reopen', onPress: () => {
+      detail: '它不会自己发送',
+      speech: '草稿已保存。它会留在「草稿」中，绝不会自己发送。',
+      action: { label: '重新打开', onPress: () => {
         dismissToast();
         openCompose({ draft }, opener?.isConnected ? opener : null);
       } },
@@ -2403,7 +2403,7 @@ function Inbox() {
       try {
         await inboxApi.deleteDraft(draft.id);
       } catch (cause) {
-        showToast(errorToast(cause, 'The draft was not deleted.'));
+        showToast(errorToast(cause, '草稿未删除。'));
         return;
       }
     }
@@ -2413,7 +2413,7 @@ function Inbox() {
     void refreshDrafts();
     showToast({
       icon: 'check',
-      lead: 'Draft deleted',
+      lead: '草稿已删除',
       onUndo: () => {
         dismissToast();
         void inboxApi
@@ -2428,8 +2428,8 @@ function Inbox() {
             ...(draft.card ? { card: draft.card } : {}),
           })
           .then(() => refreshDrafts())
-          .then(() => say('Draft restored.'))
-          .catch(() => showToast({ icon: 'warn', lead: 'The draft could not be restored.', wrap: true }));
+          .then(() => say('草稿已恢复。'))
+          .catch(() => showToast({ icon: 'warn', lead: '无法恢复该草稿。', wrap: true }));
       },
     });
   };
@@ -2562,18 +2562,18 @@ function Inbox() {
   useEffect(() => {
     if (!streamDead) {
       // Live again: the region drops the words, saying nothing new (a screen reader that reads it later finds no stale state).
-      setSaid((current) => (current === 'Reconnecting…' ? '' : current));
+      setSaid((current) => (current === '正在重新连接…' ? '' : current));
       return;
     }
     const at = reconnectSaidAt.current;
     if (at !== null && Date.now() - at < RECONNECT_SAY_GAP_MS) return;
     reconnectSaidAt.current = Date.now();
-    say('Reconnecting…');
+    say('正在重新连接…');
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `say` is a fresh closure each render; only the change matters.
   }, [streamDead]);
   // The stale page notice is said as it shows (again after a dismiss), never as it goes.
   useEffect(() => {
-    if (stalePage.inbox && !restarting) say(`Inbox updated to ${stalePage.inbox}. Reload the page to use it.`);
+    if (stalePage.inbox && !restarting) say(`收件箱已更新到 ${stalePage.inbox}。请重新加载页面以使用新版本。`);
     // eslint-disable-next-line react-hooks/exhaustive-deps -- `say` is a fresh closure each render; only the change matters.
   }, [stalePage.inbox]);
   /**
@@ -2604,7 +2604,7 @@ function Inbox() {
     }
   };
   const refreshInboxNow = async (scope: string | null, closeThread: boolean) => {
-    const label = scope ? (projects.find((p) => p.id === scope)?.name ?? 'Project') : 'Inbox';
+    const label = scope ? (projects.find((p) => p.id === scope)?.name ?? '项目') : '收件箱';
     // The brief signal plays whether or not anything changed: the icon turns once.
     setRefreshSpin((last) => ({ key: (last?.key ?? 0) + 1, scope }));
     if (refreshSpinTimer.current) clearTimeout(refreshSpinTimer.current);
@@ -2621,13 +2621,13 @@ function Inbox() {
     const next = await refreshList(true, true, { light: true, keepOpen: true });
     refreshPending.current = false;
     if (!next) {
-      say(`${label} could not refresh`);
+      say(`${label} 无法刷新`);
       return;
     }
     void refreshDrafts();
     void refreshSettings();
     void shownReads.all();
-    say(`${label} refreshed`);
+    say(`${label} 已刷新`);
   };
   const dismissToast = useCallback(() => {
     if (toastTimer.current) clearTimeout(toastTimer.current);
@@ -2681,15 +2681,15 @@ function Inbox() {
    * held for another machine (linked machines) did not fail: it waits in this Inbox's outbox and applies when that
    * machine takes it, and says so, without the warning.
    */
-  const showError = (cause: unknown) => showToast(errorToast(cause, 'The thread did not change.'));
+  const showError = (cause: unknown) => showToast(errorToast(cause, '话题未更改。'));
   // A tray change the server refused (approval "inbox-reaction-tray"): already taken back on screen; the toast says why.
   useEffect(() => {
-    onSavedReactionsFailed((cause) => showToast(errorToast(cause, 'Your saved emoji did not change.')));
+    onSavedReactionsFailed((cause) => showToast(errorToast(cause, '已保存的表情未更改。')));
     return () => onSavedReactionsFailed(null);
   });
   // A linked machine's agent's face that waits for that machine, or that it refused (agents/agentFaces.ts).
   useEffect(() => {
-    onAgentFaceRefused((cause) => showToast(errorToast(cause, 'The picture did not change.')));
+    onAgentFaceRefused((cause) => showToast(errorToast(cause, '头像未更改。')));
     return () => onAgentFaceRefused(null);
   });
   useEffect(() => () => {
@@ -2711,7 +2711,7 @@ function Inbox() {
       return;
     }
     await afterWrite([row.thread_id]);
-    say('Sending it now.');
+    say('正在发送。');
   };
 
   /**
@@ -2825,7 +2825,7 @@ function Inbox() {
       }
       dismissToast();
       // The row has not left its place, so it has nowhere to come back from.
-      say('Moved back.');
+      say('已移回。');
       return;
     }
     if (!before) return;
@@ -2889,7 +2889,7 @@ function Inbox() {
         dismissToast();
         armSlide();
         setShown((current) => (current ? putRowBack(current, before, threadId) : current));
-        say('Moved back.');
+        say('已移回。');
       },
     });
   };
@@ -2928,7 +2928,7 @@ function Inbox() {
         written = await inboxApi.markUnread(threadId);
         if (!written.wrote && stalled) {
           await afterWrite();
-          showToast({ lead: 'Not marked unread', detail: 'This thread’s read has not reached the Inbox yet. Try again in a moment.', icon: 'warn' });
+          showToast({ lead: '未标记为未读', detail: '此话题的已读状态尚未同步到收件箱。请稍后重试。', icon: 'warn' });
           return;
         }
       }
@@ -2944,7 +2944,7 @@ function Inbox() {
       // row in its place, bold with Mark read, so the click is not offered again for nothing.
       const now = rowOf(threadId) ?? written.thread;
       setShown((current) => (current ? replaceHeldRow(current, now) : current));
-      say('Already unread.');
+      say('已经是未读了。');
       return;
     }
     await afterWrite([threadId]);
@@ -2967,7 +2967,7 @@ function Inbox() {
             return;
           }
           await afterWrite([threadId]);
-          say('Read again.');
+          say('已再次标记为已读。');
         })();
       },
     });
@@ -2985,17 +2985,17 @@ function Inbox() {
     if (!on) {
       // Only a 👍's own toast goes with it; an error or another Undo on screen stays.
       if (toastNow.current && (toastNow.current.hidden || toastNow.current.icon === 'thumb')) dismissToast();
-      say(`${reaction ? reactionSpeech(reaction) : 'Looks good'} taken back.`);
+      say(`${reaction ? reactionSpeech(reaction) : '看起来不错'}已收回。`);
       return;
     }
     if (was !== undefined && reaction !== undefined) {
-      const words = reaction ? reactionSpeech(reaction) : 'Looks good';
-      const before = was ? reactionSpeech(was) : 'Looks good';
+      const words = reaction ? reactionSpeech(reaction) : '看起来不错';
+      const before = was ? reactionSpeech(was) : '看起来不错';
       showToast({
         hidden: true,
         icon: 'thumb',
         lead: words,
-        speech: `Changed to ${words}.`,
+        speech: `已改为 ${words}。`,
         onUndo: () =>
           void (async () => {
             try {
@@ -3006,18 +3006,18 @@ function Inbox() {
               return;
             }
             await afterWrite([threadId]);
-            say(`Back to ${before}.`);
+            say(`已恢复为 ${before}。`);
           })(),
       });
       return;
     }
     if (reaction !== undefined) {
-      const words = reaction ? reactionSpeech(reaction) : 'Looks good';
+      const words = reaction ? reactionSpeech(reaction) : '看起来不错';
       showToast({
         hidden: true,
         icon: 'thumb',
         lead: words,
-        speech: `${words}. Goes to ${agent} in 10 seconds and moves to Quiet.`,
+        speech: `${words}。将在 10 秒后发送给 ${agent}，并移到「安静」。`,
         onUndo: () => void acknowledge(threadId, messageId, false, agent, reaction),
       });
       return;
@@ -3025,13 +3025,13 @@ function Inbox() {
     // Only the open thread's foot offers 👍, so the toast always speaks of that thread.
     showToast({
       icon: 'thumb',
-      lead: 'Looks good',
+      lead: '看起来不错',
       // One line at 520 px with Undo and its Z for a name up to 40 characters (longer ones are cut, shortAgentName).
-      detail: `Goes to ${shortAgentName(agent)} in 10 s · Moves to Quiet`,
+      detail: `将在 10 秒后发送给 ${shortAgentName(agent)} · 移入「安静」`,
       // A phone: the news first and the name last, so a cut with "…" only ever eats the name. "Read" is the phone's word
       // for Marked read (the thread moves to Quiet), short enough that the news fits whole at 320 px beside Undo and the ×.
-      phoneDetail: `Read · Sends in 10 s · ${shortAgentName(agent)}`,
-      speech: `Looks good. Goes to ${agent} in 10 seconds and moves to Quiet.`,
+      phoneDetail: `已读 · 10 秒后发送 · ${shortAgentName(agent)}`,
+      speech: `看起来不错。将在 10 秒后发送给 ${agent}，并移到「安静」。`,
       onUndo: () => void acknowledge(threadId, messageId, false, agent),
     });
   };
@@ -3054,8 +3054,8 @@ function Inbox() {
       return null;
     }
     await afterWrite();
-    if (!mark) say('Taken out of your draft.');
-    else if (!mark.quiet) say(mark.outcome === 'done' ? 'Done. It goes with your reply.' : "Can't do it. It goes with your reply.");
+    if (!mark) say('已从你的草稿中移除。');
+    else if (!mark.quiet) say(mark.outcome === 'done' ? '已完成。它将随你的回复一起发送。' : '无法执行。它将随你的回复一起发送。');
     return actions;
   };
 
@@ -3092,12 +3092,12 @@ function Inbox() {
     if (next) {
       // The thread's foot says the next message starts a new thread.
       // From a row's menu, a thread that is not the open one: the subject says which (as Mark read's toast).
-      const detail = threadId !== open && before ? `“${before.subject ?? '(no subject)'}”` : undefined;
+      const detail = threadId !== open && before ? `“${before.subject ?? '（无主题）'}”` : undefined;
       const snoozed = before?.snoozed;
       const priority = (before ?? (threadRow?.thread_id === threadId ? threadRow : null))?.priority;
       showToast({
         icon: 'archive',
-        lead: 'Archived',
+        lead: '已归档',
         ...(detail ? { detail } : {}),
         // Archive ended the snooze and the person's Priority: Undo unarchives first, since an archived thread takes neither.
         onUndo: () =>
@@ -3107,7 +3107,7 @@ function Inbox() {
       });
     } else {
       dismissToast();
-      say('Unarchived.');
+      say('已取消归档。');
     }
   };
 
@@ -3148,17 +3148,17 @@ function Inbox() {
     // A new pin is seen: pinning while Pinned is closed opens it (owner's call, direction C).
     if (pinned) setSidebarSectionOpen('pinned', true);
     await refreshList(false).finally(unpatch);
-    const subject = row.subject ?? '(no subject)';
+    const subject = row.subject ?? '（无主题）';
     if (pinned) {
-      say(`Starred “${subject}”`);
+      say(`已星标“${subject}”`);
       return;
     }
     const canUndo = index >= 0 && pinnedAt !== null;
     showToast({
       icon: 'unpin',
-      lead: 'Unstarred',
+      lead: '已取消星标',
       detail: unpinnedWhere(listed),
-      speech: `Unstarred “${subject}”. ${unpinnedWhere(listed)}.`,
+      speech: `已取消星标“${subject}”。${unpinnedWhere(listed)}。`,
       onUndo: canUndo ? () => void restorePin({ thread_id: row.thread_id, index, pinned_at: pinnedAt! }, subject) : undefined,
     });
   };
@@ -3179,7 +3179,7 @@ function Inbox() {
     setSidebarSectionOpen('pinned', true);
     await refreshList(false);
     dismissToast();
-    say(`Starred “${subject}” again.`);
+    say(`已再次星标“${subject}”。`);
   };
   /**
    * A press on the star a list row shows (the owner, 2026-11-05): Unstar, with what the menus' item does (the toast and
@@ -3207,7 +3207,7 @@ function Inbox() {
     }
     await refreshList(false);
     // The list's pills run sideways: their menu says Move left and Move right for the same two moves.
-    say(pills ? (action === 'up' ? 'Moved left.' : 'Moved right.') : action === 'up' ? 'Moved up.' : 'Moved down.');
+    say(pills ? (action === 'up' ? '已左移。' : '已右移。') : action === 'up' ? '已上移。' : '已下移。');
   };
   /**
    * A pinned row opens its thread and leaves the list as it is (the project
@@ -3233,7 +3233,7 @@ function Inbox() {
       return threadMarkdown(open);
     });
     void copyMarkdown(markdown).then((ok) =>
-      showToast(ok ? { icon: 'check', lead: 'Thread copied', detail: plural(count, 'message') } : { icon: 'warn', lead: "Couldn't copy" }, 4200),
+      showToast(ok ? { icon: 'check', lead: '话题已复制', detail: `${count} 条消息` } : { icon: 'warn', lead: "无法复制" }, 4200),
     );
   };
   /**
@@ -3255,8 +3255,8 @@ function Inbox() {
     void copyTextToClipboard(text).then((ok) =>
       showToast(
         ok
-          ? { icon: 'check', lead: action === 'copy-link' ? 'Link copied' : 'Thread ID copied', detail: `“${row.subject ?? '(no subject)'}”` }
-          : { icon: 'warn', lead: "Couldn't copy" },
+          ? { icon: 'check', lead: action === 'copy-link' ? '链接已复制' : '话题 ID 已复制', detail: `“${row.subject ?? '（无主题）'}”` }
+          : { icon: 'warn', lead: "无法复制" },
         4200,
       ),
     );
@@ -3273,7 +3273,7 @@ function Inbox() {
    * the person leaves it).
    */
   const projectAction = async (projectId: string, action: ProjectAction) => {
-    const name = latestRef.current?.projects.find((p) => p.id === projectId)?.name ?? 'the project';
+    const name = latestRef.current?.projects.find((p) => p.id === projectId)?.name ?? '该项目';
     const before = (latestRef.current?.sections ?? []).flatMap((section) => section.threads).filter((row) => row.project.id === projectId);
     let taken: string[];
     let undo: () => Promise<unknown>;
@@ -3299,13 +3299,13 @@ function Inbox() {
         setShown((current) => (current ? taken.reduce((sections, id) => markHeldRowArchived(sections, id, at), current) : current));
       }
     } catch (cause) {
-      showToast(errorToast(cause, 'The project did not change.'));
+      showToast(errorToast(cause, '项目未更改。'));
       return;
     }
     await afterWrite(taken);
     if (taken.length === 0) {
-      if (incomplete) showToast({ icon: 'warn', lead: `${name} did not change`, detail: incomplete, wrap: true });
-      else say(action === 'read' ? `Nothing in ${name} waits on you.` : `Nothing in ${name} to archive.`);
+      if (incomplete) showToast({ icon: 'warn', lead: `${name} 未更改`, detail: incomplete, wrap: true });
+      else say(action === 'read' ? `${name} 中没有待你处理的内容。` : `${name} 中没有可归档的内容。`);
       return;
     }
     const copy = projectBatchToast(action, name, taken.length, before.filter((row) => taken.includes(row.thread_id)));
@@ -3313,18 +3313,18 @@ function Inbox() {
       ...copy,
       // Stopped partway: the warning, and why, whole (it may wrap); Undo still covers what did apply.
       // The project is on screen (its menu was just used) and in what the live region says.
-      ...(incomplete ? { icon: 'warn' as const, detail: incomplete, phoneDetail: undefined, speech: `${copy.lead} in ${name}. ${incomplete}`, wrap: true } : {}),
+      ...(incomplete ? { icon: 'warn' as const, detail: incomplete, phoneDetail: undefined, speech: `${copy.lead}，位于 ${name}。${incomplete}`, wrap: true } : {}),
       onUndo: () => {
         void (async () => {
           try {
             await undo();
           } catch (cause) {
-            showToast(errorToast(cause, 'The project did not change.'));
+            showToast(errorToast(cause, '项目未更改。'));
             return;
           }
           await afterWrite(taken);
           dismissToast();
-          say('Moved back.');
+          say('已移回。');
         })();
       },
     });
@@ -3420,8 +3420,8 @@ function Inbox() {
       // The open thread's row may have left the list (E moved it to folded Quiet): step from the slot it had.
       const slot = openSlot.current?.thread === now.thread ? openSlot.current.order : [];
       const step = threadStep(drawnOrder(body), now.thread, dir, slot);
-      if (!step) return say('This thread is not in the list on screen.');
-      if ('end' in step) return say(step.end === 'last' ? 'Last thread' : 'First thread');
+      if (!step) return say('此话题不在当前列表中。');
+      if ('end' in step) return say(step.end === 'last' ? '最后一个话题' : '第一个话题');
       const fromList = !!keyTarget(event)?.closest('.ib-main .ib-lbody');
       // Into another section: its name, as the eye sees the band.
       const section = (id: string) => rowElement(body, id)?.closest('[role="group"]')?.getAttribute('aria-label') ?? null;
@@ -3539,10 +3539,10 @@ function Inbox() {
     showToast(
       {
         icon: 'warn',
-        lead: 'Not reloaded: something you wrote is not saved yet.',
+        lead: '未重新加载：你写的内容还有未保存的。',
         wrap: true,
         action: {
-          label: 'Reload anyway',
+          label: '仍然重新加载',
           onPress: () => {
             leaveOnPurpose();
             window.location.reload();
@@ -3583,7 +3583,7 @@ function Inbox() {
       setUpdate(result.update);
       setUpdateDialog(null);
     } catch (cause) {
-      setUpdateError(cause instanceof Error ? cause.message : 'The update could not start.');
+      setUpdateError(cause instanceof Error ? cause.message : '更新无法启动。');
     } finally {
       setUpdateBusy(false);
     }
@@ -3620,7 +3620,7 @@ function Inbox() {
       );
       void refreshList(false);
     } catch (cause) {
-      const message = cause instanceof Error ? cause.message : 'The setting was not saved.';
+      const message = cause instanceof Error ? cause.message : '设置未保存。';
       setSettingsError(message);
       setUpdateError(message);
     }
@@ -3633,9 +3633,9 @@ function Inbox() {
       const result = await inboxApi.checkForUpdate();
       setUpdateDetails(result);
       setUpdate(result.update);
-      if (!result.checked.ok) setSettingsError(`Couldn't check for updates: ${result.checked.error ?? 'the check failed'}.`);
+      if (!result.checked.ok) setSettingsError(`无法检查更新：${result.checked.error ?? '检查失败'}。`);
     } catch (cause) {
-      setSettingsError(cause instanceof Error ? cause.message : 'The check failed.');
+      setSettingsError(cause instanceof Error ? cause.message : '检查失败。');
     } finally {
       setChecking(false);
     }
@@ -3747,7 +3747,7 @@ function Inbox() {
   const { decisionModeOn, decideInThread, sittingDecisions, closeDecide } = useDecideSitting({ settings, decisions, setDecisions, decide, setDecide, decideOpener, decisionModeOnRef, refreshDecisions, refreshList });
   const snoozeBack = useSnoozeBack({ thread, route, listedOpenRow, looking, openThreadCovered, lookRef: paneReads.activeLook, trackLook, refreshList, snoozed: latest?.snoozed, refreshSnoozes, seen: inboxApi.seen });
   // The list's Archived group (approval "inbox-archived-group") and Settings → Archived's Unarchive.
-  const archivedFilter = useCallback((rows: readonly InboxListRow[]) => filterShown([{ id: 'archived', label: 'Archived', threads: [...rows] }])[0]?.threads ?? rows, [filterShown]);
+  const archivedFilter = useCallback((rows: readonly InboxListRow[]) => filterShown([{ id: 'archived', label: '已归档', threads: [...rows] }])[0]?.threads ?? rows, [filterShown]);
   const { host: archivedHost, unarchiveFromSettings } = useArchivedGroup({ project: route.page === 'inbox' ? route.project : null, merged: anyMachineLinked, filter: archivedFilter, showToast, showError, afterWrite, archive, go, refreshList });
 
   const context: ConnectContext | null = settings
@@ -4230,7 +4230,7 @@ function Inbox() {
     if (settings === null || pullsShown) return;
     if (reviewBoxOpen) {
       closeCompose();
-      showToast({ icon: 'warn', lead: 'Code review is off', detail: 'no review was started', wrap: true });
+      showToast({ icon: 'warn', lead: '代码审查已关闭', detail: '未启动审查', wrap: true });
     }
     if (route.page === 'reviews' && route.new) writeRoute({ ...route, new: false }, { replace: true });
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -4418,8 +4418,8 @@ function Inbox() {
     }
     showToast(
       kind === 'finish'
-        ? { icon: 'check', lead: 'Tour finished', detail: 'Your Inbox is as you left it', speech: 'Tour finished. Your Inbox is as you left it.' }
-        : { icon: 'check', lead: 'You left the tour', detail: 'Your Inbox is as it was', speech: 'You left the tour. Your Inbox is back as it was.' },
+        ? { icon: 'check', lead: '引导已结束', detail: '你的收件箱保持离开时的样子', speech: '引导已结束。你的收件箱保持离开时的样子。' }
+        : { icon: 'check', lead: '你退出了引导', detail: '你的收件箱已恢复原样', speech: '你退出了引导。你的收件箱已恢复原样。' },
       4200,
     );
     landFocusAfterTour();
@@ -4500,9 +4500,9 @@ function Inbox() {
   /** New message in the tour's sidebar: live on step 9 until its Send; before it the coach says when, after it where the thread is. */
   const openTourComposeOrNudge = useCallback(
     (opener: HTMLElement) => {
-      if (tourState.step === TOUR_COMPOSE_STEP && tourState.compose === 'sent') nudgeTour('Your thread is started; it’s in the list.');
+      if (tourState.step === TOUR_COMPOSE_STEP && tourState.compose === 'sent') nudgeTour('话题已创建，就在列表里。');
       else if (tourState.step === TOUR_COMPOSE_STEP) openTourCompose(opener);
-      else nudgeTour('New message comes later in the tour, at step 9.');
+      else nudgeTour('新消息会在引导的第 9 步出现。');
     },
     [tourState.step, tourState.compose, openTourCompose, nudgeTour],
   );
@@ -4542,7 +4542,7 @@ function Inbox() {
     if (tourRealStep && !wasRealStep.current) {
       // The tour's own toast (Sent to Claude Code) belongs to the replay: the person's own screen starts clean.
       dismissToast();
-      say(`Step ${TOUR_STEPS} of ${TOUR_STEPS}: connect your agents. This is your own Inbox; what you connect here stays connected.`);
+      say(`第 ${TOUR_STEPS} 步，共 ${TOUR_STEPS} 步：连接你的智能体。这是你自己的收件箱；在这里连接的内容会一直保持连接。`);
       requestAnimationFrame(() => requestAnimationFrame(() => focusFirst(['.ib-main .ib-empty h2'])));
     }
     if (!tourRealStep) setTourAskHidden(false);
@@ -4873,11 +4873,11 @@ function Inbox() {
         const covered = rootRef.current?.dataset.stack?.split(' ').includes('thread') ?? false;
         if (!covered) {
           focusFirst([`.ib-listcol .ib-lbody [data-thread-id="${CSS.escape(fromFile.thread)}"]`, 'section.ib-pane h2.ib-subject']);
-          say(`${fromFile.label} list shown.${fromFile.name ? ` ${fromFile.name} closed.` : ''}`);
+          say(`${fromFile.label} 列表已显示。${fromFile.name ? ` ${fromFile.name} 已关闭。` : ''}`);
         } else {
           // No room for the list beside the thread even without the sidebar: the thread covers it, as when stacked.
           focusFirst(['section.ib-pane [data-stack-back]', 'section.ib-pane h2.ib-subject']);
-          say(`${fromFile.name ?? 'The file'} closed.`);
+          say(`${fromFile.name ?? '文件'}已关闭。`);
         }
       });
       return;
@@ -5048,8 +5048,8 @@ function Inbox() {
       sessions={firstRunSessions}
       onAgents={setAgents}
       onMessage={(session, opener) => openCompose({ session }, opener)}
-      heading={opts.tour ? 'Now, let’s connect your agents' : undefined}
-      lead={opts.tour ? 'Back in your own Inbox. Nothing from the tour was kept.' : undefined}
+      heading={opts.tour ? '现在，来连接你的智能体' : undefined}
+      lead={opts.tour ? '回到你自己的收件箱。引导中的内容都没有保留。' : undefined}
       onTakeTour={opts.tour || !settings?.tour || tourUnavailable ? undefined : startTour}
       tryPrompt={opts.tour ? TOUR_FIRST_QUESTION_PROMPT : undefined}
       ask={
@@ -5068,9 +5068,9 @@ function Inbox() {
           ) : notifications.permission === 'granted' && settings?.notifications.enabled ? (
             <div className="ib-tour-notified" data-tour-notified="">
               <Icon name="check" size={15} />
-              <span>Notifications are on for this address.</span>
+              <span>此地址的通知已开启。</span>
               <button type="button" className="ib-btn ib-ghost ib-sm" onClick={() => notifications.sendTest()}>
-                Send a test notification
+                发送测试通知
               </button>
             </div>
           ) : null
@@ -5426,7 +5426,7 @@ function Inbox() {
         onPosted={sheetPulls.refresh}
         onSent={() => {
           close(prsBack(route));
-          showToast({ icon: 'check', lead: 'Verdict sent', detail: 'in the agent’s thread', speech: 'Your verdict was sent into the agent’s thread.' }, 5000);
+          showToast({ icon: 'check', lead: '结论已发送', detail: '已发送到智能体的话题', speech: '你的结论已发送到智能体的话题。' }, 5000);
         }}
       />
     );
@@ -5471,7 +5471,7 @@ function Inbox() {
         onPosted={pullsReloadRows}
         onSent={() => {
           close({ ...route, layer: null, scope: 'layer' });
-          showToast({ icon: 'check', lead: 'Verdict sent', detail: 'in the agent’s thread', speech: 'Your verdict was sent into the agent’s thread.' }, 5000);
+          showToast({ icon: 'check', lead: '结论已发送', detail: '已发送到智能体的话题', speech: '你的结论已发送到智能体的话题。' }, 5000);
         }}
       />
     );
@@ -5663,14 +5663,14 @@ function Inbox() {
               <ListFilterEmpty onClear={() => setListFilter(clearedFrom(listFilterPicks, listFilterScoped, filterTag !== null))} />
             ) : filterTag ? (
               <div className="ib-empty-list" data-tag-empty="">
-                <b dir="auto">Nothing tagged {filterTag.name} yet</b>
-                Right-click a thread and choose Add tag.
+                <b dir="auto">还没有标记为 {filterTag.name} 的内容</b>
+                右键点击话题，选择「添加标签」。
               </div>
             ) : projectAllArchived(filterProject) ? (
               <div className="ib-empty-list" data-project-archived="">
-                <b dir="auto">Everything in {listTitle} is archived.</b>
-                It leaves the sidebar when you go elsewhere, and comes back when an agent writes there.{' '}
-                <a href="#settings/archived">See archived threads</a>
+                <b dir="auto">{listTitle} 中的所有内容都已归档。</b>
+                你离开后它会从侧边栏消失，等智能体再写入时又会回来。{' '}
+                <a href="#settings/archived">查看已归档话题</a>
               </div>
             ) : null
           }
@@ -5773,7 +5773,7 @@ function Inbox() {
             focusTheList();
           }}
         >
-          Skip to the list
+          跳到列表
         </a>
       )}
       {/* A file beside the thread takes the sidebar's room (record 2.2): it closes on the same spring, and the person's choice stays as it was. */}
@@ -5985,7 +5985,7 @@ function Inbox() {
       {updateDialog === 'restart' && update && (
         <RestartDialog
           update={update}
-          subject={unsentReply()?.subject ?? 'this thread'}
+          subject={unsentReply()?.subject ?? '此话题'}
           onRestart={() => {
             setUpdateDialog(null);
             void restart();
@@ -6162,10 +6162,10 @@ function Inbox() {
                 showToast(
                   {
                     icon: 'warn',
-                    lead: 'Voice isn’t on',
-                    detail: 'The setting wasn’t saved. You can turn it on in Settings.',
+                    lead: '语音未开启',
+                    detail: '设置未保存。你可以在「设置」中开启。',
                     action: {
-                      label: 'Voice settings',
+                      label: '语音设置',
                       onPress: () => {
                         dismissToast();
                         window.location.hash = '#settings/voice';
@@ -6188,7 +6188,7 @@ function Inbox() {
           onKeep={() => setSoundDialog('shown')}
           onTurnOff={() => {
             setSoundDialog('shown');
-            void sound.setEnabled(false).then((saved) => showToast(saved ? { icon: 'mute', lead: 'Sound off' } : { icon: 'warn', lead: 'Sound setting not saved' }, 4200));
+            void sound.setEnabled(false).then((saved) => showToast(saved ? { icon: 'mute', lead: '声音已关闭' } : { icon: 'warn', lead: '声音设置未保存' }, 4200));
           }}
         />
       )}
@@ -6248,11 +6248,11 @@ function Inbox() {
             showToast(
               {
                 icon: 'check',
-                lead: `Sent to ${hostLabel(sent.host)}`,
-                detail: `in ${sent.projectName}`,
-                speech: `Sent to ${hostLabel(sent.host)} in ${sent.projectName}. It takes it as its next turn.`,
+                lead: `已发送给 ${hostLabel(sent.host)}`,
+                detail: `在 ${sent.projectName}`,
+                speech: `已发送给 ${hostLabel(sent.host)}，位于 ${sent.projectName}。它会把这条消息作为下一轮处理。`,
                 action: {
-                  label: 'Open',
+                  label: '打开',
                   onPress: () => {
                     dismissToast();
                     dispatchTour({ type: 'open', thread: sent.threadId }, { focusCoach: true });
@@ -6378,14 +6378,14 @@ function Inbox() {
               void inboxApi
                 .editCard(sent.cardId, { op: 'link', thread_id: sent.threadId })
                 .then(() => refreshCards())
-                .catch(() => showToast({ icon: 'warn', lead: 'Sent, but not linked to the card', phoneLead: 'Not linked to the card', detail: 'Open the thread from the Inbox.' }, 7000));
+                .catch(() => showToast({ icon: 'warn', lead: '已发送，但未关联到卡片', phoneLead: '未关联到卡片', detail: '请从收件箱打开该话题。' }, 7000));
             }
             // Launch an agent from Pull requests: the new thread is the PRs' agent's, so verdicts and Reply go there.
             if (sent.pullKeys && sent.pullKeys.length > 0) {
               void inboxApi
                 .pullOwner(sent.pullKeys, sent.threadId, sent.pullAsk ?? undefined)
                 .then(() => pulls.reload())
-                .catch(() => showToast({ icon: 'warn', lead: 'Sent, but not tied to the pull request', phoneLead: 'Not tied to the pull request', detail: 'Open the thread from the Inbox.' }, 7000));
+                .catch(() => showToast({ icon: 'warn', lead: '已发送，但未关联到 PR', phoneLead: '未关联到 PR', detail: '请从收件箱打开该话题。' }, 7000));
             }
           }}
           onSaved={composeSaved}

@@ -39,9 +39,9 @@ export function ThreadWait(props: {
       <div className="ib-pwait-line" role="status">
         {load?.state === 'missing' ? (
           <>
-            <span>This thread is not in the Inbox. It may have been deleted.</span>
+            <span>此话题不在收件箱中，可能已被删除。</span>
             <button type="button" className="ib-btn" onClick={props.onClose} data-thread-wait-close="">
-              Close
+              关闭
             </button>
           </>
         ) : load?.state === 'refused' ? (
@@ -49,7 +49,7 @@ export function ThreadWait(props: {
           <>
             <span data-thread-wait-refused="">{load.error}</span>
             <button type="button" className="ib-btn" onClick={props.onClose} data-thread-wait-close="">
-              Close
+              关闭
             </button>
           </>
         ) : load?.state === 'failed' && (props.away || load.waiting) ? (
@@ -59,18 +59,18 @@ export function ThreadWait(props: {
               {props.away || load.waiting}
             </span>
             <button type="button" className="ib-btn" onClick={props.onClose} data-thread-wait-close="">
-              Close
+              关闭
             </button>
           </>
         ) : load?.state === 'failed' ? (
           <>
-            <span>Couldn't load this thread ({load.error}). Trying again…</span>
+            <span>无法加载此话题（{load.error}）。正在重试…</span>
             <button type="button" className="ib-btn" onClick={props.onRetry} data-thread-wait-retry="">
-              Try again
+              重试
             </button>
           </>
         ) : (
-          <span>Opening the thread…</span>
+          <span>正在打开话题…</span>
         )}
       </div>
       {props.held && props.held.entries.length > 0 && (

@@ -260,8 +260,8 @@ export function spaceDate(at: string, now = Date.now()): string {
   const today = new Date(now);
   const day = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
   const diff = Math.round((day(today) - day(when)) / 86_400_000);
-  if (diff === 0) return 'Today';
-  if (diff === 1) return 'Yesterday';
+  if (diff === 0) return '今天';
+  if (diff === 1) return '昨天';
   const opts: Intl.DateTimeFormatOptions = { month: 'short', day: 'numeric', ...(when.getFullYear() !== today.getFullYear() ? { year: 'numeric' } : {}) };
   return when.toLocaleDateString('en-US', opts);
 }

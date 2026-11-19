@@ -37,14 +37,14 @@ export function useRevealedLine(
 
 export const RevealMissedNote: React.FC<{ missed: { symbol: string; line: number } }> = ({ missed }) => (
   <div className="flex-none px-3 py-1 text-xs text-muted-foreground border-b border-border/40" data-reveal-missed>
-    <code className="font-mono">{missed.symbol}</code> is not near line {missed.line} in this revision; showing the top.
+    <code className="font-mono">{missed.symbol}</code> 不在本版本第 {missed.line} 行附近，已显示文件开头。
   </div>
 );
 
-/** "at working tree", "at index", "at a1b2c3d". */
+/** "工作区", "暂存区", "a1b2c3d". */
 export function revisionPhrase(revision: RepoRevisionInfo | undefined): string | null {
   if (!revision) return null;
-  return `at ${revision.label}`;
+  return revision.label;
 }
 
 /** The lines a comment is drawn under in a whole-file view: new side, line scope, not outdated. */
@@ -121,9 +121,9 @@ export const RepoFileView: React.FC<RepoFileViewProps> = ({
         <span
           className="flex-none text-[10px] font-medium px-1.5 py-0.5 rounded bg-muted text-muted-foreground"
           data-not-in-review
-          title="This file is not part of the diff under review"
+          title="此文件不在本次审查的差异中"
         >
-          Not in this review
+          不在本次审查中
         </span>
         {revisionPhrase(revision) && (
           <span className="flex-none text-xs text-muted-foreground" data-repo-file-revision>
@@ -131,8 +131,8 @@ export const RepoFileView: React.FC<RepoFileViewProps> = ({
           </span>
         )}
         <span className="ml-auto flex-none text-[11px] text-muted-foreground/80">
-          {onAddAnnotation ? 'Select lines to comment' : null}
-          {preview && <span className="ml-3" data-preview-hint>Double-click the tab to keep it</span>}
+          {onAddAnnotation ? '选择行以评论' : null}
+          {preview && <span className="ml-3" data-preview-hint>双击标签页可将其固定</span>}
         </span>
       </div>
       {missed && <RevealMissedNote missed={missed} />}
@@ -152,7 +152,7 @@ export const RepoFileView: React.FC<RepoFileViewProps> = ({
             />
           </div>
         ) : text.status === 'loading' ? (
-          <FileTextState>Reading the file…</FileTextState>
+          <FileTextState>正在读取文件…</FileTextState>
         ) : text.status === 'error' ? (
           <FileTextState>{text.message}</FileTextState>
         ) : text.status === 'empty' ? (

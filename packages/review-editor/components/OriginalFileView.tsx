@@ -21,7 +21,7 @@ export const OriginalFileView: React.FC<{
   const lineCount = useMemo(() => (text.status === 'ready' ? text.content.split('\n').length : 0), [text]);
   const removed = useMemo(() => removedOldLines(patch), [patch]);
   const css = useMemo(() => removedLinesCss(removed), [removed]);
-  if (text.status === 'loading') return <FileTextState>Reading the original…</FileTextState>;
+  if (text.status === 'loading') return <FileTextState>正在读取原始版本…</FileTextState>;
   if (text.status !== 'ready') return <FileTextState>{text.message}</FileTextState>;
   return (
     <>

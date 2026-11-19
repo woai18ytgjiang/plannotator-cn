@@ -24,10 +24,10 @@ export function StalePageNotice({ version, busy, onReload, onDismiss }: { versio
     <div ref={ref} className="ib-notice ib-stale" data-stale-page="">
       <button type="button" className="ib-stale-go" onClick={() => !busy && onReload()} aria-disabled={busy || undefined} aria-busy={busy || undefined}>
         <Icon name="refresh" size={15} />
-        <span className="ib-stale-say">Inbox updated to {version}</span>
-        <b>{busy ? 'Reloading…' : 'Reload'}</b>
+        <span className="ib-stale-say">收件箱已更新至 {version}</span>
+        <b>{busy ? '正在重新加载…' : '重新加载'}</b>
       </button>
-      <button type="button" className="ib-stale-x" onClick={dismiss} aria-label="Dismiss: reload later">
+      <button type="button" className="ib-stale-x" onClick={dismiss} aria-label="忽略：稍后重新加载">
         <Icon name="x" size={14} />
       </button>
     </div>

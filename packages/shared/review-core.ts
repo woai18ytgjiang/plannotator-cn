@@ -810,20 +810,20 @@ export async function getGitContext(
       )
     ).exitCode === 0;
     if (baseResolves) {
-      diffOptions.push({ id: "since-base", label: `All changes since ${displayRef(defaultBranch)}` });
+      diffOptions.push({ id: "since-base", label: `自 ${displayRef(defaultBranch)} 以来的所有更改` });
     }
   }
 
   const upstreamBranch = await getCurrentUpstreamBranch(runtime, cwd);
   if (upstreamBranch) {
-    diffOptions.push({ id: "local-vs-remote", label: "Local vs remote branch" });
+    diffOptions.push({ id: "local-vs-remote", label: "本地 vs 远程分支" });
   }
 
   diffOptions.push(
-    { id: "uncommitted", label: "Uncommitted changes" },
-    { id: "staged", label: "Staged changes" },
-    { id: "unstaged", label: "Unstaged changes" },
-    { id: "last-commit", label: "Last commit" },
+    { id: "uncommitted", label: "未提交的更改" },
+    { id: "staged", label: "已暂存的更改" },
+    { id: "unstaged", label: "未暂存的更改" },
+    { id: "last-commit", label: "最近一次提交" },
   );
 
   // Always offer Branch diff / PR Diff when a default branch exists. The
@@ -836,10 +836,10 @@ export async function getGitContext(
   // old guard hid the active mode's option, trapping them. Unconditional
   // emission keeps the active option reachable in every flow.
   if (defaultBranch) {
-    diffOptions.push({ id: "merge-base", label: "Committed changes (PR view)" });
+    diffOptions.push({ id: "merge-base", label: "已提交的更改（PR 视图）" });
   }
 
-  diffOptions.push({ id: "all", label: "Every file (HEAD)" });
+  diffOptions.push({ id: "all", label: "所有文件（HEAD）" });
 
   const [worktrees, currentTreePathResult] = await Promise.all([
     getWorktrees(runtime, cwd),
@@ -861,13 +861,13 @@ export async function getGitContext(
       diffTypes: ["since-base", "branch", "merge-base"],
       fallback: "main",
       picker: {
-        rowLabel: "compare against",
-        triggerLabel: "base",
-        triggerTitlePrefix: "Review base",
-        searchPlaceholder: "Search branches…",
-        emptyText: "No branches match.",
-        localGroupLabel: "Local",
-        remoteGroupLabel: "Remote",
+        rowLabel: "对比基准",
+        triggerLabel: "基准",
+        triggerTitlePrefix: "审查基准",
+        searchPlaceholder: "搜索分支…",
+        emptyText: "没有匹配的分支。",
+        localGroupLabel: "本地",
+        remoteGroupLabel: "远程",
       },
     },
     cwd,
@@ -1708,7 +1708,7 @@ export async function getGitSnapshotMaterializationPatch(
 
   if (effectiveDiffType === "local-vs-remote") {
     const upstreamBranch = await getCurrentUpstreamBranch(runtime, cwd);
-    if (!upstreamBranch) throw new Error("The current branch does not have a remote tracking branch.");
+    if (!upstreamBranch) throw new Error("当前分支没有远程跟踪分支。");
     const tracked = await binaryDiff([...common, "--end-of-options", upstreamBranch]);
     return removeTrackedDeletions(tracked, new Set(files.paths)) + files.diff;
   }
@@ -1792,8 +1792,8 @@ export async function runGitDiff(
     if (!parsed) {
       return {
         patch: "",
-        label: "Worktree error",
-        error: "Could not parse worktree diff type",
+        label: "工作区错误",
+        error: "无法解析工作区差异类型",
       };
     }
     cwd = parsed.path;
@@ -1829,17 +1829,17 @@ export async function runGitDiff(
         `${baseRef}..${sha}`,
       ];
       patch = await runBoundedTrackedDiff(runtime, commitDiffArgs, cwd, fileIdentities);
-      label = subject ? `Commit ${shortSha} — ${subject}` : `Commit ${shortSha}`;
+      label = subject ? `提交 ${shortSha} — ${subject}` : `提交 ${shortSha}`;
     } else if (effectiveDiffType.startsWith("commit:")) {
-      return { patch: "", label: `Error: ${diffType}`, error: "Invalid commit ref" };
+      return { patch: "", label: `错误：${diffType}`, error: "无效的提交引用" };
     } else switch (effectiveDiffType) {
       case "local-vs-remote": {
         const upstreamBranch = await getCurrentUpstreamBranch(runtime, cwd);
         if (!upstreamBranch) {
-          throw new Error("The current branch does not have a remote tracking branch.");
+          throw new Error("当前分支没有远程跟踪分支。");
         }
         patch = await getWorkingTreeDiffFromBase(runtime, upstreamBranch, cwd, options);
-        label = `Local vs ${displayRef(upstreamBranch)}`;
+        label = `本地 vs ${displayRef(upstreamBranch)}`;
         break;
       }
 
@@ -1862,7 +1862,7 @@ export async function runGitDiff(
           base = await getEmptyTreeSha(runtime, cwd);
         }
         patch = await getWorkingTreeDiffFromBase(runtime, base, cwd, options, "best-effort", fileIdentities);
-        label = `All changes since ${displayRef(defaultBranch)}`;
+        label = `自 ${displayRef(defaultBranch)} 以来的所有更改`;
         break;
       }
 
@@ -1872,7 +1872,7 @@ export async function runGitDiff(
             .exitCode === 0;
         const base = hasHead ? "HEAD" : await getEmptyTreeSha(runtime, cwd);
         patch = await getWorkingTreeDiffFromBase(runtime, base, cwd, options, "best-effort", fileIdentities);
-        label = "Uncommitted changes";
+        label = "未提交的更改";
         break;
       }
 
@@ -1886,7 +1886,7 @@ export async function runGitDiff(
           "--dst-prefix=b/",
         ];
         patch = await runBoundedTrackedDiff(runtime, stagedDiffArgs, cwd, fileIdentities);
-        label = "Staged changes";
+        label = "已暂存的更改";
         break;
       }
 
@@ -1903,7 +1903,7 @@ export async function runGitDiff(
           await runBoundedTrackedDiff(runtime, trackedDiffArgs, cwd, fileIdentities),
           new Set(untracked.paths),
         ) + untracked.diff;
-        label = "Unstaged changes";
+        label = "未暂存的更改";
         break;
       }
 
@@ -1915,7 +1915,7 @@ export async function runGitDiff(
         const baseRef = hasParent.exitCode === 0 ? "HEAD~1" : await getEmptyTreeSha(runtime, cwd);
         const args = ["diff", "--no-ext-diff", ...wFlag, "--src-prefix=a/", "--dst-prefix=b/", `${baseRef}..HEAD`];
         patch = await runBoundedTrackedDiff(runtime, args, cwd, fileIdentities);
-        label = "Last commit";
+        label = "最近一次提交";
         break;
       }
 
@@ -1934,7 +1934,7 @@ export async function runGitDiff(
           `${defaultBranch}..HEAD`,
         ];
         patch = await runBoundedTrackedDiff(runtime, branchDiffArgs, cwd, fileIdentities);
-        label = `Changes vs ${displayRef(defaultBranch)}`;
+        label = `与 ${displayRef(defaultBranch)} 的更改`;
         break;
       }
 
@@ -1955,7 +1955,7 @@ export async function runGitDiff(
           `${mergeBase}..HEAD`,
         ];
         patch = await runBoundedTrackedDiff(runtime, mergeBaseDiffArgs, cwd, fileIdentities);
-        label = `PR diff vs ${displayRef(defaultBranch)}`;
+        label = `与 ${displayRef(defaultBranch)} 的 PR 差异`;
         break;
       }
 
@@ -1972,12 +1972,12 @@ export async function runGitDiff(
           `${emptyTree}..HEAD`,
         ];
         patch = await runBoundedTrackedDiff(runtime, allDiffArgs, cwd, fileIdentities);
-        label = "Every file";
+        label = "所有文件";
         break;
       }
 
       default:
-        return { patch: "", label: "Unknown diff type" };
+        return { patch: "", label: "未知的差异类型" };
     }
   } catch (error) {
     const raw = error instanceof Error ? error.message : String(error);
@@ -2432,12 +2432,12 @@ export async function listGitSideFiles(
     const removed = new Set(splitNulList(deleted.stdout));
     // Unmerged entries are listed once per stage; the Set dedupes them.
     paths = [...new Set(splitNulList(listed.stdout))].filter((path) => !removed.has(path));
-    revision = { kind: "worktree", label: "working tree" };
+    revision = { kind: "worktree", label: "工作区" };
   } else if (side.kind === "index") {
     const listed = await runtime.runGit(["ls-files", "-z", "--cached"], opts);
     if (listed.exitCode !== 0) return null;
     paths = [...new Set(splitNulList(listed.stdout))];
-    revision = { kind: "index", label: "index" };
+    revision = { kind: "index", label: "暂存区" };
   } else {
     const [listed, short] = await Promise.all([
       runtime.runGit(["ls-tree", "-r", "-z", "--name-only", "--full-tree", "--end-of-options", side.rev], opts),

@@ -66,7 +66,7 @@ export function ColorSquare({ hue, s, v, onMove, onLetGo, onBlur }: SquareProps)
         className="ib-tagc-sq"
         role="slider"
         tabIndex={0}
-        aria-label="Color"
+        aria-label="颜色"
         aria-valuemin={0}
         aria-valuemax={100}
         aria-valuenow={s}

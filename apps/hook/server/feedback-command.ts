@@ -22,6 +22,7 @@
 import {
   FEEDBACK_CATEGORIES,
   FEEDBACK_HEREDOC_END,
+  FEEDBACK_MESSAGE_REQUIRED,
   FEEDBACK_UNAVAILABLE,
   feedbackInputError,
   feedbackOsName,
@@ -42,7 +43,7 @@ export type ParsedFeedbackCommand =
   | { ok: true; help: false; stdin: boolean; message: string; category: FeedbackCategory | null; contact: string | null }
   | { ok: false; error: string };
 
-const USAGE_HINT = `Give the message on stdin: plannotator feedback --stdin <<'${FEEDBACK_HEREDOC_END}' … ${FEEDBACK_HEREDOC_END}`;
+const USAGE_HINT = `通过 stdin 提供消息：plannotator feedback --stdin <<'${FEEDBACK_HEREDOC_END}' … ${FEEDBACK_HEREDOC_END}`;
 
 export function parseFeedbackCommand(argv: readonly string[]): ParsedFeedbackCommand {
   const words: string[] = [];
@@ -63,25 +64,25 @@ export function parseFeedbackCommand(argv: readonly string[]): ParsedFeedbackCom
     }
     if (!flagsDone && (arg === "--category" || arg.startsWith("--category="))) {
       const value = arg.includes("=") ? arg.slice(arg.indexOf("=") + 1) : argv[++i];
-      if (value === undefined) return { ok: false, error: "--category needs a value (bug, idea or other)." };
-      if (!(FEEDBACK_CATEGORIES as readonly string[]).includes(value)) return { ok: false, error: `--category must be one of: ${FEEDBACK_CATEGORIES.join(", ")}.` };
+      if (value === undefined) return { ok: false, error: "--category 需要一个值（bug、idea 或 other）。" };
+      if (!(FEEDBACK_CATEGORIES as readonly string[]).includes(value)) return { ok: false, error: `--category 必须是以下之一：${FEEDBACK_CATEGORIES.join(", ")}。` };
       category = value as FeedbackCategory;
       continue;
     }
     if (!flagsDone && (arg === "--contact" || arg.startsWith("--contact="))) {
       const value = arg.includes("=") ? arg.slice(arg.indexOf("=") + 1) : argv[++i];
-      if (value === undefined) return { ok: false, error: "--contact needs a value." };
+      if (value === undefined) return { ok: false, error: "--contact 需要一个值。" };
       contact = value;
       continue;
     }
-    if (!flagsDone && arg.startsWith("--")) return { ok: false, error: `Unknown option: ${arg}` };
+    if (!flagsDone && arg.startsWith("--")) return { ok: false, error: `未知选项：${arg}` };
     words.push(arg);
   }
-  if (stdin && words.length > 0) return { ok: false, error: "Give the message on stdin or as words, not both." };
+  if (stdin && words.length > 0) return { ok: false, error: "消息只能通过 stdin 或命令行词句提供，不能同时使用两者。" };
   const message = words.join(" ");
   if (!stdin) {
     const invalid = feedbackInputError({ message, category, contact });
-    if (invalid) return { ok: false, error: invalid === "Write your feedback first." ? USAGE_HINT : invalid };
+    if (invalid) return { ok: false, error: invalid === FEEDBACK_MESSAGE_REQUIRED ? USAGE_HINT : invalid };
   }
   return { ok: true, help: false, stdin, message, category, contact };
 }
@@ -129,7 +130,7 @@ export async function runFeedbackCommand(argv: readonly string[], deps: Feedback
   const err = deps.err ?? ((line: string) => console.error(line));
   const usage = (error: string) => {
     err(error);
-    err("Run 'plannotator feedback --help' for usage.");
+    err("运行 'plannotator feedback --help' 查看用法。");
     return 2;
   };
   const parsed = parseFeedbackCommand(argv);
@@ -140,12 +141,12 @@ export async function runFeedbackCommand(argv: readonly string[], deps: Feedback
   }
   let message = parsed.message;
   if (parsed.stdin) {
-    if (deps.stdinIsTTY ?? process.stdin.isTTY === true) return usage(`--stdin reads the message from a pipe or heredoc. ${USAGE_HINT}`);
+    if (deps.stdinIsTTY ?? process.stdin.isTTY === true) return usage(`--stdin 从管道或 heredoc 读取消息。${USAGE_HINT}`);
     const text = await readStdin(deps.stdin ?? (Bun.stdin.stream() as ReadableStream<Uint8Array>)).catch(() => "");
-    if (text === null) return usage("The message on stdin is too long: keep it under 4,000 characters.");
+    if (text === null) return usage("stdin 上的消息太长：请控制在 4,000 个字符以内。");
     message = stdinMessage(text);
     const invalid = feedbackInputError({ message, category: parsed.category, contact: parsed.contact });
-    if (invalid) return usage(invalid === "Write your feedback first." ? `stdin was empty. ${USAGE_HINT}` : invalid);
+    if (invalid) return usage(invalid === FEEDBACK_MESSAGE_REQUIRED ? `stdin 为空。${USAGE_HINT}` : invalid);
   }
   let result: Awaited<ReturnType<typeof sendProductFeedback>>;
   try {
@@ -160,9 +161,9 @@ export async function runFeedbackCommand(argv: readonly string[], deps: Feedback
   }
   if (!result.ok) {
     // Unavailable: the plain line as it is. A refusal: the Worker's words.
-    err(result.unavailable ? result.reason : `Not sent: ${result.reason}`);
+    err(result.unavailable ? result.reason : `未发送：${result.reason}`);
     return 1;
   }
-  out("Sent");
+  out("已发送");
   return 0;
 }

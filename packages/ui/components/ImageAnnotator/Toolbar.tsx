@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import type { Tool } from './types';
 import { COLORS } from './types';
@@ -154,8 +155,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           type="button"
           onClick={() => canDecrease && onStrokeSizeChange(STROKE_SIZES[currentSizeIndex - 1])}
           disabled={!canDecrease}
-          title="Smaller stroke"
-          aria-label="Smaller stroke"
+          title="更细的笔触"
+          aria-label="更细的笔触"
           className={`p-1 rounded transition-colors ${
             canDecrease
               ? 'hover:bg-muted text-muted-foreground hover:text-foreground'
@@ -166,9 +167,9 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         </button>
         <div
           className="w-5 h-5 flex items-center justify-center"
-          title={`Stroke size: ${strokeSize}`}
+          title={`笔触大小：${strokeSize}`}
           role="img"
-          aria-label={`Stroke size: ${strokeSize}`}
+          aria-label={`笔触大小：${strokeSize}`}
         >
           <div
             className="rounded-full"
@@ -183,8 +184,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           type="button"
           onClick={() => canIncrease && onStrokeSizeChange(STROKE_SIZES[currentSizeIndex + 1])}
           disabled={!canIncrease}
-          title="Larger stroke"
-          aria-label="Larger stroke"
+          title="更粗的笔触"
+          aria-label="更粗的笔触"
           className={`p-1 rounded transition-colors ${
             canIncrease
               ? 'hover:bg-muted text-muted-foreground hover:text-foreground'
@@ -204,7 +205,7 @@ export const Toolbar: React.FC<ToolbarProps> = ({
             key={c}
             type="button"
             onClick={() => onColorChange(c)}
-            aria-label={`Colour: ${COLOR_NAMES[c] ?? c}`}
+            aria-label={`颜色：${COLOR_NAMES[c] ?? c}`}
             aria-pressed={color === c}
             className={`w-5 h-5 rounded-full border-2 transition-transform ${
               color === c ? 'scale-110 border-foreground' : 'border-transparent hover:scale-105'
@@ -221,8 +222,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
         type="button"
         onClick={onUndo}
         disabled={!canUndo}
-        title="Undo (Cmd+Z)"
-        aria-label="Undo"
+        title="撤销（Cmd+Z）"
+        aria-label="撤销"
         className={`p-1.5 rounded transition-colors ${
           canUndo
             ? 'hover:bg-muted text-muted-foreground hover:text-foreground'
@@ -237,8 +238,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
           type="button"
           onClick={onRedo}
           disabled={!canRedo}
-          title="Redo (Cmd+Shift+Z)"
-          aria-label="Redo"
+          title="重做（Cmd+Shift+Z）"
+          aria-label="重做"
           className={`p-1.5 rounded transition-colors ${
             canRedo
               ? 'hover:bg-muted text-muted-foreground hover:text-foreground'
@@ -253,8 +254,8 @@ export const Toolbar: React.FC<ToolbarProps> = ({
       <button
         type="button"
         onClick={onClear}
-        title="Clear all"
-        aria-label="Clear all"
+        title="清除全部"
+        aria-label="清除全部"
         className="p-1.5 rounded transition-colors hover:bg-muted text-muted-foreground hover:text-destructive"
       >
         <ClearIcon />

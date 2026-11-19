@@ -206,7 +206,7 @@ const AgentRow = memo(
         <ProjectNameField
           name={entry.name}
           folder={agentRowName(agentAsListed(entry.agent))}
-          label="Agent name"
+          label="智能体名称"
           emptyResets
           announce={props.announce}
           others={[]}
@@ -242,32 +242,32 @@ const AgentRow = memo(
         {onRename && (
           <Menu.Item className="ib-pmi" label="Rename…" onClick={() => act('rename')} data-agent-action="rename">
             <Icon name="pen" size={15} />
-            Rename…
+            重命名…
           </Menu.Item>
         )}
         {onRename && named && (
           <Menu.Item className="ib-pmi" label="Reset name" onClick={() => act('reset')} data-agent-action="reset">
             <Icon name="replay" size={15} />
-            Reset name
+            重置名称
           </Menu.Item>
         )}
         {onShowInRex && (
           <Menu.Item className="ib-pmi" label="Show in Rex" onClick={() => act('rex')} data-agent-action="rex">
             <Icon name="terminal" size={15} />
-            Show in Rex
+            在 Rex 中显示
           </Menu.Item>
         )}
         {(onRename || onShowInRex) && (onStop || onDelete) && <Menu.Separator className="ib-pm-sep" />}
         {onStop && (
           <Menu.Item className="ib-pmi" label={`Stop ${launchName}`} onClick={() => act('stop')} data-agent-action="stop">
             <Icon name="xCircle" size={15} />
-            Stop {launchName}
+            停止 {launchName}
           </Menu.Item>
         )}
         {onDelete && (
           <Menu.Item className="ib-pmi" label={`Delete ${launchName} session…`} onClick={() => act('delete')} data-agent-action="delete">
             <Icon name="x" size={15} />
-            Delete {launchName} session…
+            删除 {launchName} 会话…
           </Menu.Item>
         )}
       </>
@@ -290,16 +290,16 @@ const AgentRow = memo(
               {entry.name}
             </span>
             <span className="ib-sr">
-              , {agentHostName(entry.agent.host)}
-              {entry.agent.place ? `, in ${entry.agent.place.line.replace(' · ', ', ').replace(' / ', ', ')}` : ''}
-              {mark ? `, ${rexMarkWords(mark)}` : ''}
+              ，{agentHostName(entry.agent.host)}
+              {entry.agent.place ? `，位于 ${entry.agent.place.line.replace(' · ', ', ').replace(' / ', ', ')}` : ''}
+              {mark ? `，${rexMarkWords(mark)}` : ''}
             </span>
           </button>
         </Tip>
         <AgentMark id={entry.agent.id} host={entry.agent.host} name={entry.name} agent={entry.agent} picks={props.picks} statusMarks />
         {hasMenu && (
           <Menu.Root open={menuOpen} onOpenChange={setMenuOpen} modal={false}>
-            <Menu.Trigger ref={more} className="ib-pmore" aria-label={`${entry.name} options`} data-agent-more={entry.agent.id}>
+            <Menu.Trigger ref={more} className="ib-pmore" aria-label={`${entry.name} 选项`} data-agent-more={entry.agent.id}>
               <Icon name="dots" size={16} />
             </Menu.Trigger>
             <Menu.Portal container={portal ?? undefined}>
@@ -418,20 +418,20 @@ export function AgentsSection(props: AgentsSectionProps) {
       <div className="ib-secrow" data-agents-head="" data-one-add={props.onAddMachine ? undefined : ""}>
         {props.header(<GogglesMark />)}
         {props.onAddMachine && (
-          <Tip content="Add machine">
-            <button type="button" className="ib-proj-sort ib-agents-add" aria-label="Add machine" data-agents-add="machine" onClick={props.pick(() => props.onAddMachine?.())}>
+          <Tip content="添加设备">
+            <button type="button" className="ib-proj-sort ib-agents-add" aria-label="添加设备" data-agents-add="machine" onClick={props.pick(() => props.onAddMachine?.())}>
               <LaptopPlus />
             </button>
           </Tip>
         )}
-        <Tip content="Add agent">
-          <button type="button" className="ib-proj-sort ib-agents-add" aria-label="Add agent" aria-haspopup="dialog" data-agents-add="agent" onClick={(event) => props.pick(() => props.onAddAgent(event.currentTarget))()}>
+        <Tip content="添加智能体">
+          <button type="button" className="ib-proj-sort ib-agents-add" aria-label="添加智能体" aria-haspopup="dialog" data-agents-add="agent" onClick={(event) => props.pick(() => props.onAddAgent(event.currentTarget))()}>
             <Icon name="plus" />
           </button>
         </Tip>
       </div>
       <div className="ib-agents-body" id={props.bodyId} role="group" aria-labelledby={props.labelId} data-agents-section="" data-flat={captions ? undefined : ''} data-closed={props.closed ? '' : undefined}>
-        {empty && !props.closed && <div className="ib-side-empty ib-agents-empty">Agents show here while they run.</div>}
+        {empty && !props.closed && <div className="ib-side-empty ib-agents-empty">智能体运行时会显示在这里。</div>}
         {/* Closed, nothing is drawn under the heading, whatever thread or machine is open (unlike Pinned and Projects). */}
         {(props.closed ? [] : filled).map((group) => {
           const machine = group.machine;
@@ -448,7 +448,7 @@ export function AgentsSection(props: AgentsSectionProps) {
             <div key={machine?.id ?? 'flat'} className="ib-agents-group" data-agents-machine={machine?.id ?? ''}>
               {machine && captions && (
                 <div className="ib-mside ib-agents-cap" data-machine-notice={notice?.kind ?? undefined}>
-                  <Tip content={machine.self ? 'This machine' : (awayLine(machine) ?? machine.name)} side="right">
+                  <Tip content={machine.self ? '此设备' : (awayLine(machine) ?? machine.name)} side="right">
                     <button
                       type="button"
                       className={`ib-proj ib-proj-quiet${captionOn ? ' ib-on' : ''}`}
@@ -460,7 +460,7 @@ export function AgentsSection(props: AgentsSectionProps) {
                       <span className="ib-name" dir="auto">
                         {machine.name}
                       </span>
-                      {away && <span className="ib-sr">, {awayLine(machine)}</span>}
+                      {away && <span className="ib-sr">，{awayLine(machine)}</span>}
                     </button>
                   </Tip>
                   {notice && <MachineSidebarWord notice={notice} name={machine.name} onPress={props.pick(() => props.onMachineUpdate?.(machine.id))} />}

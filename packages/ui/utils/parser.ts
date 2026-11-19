@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { Block, Annotation, CodeAnnotation, EditorAnnotation, ImageAttachment } from '../types';
 import { attachedLines } from './attachedLines';
 import { planDenyFeedback } from '@plannotator/core/feedback-templates';
@@ -1545,18 +1546,18 @@ export interface LinkedDocExportHeading {
 }
 
 export const LINKED_DOC_EXPORT_HEADING: LinkedDocExportHeading = {
-  title: 'Linked Document Feedback',
-  intro: 'The following feedback is on documents referenced in the plan.',
+  title: '链接文档反馈',
+  intro: '以下反馈针对计划中引用的文档。',
 };
 
 export const FOLDER_DOC_EXPORT_HEADING: LinkedDocExportHeading = {
-  title: 'Folder Document Feedback',
-  intro: 'The following feedback is on files in the reviewed folder, grouped by file.',
+  title: '文件夹文档反馈',
+  intro: '以下反馈针对被审查文件夹中的文件，按文件分组。',
 };
 
 export const BUNDLE_DOC_EXPORT_HEADING: LinkedDocExportHeading = {
-  title: 'File Feedback',
-  intro: 'The following feedback is on the files under review, one section per file, in the order they were given for review.',
+  title: '文件反馈',
+  intro: '以下反馈针对被审查的文件，每个文件一节，按提交审查的顺序排列。',
 };
 
 export const exportLinkedDocAnnotations = (

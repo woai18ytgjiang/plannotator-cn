@@ -51,7 +51,7 @@ import { isComposingKey, keyTarget, modalOpen } from '../shortcuts/guards';
 export function artifactDetail(artifact: Artifact): string {
   if (artifact.type === 'guide') {
     const { guide } = artifact;
-    return `${guide.walkthrough ? 'Walkthrough' : 'Guided review'}, ${plural(guide.sections, 'section')}, ${plural(guide.files, 'file')}`;
+    return `${guide.walkthrough ? '导览' : '引导式审查'}，${guide.sections} 个章节，${guide.files} 个文件`;
   }
   const { attachment } = artifact;
   if (readInboxAttachmentKind(attachment.kind) === 'image') {
@@ -66,13 +66,13 @@ export function artifactDetail(artifact: Artifact): string {
 export function artifactChanged(attachment: InboxAttachmentState): { short: string; long: string } | null {
   if (attachment.unavailable) {
     return attachment.unavailable.code === 'attachment_missing'
-      ? { short: 'No longer on disk', long: 'no longer on disk, the sent version opens' }
-      : { short: 'Changed type', long: 'changed type, the sent version opens' };
+      ? { short: '磁盘上已不存在', long: '磁盘上已不存在，将打开发送时的版本' }
+      : { short: '类型已更改', long: '类型已更改，将打开发送时的版本' };
   }
   if (attachment.changed_since_sent && attachment.current) {
     return attachment.captured === 'on_open'
-      ? { short: 'Changed since opened', long: 'changed since you first opened it' }
-      : { short: 'Changed since sent', long: 'changed since it was sent' };
+      ? { short: '自打开后已更改', long: '自你首次打开后已更改' }
+      : { short: '自发送后已更改', long: '自发送后已更改' };
   }
   return null;
 }
@@ -331,7 +331,7 @@ export function GuideFace({ artifact }: { artifact: GuideArtifact }) {
       <span className="ib-art-g-ic">
         <Icon name="book" size={20} />
       </span>
-      <span className="ib-art-g-t">{guide.walkthrough ? 'Walkthrough' : 'Guided review'}</span>
+      <span className="ib-art-g-t">{guide.walkthrough ? '导览' : '引导式审查'}</span>
       <span className="ib-art-g-bars" aria-hidden="true">
         <s style={{ width: '72%' }} />
         <s style={{ width: '48%' }} />
@@ -573,8 +573,8 @@ export const ArtifactsView = forwardRef<HTMLHeadingElement, ArtifactsViewProps>(
           <span className="ib-art-empty-ic">
             <Icon name="artifacts" size={28} />
           </span>
-          <b>No artifacts in this thread yet</b>
-          <span>Files, images and guided reviews an agent sends, and files you paste into a reply, show here.</span>
+          <b>此话题中还没有产物</b>
+          <span>智能体发送的文件、图片和引导式审查，以及你粘贴到回复中的文件，都会显示在这里。</span>
         </div>
       ) : pinned.length === 0 ? (
         <ul className="ib-art-grid" aria-label={plural(count, 'artifact')}>
@@ -596,7 +596,7 @@ export const ArtifactsView = forwardRef<HTMLHeadingElement, ArtifactsViewProps>(
           )}
           {rest.length > 0 && (
             <div className="ib-art-part" data-artifacts-group="rest">
-              <h3 className="ib-art-gh">Everything else</h3>
+              <h3 className="ib-art-gh">其他所有内容</h3>
               <ul className="ib-art-grid" aria-label={plural(rest.length, 'artifact')}>
                 {rest.map(tileOf)}
               </ul>

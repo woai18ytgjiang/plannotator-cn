@@ -37,6 +37,13 @@
 
 # Plannotator
 
+> **本仓库是社区维护的非官方简体中文分支（unofficial Simplified Chinese fork）**
+>
+> - 上游项目：[backnotprop/plannotator](https://github.com/backnotprop/plannotator)，本分支基点 commit `a931eec265677682aaa33adf5b673ed69fa2f209`（Plannotator `0.29.0`）。
+> - 许可与版权：沿用上游许可（仓库根 MIT OR Apache-2.0；`packages/core`、`packages/ui` 等发布包为 Apache-2.0；第三方组件见各自 NOTICE），上游版权归原作者所有。完整说明见 [`ATTRIBUTION.md`](ATTRIBUTION.md)。
+> - 本分支只做界面简体中文化，改动清单见 [`CHANGES.zh-CN.md`](CHANGES.zh-CN.md)，本地部署与汉化说明见 [`docs/zh-CN/本地部署与汉化说明.md`](docs/zh-CN/本地部署与汉化说明.md)。
+> - 非官方版本，不代表上游项目或作者背书；Plannotator 名称与标识的权利归其权利人。
+
 **⭐️ NEW:** [Plannotator Inbox](https://plannotator.ai/inbox/) is the missing review layer between you and multi-agent work. It surfaces decisions, prototypes, variations, plans, and everything you need to stay in the loop. Works with all coding agents and personal assistants.
 
 Plannotator is a local, browser-based review surface for AI coding agents: Claude Code, Codex, Copilot CLI, Gemini CLI, OpenCode, Kiro, Droid, Amp, DeepSeek Harness, and Pi. Plannotator Inbox also works with personal assistants (Grok Bot, Muse, Hermes, OpenClaw).

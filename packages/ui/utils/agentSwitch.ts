@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Agent Switch Settings Utility
  *
@@ -33,9 +34,9 @@ export interface AgentSwitchSettings {
 
 // Fallback options when API is unavailable or for non-OpenCode origins
 export const AGENT_OPTIONS: { value: string; label: string; description: string }[] = [
-  { value: 'build', label: 'Build', description: 'Switch to build agent after approval' },
-  { value: 'custom', label: 'Custom', description: 'Switch to a custom agent after approval' },
-  { value: 'disabled', label: 'Disabled', description: 'Stay on current agent after approval' },
+  { value: 'build', label: '构建', description: '批准后切换到构建智能体' },
+  { value: 'custom', label: '自定义', description: '批准后切换到自定义智能体' },
+  { value: 'disabled', label: '禁用', description: '批准后保持当前智能体' },
 ];
 
 /** UI surface asking for the setting — only affects the unset default. */

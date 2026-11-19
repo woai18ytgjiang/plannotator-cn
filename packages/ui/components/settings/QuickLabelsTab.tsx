@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useLayoutEffect, useRef, useState } from 'react';
 import { isMac, isWindows, altKey } from '../../utils/platform';
 import {
@@ -33,13 +34,27 @@ const toRows = (labels: readonly QuickLabel[]): QuickLabelRow[] =>
 
 const shortcutHint = (digit: string) => `${altKey}${isMac ? '' : '+'}${digit}`;
 const shortcutWords = (digit: string) => `${isMac ? 'Option' : 'Alt'}+${digit}`;
-const labelName = (label: QuickLabel) => label.text.trim() || 'label';
+const labelName = (label: QuickLabel) => label.text.trim() || '标签';
+
+/** The `LABEL_COLOR_MAP` keys as Chinese names for the colour select. */
+const COLOR_NAMES: Record<string, string> = {
+  blue: '蓝色',
+  green: '绿色',
+  yellow: '黄色',
+  purple: '紫色',
+  orange: '橙色',
+  cyan: '青色',
+  teal: '蓝绿色',
+  pink: '粉色',
+  amber: '琥珀色',
+  red: '红色',
+};
 
 const EMOJI_HINT = isMac
-  ? 'Enter one emoji. Control-Command-Space opens the emoji picker.'
+  ? '输入一个 emoji。Control-Command-Space 可打开 emoji 选择器。'
   : isWindows
-    ? 'Enter one emoji. Windows+period opens the emoji picker.'
-    : 'Enter one emoji.';
+    ? '输入一个 emoji。Windows+句号 可打开 emoji 选择器。'
+    : '输入一个 emoji。';
 
 const ChevronIcon: React.FC<{ up: boolean }> = ({ up }) => (
   <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
@@ -86,7 +101,7 @@ export const QuickLabelsTab: React.FC = () => {
     pendingFocus.current = { key: row.key, target: delta < 0 ? 'up' : 'down' };
     const digit = quickLabelShortcutDigit(to);
     setAnnouncement(
-      `Moved ${labelName(row.label)} to position ${to + 1} of ${rows.length}, ${digit ? shortcutWords(digit) : 'no shortcut key'}.`,
+      `已将${labelName(row.label)}移到第 ${to + 1} 位（共 ${rows.length} 个），${digit ? shortcutWords(digit) : '无快捷键'}。`,
     );
   };
 
@@ -121,9 +136,9 @@ export const QuickLabelsTab: React.FC = () => {
     <>
       <div className="flex items-center justify-between">
         <div>
-          <div className="text-sm font-medium flex items-center gap-2">Quick Labels</div>
+          <div className="text-sm font-medium flex items-center gap-2">快捷标签</div>
           <div className="text-xs text-muted-foreground">
-            Preset annotations for one-click feedback
+            一键反馈用的预设批注
           </div>
         </div>
         <button
@@ -135,7 +150,7 @@ export const QuickLabelsTab: React.FC = () => {
           }}
           className="text-[10px] text-muted-foreground hover:text-foreground transition-colors"
         >
-          Reset to defaults
+          恢复默认
         </button>
       </div>
 
@@ -171,10 +186,10 @@ export const QuickLabelsTab: React.FC = () => {
                   type="text"
                   data-quick-label-emoji
                   value={emojiDraft ?? label.emoji}
-                  aria-label={`Emoji for ${name}`}
+                  aria-label={`${name} 的 emoji`}
                   aria-invalid={emojiInvalid || undefined}
                   aria-describedby={emojiInvalid ? emojiErrorId : undefined}
-                  title="Change emoji"
+                  title="更改 emoji"
                   autoComplete="off"
                   spellCheck={false}
                   onFocus={(e) => e.target.select()}
@@ -202,7 +217,7 @@ export const QuickLabelsTab: React.FC = () => {
                   type="text"
                   data-quick-label-text
                   value={label.text}
-                  aria-label={`Label text, position ${index + 1}`}
+                  aria-label={`标签文本，第 ${index + 1} 位`}
                   onChange={(e) => {
                     updateLabel(key, {
                       text: e.target.value,
@@ -231,7 +246,7 @@ export const QuickLabelsTab: React.FC = () => {
                         ? 'bg-foreground/10 text-foreground/70 hover:text-foreground border border-foreground/15'
                         : 'text-muted-foreground/30 hover:text-muted-foreground/60 border border-dashed border-muted-foreground/20 hover:border-muted-foreground/40'
                     }`}
-                    title={hasTip ? `Tip: ${label.tip}` : 'Add AI instruction tip'}
+                    title={hasTip ? `提示：${label.tip}` : '添加 AI 指令提示'}
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
@@ -242,12 +257,12 @@ export const QuickLabelsTab: React.FC = () => {
                   </button>
                   <select
                     value={label.color}
-                    aria-label={`Colour for ${name}`}
+                    aria-label={`${name} 的颜色`}
                     onChange={(e) => updateLabel(key, { color: e.target.value })}
                     className="px-1.5 py-1 bg-background/80 rounded text-[10px] focus:outline-none focus:ring-1 focus:ring-primary/50"
                   >
                     {Object.keys(LABEL_COLOR_MAP).map(c => (
-                      <option key={c} value={c}>{c}</option>
+                      <option key={c} value={c}>{COLOR_NAMES[c] ?? c}</option>
                     ))}
                   </select>
                   <span
@@ -263,8 +278,8 @@ export const QuickLabelsTab: React.FC = () => {
                     data-quick-label-move="up"
                     disabled={index === 0}
                     onClick={() => move(index, -1)}
-                    aria-label={`Move ${name} up`}
-                    title="Move up"
+                    aria-label={`上移${name}`}
+                    title="上移"
                     className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 disabled:opacity-30 disabled:pointer-events-none"
                   >
                     <ChevronIcon up />
@@ -274,8 +289,8 @@ export const QuickLabelsTab: React.FC = () => {
                     data-quick-label-move="down"
                     disabled={index === rows.length - 1}
                     onClick={() => move(index, 1)}
-                    aria-label={`Move ${name} down`}
-                    title="Move down"
+                    aria-label={`下移${name}`}
+                    title="下移"
                     className="p-1 rounded text-muted-foreground hover:text-foreground transition-colors flex-shrink-0 disabled:opacity-30 disabled:pointer-events-none"
                   >
                     <ChevronIcon up={false} />
@@ -286,9 +301,9 @@ export const QuickLabelsTab: React.FC = () => {
                       setEmojiDraft(key, null);
                       if (editingTipKey === key) setEditingTipKey(null);
                     }}
-                    aria-label={`Remove ${name}`}
+                    aria-label={`移除${name}`}
                     className="p-1 rounded hover:bg-destructive/10 text-muted-foreground hover:text-destructive transition-colors flex-shrink-0"
-                    title="Remove label"
+                    title="移除标签"
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -314,7 +329,7 @@ export const QuickLabelsTab: React.FC = () => {
                     type="text"
                     data-quick-label-tip
                     value={editingTipValue}
-                    aria-label={`AI instruction tip for ${name}`}
+                    aria-label={`${name} 的 AI 指令提示`}
                     onChange={(e) => setEditingTipValue(e.target.value)}
                     onKeyDown={(e) => {
                       if (e.key === 'Enter') saveTip(key);
@@ -324,7 +339,7 @@ export const QuickLabelsTab: React.FC = () => {
                         setEditingTipKey(null);
                       }
                     }}
-                    placeholder="AI instruction tip..."
+                    placeholder="AI 指令提示…"
                     className="flex-1 px-2 py-1 bg-background/60 rounded text-[10px] text-muted-foreground placeholder:text-muted-foreground/30 focus:outline-none focus:ring-1 focus:ring-primary/50"
                     autoFocus
                     onFocus={(e) => { e.target.setSelectionRange(0, 0); e.target.scrollLeft = 0; }}
@@ -332,7 +347,7 @@ export const QuickLabelsTab: React.FC = () => {
                   <button
                     onClick={() => saveTip(key)}
                     className="p-1 rounded text-muted-foreground/50 hover:text-green-500 hover:bg-green-500/10 transition-colors flex-shrink-0"
-                    title="Save tip"
+                    title="保存提示"
                   >
                     <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
@@ -354,7 +369,7 @@ export const QuickLabelsTab: React.FC = () => {
             label: {
               id: `custom-${Date.now()}`,
               emoji: '📌',
-              text: 'New label',
+              text: '新标签',
               color: 'blue',
             },
           };
@@ -363,11 +378,11 @@ export const QuickLabelsTab: React.FC = () => {
         }}
         className="w-full py-1.5 text-xs text-muted-foreground hover:text-foreground border border-dashed border-border rounded-lg hover:border-foreground/30 transition-colors"
       >
-        + Add label
+        + 添加标签
       </button>
 
       <div className="text-[10px] text-muted-foreground/70">
-        Use {shortcutHint('1')} through {shortcutHint('0')} when the annotation toolbar is visible to apply a label instantly. The order of the list decides the key; use the arrows to move a label, and click its emoji to change it.
+        批注工具栏可见时，按 {shortcutHint('1')} 至 {shortcutHint('0')} 可立即应用标签。列表顺序决定按键；用箭头移动标签，点击 emoji 即可更改。
       </div>
     </>
   );

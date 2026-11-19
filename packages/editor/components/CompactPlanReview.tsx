@@ -32,7 +32,7 @@ export const CompactPlanCompletion: React.FC<CompactPlanCompletionProps> = ({
     <div className="flex flex-col gap-4 border-t border-border/60 pt-6">
       <div>
         <h2 id="pn-compact-plan-completion-title" className="text-base font-semibold tracking-tight text-foreground">
-          Ready to finish?
+          准备完成了吗？
         </h2>
         <p className="mt-1 text-sm leading-relaxed text-muted-foreground">{feedbackSummary}</p>
       </div>
@@ -43,7 +43,7 @@ export const CompactPlanCompletion: React.FC<CompactPlanCompletionProps> = ({
         onClick={onOpenReview}
         className="flex min-h-11 w-full items-center justify-between gap-3 rounded-xl bg-primary px-4 py-3 text-left text-sm font-semibold text-primary-foreground outline-none transition-opacity active:opacity-90 focus-visible:ring-2 focus-visible:ring-ring/70 focus-visible:ring-offset-2 focus-visible:ring-offset-card"
       >
-        <span>Review and finish</span>
+        <span>审查并完成</span>
         <svg className="h-4 w-4 flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
           <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
         </svg>
@@ -80,7 +80,7 @@ export const CompactPlanReview: React.FC<CompactPlanReviewProps> = ({
     <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 py-5">
       <div className="mx-auto flex w-full max-w-xl flex-col gap-6">
         <section aria-labelledby="pn-compact-review-summary-title">
-          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">Feedback</p>
+          <p className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">反馈</p>
           <h2 id="pn-compact-review-summary-title" className="mt-2 text-xl font-semibold tracking-tight text-foreground">
             {feedbackSummary}
           </h2>
@@ -91,7 +91,7 @@ export const CompactPlanReview: React.FC<CompactPlanReviewProps> = ({
               onClick={onOpenAnnotations}
               className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-border bg-background/40 px-4 py-3 text-left text-sm font-medium text-foreground outline-none transition-colors active:bg-muted focus-visible:ring-2 focus-visible:ring-ring/60"
             >
-              <span>Review annotations</span>
+              <span>查看批注</span>
               <CommentIcon />
             </button>
             {onOpenAI && (
@@ -101,7 +101,7 @@ export const CompactPlanReview: React.FC<CompactPlanReviewProps> = ({
                 onClick={onOpenAI}
                 className="flex min-h-11 items-center justify-between gap-3 rounded-xl border border-border bg-background/40 px-4 py-3 text-left text-sm font-medium text-foreground outline-none transition-colors active:bg-muted focus-visible:ring-2 focus-visible:ring-ring/60"
               >
-                <span>Ask AI</span>
+                <span>询问 AI</span>
                 <SparklesIcon />
               </button>
             )}
@@ -110,7 +110,7 @@ export const CompactPlanReview: React.FC<CompactPlanReviewProps> = ({
 
         <section aria-labelledby="pn-compact-review-decision-title">
           <h2 id="pn-compact-review-decision-title" className="text-[11px] font-semibold uppercase tracking-[0.14em] text-muted-foreground">
-            Decision
+            决策
           </h2>
           <div className="mt-2 flex flex-col gap-2">
             {orderedActions.map((action) => {

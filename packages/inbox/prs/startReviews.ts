@@ -48,8 +48,8 @@ export async function startReview(group: ReviewGroup, machineName: string | null
     await inboxApi.pullOwnerCheck(keys, project, machine);
   } catch (cause) {
     // An older Plannotator there has no such door route.
-    if (cause instanceof InboxApiError && cause.code === 'device_route_not_found') return { group, why: `${inboxMachineLaunchWords(machineName ?? 'the other machine', 'update')}.` };
-    return { group, why: whyOf(cause, 'It didn’t go.') };
+    if (cause instanceof InboxApiError && cause.code === 'device_route_not_found') return { group, why: `${inboxMachineLaunchWords(machineName ?? '另一台设备', 'update')}.` };
+    return { group, why: whyOf(cause, '未成功。') };
   }
   const send = sendKeyFor(machine, keys, newUuid);
   const one = group.pulls.length === 1 ? inboxPullStacks(group.pulls)[0]! : null;
@@ -71,16 +71,16 @@ export async function startReview(group: ReviewGroup, machineName: string | null
   } catch (cause) {
     if (cause instanceof InboxHeldError) {
       // Never held: a review that starts days later, when nobody is looking, is not what was pressed.
-      const name = cause.machine?.name ?? 'The other machine';
+      const name = cause.machine?.name ?? '另一台设备';
       try {
         await inboxApi.cancelOutbox(cause.outbox.key);
       } catch (late) {
-        return { group, why: whyOf(late, `${name} took it late.`) };
+        return { group, why: whyOf(late, `${name} 稍后才接收。`) };
       }
       forgetSend(send);
-      return { group, why: `${name} cannot be reached now.` };
+      return { group, why: `现在无法连接 ${name}。` };
     }
-    return { group, why: whyOf(cause, 'It didn’t go.') };
+    return { group, why: whyOf(cause, '未成功。') };
   }
   const launch = 'launch' in to && started.launch?.state !== 'failed' ? (started.launch?.id ?? null) : null;
   try {
@@ -89,7 +89,7 @@ export async function startReview(group: ReviewGroup, machineName: string | null
     return { group, threadId: started.thread_id, launch, untied: null };
   } catch (cause) {
     noteStarted(send, started.thread_id, true);
-    return { group, threadId: started.thread_id, launch, untied: whyOf(cause, 'It didn’t go.') };
+    return { group, threadId: started.thread_id, launch, untied: whyOf(cause, '未成功。') };
   }
 }
 

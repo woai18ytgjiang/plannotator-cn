@@ -322,7 +322,7 @@ function SidebarTrigger({ className, onClick, ...props }: React.ComponentProps<"
 			data-sidebar="trigger"
 			data-slot="sidebar-trigger"
 			className={className ? `ib-sb-trigger ${className}` : "ib-sb-trigger"}
-			aria-label={notice ? `Toggle Sidebar, ${notice.label}` : "Toggle Sidebar"}
+			aria-label={notice ? `切换侧边栏，${notice.label}` : "切换侧边栏"}
 			data-notice={notice ? notice.tone : undefined}
 			onClick={(event) => {
 				onClick?.(event);

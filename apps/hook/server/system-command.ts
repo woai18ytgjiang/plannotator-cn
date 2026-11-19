@@ -92,7 +92,7 @@ function parseFlags(argv: readonly string[], valueFlags: readonly string[], swit
       values.set(name, ["true"]);
       continue;
     }
-    if (!valueFlags.includes(name)) throw new UsageError(`unknown option ${name}`);
+    if (!valueFlags.includes(name)) throw new UsageError(`未知选项 ${name}`);
     const value = eq > 0 ? arg.slice(eq + 1) : argv[++i];
     if (value === undefined || value === "" || (eq < 0 && value.startsWith("--"))) throw new UsageError(`${name} needs a value`);
     const seen = values.get(name);
@@ -288,7 +288,7 @@ function parsePr(value: string): { repo: string; segments: [string, string, stri
 
 async function runRevision(argv: readonly string[], deps: SystemCommandDeps, out: (text: string) => Promise<void>, err: (text: string) => void): Promise<number> {
   const f = parseFlags(argv, ["--project", "--pr", "--head"]);
-  if (f.words.length !== 1 || f.words[0] !== "-") throw new UsageError("revision reads the YAML on stdin: end the command with -");
+  if (f.words.length !== 1 || f.words[0] !== "-") throw new UsageError("revision 从 stdin 读取 YAML：请在命令末尾加上 -");
   const root = projectFolder(deps, f);
   const pr = parsePr(required(f, "--pr"));
   const head = required(f, "--head");
@@ -413,17 +413,17 @@ export async function runSystemCommand(argv: readonly string[], deps: SystemComm
     if (sub === "tick") return await runTick(rest, deps, out);
     if (sub === "revision") return await runRevision(rest, deps, out, err);
     if (sub === "schedule") return await runSchedule(rest, deps, out);
-    throw new UsageError(`unknown command "${sub}"; plannotator system takes check, gate, tick, revision or schedule`);
+    throw new UsageError(`未知命令 "${sub}"；plannotator system 支持 check、gate、tick、revision 或 schedule`);
   } catch (e) {
     if (e instanceof UsageError) {
-      err(`usage: ${e.message}. Run 'plannotator system --help'.`);
+      err(`用法：${e.message}。运行 'plannotator system --help'。`);
       return 2;
     }
     if (e instanceof Refusal) {
       err(`${e.code}: ${e.message}`);
       return 1;
     }
-    err(`failed: ${(e as Error).message}`);
+    err(`失败：${(e as Error).message}`);
     return 1;
   }
 }

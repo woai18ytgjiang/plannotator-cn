@@ -36,15 +36,15 @@ export const GeneratedFileNotice: React.FC<{
         onExpand();
       }}
       className="flex w-full items-center gap-2 px-4 py-2 text-left text-xs leading-relaxed text-muted-foreground border-b border-border bg-muted/30 hover:bg-muted/60 transition-colors cursor-pointer"
-      title="Expand diff"
+      title="展开差异"
     >
-      <span>Generated file collapsed</span>
+      <span>已折叠生成的文件</span>
       <span className="flex items-center gap-1.5 font-mono">
         {additions > 0 && <span className="text-success">+{additions}</span>}
         {deletions > 0 && <span className="text-destructive">-{deletions}</span>}
       </span>
       <span className="ml-auto underline decoration-dotted underline-offset-2">
-        Click to view
+        点击查看
       </span>
     </button>
   );

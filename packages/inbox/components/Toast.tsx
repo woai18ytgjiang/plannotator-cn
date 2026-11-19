@@ -60,7 +60,7 @@ export function toastSpeech(toast: Pick<InboxToastModel, 'lead' | 'detail' | 'on
   const said = toast.speech ? sentence(toast.speech) : toast.detail ? `${sentence(toast.lead)} ${sentence(toast.detail)}` : sentence(toast.lead);
   if (!toast.onUndo) return said;
   // With single keys off Z does nothing, so it is not offered.
-  return `${said} ${phone || !singleKeys ? 'Undo is available.' : `Press ${hintText({ scope: inboxThreadShortcuts, action: 'undo' })} to undo.`}`;
+  return `${said} ${phone || !singleKeys ? '可以撤销。' : `按 ${hintText({ scope: inboxThreadShortcuts, action: 'undo' })} 撤销。`}`;
 }
 
 /**
@@ -162,18 +162,18 @@ function ToastBody({ toast, phone, onDismiss }: { toast: InboxToastModel; phone:
           )}
           {reply && (
             <button type="button" className="ib-tghost" onClick={toast.onReply} data-toast-reply="">
-              Reply
+              回复
             </button>
           )}
           {toast.onUndo && (
             <button type="button" className="ib-tundo" {...undoPress} data-toast-undo="" aria-keyshortcuts={toast.noKey || (phone && touchPhone) ? undefined : undoKeys}>
-              Undo
+              撤销
               {/* A narrow desktop window (the phone layout, a mouse and keys) keeps Z, as it keeps Reply. */}
               {!toast.noKey && !(phone && touchPhone) && <ShortcutHint scope={inboxThreadShortcuts} action="undo" className="" touchOnly />}
             </button>
           )}
           {onDismiss && (
-            <button type="button" className="ib-tclose" onClick={onDismiss} aria-label="Dismiss" data-toast-dismiss="">
+            <button type="button" className="ib-tclose" onClick={onDismiss} aria-label="忽略" data-toast-dismiss="">
               <Icon name="x" size={14} />
             </button>
           )}

@@ -69,7 +69,7 @@ export function createBunShapeRoutes(options: { dataDir: string; heartbeatMs?: n
     /** A Response for a Shape path, else null. */
     async route(req: Request, url: URL): Promise<Response | null> {
       if (url.pathname === SHAPE_EVENTS_PATH) {
-        if (req.method !== "GET") return Response.json({ error: "method not allowed" }, { status: 405, headers: NO_STORE });
+        if (req.method !== "GET") return Response.json({ error: "不允许使用该方法" }, { status: 405, headers: NO_STORE });
         return events(req);
       }
       const answer = await handleShapeRoute({ method: req.method, pathname: url.pathname, params: url.searchParams, json: () => req.json() }, deps);

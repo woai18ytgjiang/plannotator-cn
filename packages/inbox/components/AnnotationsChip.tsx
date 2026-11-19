@@ -203,7 +203,7 @@ export function AnnotationsList({
       <div className="ib-aph">
         <b>{plural(records.length, 'comment')}</b>
         <span className="ib-sp" />
-        <button type="button" className="ib-iconbtn" onClick={() => closeRef.current(true)} aria-label="Close the list">
+        <button type="button" className="ib-iconbtn" onClick={() => closeRef.current(true)} aria-label="关闭列表">
           <Icon name="x" />
         </button>
       </div>
@@ -249,7 +249,7 @@ export function AnnotationsList({
               <>
                 <textarea
                   className="ib-aed"
-                  aria-label="Edit the comment"
+                  aria-label="编辑评论"
                   value={editing.text}
                   autoFocus
                   rows={2}

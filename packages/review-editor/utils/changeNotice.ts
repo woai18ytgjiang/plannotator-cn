@@ -10,12 +10,12 @@ export function changeNotice(patch: string): string | null {
     if (removed !== undefined && added !== undefined) return `Symlink: ${removed} → ${added}`;
     if (added !== undefined) return `Symlink to ${added}`;
     if (removed !== undefined) return `Symlink to ${removed}, removed`;
-    return 'Symlink';
+    return '符号链接';
   }
   if (hunkAt !== -1 || /^(?:Binary files|GIT binary patch)/m.test(patch)) return null;
   const mode = head.match(/^old mode (\d+)\r?\nnew mode (\d+)$/m);
   if (mode) return `Mode changed ${mode[1]} → ${mode[2]}`;
-  if (/^new file mode/m.test(head)) return 'Empty file';
-  if (/^deleted file mode/m.test(head)) return 'Empty file, deleted';
+  if (/^new file mode/m.test(head)) return '空文件';
+  if (/^deleted file mode/m.test(head)) return '空文件，已删除';
   return null;
 }

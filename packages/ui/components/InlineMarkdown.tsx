@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { createContext, useContext, useState, useMemo, useSyncExternalStore } from "react";
 import { isCodeFilePath, isCodeFilePathStrict, CODE_PATH_BARE_REGEX, parseCodePath } from "@plannotator/core/code-file";
 import { findCrossRepoRef, forgeRefLinks, gitlabHostsSnapshot, matchCrossRepoRef, subscribeGitlabHosts, type CrossRepoRef } from "@plannotator/core/forge-refs";
@@ -131,7 +132,7 @@ const CodeFileLink: React.FC<{
         onMouseEnter={handleMouseEnter}
         onMouseLeave={handleMouseLeave}
         className="code-file-link px-1.5 py-0.5 rounded bg-muted text-sm font-mono cursor-pointer hover:text-primary inline-flex items-center gap-1 transition-colors"
-        title={isAmbiguous ? `${display} — multiple matches` : `View: ${display}`}
+        title={isAmbiguous ? `${display} — 多个匹配` : `查看：${display}`}
       >
         {display}
         <CodeFileIcon />
@@ -468,8 +469,8 @@ const HostResolvedImage: React.FC<{
   return (
     <>
       {failed && (
-        <span key="unavailable" className={`${UNAVAILABLE_IMAGE_CLASS} annotation-exclude`} title="Image could not be loaded" data-image-unavailable="">
-          {alt || 'Image'}
+        <span key="unavailable" className={`${UNAVAILABLE_IMAGE_CLASS} annotation-exclude`} title="图片无法加载" data-image-unavailable="">
+          {alt || '图片'}
         </span>
       )}
       <img
@@ -1131,7 +1132,7 @@ export const InlineMarkdown: React.FC<{
           <span
             key={key++}
             className="text-muted-foreground line-through decoration-muted-foreground/60"
-            title="Document deleted"
+            title="文档已删除"
           >
             {display}
           </span>,
@@ -1146,7 +1147,7 @@ export const InlineMarkdown: React.FC<{
               onOpenLinkedDoc(targetPath);
             }}
             className="text-primary underline underline-offset-2 hover:text-primary/80 inline-flex items-center gap-1 cursor-pointer"
-            title={`Open: ${target}`}
+            title={`打开：${target}`}
           >
             {display}
             <svg
@@ -1187,7 +1188,7 @@ export const InlineMarkdown: React.FC<{
       } else if (tag.src) {
         parts.push(
           <span key={key++} className={UNAVAILABLE_IMAGE_CLASS} title={resolved?.kind === 'unavailable' ? resolved.title : undefined} data-image-unavailable="">
-            {tag.alt || 'Image'}
+            {tag.alt || '图片'}
           </span>,
         );
       }
@@ -1212,7 +1213,7 @@ export const InlineMarkdown: React.FC<{
             title={resolvedImage.title}
             data-image-unavailable=""
           >
-            {alt || 'Image'}
+            {alt || '图片'}
           </span>,
         );
         remaining = remaining.slice(match[0].length);
@@ -1387,7 +1388,7 @@ export const InlineMarkdown: React.FC<{
               onOpenLinkedDoc(linkedDocPath);
             }}
             className="text-primary underline underline-offset-2 hover:text-primary/80 inline-flex items-center gap-1 cursor-pointer"
-            title={`Open: ${linkUrl}`}
+            title={`打开：${linkUrl}`}
           >
             {label}
             <svg
@@ -1416,7 +1417,7 @@ export const InlineMarkdown: React.FC<{
               onOpenCodeFile(codeFilePath);
             }}
             className="text-primary underline underline-offset-2 hover:text-primary/80 inline-flex items-center gap-1 cursor-pointer"
-            title={`View: ${linkUrl}`}
+            title={`查看：${linkUrl}`}
           >
             {label}
             <CodeFileIcon />

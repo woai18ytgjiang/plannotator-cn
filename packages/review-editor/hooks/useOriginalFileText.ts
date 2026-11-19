@@ -27,11 +27,11 @@ export function useOriginalFileText(
         if (controller.signal.aborted) return;
         if (!response.ok) setState({ status: 'error', message: body.error ?? `HTTP ${response.status}` });
         else if (typeof body.oldContent === 'string') setState({ status: 'ready', content: body.oldContent });
-        else setState({ status: 'none', message: 'This file is new: it has no original.' });
+        else setState({ status: 'none', message: '这是新文件：没有原始版本。' });
       })
       .catch((error) => {
         if (controller.signal.aborted) return;
-        setState({ status: 'error', message: error instanceof Error ? error.message : 'The original could not be read.' });
+        setState({ status: 'error', message: error instanceof Error ? error.message : '无法读取原始版本。' });
       });
     return () => controller.abort();
   }, [path, oldPath, base, snapshotId, fetchImpl]);

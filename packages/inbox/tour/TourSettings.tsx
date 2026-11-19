@@ -41,9 +41,9 @@ export function tourMoreColorSets(half: ThemeHalf, themes: ThemeInfo[] = BUILT_I
 }
 
 const MODES: { id: Mode; label: string; icon: 'sun' | 'moon' | 'system' }[] = [
-  { id: 'light', label: 'Light', icon: 'sun' },
-  { id: 'dark', label: 'Dark', icon: 'moon' },
-  { id: 'system', label: 'Match system', icon: 'system' },
+  { id: 'light', label: '浅色', icon: 'sun' },
+  { id: 'dark', label: '深色', icon: 'moon' },
+  { id: 'system', label: '跟随系统', icon: 'system' },
 ];
 
 /** The tile's name: "Modern" for "Plannotator Modern"; the card already says it is Plannotator. */
@@ -154,7 +154,7 @@ export const TourSettings = forwardRef<TourSettingsHandle, { onSettings: () => v
     <div className="ib-tset" data-tour-settings="" data-waiting={ready ? undefined : ''} aria-busy={ready ? undefined : true}>
       <div className="ib-tset-grp">
         <span className="ib-tset-l" id="ib-tset-theme">
-          Theme
+          主题
         </span>
         <div className="ib-tset-tiles" role="radiogroup" aria-labelledby="ib-tset-theme">
           {MODES.map((choice) => {
@@ -193,7 +193,7 @@ export const TourSettings = forwardRef<TourSettingsHandle, { onSettings: () => v
       </div>
       <div className="ib-tset-grp">
         <span className="ib-tset-l" id="ib-tset-colors">
-          Colors
+          配色
         </span>
         <div className="ib-tset-tiles" role="radiogroup" aria-labelledby="ib-tset-colors">
           {sets.map((set) => {
@@ -229,7 +229,7 @@ export const TourSettings = forwardRef<TourSettingsHandle, { onSettings: () => v
           })}
         </div>
         <p className="ib-tset-more" data-tour-more-colors={more}>
-          {more > 0 ? `${more} more in ` : 'More in '}
+          {more > 0 ? `还有 ${more} 个配色在 ` : '更多配色在 '}
           <a
             href="#settings/general"
             data-tour-settings-link=""
@@ -238,13 +238,13 @@ export const TourSettings = forwardRef<TourSettingsHandle, { onSettings: () => v
               onSettings();
             }}
           >
-            Settings
+            设置
           </a>
         </p>
       </div>
       <div className="ib-tset-grp ib-tset-row">
         <span className="ib-tset-l" id="ib-tset-size">
-          Text size
+          文字大小
         </span>
         <span className="ib-seg" role="radiogroup" aria-labelledby="ib-tset-size">
           {INBOX_TEXT_SIZES.map((n) => (

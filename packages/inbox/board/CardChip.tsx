@@ -9,7 +9,7 @@ export function CardChip({ card, onOpen }: { card: InboxCardWire | null; onOpen:
   if (!card) return null;
   const column = INBOX_CARD_COLUMN_LABELS[card.column];
   return (
-    <button type="button" className="ib-cardchip" onClick={onOpen} data-thread-card={card.id} aria-label={`Board card: ${card.title}, ${column}. Open the card`}>
+    <button type="button" className="ib-cardchip" onClick={onOpen} data-thread-card={card.id} aria-label={`看板卡片：${card.title}，${column}。打开卡片`}>
       <span className="ib-lane-dot" data-col={card.column} aria-hidden="true" />
       <b dir="auto">{card.title}</b>
       <span>· {column}</span>

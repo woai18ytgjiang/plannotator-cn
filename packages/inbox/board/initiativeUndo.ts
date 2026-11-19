@@ -6,7 +6,7 @@
 import { InboxApiError, inboxApi } from '../api';
 import type { InboxInitiative } from '@plannotator/core/inbox-types';
 
-export const INITIATIVE_SAVE_FAILED = 'That did not save. Try again.';
+export const INITIATIVE_SAVE_FAILED = '未能保存，请重试。';
 
 /** A refusal the person can read: the server's own words stand. */
 export function initiativeRefusal(cause: unknown): string | null {

@@ -9,7 +9,7 @@ import { inboxThreadShortcuts } from '../shortcuts/thread.shortcuts';
 import { isEditableTarget, keyTarget } from '../shortcuts/guards';
 import { useShortcutAria } from '../shortcuts/hint';
 import { copyAuthor, copyMarkdown, messageMarkdown, threadMarkdown } from '../copyMarkdown';
-import { plural, shortAgentName, whenTime } from '../format';
+import { shortAgentName, whenTime } from '../format';
 import { Icon } from '../icons';
 import { DECISIONS_POST_TO_WORDS, decisionExportUrl, threadHasQuestionCards } from '../decisionExport';
 import { inboxApi, type DecisionsPostTo } from '../api';
@@ -52,18 +52,18 @@ function who(message: InboxMessageWire, short = false): string {
 
 function useCopies(host: () => CopyMenuHost) {
   const say = (ok: boolean, lead: string, detail: string, speech?: string) =>
-    host().onToast?.(ok ? { icon: 'check', lead, detail, ...(speech && speech !== `${lead}. ${detail}` ? { speech } : {}) } : { icon: 'warn', lead: "Couldn't copy" });
+    host().onToast?.(ok ? { icon: 'check', lead, detail, ...(speech && speech !== `${lead}. ${detail}` ? { speech } : {}) } : { icon: 'warn', lead: "复制失败" });
   const named = (lead: string, message: InboxMessageWire) => say(true, lead, who(message, true), `${lead}. ${who(message)}`);
-  const subject = () => `“${host().thread.subject ?? '(no subject)'}”`;
+  const subject = () => `“${host().thread.subject ?? '（无主题）'}”`;
   return {
-    message: (message: InboxMessageWire) => void copyMarkdown(messageMarkdown(message)).then((ok) => (ok ? named('Message copied', message) : say(false, '', ''))),
-    messageLink: (message: InboxMessageWire) => void copyTextToClipboard(host().linkOf(message.id)).then((ok) => (ok ? named('Link copied', message) : say(false, '', ''))),
+    message: (message: InboxMessageWire) => void copyMarkdown(messageMarkdown(message)).then((ok) => (ok ? named('消息已复制', message) : say(false, '', ''))),
+    messageLink: (message: InboxMessageWire) => void copyTextToClipboard(host().linkOf(message.id)).then((ok) => (ok ? named('链接已复制', message) : say(false, '', ''))),
     thread: () => {
       const { thread } = host();
-      void copyMarkdown(threadMarkdown(thread)).then((ok) => say(ok, 'Thread copied', plural(thread.messages.length, 'message')));
+      void copyMarkdown(threadMarkdown(thread)).then((ok) => say(ok, '话题已复制', `${thread.messages.length} 条消息`));
     },
-    threadLink: () => void copyTextToClipboard(host().linkOf()).then((ok) => say(ok, 'Link copied', subject())),
-    threadId: () => void copyTextToClipboard(host().thread.thread_id).then((ok) => say(ok, 'Thread ID copied', subject())),
+    threadLink: () => void copyTextToClipboard(host().linkOf()).then((ok) => say(ok, '链接已复制', subject())),
+    threadId: () => void copyTextToClipboard(host().thread.thread_id).then((ok) => say(ok, '话题 ID 已复制', subject())),
   };
 }
 
@@ -144,18 +144,18 @@ export function MessageMenu(props: { phone: boolean; newest: { readonly current:
           <Menu.Separator className="ib-pm-sep" />
         </>
       )}
-      <Menu.Item className="ib-pmi" label="Copy message" onClick={() => copies.message(message)} data-copy-item="message">
+      <Menu.Item className="ib-pmi" label="复制消息" onClick={() => copies.message(message)} data-copy-item="message">
         <Icon name="copy" size={15} />
-        Copy message
+        复制消息
       </Menu.Item>
-      <Menu.Item className="ib-pmi" label="Copy link to message" onClick={() => copies.messageLink(message)} data-copy-item="message-link">
+      <Menu.Item className="ib-pmi" label="复制消息链接" onClick={() => copies.messageLink(message)} data-copy-item="message-link">
         <Icon name="link" size={15} />
-        Copy link to message
+        复制消息链接
       </Menu.Item>
       <Menu.Separator className="ib-pm-sep" />
-      <Menu.Item className="ib-pmi" label="Copy thread" onClick={() => copies.thread()} data-copy-item="thread">
+      <Menu.Item className="ib-pmi" label="复制话题" onClick={() => copies.thread()} data-copy-item="thread">
         <Icon name="stack" size={15} />
-        Copy thread
+        复制话题
       </Menu.Item>
     </>
   );
@@ -169,7 +169,7 @@ export function MessageMenu(props: { phone: boolean; newest: { readonly current:
         className="ib-mut ib-mmore"
         aria-haspopup="menu"
         aria-expanded={false}
-        aria-label={`More: ${named}`}
+        aria-label={`更多：${named}`}
         data-phone={phone ? '' : undefined}
         data-message-more={message.id}
         onClick={() => {
@@ -191,11 +191,11 @@ export function MessageMenu(props: { phone: boolean; newest: { readonly current:
   }
   const trigger = (
     <Menu.Root open={open} onOpenChange={setOpen} modal={false}>
-      <Tip content="More">
+      <Tip content="更多">
         <Menu.Trigger
           ref={more}
           className="ib-mut ib-mmore"
-          aria-label={`More: ${named}`}
+          aria-label={`更多：${named}`}
           data-open={open || contextOpen ? '' : undefined}
           data-phone={phone ? '' : undefined}
           data-message-more={message.id}
@@ -206,7 +206,7 @@ export function MessageMenu(props: { phone: boolean; newest: { readonly current:
       <Menu.Portal container={portal ?? undefined}>
         {phone && <Menu.Backdrop className="ib-pm-scrim" />}
         <Menu.Positioner className="ib-pm-pos" side="bottom" align="end" sideOffset={4} data-phone={phone ? '' : undefined}>
-          <Menu.Popup ref={menuPopup} className="ib-pm" aria-label={`Message from ${named}`} data-message-menu={message.id}>
+          <Menu.Popup ref={menuPopup} className="ib-pm" aria-label={`来自 ${named} 的消息`} data-message-menu={message.id}>
             {items}
           </Menu.Popup>
         </Menu.Positioner>
@@ -221,7 +221,7 @@ export function MessageMenu(props: { phone: boolean; newest: { readonly current:
       <ContextMenu.Portal container={portal ?? undefined}>
         <ContextMenu.Positioner className="ib-pm-pos">
           {/* Focus goes back to the message's ⋯, never the page. */}
-          <ContextMenu.Popup className="ib-pm" aria-label={`Message from ${named}`} data-message-menu={message.id} data-context="" finalFocus={more}>
+          <ContextMenu.Popup className="ib-pm" aria-label={`来自 ${named} 的消息`} data-message-menu={message.id} data-context="" finalFocus={more}>
             {items}
           </ContextMenu.Popup>
         </ContextMenu.Positioner>
@@ -360,7 +360,7 @@ export function ThreadMore(
     <>
       <Menu.Separator className="ib-pm-sep" />
       <Menu.Group>
-        <Menu.GroupLabel className="ib-pm-glabel">Post on a pull request</Menu.GroupLabel>
+        <Menu.GroupLabel className="ib-pm-glabel">发布到拉取请求</Menu.GroupLabel>
         {linked.map((pull) => (
           <Menu.Item key={pull.pull} className="ib-pmi" label={pull.ref} onClick={() => postDecisions.post(pull.ref)} data-decision-post={pull.ref}>
             <RefMarkIcon kind="pr" state={pull.state} size={15} />
@@ -368,7 +368,7 @@ export function ThreadMore(
           </Menu.Item>
         ))}
         {pullsAnswer && linked.length === 0 && (
-          <Menu.Item className="ib-pmi" label="Add a pull request" onClick={postDecisions.addPullThenPost} data-decision-post-add="">
+          <Menu.Item className="ib-pmi" label="添加拉取请求" onClick={postDecisions.addPullThenPost} data-decision-post-add="">
             <Icon name="link" size={15} />
             Add a pull request…
           </Menu.Item>
@@ -377,7 +377,7 @@ export function ThreadMore(
             group, no divider, a quiet indented sub-choice under them. */}
         {postTo && (
           <Menu.RadioGroup
-            aria-label="Where to post"
+            aria-label="发布位置"
             className="ib-pm-subchoice"
             data-decision-post-where=""
             value={postTo}
@@ -404,11 +404,11 @@ export function ThreadMore(
   );
   const downloads = (
     <>
-      <Menu.Item className="ib-pmi" label="Download as Markdown" render={<a href={decisionExportUrl(thread.thread_id, 'md')} download="" />} data-decision-export="md">
+      <Menu.Item className="ib-pmi" label="下载为 Markdown" render={<a href={decisionExportUrl(thread.thread_id, 'md')} download="" />} data-decision-export="md">
         <Icon name="doc" size={15} />
         Download as Markdown
       </Menu.Item>
-      <Menu.Item className="ib-pmi" label="Download as HTML" render={<a href={decisionExportUrl(thread.thread_id, 'html')} download="" />} data-decision-export="html">
+      <Menu.Item className="ib-pmi" label="下载为 HTML" render={<a href={decisionExportUrl(thread.thread_id, 'html')} download="" />} data-decision-export="html">
         <Icon name="code" size={15} />
         Download as HTML
       </Menu.Item>
@@ -416,7 +416,7 @@ export function ThreadMore(
     </>
   );
   const exportItem = !exportOffered ? null : phone ? (
-    <Menu.Item className="ib-pmi" label="Export decisions" closeOnClick={false} onClick={() => setExportView(true)} data-thread-export-item="">
+    <Menu.Item className="ib-pmi" label="导出决策" closeOnClick={false} onClick={() => setExportView(true)} data-thread-export-item="">
       <Icon name="download" size={15} />
       Export decisions
       <span className="ib-zsub">
@@ -425,7 +425,7 @@ export function ThreadMore(
     </Menu.Item>
   ) : (
     <Menu.SubmenuRoot>
-      <Menu.SubmenuTrigger className="ib-pmi" label="Export decisions" data-thread-export-item="">
+      <Menu.SubmenuTrigger className="ib-pmi" label="导出决策" data-thread-export-item="">
         <Icon name="download" size={15} />
         Export decisions
         <span className="ib-zsub">
@@ -434,7 +434,7 @@ export function ThreadMore(
       </Menu.SubmenuTrigger>
       <Menu.Portal container={portal ?? undefined}>
         <Menu.Positioner className="ib-pm-pos" side="left" align="start" sideOffset={2}>
-          <Menu.Popup className="ib-pm" aria-label="Export decisions" data-thread-export-menu="">
+          <Menu.Popup className="ib-pm" aria-label="导出决策" data-thread-export-menu="">
             {downloads}
           </Menu.Popup>
         </Menu.Positioner>
@@ -444,41 +444,41 @@ export function ThreadMore(
   const readItems = (
     <>
       {markRead && (
-        <Menu.Item className="ib-pmi" label="Mark read" onClick={markRead} aria-keyshortcuts={phone ? undefined : markReadKeys} data-thread-read-item="">
+        <Menu.Item className="ib-pmi" label="标为已读" onClick={markRead} aria-keyshortcuts={phone ? undefined : markReadKeys} data-thread-read-item="">
           <Icon name="mailOpen" size={15} />
-          Mark read
+          标为已读
         </Menu.Item>
       )}
       {moveBack && (
-        <Menu.Item className="ib-pmi" label="Move back to the top" onClick={moveBack} data-thread-move-back-item="">
+        <Menu.Item className="ib-pmi" label="移回顶部" onClick={moveBack} data-thread-move-back-item="">
           <Icon name="inbox" size={15} />
-          Move back to the top
+          移回顶部
         </Menu.Item>
       )}
       {markUnread && (
-        <Menu.Item className="ib-pmi" label="Mark unread" onClick={markUnread} data-thread-unread-item="">
+        <Menu.Item className="ib-pmi" label="标为未读" onClick={markUnread} data-thread-unread-item="">
           <Icon name="mail" size={15} />
-          Mark unread
+          标为未读
         </Menu.Item>
       )}
     </>
   );
   const unsnoozeItem = snooze?.snoozed && (
-    <Menu.Item className="ib-pmi" label="Unsnooze" onClick={snooze.onUnsnooze} data-thread-unsnooze-item="">
+    <Menu.Item className="ib-pmi" label="取消稍后提醒" onClick={snooze.onUnsnooze} data-thread-unsnooze-item="">
       <Icon name="inbox" size={15} />
-      Unsnooze
+      取消稍后提醒
     </Menu.Item>
   );
   const pinItem = pin && (
-    <Menu.Item className="ib-pmi" label={pin.pinned ? 'Unstar thread' : 'Star thread'} onClick={pin.onToggle} data-thread-pin-item="">
+    <Menu.Item className="ib-pmi" label={pin.pinned ? '取消星标话题' : '星标话题'} onClick={pin.onToggle} data-thread-pin-item="">
       <Icon name="star" size={15} className={pin.pinned ? 'ib-star-on' : undefined} />
-      {pin.pinned ? 'Unstar thread' : 'Star thread'}
+      {pin.pinned ? '取消星标话题' : '星标话题'}
     </Menu.Item>
   );
   const priorityItem = priority && (
-    <Menu.Item className="ib-pmi" label={priority.on ? 'Remove from Priority' : 'Add to Priority'} onClick={priority.onToggle} data-thread-priority-item="">
+    <Menu.Item className="ib-pmi" label={priority.on ? '从优先级中移除' : '加入优先级'} onClick={priority.onToggle} data-thread-priority-item="">
       <Icon name={priority.on ? 'toBottom' : 'toTop'} size={15} />
-      {priority.on ? 'Remove from Priority' : 'Add to Priority'}
+      {priority.on ? '从优先级中移除' : '加入优先级'}
     </Menu.Item>
   );
   const leadItems = !!(markRead || moveBack || markUnread || snooze);
@@ -486,16 +486,16 @@ export function ThreadMore(
     <>
       {readItems}
       {snooze?.blocked && (
-        <Menu.Item className="ib-pmi" label={`Snooze: update ${snooze.blocked.name} first`} onClick={snooze.blocked.onPress} data-thread-snooze-item="" data-snooze-blocked="">
+        <Menu.Item className="ib-pmi" label={`稍后提醒：请先更新 ${snooze.blocked.name}`} onClick={snooze.blocked.onPress} data-thread-snooze-item="" data-snooze-blocked="">
           <Icon name="clock" size={15} />
-          Snooze
-          <span className="ib-zsub ib-zneeds">Update {snooze.blocked.name}</span>
+          稍后提醒
+          <span className="ib-zsub ib-zneeds">更新 {snooze.blocked.name}</span>
         </Menu.Item>
       )}
       {snooze && !snooze.blocked && (
-        <Menu.Item className="ib-pmi" label="Snooze" closeOnClick={false} onClick={() => setView('times')} aria-keyshortcuts={phone ? undefined : snoozeKeys} data-thread-snooze-item="">
+        <Menu.Item className="ib-pmi" label="稍后提醒" closeOnClick={false} onClick={() => setView('times')} aria-keyshortcuts={phone ? undefined : snoozeKeys} data-thread-snooze-item="">
           <Icon name="clock" size={15} />
-          Snooze
+          稍后提醒
           <span className="ib-zsub">
             <Icon name="chevR" size={13} />
           </span>
@@ -523,21 +523,21 @@ export function ThreadMore(
         }
       }}
     >
-      <Tip content="More">
-        <Menu.Trigger ref={ref} className="ib-iconbtn ib-tmore" aria-label="More" data-thread-more="" data-snooze-key={!phone && snooze && !snooze.blocked ? '' : undefined}>
+      <Tip content="更多">
+        <Menu.Trigger ref={ref} className="ib-iconbtn ib-tmore" aria-label="更多" data-thread-more="" data-snooze-key={!phone && snooze && !snooze.blocked ? '' : undefined}>
           <Icon name="dots" size={18} />
         </Menu.Trigger>
       </Tip>
       <Menu.Portal container={portal ?? undefined}>
         {phone && <Menu.Backdrop className="ib-pm-scrim" />}
         <Menu.Positioner className="ib-pm-pos" side="bottom" align="end" sideOffset={4} data-phone={phone ? '' : undefined}>
-          <Menu.Popup ref={popup} className="ib-pm" aria-label={thread.subject ?? 'Thread'} data-thread-menu="" data-thread-snooze-menu={view ? '' : undefined}>
+          <Menu.Popup ref={popup} className="ib-pm" aria-label={thread.subject ?? '话题'} data-thread-menu="" data-thread-snooze-menu={view ? '' : undefined}>
             {view && snooze ? (
               <>
                 {/* A phone's sheet keeps its title over the times (the approved phone sheet). */}
                 {phone && (
                   <div className="ib-pm-title" dir="auto" aria-hidden="true">
-                    {thread.subject ?? '(no subject)'}
+                    {thread.subject ?? '（无主题）'}
                   </div>
                 )}
                 <SnoozeTimes
@@ -555,7 +555,7 @@ export function ThreadMore(
               <>
                 {phone && (
                   <div className="ib-pm-title" dir="auto" aria-hidden="true">
-                    {thread.subject ?? '(no subject)'}
+                    {thread.subject ?? '（无主题）'}
                   </div>
                 )}
                 <AddTagList
@@ -570,11 +570,11 @@ export function ThreadMore(
             ) : exportView && exportOffered ? (
               <>
                 <div className="ib-pm-title" dir="auto" aria-hidden="true">
-                  {thread.subject ?? '(no subject)'}
+                  {thread.subject ?? '（无主题）'}
                 </div>
                 <Menu.Item
                   className="ib-pmi ib-zb"
-                  label="Export decisions"
+                  label="导出决策"
                   closeOnClick={false}
                   onClick={() => {
                     backed.current = true;
@@ -584,33 +584,33 @@ export function ThreadMore(
                   data-decision-export-back=""
                 >
                   <Icon name="chevL" size={14} />
-                  Export decisions
+                  导出决策
                 </Menu.Item>
                 {downloads}
               </>
             ) : (
               <>
                 <div className="ib-pm-title" dir="auto" aria-hidden="true">
-                  {thread.subject ?? '(no subject)'}
+                  {thread.subject ?? '（无主题）'}
                 </div>
                 {launch && (launch.copyAttach || launch.stop || launch.remove) && (
                   <>
                     {launch.copyAttach && (
-                      <Menu.Item className="ib-pmi" label="Copy attach command" onClick={launch.copyAttach} data-launch-item="attach">
+                      <Menu.Item className="ib-pmi" label="复制附加命令" onClick={launch.copyAttach} data-launch-item="attach">
                         <Icon name="copy" size={15} />
-                        Copy attach command
+                        复制附加命令
                       </Menu.Item>
                     )}
                     {launch.stop && (
-                      <Menu.Item className="ib-pmi" label={`Stop ${launch.name}`} onClick={launch.stop} data-launch-item="stop">
+                      <Menu.Item className="ib-pmi" label={`停止 ${launch.name}`} onClick={launch.stop} data-launch-item="stop">
                         <Icon name="xCircle" size={15} />
-                        Stop {launch.name}
+                        停止 {launch.name}
                       </Menu.Item>
                     )}
                     {launch.remove && (
-                      <Menu.Item className="ib-pmi" label={`Delete ${launch.name} session…`} onClick={launch.remove} data-launch-item="delete">
+                      <Menu.Item className="ib-pmi" label={`删除 ${launch.name} 会话…`} onClick={launch.remove} data-launch-item="delete">
                         <Icon name="x" size={15} />
-                        Delete {launch.name} session…
+                        删除 {launch.name} 会话…
                       </Menu.Item>
                     )}
                     <Menu.Separator className="ib-pm-sep" />
@@ -619,26 +619,26 @@ export function ThreadMore(
                 <PaneMenuItems />
                 {lead}
                 {leads && <Menu.Separator className="ib-pm-sep" />}
-                <Menu.Item className="ib-pmi" label="Copy thread" onClick={() => copies.thread()} data-copy-item="thread">
+                <Menu.Item className="ib-pmi" label="复制话题" onClick={() => copies.thread()} data-copy-item="thread">
                   <Icon name="stack" size={15} />
-                  Copy thread
+                  复制话题
                 </Menu.Item>
                 <Menu.Separator className="ib-pm-sep" />
-                <Menu.Item className="ib-pmi" label="Copy link" onClick={() => copies.threadLink()} data-copy-item="thread-link">
+                <Menu.Item className="ib-pmi" label="复制链接" onClick={() => copies.threadLink()} data-copy-item="thread-link">
                   <Icon name="link" size={15} />
-                  Copy link
+                  复制链接
                 </Menu.Item>
-                <Menu.Item className="ib-pmi" label="Copy thread ID" onClick={() => copies.threadId()} data-copy-item="thread-id">
+                <Menu.Item className="ib-pmi" label="复制话题 ID" onClick={() => copies.threadId()} data-copy-item="thread-id">
                   <Icon name="hash" size={15} />
-                  Copy thread ID
+                  复制话题 ID
                 </Menu.Item>
                 {(addPull || exportItem) && (
                   <>
                     <Menu.Separator className="ib-pm-sep" />
                     {addPull && (
-                      <Menu.Item className="ib-pmi" label="Add a pull request" onClick={addPull} data-thread-add-pull-item="">
+                      <Menu.Item className="ib-pmi" label="添加拉取请求" onClick={addPull} data-thread-add-pull-item="">
                         <Icon name="link" size={15} />
-                        Add a pull request…
+                        添加拉取请求…
                       </Menu.Item>
                     )}
                     {exportItem}
@@ -647,9 +647,9 @@ export function ThreadMore(
                 {requestGuide && (
                   <>
                     <Menu.Separator className="ib-pm-sep" />
-                    <Menu.Item className="ib-pmi" label="Request guided review" onClick={requestGuide} data-thread-guide-request-item="">
+                    <Menu.Item className="ib-pmi" label="请求引导式审查" onClick={requestGuide} data-thread-guide-request-item="">
                       <Icon name="book" size={15} />
-                      Request guided review
+                      请求引导式审查
                     </Menu.Item>
                   </>
                 )}
@@ -658,12 +658,12 @@ export function ThreadMore(
                     <Menu.Separator className="ib-pm-sep" />
                     <Menu.Item
                       className="ib-pmi"
-                      label={archive.archived ? 'Unarchive thread' : 'Archive thread'}
+                      label={archive.archived ? '取消归档话题' : '归档话题'}
                       onClick={archive.onToggle}
                       data-thread-archive-item=""
                     >
                       <Icon name="archive" size={15} />
-                      {archive.archived ? 'Unarchive thread' : 'Archive thread'}
+                      {archive.archived ? '取消归档话题' : '归档话题'}
                     </Menu.Item>
                   </>
                 )}

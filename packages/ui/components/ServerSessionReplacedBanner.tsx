@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { useServerSessionReplaced } from '../utils/serverSession';
 
@@ -16,13 +17,13 @@ export const ServerSessionReplacedBanner: React.FC<{ onReload?: () => void }> = 
       data-server-session-replaced
       className="fixed inset-x-0 top-0 z-[110] flex items-center justify-center gap-3 border-b border-border bg-destructive/95 px-4 py-2 text-sm text-destructive-foreground shadow-md"
     >
-      <span>This review was replaced — reload to see what is open now. Nothing was submitted.</span>
+      <span>此次审查已被替换 — 重新加载以查看当前打开的内容。未提交任何内容。</span>
       <button
         type="button"
         onClick={onReload ?? (() => window.location.reload())}
         className="rounded border border-destructive-foreground/40 px-2 py-0.5 font-medium hover:bg-destructive-foreground/10"
       >
-        Reload
+        重新加载
       </button>
     </div>
   );

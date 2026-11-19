@@ -63,7 +63,7 @@ export function ArchivedGroup(props: GroupProps) {
       data-section-id="archived"
       data-archived-group=""
       role="group"
-      aria-label="Archived"
+      aria-label="已归档"
       onFocus={(event) => {
         // The row itself, or its hover action beside it in the row's wrapper.
         const at = (event.target as HTMLElement).closest('[data-thread-id], [data-row]');

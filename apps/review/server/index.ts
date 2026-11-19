@@ -49,7 +49,7 @@ try {
   const result = await $`${diffCommand}`.quiet();
   rawPatch = result.text();
 } catch (err) {
-  console.error("Failed to get git diff:", err);
+  console.error("获取 git 差异失败：", err);
   process.exit(1);
 }
 
@@ -74,9 +74,9 @@ const server = await startReviewServer({
   approvalNotesSupported: true,
   onReady: (url, isRemote, port) => {
     handleReviewServerReady(url, isRemote, port);
-    console.error(`Code review at ${url}`);
+    console.error(`代码审查地址：${url}`);
     if (isRemote) {
-      console.error(`(Remote mode detected — if no browser opens automatically, use the URL above)`);
+      console.error(`（检测到远程模式——如果浏览器未自动打开，请使用上面的 URL）`);
     }
   },
 });

@@ -39,7 +39,7 @@ export function tourFileSource(fixture: TourFixture, options: TourFileSourceOpti
     const kept = tourAssetText(name);
     if (kept !== null) return kept;
     const res = await fetch(tourAssetUrl(name));
-    if (!res.ok) throw new Error('The tour keeps this file in memory once it is loaded.');
+    if (!res.ok) throw new Error('导览加载后会将此文件保存在内存中。');
     return res.text();
   };
   return {
@@ -57,7 +57,7 @@ export function tourFileSource(fixture: TourFixture, options: TourFileSourceOpti
       return { serverSession: 'tour', attachment, version: version === 'sent' ? attachment.sent_sha256 : 'current', text, html };
     },
     linkedPage: async () => {
-      throw new Error('This page is part of the mock above.');
+      throw new Error('此页面是上方演示的一部分。');
     },
     keepMarkup: async (blob) => keepTourMarkup(blob),
     saveAnnotation: async (attachment, _version, annotation) => {

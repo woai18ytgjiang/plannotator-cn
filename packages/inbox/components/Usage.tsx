@@ -40,13 +40,13 @@ export function UsageRow({ installed, open, onOpen }: { installed: boolean; open
       className="ib-nav"
       aria-haspopup="dialog"
       aria-expanded={open}
-      aria-label={figure === null ? 'Usage' : `Usage: ${figure} percent used`}
+      aria-label={figure === null ? '用量' : `用量：已使用 ${figure}%`}
       data-usage-nav=""
       data-open={open ? '' : undefined}
       onClick={(event) => onOpen(event.currentTarget)}
     >
       <Icon name="user" />
-      Usage
+      用量
       {figure !== null && (
         <span className="ib-usage-fig" data-usage-figure="">
           <HostMark host="claude-code" />
@@ -74,16 +74,16 @@ function UsageLine({ meter, muted }: { meter: Meter; muted: boolean }) {
 
 /** What the block says beside the name, when it has no limits to draw or they cannot be trusted. */
 function sideNote(account: InboxAccount, meters: Meter[]): string | null {
-  if (loginExpired(account)) return 'Login expired';
-  if (account.usageStatus === 'api_key') return 'API key';
-  return meters.length === 0 ? 'No reading yet' : null;
+  if (loginExpired(account)) return '登录已过期';
+  if (account.usageStatus === 'api_key') return 'API 密钥';
+  return meters.length === 0 ? '暂无数据' : null;
 }
 
 /** The peek's one block. All of it opens Settings → Accounts: that is where anything gets done. */
 function UsageBlock({ name, note, meters, muted, onOpen }: { name: string; note?: string | null; meters?: Meter[]; muted?: boolean; onOpen: () => void }) {
   const lines = meters ?? [];
   return (
-    <button type="button" className="ib-usage-row" aria-label={`${name}. Open Accounts in Settings.`} data-usage-block="" onClick={onOpen}>
+    <button type="button" className="ib-usage-row" aria-label={`${name}。在设置中打开账户。`} data-usage-block="" onClick={onOpen}>
       <span className="ib-usage-who">
         <HostMark host="claude-code" />
         <span className="ib-usage-nm">{name}</span>
@@ -105,7 +105,7 @@ function UsageBlock({ name, note, meters, muted, onOpen }: { name: string; note?
 function NearMachine({ name, meter, onOpen }: { name: string; meter: Meter; onOpen: () => void }) {
   const figure = `${meter.label} ${shownPct(meter.window)}`;
   return (
-    <button type="button" className="ib-usage-row" aria-label={`${name}, ${figure} percent. Open Accounts in Settings.`} data-usage-machine="" onClick={onOpen}>
+    <button type="button" className="ib-usage-row" aria-label={`${name}，${figure}%。在设置中打开账户。`} data-usage-machine="" onClick={onOpen}>
       <span className="ib-usage-who">
         <HostMark host="claude-code" />
         <span className="ib-usage-nm">{name}</span>
@@ -122,10 +122,10 @@ function ThisMachine({ onOpen }: { onOpen: () => void }) {
   const { view } = useAccounts();
   const failure = view && accountsFailure(view);
   if (failure) return <UsageBlock name={FAILURE_TEXT[failure]} onOpen={onOpen} />;
-  if (view?.state !== 'accounts') return <UsageBlock name="Reading accounts…" onOpen={onOpen} />;
-  if (view.accounts.length === 0) return <UsageBlock name="No accounts yet" onOpen={onOpen} />;
+  if (view?.state !== 'accounts') return <UsageBlock name="正在读取账户…" onOpen={onOpen} />;
+  if (view.accounts.length === 0) return <UsageBlock name="还没有账户" onOpen={onOpen} />;
   const active = view.accounts.find((account) => account.active);
-  if (!active) return <UsageBlock name="No account in use" onOpen={onOpen} />;
+  if (!active) return <UsageBlock name="没有正在使用的账户" onOpen={onOpen} />;
   const { label, number } = rowName(view.accounts, active);
   const meters = accountMeters(active);
   return (
@@ -175,7 +175,7 @@ export function UsagePeek({ anchor, phone, onClose, onSettings }: { anchor: HTML
         <Popover.Positioner className="ib-tidy-pos" anchor={place} side="right" align="end" sideOffset={14} disableAnchorTracking data-phone={phone ? '' : undefined}>
           <Popover.Popup
             className="ib-tidy ib-usage"
-            aria-label="Usage"
+            aria-label="用量"
             finalFocus={phone ? false : row}
             data-usage-peek=""
             onKeyDown={(event) => {

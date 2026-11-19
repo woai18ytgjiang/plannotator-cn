@@ -51,7 +51,7 @@ export interface InboxCapabilityGuard {
   serverSession: string;
 }
 
-const NOT_FOUND = () => Response.json({ error: "Not found", code: "not_found" }, { status: 404, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
+const NOT_FOUND = () => Response.json({ error: "未找到", code: "not_found" }, { status: 404, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
 
 const owns = (prefix: string, pathname: string) => pathname === prefix || pathname.startsWith(`${prefix}/`);
 

@@ -200,7 +200,7 @@ export function InboxComposerField({
             kinds: ['agent'],
             matchDetail: false,
             // Only a bare `@` with nobody to offer says so; a query nobody matches closes the picker (prose after a tag).
-            emptyNotice: options.length === 0 ? 'No agent to tag: none is live, and none reads the Inbox yet.' : null,
+            emptyNotice: options.length === 0 ? '没有可标记的智能体：没有在线的，也还没有读取收件箱的。' : null,
             tokenClassName: TAG_TOKEN_CLASS,
             onMentionsChange: (ids) => onTagsChange?.(ids),
             // A session on an older Plannotator: nothing is inserted; say why.

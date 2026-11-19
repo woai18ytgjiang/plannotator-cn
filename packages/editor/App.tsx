@@ -469,19 +469,19 @@ const buildMessageAnnotationCounts = (
 
 const draftBannerMessage = (banner: { count: number; timeAgo: string; hasEdits: boolean; documents?: number; documentComments?: number }): string => {
   const linked = banner.documents
-    ? `${banner.documents} linked document${banner.documents !== 1 ? 's' : ''}`
+    ? `已关联 ${banner.documents} 个文档`
     : '';
   // Every comment on the linked documents (none on the root): "on", not "including".
   const onDocuments = !linked
     ? ''
     : banner.documentComments === banner.count
-      ? ` on ${linked}`
-      : ` (including comments on ${linked})`;
+      ? `（位于${linked}）`
+      : `（含${linked}上的评论）`;
   const parts = [
-    banner.count > 0 ? `${banner.count} annotation${banner.count !== 1 ? 's' : ''}${onDocuments}` : '',
-    banner.hasEdits ? 'unsent direct edits' : '',
+    banner.count > 0 ? `${banner.count} 条批注${onDocuments}` : '',
+    banner.hasEdits ? '未发送的直接编辑' : '',
   ].filter(Boolean);
-  return `Found ${parts.join(' and ')} from ${banner.timeAgo}. Would you like to restore them?`;
+  return `发现来自 ${banner.timeAgo} 的${parts.join('，以及')}。要恢复这些内容吗？`;
 };
 
 type SourceFileEditWarningAction = 'send-feedback' | 'approve' | 'close';
@@ -519,7 +519,7 @@ const itemId = (item: { id: string }): string => item.id;
 
 
 /** Hint shown following the cursor while hovering a sidebar/panel resize handle. */
-const RESIZE_HANDLE_TOOLTIP = 'Click to close · Drag to resize';
+const RESIZE_HANDLE_TOOLTIP = '点击关闭 · 拖动调整大小';
 
 const App: React.FC = () => {
   useViewportEnvironment();
@@ -697,7 +697,7 @@ const App: React.FC = () => {
       toast(title, {
         description,
         duration: autoUpdateNotice.kind === 'failed' ? 10000 : 6000,
-        action: { label: 'Release notes', onClick: () => window.open(autoUpdateNotice.releaseUrl, '_blank', 'noopener,noreferrer') },
+        action: { label: '发行说明', onClick: () => window.open(autoUpdateNotice.releaseUrl, '_blank', 'noopener,noreferrer') },
         // The failed notice names the update log's path: keep that line selectable
         // so it can be copied (every other toast is select-none, see <Toaster>).
         classNames: { toast: '!w-auto', description: autoUpdateNotice.kind === 'failed' ? '!text-foreground/70 select-text' : '!text-foreground/70' },
@@ -753,7 +753,7 @@ const App: React.FC = () => {
     canSubmit: false,
     isSubmitting: false,
     submitted: false,
-    submitLabel: 'Submit',
+    submitLabel: '提交',
   });
   const [sourceInfo, setSourceInfo] = useState<string | undefined>();
   // Server-resolved annotate copy-wrapper templates (config-aware) so
@@ -1569,12 +1569,12 @@ const App: React.FC = () => {
     return {
       fetchVersion: async (version: number) => {
         const res = await fetch(`/api/plan/version?v=${version}&path=${encodeURIComponent(filepath)}`);
-        if (!res.ok) throw new Error(`Failed to load version ${version}.`);
+        if (!res.ok) throw new Error(`加载版本 ${version} 失败。`);
         return (await res.json()) as { plan: string; version: number };
       },
       fetchVersions: async () => {
         const res = await fetch(`/api/plan/versions?path=${encodeURIComponent(filepath)}`);
-        if (!res.ok) throw new Error('Failed to load versions.');
+        if (!res.ok) throw new Error('加载版本列表失败。');
         return (await res.json()) as { project: string; slug: string; versions: VersionEntry[] };
       },
     };
@@ -1615,10 +1615,10 @@ const App: React.FC = () => {
     exitPlanDiffView,
   );
   const warnFinishEditingFirst = useCallback((target: 'versions' | 'diff') => {
-    toast('Finish editing first', {
+    toast('请先结束编辑', {
       description: target === 'versions'
-        ? 'Use "Done editing" before changing the comparison version.'
-        : 'Use "Done editing" before opening the version diff.',
+        ? '更改对比版本前，请先点击「完成编辑」。'
+        : '打开版本差异前，请先点击「完成编辑」。',
     });
   }, []);
   const handleSelectBaseVersion = useCallback((version: number) => {
@@ -1937,7 +1937,7 @@ const App: React.FC = () => {
     const dirPath = root.replace(/[\\/]+$/, '');
     return {
       path: dirPath,
-      name: `${bundleFiles.length} files in this review`,
+      name: `本次审查共 ${bundleFiles.length} 个文件`,
       tree: bundleFiles.map((file) => {
         const relative = annotateBundleRelativePath(file.path, dirPath);
         return { name: relative, path: relative, type: 'file' as const };
@@ -2237,12 +2237,12 @@ const App: React.FC = () => {
       return;
     }
     if (intent.kind === 'unsupported') {
-      toast(`Can't open ${intent.label}`, {
+      toast(`无法打开 ${intent.label}`, {
         description: intent.reason === 'outside-asset-root'
-          ? "Images open only from this page's own folder."
+          ? "图片只能从本页面所在文件夹打开。"
           : intent.reason === 'no-asset-root'
-            ? "This page's local images aren't available here."
-            : 'Only markdown, text and HTML documents open in Plannotator.',
+            ? "此页面的本地图片在此处不可用。"
+            : 'Plannotator 只能打开 Markdown、文本和 HTML 文档。',
       });
       return;
     }
@@ -2309,8 +2309,8 @@ const App: React.FC = () => {
     // A bundle file is not a detour: the switcher moves between the files.
     if (bundleIndex >= 0) return null;
     const root = bundleBackPath ?? sourceFilePath;
-    if (!root) return 'Back';
-    return `Back to ${basenameFromPath(root)}`;
+    if (!root) return '返回';
+    return `返回 ${basenameFromPath(root)}`;
   }, [isHtmlSurface, linkedDocHook.isActive, sourceFilePath, bundleIndex, bundleBackPath]);
 
   // Wrap linked doc back to also clear file browser active file
@@ -2402,10 +2402,10 @@ const App: React.FC = () => {
 
   // Context-aware back label for linked doc navigation
   const backLabel = bundleBackPath ? annotateBundleBaseName(bundleBackPath)
-    : annotateSource === 'folder' ? 'file list'
-    : annotateSource === 'file' ? 'file'
-    : annotateSource === 'message' ? 'message'
-    : 'plan';
+    : annotateSource === 'folder' ? '文件列表'
+    : annotateSource === 'file' ? '文件'
+    : annotateSource === 'message' ? '消息'
+    : '计划';
 
   // Viewer identity must change when the rendered document changes: web-highlighter
   // mutates the Viewer DOM, so reconciling new content against the old subtree throws
@@ -2575,7 +2575,7 @@ const App: React.FC = () => {
     const hasCodeAnnotations = codeAnnotations.length > 0;
 
     if (!hasPlanAnnotations && !hasDocAnnotations && !hasEditorAnnotations && !hasCodeAnnotations) {
-      return 'User reviewed the document and has no feedback.';
+      return '用户已查看文档，没有反馈。';
     }
 
     let output = hasPlanAnnotations
@@ -2583,7 +2583,7 @@ const App: React.FC = () => {
           sections.blocks,
           sections.annotations,
           sections.globalAttachments,
-          annotateSource === 'message' ? 'Message Feedback' : bundleFiles ? 'Review Feedback' : annotateSource === 'folder' ? 'Folder Feedback' : annotateSource === 'file' ? 'File Feedback' : 'Plan Feedback',
+          annotateSource === 'message' ? '消息反馈' : bundleFiles ? '审查反馈' : annotateSource === 'folder' ? '文件夹反馈' : annotateSource === 'file' ? '文件反馈' : '计划反馈',
           annotateSource ?? 'plan',
           { sourceConverted: sections.sourceConverted },
         )
@@ -2624,10 +2624,10 @@ const App: React.FC = () => {
     const res = await fetch(`/api/share-html${query ? `?${query}` : ''}`);
     const data = (await res.json().catch(() => ({}))) as { shareHtml?: unknown; error?: string };
     if (!res.ok || data.error || typeof data.shareHtml !== 'string') {
-      throw new Error(data.error || 'Failed to prepare HTML for sharing');
+      throw new Error(data.error || '准备分享用的 HTML 失败');
     }
     if (latestHtmlShareContextRef.current !== htmlShareContext) {
-      throw new Error('HTML changed while preparing the share link');
+      throw new Error('生成分享链接时 HTML 发生了变化');
     }
     setShareHtml(data.shareHtml);
     return data.shareHtml;
@@ -2868,7 +2868,7 @@ const App: React.FC = () => {
     onBeforeMerge: annotationHistory.clear,
     onRestored: (path, count) => {
       const name = path.split(/[\\/]/).pop() || path;
-      toast(`Restored ${count} saved ${count === 1 ? 'comment' : 'comments'} on ${name}`, { duration: 4000 });
+      toast(`已恢复 ${name} 上的 ${count} 条已保存评论`, { duration: 4000 });
     },
   });
 
@@ -3010,8 +3010,8 @@ const App: React.FC = () => {
         (a) => !document.querySelector(`[data-bind-id="${a.id}"], [data-highlight-id="${a.id}"]`)
       );
       if (missing.length > 0) {
-        toast(`${missing.length} annotation${missing.length === 1 ? '' : 's'} no longer match the text`, {
-          description: 'The highlighted text was edited. They remain listed in the panel.',
+        toast(`有 ${missing.length} 条批注与正文不再匹配`, {
+          description: '高亮文本已被编辑，它们仍会列在面板中。',
           duration: 5000,
         });
       }
@@ -3131,14 +3131,14 @@ const App: React.FC = () => {
       .map((entry) => entry.change);
 
     if (changedOrMissing.length > 0) {
-      toast('Some saved edit context was not restored', {
-        description: 'Those files changed or disappeared after Plannotator saved them.',
+      toast('部分已保存的编辑上下文未恢复', {
+        description: '这些文件在 Plannotator 保存后发生了变更或已消失。',
         duration: 5000,
       });
     }
     if (result.unverified.length > 0) {
-      toast('Some saved edit context could not be verified', {
-        description: 'Plannotator kept it for now and will check again before sending feedback.',
+      toast('部分已保存的编辑上下文无法验证', {
+        description: 'Plannotator 暂时保留，发送反馈前会再次检查。',
         duration: 5000,
       });
     }
@@ -3190,15 +3190,15 @@ const App: React.FC = () => {
 
     if (editedDocumentsForRestore.length > 0) {
       if (isEditingMarkdown) {
-        toast('Draft file edits were not restored', {
-          description: 'You already have edits in this session — those take precedence.',
+        toast('草稿文件编辑未恢复', {
+          description: '当前会话中已有编辑，将优先采用现有编辑。',
           duration: 5000,
         });
       } else {
         const restoredDocumentKeys = editableDocuments.restoreDraftDocuments(editedDocumentsForRestore);
         if (restoredDocumentKeys.length < editedDocumentsForRestore.length) {
-          toast('Some draft file edits were not restored', {
-            description: 'You already have edits in this session — those take precedence.',
+          toast('部分草稿文件编辑未恢复', {
+            description: '当前会话中已有编辑，将优先采用现有编辑。',
             duration: 5000,
           });
         }
@@ -3267,8 +3267,8 @@ const App: React.FC = () => {
     if (edited !== null && (editStats !== null || isEditingMarkdown)) {
       // Skipped, not silently dropped: the user started editing before the
       // (late) draft banner was answered. Their live work wins.
-      toast('Draft edits were not restored', {
-        description: 'You already have edits in this session — those take precedence.',
+      toast('草稿编辑未恢复', {
+        description: '当前会话中已有编辑，将优先采用现有编辑。',
         duration: 5000,
       });
     }
@@ -3608,16 +3608,16 @@ const App: React.FC = () => {
     : undefined;
   const hasUnsentFeedback = feedbackAnnotationCount > 0 || hasDirectEdits;
   const hasOnlySavedFileChanges = hasSavedFileChanges && !hasUnsentFeedback;
-  const savedFileChangesLabel = savedFileChanges.length === 1 ? 'saved file change' : 'saved file changes';
-  const savedFileChangesVerb = savedFileChanges.length === 1 ? 'is' : 'are';
-  const savedFileChangesPronoun = savedFileChanges.length === 1 ? 'it' : 'them';
-  const savedFileChangesOnDiskMessage = <>Your {savedFileChangesLabel} {savedFileChangesVerb} already on disk.</>;
+  const savedFileChangesLabel = '已保存的文件更改';
+  const savedFileChangesVerb = '都';
+  const savedFileChangesPronoun = '这些更改';
+  const savedFileChangesOnDiskMessage = <>你{savedFileChangesLabel}{savedFileChangesVerb}在磁盘上。</>;
   // The plan decision control's confirm when saved file changes are the only
   // feedback: approving loses nothing, the agent just isn't told (the words of
   // the retired "Feedback Won't Be Sent" dialog's saved-files case).
-  const savedFileAwarenessOnlyText = `Your ${savedFileChangesLabel} ${savedFileChangesVerb} already on disk. The agent won't be told about ${savedFileChangesPronoun}.`;
+  const savedFileAwarenessOnlyText = `你${savedFileChangesLabel}${savedFileChangesVerb}在磁盘上。智能体不会被告知${savedFileChangesPronoun}。`;
   const savedFileAwarenessMixedMessage = hasSavedFileChanges
-    ? <> Your {savedFileChangesLabel} will stay on disk, but the agent won't be told about {savedFileChangesPronoun}.</>
+    ? <>你{savedFileChangesLabel}会保留在磁盘上，但智能体不会被告知{savedFileChangesPronoun}。</>
     : null;
 
   // Pinned "Direct edits" card data for the annotation sidebar. Source-backed
@@ -3676,14 +3676,14 @@ const App: React.FC = () => {
       editorAnnotations: discard ? [] : editorAnnotations,
       codeAnnotations: discard ? [] : codeAnnotations,
       title: annotateSource === 'message'
-        ? 'Message Feedback'
+        ? '消息反馈'
         : bundleFiles
-          ? 'Review Feedback'
+          ? '审查反馈'
           : annotateSource === 'folder'
-            ? 'Folder Feedback'
+            ? '文件夹反馈'
             : annotateSource === 'file'
-              ? 'File Feedback'
-              : 'Plan Feedback',
+              ? '文件反馈'
+              : '计划反馈',
       subject: annotateSource ?? 'plan',
       sourceConverted: sections.sourceConverted,
       directEditsSection: buildEditsSection(),
@@ -3727,15 +3727,15 @@ const App: React.FC = () => {
     if (stale.length > 0) {
       editableDocuments.clearSavedFileChanges(stale.map((entry) => entry.change.key));
       scheduleDraftSave();
-      toast.error('Saved edits changed on disk', {
-        description: 'Plannotator removed the stale edit context. Nothing was sent.',
+      toast.error('已保存的编辑在磁盘上发生了变化', {
+        description: 'Plannotator 已移除过期的编辑上下文，未发送任何内容。',
       });
       return null;
     }
 
     if (result.unverified.length > 0) {
-      toast.error('Saved edits could not be verified', {
-        description: 'Check the file tree and try sending feedback again.',
+      toast.error('无法验证已保存的编辑', {
+        description: '请检查文件树，然后重试发送反馈。',
       });
       return null;
     }
@@ -3787,8 +3787,8 @@ const App: React.FC = () => {
                 : null,
             );
           }
-          toast('File no longer exists on disk', {
-            description: `Save ${result.record.basename} to recreate it.`,
+          toast('文件已不在磁盘上', {
+            description: `保存 ${result.record.basename} 可重新创建该文件。`,
             duration: 5000,
           });
         }
@@ -3806,8 +3806,8 @@ const App: React.FC = () => {
           setEditStats(null);
         }
         if (result.clearedSavedChange) {
-          toast('File updated from disk', {
-            description: `${result.record.basename} changed outside Plannotator, so its old Edits card was cleared.`,
+          toast('文件已从磁盘更新', {
+            description: `${result.record.basename} 在 Plannotator 之外发生了变更，旧的编辑卡片已清除。`,
           });
         }
       } else if (event.type === 'conflict') {
@@ -3815,8 +3815,8 @@ const App: React.FC = () => {
           setEditorDirty(true);
           setEditorDiffersFromBaseline(true);
           setEditStats(computeEditStats(result.record.diskBaseline, result.record.currentText));
-          toast.error('File changed on disk', {
-            description: 'Choose whether to overwrite disk or reload the file.',
+          toast.error('文件在磁盘上已变更', {
+            description: '请选择覆盖磁盘内容或重新加载文件。',
           });
         }
       }
@@ -4337,16 +4337,16 @@ const App: React.FC = () => {
 
         const failed = targets.filter(t => !data.results?.[t.toLowerCase()]?.success);
         if (failed.length === 0) {
-          toast.success(`Auto-saved to ${targets.join(' & ')}`);
+          toast.success(`已自动保存到 ${targets.join(' & ')}`);
         } else {
-          toast.error(`Auto-save failed for ${failed.join(' & ')}`);
+          toast.error(`以下目标自动保存失败：${failed.join(' & ')}`);
         }
 
         return results;
       })
       .catch(() => {
         autoSaveResultsRef.current = {};
-        toast.error('Auto-save failed');
+        toast.error('自动保存失败');
         return {};
       });
     autoSavePromiseRef.current = autoSavePromise;
@@ -4419,21 +4419,21 @@ const App: React.FC = () => {
   const getAnnotateFeedbackTarget = useCallback((): AnnotateFeedbackTarget => {
     // A review of several files names every one, whichever is open.
     if (bundlePaths) {
-      return { fileHeader: 'Files', filePath: annotateBundleTargetText(bundlePaths) };
+      return { fileHeader: '文件', filePath: annotateBundleTargetText(bundlePaths) };
     }
     if (linkedDocHook.isActive && linkedDocHook.filepath) {
-      return { fileHeader: 'File', filePath: linkedDocHook.filepath };
+      return { fileHeader: '文件', filePath: linkedDocHook.filepath };
     }
     if (sourceFilePath) {
-      return { fileHeader: 'File', filePath: sourceFilePath };
+      return { fileHeader: '文件', filePath: sourceFilePath };
     }
     if (fileBrowser.activeFile) {
-      return { fileHeader: 'File', filePath: fileBrowser.activeFile };
+      return { fileHeader: '文件', filePath: fileBrowser.activeFile };
     }
     if (annotateSource === 'folder') {
-      return { fileHeader: 'Folder', filePath: fileBrowser.activeDirPath ?? projectRoot ?? 'selected folder' };
+      return { fileHeader: '文件夹', filePath: fileBrowser.activeDirPath ?? projectRoot ?? '所选文件夹' };
     }
-    return { fileHeader: 'File', filePath: 'current file' };
+    return { fileHeader: '文件', filePath: '当前文件' };
   }, [
     annotateSource,
     bundlePaths,
@@ -4534,8 +4534,8 @@ const App: React.FC = () => {
     const remapped = applyEditedDocument(normalized);
     repaintHighlights(remapped);
     const version = snapshot.versionInfo?.version;
-    toast(version ? `Plan updated to version ${version}` : 'Plan updated', {
-      description: 'The agent sent a revised plan. Your comments were kept.',
+    toast(version ? `计划已更新到版本 ${version}` : '计划已更新', {
+      description: '智能体发送了修订后的计划，你的评论已保留。',
     });
   }, [applyEditedDocument, repaintHighlights]);
   const planRevisions = usePlanRevisions({
@@ -4548,12 +4548,12 @@ const App: React.FC = () => {
     }),
     onApply: applyPlanRevision,
     onBlocked: (_revision, blocker) => {
-      toast('The agent sent a revised plan', {
+      toast('智能体发送了修订后的计划', {
         description: blocker === 'edits'
-          ? 'It loads when you finish or discard your edits.'
+          ? '结束或放弃编辑后会加载。'
           : blocker === 'composer'
-            ? 'It loads when you finish or close your comment.'
-            : 'It loads when you return to the plan.',
+            ? '完成或关闭评论后会加载。'
+            : '返回计划后会加载。',
       });
     },
   });
@@ -4565,8 +4565,8 @@ const App: React.FC = () => {
   };
   const handleStaleRevisionRefusal = () => {
     setIsSubmitting(false);
-    toast('The agent revised the plan', {
-      description: 'Review the new version, then decide again.',
+    toast('智能体修订了计划', {
+      description: '请查看新版本，然后再次决策。',
     });
     planRevisions.refreshNow();
   };
@@ -4821,7 +4821,7 @@ const App: React.FC = () => {
           return true;
         }
         handleAgentTerminalReadyChange(false);
-        toast.error('Agent terminal is not ready. Sending through the original session.');
+        toast.error('智能体终端尚未就绪，将通过原会话发送。');
       }
 
       const body = {
@@ -5369,7 +5369,7 @@ const App: React.FC = () => {
   const currentDocumentGroupKey = currentDocumentPath ?? ROOT_DOCUMENT_GROUP_KEY;
   const currentDocumentGroupLabel = currentDocumentPath
     ? undefined
-    : (annotateMode ? '(this document)' : '(this plan)');
+    : (annotateMode ? '（本文档）' : '（本计划）');
 
   const annotationDocumentRoots = useMemo(() => {
     const roots = fileBrowser.dirs.filter((d) => !d.isVault).map((d) => d.path);
@@ -5500,8 +5500,8 @@ const App: React.FC = () => {
       live();
       return;
     }
-    toast.error('Could not update that comment', {
-      description: 'Open the file it belongs to and try again.',
+    toast.error('无法更新该评论', {
+      description: '请打开该评论所属的文件后重试。',
     });
   }, [currentDocumentGroupKey, documentReadOnly, linkedDocHook]);
 
@@ -5719,7 +5719,7 @@ const App: React.FC = () => {
       kind: 'document',
       path: aiDocumentPath,
       sourceUrl: liveApp?.targetUrl ?? aiSourceInfo,
-      label: annotateSource === 'message' && !linkedDocHook.isActive ? "the agent's message" : undefined,
+      label: annotateSource === 'message' && !linkedDocHook.isActive ? '智能体的消息' : undefined,
       renderAs: aiRenderAs,
       converted: aiSourceConverted,
       position: aiContext.annotate.bundlePosition,
@@ -5735,7 +5735,7 @@ const App: React.FC = () => {
     providerId: aiConfig.providerId,
     model: aiConfig.model,
     reasoningEffort: aiConfig.reasoningEffort,
-    threadTitle: aiDocumentMode ? 'Document chat' : 'Plan chat',
+    threadTitle: aiDocumentMode ? '文档对话' : '计划对话',
   });
   const {
     messages: aiMessages,
@@ -5755,7 +5755,7 @@ const App: React.FC = () => {
   const canUseDocumentAskAI = canUseAskAI;
   const visibleAIMessages = isAgentTerminalReady ? [] : aiMessages;
   const visibleAIProviders = useMemo<AIProviderOption[]>(
-    () => isAgentTerminalReady ? [{ id: 'agent-terminal', name: 'Agent terminal' }] : aiProviders,
+    () => isAgentTerminalReady ? [{ id: 'agent-terminal', name: '智能体终端' }] : aiProviders,
     [aiProviders, isAgentTerminalReady],
   );
   const visibleAIConfig = isAgentTerminalReady
@@ -5796,7 +5796,7 @@ const App: React.FC = () => {
       inlineDocument: terminalAskReadableFilePath
         ? null
         : {
-            label: aiRenderAs === 'html' ? 'Current document HTML' : 'Current document text',
+            label: aiRenderAs === 'html' ? '当前文档 HTML' : '当前文档文本',
             content: aiRenderAs === 'html' && rawHtml ? rawHtml : displayedMarkdown,
           },
     });
@@ -5878,13 +5878,13 @@ const App: React.FC = () => {
       }
       handleAgentTerminalReadyChange(false);
       if (!canUseAI) {
-        toast.error('Agent terminal is not ready');
+        toast.error('智能体终端尚未就绪');
         return false;
       }
     }
 
     if (!canUseAI) {
-      toast.error('Ask AI is unavailable');
+      toast.error('询问 AI 不可用');
       return false;
     }
     openAIChat();
@@ -5923,7 +5923,7 @@ const App: React.FC = () => {
   ]);
 
   const handleAskGeneralAI = useCallback((question: string) => {
-    handleAskAI(question, { kind: 'general', label: aiDocumentMode ? 'Document' : 'Plan', sourcePath: aiDocumentPath });
+    handleAskAI(question, { kind: 'general', label: aiDocumentMode ? '文档' : '计划', sourcePath: aiDocumentPath });
   }, [aiDocumentMode, aiDocumentPath, handleAskAI]);
 
   // Bot callback config — read once from URL search params (?cb=&ct=)
@@ -5938,7 +5938,7 @@ const App: React.FC = () => {
     try {
       const callbackShareUrl = await ensureShareLink();
       if (!callbackShareUrl) {
-        toast.error('Failed to create share link');
+        toast.error('创建分享链接失败');
         return;
       }
       const result = await executeCallback(action, callbackConfig, callbackShareUrl);
@@ -5968,7 +5968,7 @@ const App: React.FC = () => {
     a.download = 'annotations.md';
     a.click();
     URL.revokeObjectURL(url);
-    toast.success('Downloaded annotations');
+    toast.success('已下载批注');
   };
 
   const handleQuickSaveToNotes = async (target: 'obsidian' | 'bear' | 'octarine' | 'notion') => {
@@ -5977,7 +5977,7 @@ const App: React.FC = () => {
     // document text; saving would write an empty note. Plan review always
     // has text, so this never fires there.
     if (!notesSaveAvailable) {
-      toast.error('No document text to save in this session');
+      toast.error('当前会话没有可保存的文档文本');
       return;
     }
 
@@ -6030,18 +6030,18 @@ const App: React.FC = () => {
         body: JSON.stringify(withServerSession(body)),
       });
       if (await noteServerSessionMismatch(res)) {
-        toast.error('This review was replaced. Reload the page.');
+        toast.error('本次审查已被替换，请重新加载页面。');
         return;
       }
       const data = await res.json();
       const result = data.results?.[target];
       if (result?.success) {
-        toast.success(`Saved to ${targetName}`);
+        toast.success(`已保存到 ${targetName}`);
       } else {
-        toast.error(result?.error || 'Save failed');
+        toast.error(result?.error || '保存失败');
       }
     } catch {
-      toast.error('Save failed');
+      toast.error('保存失败');
     }
   };
 
@@ -6049,7 +6049,7 @@ const App: React.FC = () => {
     const activeDocument = editableDocuments.getActiveDocumentLive();
     const activeSourceSave = activeDocument?.sourceSave;
     if (!activeDocument || !activeSourceSave?.enabled) {
-      toast.error('This document cannot be saved to a file');
+      toast.error('此文档无法保存为文件');
       return true;
     }
 
@@ -6057,13 +6057,13 @@ const App: React.FC = () => {
       ? markdownEditorHandleRef.current?.getMarkdown()
       : activeDocument.currentText;
     if (edited == null) {
-      toast.error('Editor is not ready');
+      toast.error('编辑器尚未就绪');
       return true;
     }
 
     if (activeDocument.diskConflict && !options?.overwriteDiskConflict) {
-      toast.error('Resolve the disk conflict first', {
-        description: 'Choose Overwrite disk or Reload from disk.',
+      toast.error('请先解决磁盘冲突', {
+        description: '请选择「覆盖磁盘」或「从磁盘重新加载」。',
       });
       return true;
     }
@@ -6095,13 +6095,13 @@ const App: React.FC = () => {
       });
       // A tab on a port a newer session took over: show the reload prompt, write nothing.
       if (await noteServerSessionMismatch(res)) {
-        editableDocuments.markError(activeDocument.key, 'This review was replaced; reload the page.');
+        editableDocuments.markError(activeDocument.key, '本次审查已被替换；请重新加载页面。');
         return true;
       }
       const data = (await res.json()) as SourceSaveResponse;
 
       if (!res.ok || !data.ok) {
-        const message = !data.ok ? data.message : 'Save failed';
+        const message = !data.ok ? data.message : '保存失败';
         if (!data.ok && data.code === 'conflict') {
           const hasConflictSnapshot = hasSourceSaveConflictSnapshot(data);
           if (hasConflictSnapshot) {
@@ -6122,13 +6122,13 @@ const App: React.FC = () => {
               setEditorDiffersFromBaseline(true);
               setEditStats(computeEditStats(result.record.diskBaseline, result.record.currentText));
               scheduleDraftSave();
-              toast.error('File changed on disk', {
-                description: 'Choose whether to overwrite disk or reload the file.',
+              toast.error('文件在磁盘上已变更', {
+                description: '请选择覆盖磁盘内容或重新加载文件。',
               });
             } else if (result.type === 'conflict') {
               scheduleDraftSave();
-              toast.error('File changed on disk', {
-                description: 'Choose whether to overwrite disk or reload the file.',
+              toast.error('文件在磁盘上已变更', {
+                description: '请选择覆盖磁盘内容或重新加载文件。',
               });
             } else if (result.type === 'clean-updated') {
               noteRootDiskText(result.record);
@@ -6141,19 +6141,19 @@ const App: React.FC = () => {
                 setEditStats(null);
               }
               scheduleDraftSave();
-              toast('File updated from disk', {
-                description: `${result.record.basename} changed outside Plannotator, so it was reloaded instead of saved.`,
+              toast('文件已从磁盘更新', {
+                description: `${result.record.basename} 在 Plannotator 之外发生了变更，因此已重新加载而不是保存。`,
               });
             } else if (!editableDocuments.getDocument(activeDocument.key)?.diskConflict) {
               editableDocuments.markError(activeDocument.key, message);
-              toast.error('File changed on disk', {
-                description: 'Plannotator could not load the latest disk version. Try saving again.',
+              toast.error('文件在磁盘上已变更', {
+                description: 'Plannotator 无法加载最新的磁盘版本，请重试保存。',
               });
             }
           } else {
             editableDocuments.markError(activeDocument.key, message);
-            toast.error('File changed on disk', {
-              description: 'Plannotator could not load the latest disk version. Try saving again.',
+            toast.error('文件在磁盘上已变更', {
+              description: 'Plannotator 无法加载最新的磁盘版本，请重试保存。',
             });
           }
         } else {
@@ -6201,11 +6201,11 @@ const App: React.FC = () => {
         setIsPanelOpen(true);
       }
       scheduleDraftSave();
-      toast.success(`Saved ${activeSourceSave.basename}`);
+      toast.success(`已保存 ${activeSourceSave.basename}`);
       return true;
     } catch {
-      editableDocuments.markError(activeDocument.key, 'Save failed');
-      toast.error('Save failed');
+      editableDocuments.markError(activeDocument.key, '保存失败');
+      toast.error('保存失败');
       return true;
     }
   }, [applyEditedDocument, editableDocuments, isEditingMarkdown, noteRootDiskText, repaintHighlights, scheduleDraftSave]);
@@ -6227,7 +6227,7 @@ const App: React.FC = () => {
     setEditorDiffersFromBaseline(false);
     setEditStats(null);
     scheduleDraftSave();
-    toast.success(`Reloaded ${reloaded.basename} from disk`);
+    toast.success(`已从磁盘重新加载 ${reloaded.basename}`);
   }, [applyEditedDocument, editableDocuments, noteRootDiskText, repaintHighlights, scheduleDraftSave]);
 
   // Agent Instructions — copy a clipboard payload teaching external agents
@@ -6244,9 +6244,9 @@ const App: React.FC = () => {
         )
       : buildPlanAgentInstructions(window.location.origin);
     if (await copyTextToClipboard(payload)) {
-      toast.success('Agent instructions copied');
+      toast.success('智能体指令已复制');
     } else {
-      toast.error('Failed to copy');
+      toast.error('复制失败');
     }
   };
 
@@ -6255,13 +6255,13 @@ const App: React.FC = () => {
     if (!url) {
       setInitialExportTab('share');
       setShowExport(true);
-      toast.error('Failed to create share link');
+      toast.error('创建分享链接失败');
       return;
     }
     if (await copyTextToClipboard(url)) {
-      toast.success('Share link copied');
+      toast.success('分享链接已复制');
     } else {
-      toast.error('Failed to copy');
+      toast.error('复制失败');
     }
   };
 
@@ -6634,8 +6634,8 @@ const App: React.FC = () => {
 
   // Per-surface Close titles (spec §3.1 / prototype :521-522).
   const annotateCloseTitle = annotateSource === 'message'
-    ? 'Dismiss without telling the agent'
-    : 'Close session without sending';
+    ? '关闭且不通知智能体'
+    : '关闭会话且不发送';
 
   const annotateDecision = useMemo(() => ({
     spec: annotateDecisionSpec,
@@ -6833,13 +6833,13 @@ const App: React.FC = () => {
       ? [
           {
             id: 'feedback',
-            label: 'Send feedback to bot',
+            label: '发送反馈给机器人',
             onSelect: handleCallbackFeedback,
             disabled: compactActionBusy || !callbackShareUrlReady,
           },
           {
             id: 'approve',
-            label: 'Approve design',
+            label: '批准设计',
             onSelect: handleCallbackApprove,
             disabled: compactActionBusy || !callbackShareUrlReady,
           },
@@ -6853,7 +6853,7 @@ const App: React.FC = () => {
                   // the missing positive outcome at zero was the defect).
                   {
                     id: 'exit' as const,
-                    label: 'Close session',
+                    label: '关闭会话',
                     onSelect: handleHeaderAnnotateExit,
                     disabled: compactActionBusy,
                   },
@@ -6861,9 +6861,9 @@ const App: React.FC = () => {
                     id: annotateCompactPrimaryId,
                     label: annotateDecisionSpec.primary.mobileLabel ?? annotateDecisionSpec.primary.label,
                     subtitle: feedbackAnnotationCount > 0
-                      ? `${feedbackAnnotationCount} annotation${feedbackAnnotationCount === 1 ? '' : 's'}`
+                      ? `${feedbackAnnotationCount} 条批注`
                       : hasFeedbackToSend
-                        ? 'Edited document'
+                        ? '已编辑文档'
                         : undefined,
                     onSelect: submitPrimaryDecision,
                     disabled: compactActionBusy,
@@ -6893,11 +6893,11 @@ const App: React.FC = () => {
                     id: compactPrimaryIdForDecision(planDecisionSpec.primary),
                     label: planDecisionSpec.primary.mobileLabel ?? planDecisionSpec.primary.label,
                     subtitle: answersOnlyFeedback
-                      ? `${questionAnswerCount} answer${questionAnswerCount === 1 ? '' : 's'}`
+                      ? `${questionAnswerCount} 个回答`
                       : feedbackAnnotationCount > 0
-                        ? `${feedbackAnnotationCount} annotation${feedbackAnnotationCount === 1 ? '' : 's'}`
+                        ? `${feedbackAnnotationCount} 条批注`
                         : hasFeedbackToSend
-                          ? 'Edited document'
+                          ? '已编辑文档'
                           : undefined,
                     onSelect: submitPrimaryDecision,
                     disabled: compactActionBusy,
@@ -6926,14 +6926,14 @@ const App: React.FC = () => {
     ? []
     : isApiMode && !linkedDocHook.isActive && archive.archiveMode
       ? [
-          { id: 'copy', label: 'Copy plan', onSelect: archive.copy },
-          { id: 'done', label: 'Done', onSelect: archive.done },
+          { id: 'copy', label: '复制计划', onSelect: archive.copy },
+          { id: 'done', label: '完成', onSelect: archive.done },
         ]
       : isApiMode && !linkedDocHook.isActive && goalSetupMode
         ? [
             {
               id: 'exit',
-              label: 'Close goal setup',
+              label: '关闭目标设置',
               onSelect: handleGoalSetupExit,
               disabled: compactActionBusy,
             },
@@ -6948,18 +6948,18 @@ const App: React.FC = () => {
   const hasReviewDocumentChanges = hasDirectEdits || hasSavedFileChanges;
   const compactCanApprove = compactReviewActions.some((action) => action.id === 'approve');
   const compactFeedbackSummary = showAgentTerminalDeliveryStatus
-    ? 'Feedback was sent to the agent. You can keep reviewing or close the session.'
+    ? '反馈已发送给智能体，你可以继续查看或关闭会话。'
     : feedbackAnnotationCount > 0 && hasReviewDocumentChanges
-      ? `${feedbackAnnotationCount} annotation${feedbackAnnotationCount === 1 ? '' : 's'} and document edits are ready.`
+      ? `${feedbackAnnotationCount} 条批注和文档编辑已准备好。`
       : feedbackAnnotationCount > 0
-        ? `${feedbackAnnotationCount} annotation${feedbackAnnotationCount === 1 ? '' : 's'} ${feedbackAnnotationCount === 1 ? 'is' : 'are'} ready.`
+        ? `${feedbackAnnotationCount} 条批注已准备好。`
         : hasReviewDocumentChanges
-          ? 'Document edits are ready to send with your review.'
+          ? '文档编辑可以随审查一起发送。'
           : compactCanApprove
             ? annotateMode && !gate
-              ? 'No feedback added. You can finish or keep reviewing.'
-              : 'No feedback added. You can approve or keep reviewing.'
-            : 'No feedback added. You can keep reviewing or close the session.';
+              ? '尚未添加反馈，你可以直接完成或继续查看。'
+              : '尚未添加反馈，你可以直接批准或继续查看。'
+            : '尚未添加反馈，你可以继续查看或关闭会话。';
   const compactRowsFromDecisionSpec = isApiMode && (!linkedDocHook.isActive || annotateMode)
     && !archive.archiveMode && !goalSetupMode && compactReviewActions.length > 0;
   const compactPrimaryReviewActionId: CompactPlanReviewAction['id'] | undefined =
@@ -6979,9 +6979,9 @@ const App: React.FC = () => {
         ...(!goalSetupMode
           ? [{
               id: 'annotations' as const,
-              label: 'Annotations',
+              label: '批注',
               subtitle: feedbackAnnotationCount > 0
-                ? `${feedbackAnnotationCount} item${feedbackAnnotationCount === 1 ? '' : 's'}`
+                ? `${feedbackAnnotationCount} 项`
                 : undefined,
               onSelect: () => openCompactPlanSurface('annotations'),
             }]
@@ -6989,9 +6989,9 @@ const App: React.FC = () => {
         ...(!goalSetupMode && canUseAskAI
           ? [{
               id: 'ai' as const,
-              label: 'Ask AI',
+              label: '询问 AI',
               subtitle: visibleAIMessages.length > 0
-                ? `${visibleAIMessages.length} message${visibleAIMessages.length === 1 ? '' : 's'}`
+                ? `${visibleAIMessages.length} 条消息`
                 : undefined,
               onSelect: () => openCompactPlanSurface('ai'),
             }]
@@ -6999,12 +6999,12 @@ const App: React.FC = () => {
         ...(compactReviewActions.length > 0
           ? [{
               id: 'review' as const,
-              label: 'Review and finish',
+              label: '审查并完成',
               subtitle: hasFeedbackToSend
-                ? 'Feedback ready'
+                ? '反馈已就绪'
                 : compactCanApprove
-                  ? 'Approve or send feedback'
-                  : 'Close when finished',
+                  ? '批准或发送反馈'
+                  : '完成后关闭',
               onSelect: () => openCompactPlanSurface('review'),
             }]
           : compactModeActions),
@@ -7017,7 +7017,7 @@ const App: React.FC = () => {
         ...(bundleSwitcher && bundleSwitcher.index > 1
           ? [{
               id: 'bundle-previous' as const,
-              label: 'Previous file',
+              label: '上一个文件',
               subtitle: bundleFiles?.[bundleSwitcher.index - 2] ? annotateBundleBaseName(bundleFiles[bundleSwitcher.index - 2]!.path) : undefined,
               onSelect: bundleSwitcher.onPrevious,
             }]
@@ -7025,7 +7025,7 @@ const App: React.FC = () => {
         ...(bundleSwitcher && bundleSwitcher.index < bundleSwitcher.total
           ? [{
               id: 'bundle-next' as const,
-              label: 'Next file',
+              label: '下一个文件',
               subtitle: bundleFiles?.[bundleSwitcher.index] ? annotateBundleBaseName(bundleFiles[bundleSwitcher.index]!.path) : undefined,
               onSelect: bundleSwitcher.onNext,
             }]
@@ -7033,8 +7033,8 @@ const App: React.FC = () => {
         ...(canEditMarkdown && !isEditingMarkdown && !isPlanDiffActive && !archive.archiveMode && !isHtmlSurface
           ? [{
               id: 'edit' as const,
-              label: 'Edit document',
-              subtitle: activeSourceSave ? `Edit ${activeSourceSave.basename}` : 'Edit the plan text directly',
+              label: '编辑文档',
+              subtitle: activeSourceSave ? `编辑 ${activeSourceSave.basename}` : '直接编辑计划文本',
               onSelect: handleEditExitClick,
             }]
           : []),
@@ -7045,7 +7045,7 @@ const App: React.FC = () => {
           ? [{
               id: 'linked-doc-back' as const,
               label: htmlLinkedDocBackTarget,
-              subtitle: 'Leave this document for the one the session opened from',
+              subtitle: '离开此文档，返回会话最初打开的文档',
               onSelect: handleLinkedDocBack,
             }]
           : []),
@@ -7057,20 +7057,20 @@ const App: React.FC = () => {
         ...(isHtmlSurface && !documentReadOnly
           ? [{
               id: 'annotate' as const,
-              label: htmlAnnotateArmed ? 'Interact with page' : 'Annotate page',
+              label: htmlAnnotateArmed ? '与页面交互' : '批注页面',
               subtitle: htmlAnnotateArmed
-                ? 'Taps annotate. Switch to use the page itself.'
-                : 'Taps use the page. Switch to add annotations.',
+                ? '轻点即批注，切换后可直接操作页面。'
+                : '轻点即操作页面，切换后可以添加批注。',
               onSelect: handleHtmlAnnotateToggle,
             }]
           : []),
         ...(isHtmlSurface
           ? [{
               id: 'tools' as const,
-              label: htmlToolsHidden ? 'Show tools' : 'Hide tools',
+              label: htmlToolsHidden ? '显示工具' : '隐藏工具',
               subtitle: htmlToolsHidden
-                ? 'Bring the annotation chrome back over the page'
-                : 'Remove all floating chrome from over the page',
+                ? '把批注工具重新显示在页面上'
+                : '移除页面上的所有浮动工具',
               onSelect: handleHtmlToolsToggle,
             }]
           : []),
@@ -7079,10 +7079,10 @@ const App: React.FC = () => {
         ...(isHtmlSurface && htmlRefresh.canRefresh
           ? [{
               id: 'refresh' as const,
-              label: 'Refresh from disk',
+              label: '从磁盘刷新',
               subtitle: htmlRefresh.isRefreshing
-                ? 'Refreshing the HTML file'
-                : 'Reload the HTML file and keep the annotations that still match',
+                ? '正在刷新 HTML 文件'
+                : '重新加载 HTML 文件，并保留仍然匹配的批注',
               onSelect: () => { void htmlRefresh.refresh(); },
               disabled: htmlRefresh.isRefreshing,
             }]
@@ -7300,13 +7300,13 @@ const App: React.FC = () => {
     // Plan/review linked-doc browsing still swaps the root document under the
     // editor. Folder mode snapshots the active file first.
     if (isEditingMarkdown && annotateSource !== 'folder') {
-      toast('Finish editing first', { description: 'Use "Done editing" before opening files.' });
+      toast('请先结束编辑', { description: '打开文件前，请先点击「完成编辑」。' });
       return;
     }
     // Wider annotatable types are view-only. Switching to one mid-edit would
     // silently downgrade "Done editing" to feedback-only edits.
     if (isEditingMarkdown && !isSourceSaveFilePath(args[0])) {
-      toast('Finish editing first', { description: 'Use "Done editing" before opening non-editable files.' });
+      toast('请先结束编辑', { description: '打开不可编辑的文件前，请先点击「完成编辑」。' });
       return;
     }
     if (!isCompactTouchLayout) {
@@ -7327,13 +7327,13 @@ const App: React.FC = () => {
     if (compactPendingFileRef.current === destination) {
       compactPendingFileRef.current = null;
       setCompactPendingFilePath(null);
-      toast('Couldn’t open file', { description: 'The file navigator is still open so you can try again.' });
+      toast('无法打开文件', { description: '文件导航仍处于打开状态，你可以重试。' });
     }
   };
 
   const handleNavigatorArchiveSelect = (...args: Parameters<typeof archive.select>) => {
     if (isEditingMarkdown) {
-      toast('Finish editing first', { description: 'Use "Done editing" before browsing archived plans.' });
+      toast('请先结束编辑', { description: '浏览归档计划前，请先点击「完成编辑」。' });
       return;
     }
     archive.select(...args);
@@ -7653,7 +7653,7 @@ const App: React.FC = () => {
         {isCompactAnnotationsOpen && (
           <CompactPlanStage
             id="pn-compact-plan-annotations"
-            title="Annotations"
+            title="批注"
             subtitle={compactDocumentTitle}
             count={feedbackAnnotationCount}
             onClose={closeCompactPlanSurface}
@@ -7667,7 +7667,7 @@ const App: React.FC = () => {
         {isCompactAIOpen && canUseAskAI && (
           <CompactPlanStage
             id="pn-compact-plan-ai"
-            title="Ask AI"
+            title="询问 AI"
             subtitle={compactDocumentTitle}
             count={visibleAIMessages.length}
             onClose={closeCompactPlanSurface}
@@ -7681,7 +7681,7 @@ const App: React.FC = () => {
         {isCompactReviewOpen && compactReviewActions.length > 0 && (
           <CompactPlanStage
             id="pn-compact-plan-review"
-            title="Review"
+            title="审查"
             subtitle={compactDocumentTitle}
             onClose={closeCompactPlanSurface}
           >
@@ -7703,7 +7703,7 @@ const App: React.FC = () => {
               onClick={linkedDocHook.dismissError}
               className="ml-auto text-xs text-destructive/60 hover:text-destructive"
             >
-              dismiss
+              忽略
             </button>
           </div>
         )}
@@ -7711,7 +7711,7 @@ const App: React.FC = () => {
         {activeEditableDocument?.diskConflict && (
           <div className="bg-warning/10 border-b border-warning/25 px-4 py-2 flex items-center gap-3 flex-shrink-0">
             <span className="min-w-0 flex-1 text-xs text-warning-foreground">
-              {activeEditableDocument.basename} changed on disk{isEditingMarkdown ? ' while you were editing' : ''}.
+              {activeEditableDocument.basename} 已在磁盘上变更{isEditingMarkdown ? '（编辑期间）' : ''}。
             </span>
             {canOverwriteDiskConflict && (
               <button
@@ -7719,7 +7719,7 @@ const App: React.FC = () => {
                 onClick={handleOverwriteDiskConflict}
                 className="text-xs font-medium text-primary hover:text-primary/80"
               >
-                Overwrite disk
+                覆盖磁盘
               </button>
             )}
             <button
@@ -7727,7 +7727,7 @@ const App: React.FC = () => {
               onClick={handleReloadDiskConflict}
               className="text-xs font-medium text-muted-foreground hover:text-foreground"
             >
-              Reload from disk
+              从磁盘重新加载
             </button>
           </div>
         )}
@@ -7735,7 +7735,7 @@ const App: React.FC = () => {
         {activeEditableDocument?.missingOnDisk && !activeEditableDocument.diskConflict && (
           <div className="bg-warning/10 border-b border-warning/25 px-4 py-2 flex items-center gap-3 flex-shrink-0">
             <span className="min-w-0 flex-1 text-xs text-warning-foreground">
-              {activeEditableDocument.basename} no longer exists on disk. Save to recreate it.
+              {activeEditableDocument.basename} 已不在磁盘上，保存可重新创建。
             </span>
             <button
               type="button"
@@ -7743,14 +7743,14 @@ const App: React.FC = () => {
               disabled={activeSaveStatus === 'saving'}
               className="text-xs font-medium text-primary hover:text-primary/80 disabled:cursor-not-allowed disabled:opacity-50"
             >
-              Save
+              保存
             </button>
           </div>
         )}
         {showAgentTerminalDeliveryStatus && (
           <div className="border-b border-primary/20 bg-primary/5 px-4 py-2 text-xs text-muted-foreground flex-shrink-0">
-            <span className="font-medium text-foreground">Sent to agent.</span>{" "}
-            Keep this window open while it runs. Close Plannotator when you're done.
+            <span className="font-medium text-foreground">已发送给智能体。</span>
+            智能体运行期间请保持此窗口打开，完成后关闭 Plannotator。
           </div>
         )}
 
@@ -7804,10 +7804,10 @@ const App: React.FC = () => {
               isOpen={!!draftBanner}
               onClose={handleDismissDraft}
               onConfirm={handleRestoreDraft}
-              title="Draft Recovered"
+              title="已恢复草稿"
               message={draftBanner ? draftBannerMessage(draftBanner) : ''}
-              confirmText="Restore"
-              cancelText="Dismiss"
+              confirmText="恢复"
+              cancelText="忽略"
               showCancel
             />
             <div ref={planAreaRef} className={`${isHtmlSurface ? 'h-full flex flex-col' : 'min-h-full flex flex-col items-center px-2 py-3 md:px-10 md:py-8 xl:px-16'} relative z-10`}>
@@ -7830,8 +7830,8 @@ const App: React.FC = () => {
                   isPlanDiffActive={isPlanDiffActive}
                   hasPreviousVersion={planDiff.hasPreviousVersion}
                   onPlanDiffToggle={() => setIsPlanDiffActive(!isPlanDiffActive)}
-                  planDiffBaselineLabel={annotateMode ? 'since last review' : undefined}
-                  planDiffBaselineTooltip={annotateMode ? 'Changes since you last reviewed this file' : undefined}
+                  planDiffBaselineLabel={annotateMode ? '自上次审查以来' : undefined}
+                  planDiffBaselineTooltip={annotateMode ? '自你上次审查此文件以来的更改' : undefined}
                   archiveInfo={archive.currentInfo}
                   maxWidth={annotateReaderMaxWidth}
                   remountToken={viewerContentKey}
@@ -7924,7 +7924,7 @@ const App: React.FC = () => {
                           <Tooltip
                             side="top"
                             align="end"
-                            content={type === 'wide' ? 'Hide panels and expand document width' : `Hide panels, keep document width (${modKey}+.)`}
+                            content={type === 'wide' ? '隐藏面板并扩展文档宽度' : `隐藏面板，保持文档宽度（${modKey}+.）`}
                           >
                             <button
                               type="button"
@@ -7936,7 +7936,7 @@ const App: React.FC = () => {
                                   : 'text-muted-foreground/50 hover:text-muted-foreground'
                               }`}
                             >
-                              {type.charAt(0).toUpperCase() + type.slice(1)}
+                              {type === 'wide' ? '宽屏' : '专注'}
                             </button>
                           </Tooltip>
                         </React.Fragment>
@@ -7949,7 +7949,7 @@ const App: React.FC = () => {
                               <Tooltip
                                 side="top"
                                 align="end"
-                                content={`Save changes to ${activeSourceSave.basename}`}
+                                content={`保存对 ${activeSourceSave.basename} 的更改`}
                               >
                                 <button
                                   type="button"
@@ -7966,13 +7966,13 @@ const App: React.FC = () => {
                                   {/* Invisible widest label reserves the width so Save/Saving/Saved
                                       swap without nudging neighbors (font-agnostic, no fixed px). */}
                                   <span className="grid justify-items-start">
-                                    <span aria-hidden className="invisible col-start-1 row-start-1">Saving</span>
+                                    <span aria-hidden className="invisible col-start-1 row-start-1">保存中</span>
                                     <span className="col-start-1 row-start-1">
                                       {activeSaveStatus === 'saving'
-                                        ? 'Saving'
+                                        ? '保存中'
                                         : hasUnsavedDiskChanges
-                                          ? 'Save'
-                                          : 'Saved'}
+                                          ? '保存'
+                                          : '已保存'}
                                     </span>
                                   </span>
                                   {/* Dot slot is always present — only its color changes — so the
@@ -7993,10 +7993,10 @@ const App: React.FC = () => {
                             align="end"
                             content={
                               !isEditingMarkdown
-                                ? 'Edit the document text directly'
+                                ? '直接编辑文档文本'
                                 : cancelMode
-                                  ? 'Discard your edits and stop editing'
-                                  : 'Commit your edits and return to annotating'
+                                  ? '放弃编辑并退出编辑'
+                                  : '确认编辑并返回批注'
                             }
                           >
                             <button
@@ -8014,10 +8014,10 @@ const App: React.FC = () => {
                               }`}
                             >
                               {!isEditingMarkdown
-                                ? 'Edit'
+                                ? '编辑'
                                 : cancelMode
-                                  ? (confirmCancelEdits ? 'Discard?' : 'Cancel')
-                                  : 'Done'}
+                                  ? (confirmCancelEdits ? '放弃？' : '取消')
+                                  : '完成'}
                             </button>
                           </Tooltip>
                         </>
@@ -8136,8 +8136,8 @@ const App: React.FC = () => {
                     isPlanDiffActive={isPlanDiffActive}
                     onPlanDiffToggle={() => setIsPlanDiffActive(!isPlanDiffActive)}
                     hasPreviousVersion={planDiff.hasPreviousVersion}
-                    planDiffBaselineLabel={annotateMode ? 'since last review' : undefined}
-                    planDiffBaselineTooltip={annotateMode ? 'Changes since you last reviewed this file' : undefined}
+                    planDiffBaselineLabel={annotateMode ? '自上次审查以来' : undefined}
+                    planDiffBaselineTooltip={annotateMode ? '自你上次审查此文件以来的更改' : undefined}
                     showDemoBadge={!isApiMode && !isLoadingShared && !isSharedSession}
                     maxWidth={annotateReaderMaxWidth}
                     onOpenLinkedDoc={handleOpenLinkedDoc}
@@ -8151,8 +8151,8 @@ const App: React.FC = () => {
                             label: annotateSource === 'folder'
                               ? undefined
                               : fileBrowser.dirs.find(d => d.path === fileBrowser.activeDirPath)?.isVault
-                                ? 'Vault File'
-                                : fileBrowser.activeFile ? 'File' : undefined,
+                                ? '仓库文件'
+                                : fileBrowser.activeFile ? '文件' : undefined,
                             backLabel,
                             variant: annotateSource === 'folder' ? 'folder-file' : 'breadcrumb',
                           }
@@ -8160,7 +8160,7 @@ const App: React.FC = () => {
                     }
                     imageBaseDir={linkedDocHook.isActive ? activeDocBaseDir : imageBaseDir}
                     codePathBaseDir={activeDocBaseDir}
-                    copyLabel={annotateSource === 'message' ? 'Copy message' : annotateSource === 'file' || annotateSource === 'folder' ? 'Copy file' : undefined}
+                    copyLabel={annotateSource === 'message' ? '复制消息' : annotateSource === 'file' || annotateSource === 'folder' ? '复制文件' : undefined}
                     archiveInfo={archive.currentInfo}
                     sourceInfo={sourceInfo}
                     openInAppPath={annotateMode ? (linkedDocHook.isActive ? (linkedDocHook.filepath ?? null) : sourceFilePath) : null}
@@ -8234,8 +8234,8 @@ const App: React.FC = () => {
                     <button
                       onClick={() => setIsPanelOpen(false)}
                       className="relative rounded-md p-1.5 text-muted-foreground transition-colors before:absolute before:-inset-1.5 before:content-[''] hover:text-foreground md:hidden"
-                      title="Close panel"
-                      aria-label="Close AI panel"
+                      title="关闭面板"
+                      aria-label="关闭 AI 面板"
                     >
                       <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -8306,21 +8306,21 @@ const App: React.FC = () => {
           isOpen={showSourceFileEditWarning}
           onClose={closeSourceFileEditWarning}
           onConfirm={confirmSourceFileEditWarning}
-          title={sourceFileEditWarningAction === 'close' ? 'Unsaved File Edits' : "File Edits Won't Be Sent"}
+          title={sourceFileEditWarningAction === 'close' ? '未保存的文件编辑' : '文件编辑不会被发送'}
           message={
             sourceFileEditWarningAction === 'close'
-              ? <>You have unsaved file edits. They are not saved to disk and will be lost if you close this session.</>
-              : <>You have unsaved file edits. They are not saved to disk, and {agentName} won't get them if you {sourceFileEditWarningAction === 'approve' ? 'approve' : 'send feedback'}.</>
+              ? <>你有未保存的文件编辑，这些编辑不会保存到磁盘，关闭会话后将丢失。</>
+              : <>你有未保存的文件编辑，这些编辑不会保存到磁盘；若你{sourceFileEditWarningAction === 'approve' ? '批准' : '发送反馈'}，{agentName} 将获取不到它们。</>
           }
-          subMessage="Save or discard the file edits first if you want Plannotator to keep them."
+          subMessage="如需 Plannotator 保留这些编辑，请先保存或放弃文件编辑。"
           confirmText={
             sourceFileEditWarningAction === 'approve'
-              ? 'Approve Anyway'
+              ? '仍然批准'
               : sourceFileEditWarningAction === 'close'
-                ? 'Close Anyway'
-                : 'Send Anyway'
+                ? '仍然关闭'
+                : '仍然发送'
           }
-          cancelText="Cancel"
+          cancelText="取消"
           variant="warning"
           showCancel
         />
@@ -8336,15 +8336,15 @@ const App: React.FC = () => {
             setShowExitWarning(false);
             handleAnnotateExit();
           }}
-          title="Feedback Won't Be Sent"
+          title="反馈不会被发送"
           message={
             hasOnlySavedFileChanges
-              ? <>{savedFileChangesOnDiskMessage} The agent will not get that context if you close.</>
-              : <>You have {feedbackLoss} that will be lost if you close.{savedFileAwarenessMixedMessage}</>
+              ? <>{savedFileChangesOnDiskMessage}关闭后智能体将无法获取该上下文。</>
+              : <>你有{feedbackLoss}，关闭后会丢失。{savedFileAwarenessMixedMessage}</>
           }
-          subMessage={hasOnlySavedFileChanges ? 'To tell the agent what changed, use Send Feedback instead.' : 'To send this feedback, use Send Feedback instead.'}
-          confirmText="Close Anyway"
-          cancelText="Cancel"
+          subMessage={hasOnlySavedFileChanges ? '如需告知智能体改了什么，请改用「发送反馈」。' : '如需发送此反馈，请改用「发送反馈」。'}
+          confirmText="仍然关闭"
+          cancelText="取消"
           variant="warning"
           showCancel
         />
@@ -8379,7 +8379,7 @@ const App: React.FC = () => {
             title={compactConfirmItem.confirm.title}
             message={compactConfirmItem.confirm.message}
             confirmText={compactConfirmItem.confirm.confirmText}
-            cancelText="Cancel"
+            cancelText="取消"
             variant="warning"
             showCancel
           />
@@ -8389,9 +8389,9 @@ const App: React.FC = () => {
         <ConfirmDialog
           isOpen={!!shareLoadError && !isApiMode}
           onClose={clearShareLoadError}
-          title="Shared Plan Could Not Be Loaded"
+          title="无法加载分享的计划"
           message={shareLoadError}
-          subMessage="You are viewing a demo plan. This is sample content — it is not your data or anyone else's."
+          subMessage="你正在查看演示计划。这是示例内容，不是你的数据，也不是他人的数据。"
           variant="warning"
         />
 
@@ -8443,15 +8443,15 @@ const App: React.FC = () => {
         <CompletionOverlay
           submitted={submitted}
           title={
-            archive.archiveMode ? 'Archive Closed'
+            archive.archiveMode ? '归档已关闭'
             : submitted === 'exited' && agentClosed ? closedReviewCopy(agentClosed).title
-            : submitted === 'exited' ? 'Session Closed'
-            : goalSetupMode ? 'Answers Submitted'
+            : submitted === 'exited' ? '会话已关闭'
+            : goalSetupMode ? '回答已提交'
             : submitted === 'approved'
-              ? (annotateMode ? 'Approved' : 'Plan Approved')
-              : submitted === 'done' ? 'Done'
-              : annotateMode ? 'Feedback Sent'
-            : 'Feedback Sent'
+              ? (annotateMode ? '已批准' : '计划已批准')
+              : submitted === 'done' ? '完成'
+              : annotateMode ? '反馈已发送'
+            : '反馈已发送'
           }
           subtitle={
             submitted === 'exited' && agentClosed
@@ -8466,20 +8466,20 @@ const App: React.FC = () => {
                     : 'document',
                 ).subtitle
             : submitted === 'exited'
-              ? 'Annotation session closed without feedback.'
+              ? '批注会话已关闭，未发送反馈。'
               : archive.archiveMode
-                ? 'You can reopen with plannotator archive.'
+                ? '你可以用 plannotator archive 重新打开。'
                 : goalSetupMode
-                  ? `${agentName} will use your answers to continue.`
+                  ? `${agentName} 将使用你的回答继续。`
                 : submitted === 'approved'
                   ? (annotateMode
-                      ? `${agentName} will proceed.`
-                      : `${agentName} will proceed with the implementation.`)
+                      ? `${agentName} 将继续执行。`
+                      : `${agentName} 将继续实施。`)
                   : submitted === 'done'
-                    ? `Nothing was sent to ${agentName}.`
+                    ? `未向 ${agentName} 发送任何内容。`
                   : annotateMode
-                    ? `${agentName} will address your feedback on the ${annotateSource === 'message' ? 'message' : annotateSource === 'folder' ? 'files' : 'file'}.`
-                    : `${agentName} will revise the plan based on your feedback.`
+                    ? `${agentName} 将处理你对该${annotateSource === 'message' ? '消息' : annotateSource === 'folder' ? '文件夹' : '文件'}的反馈。`
+                    : `${agentName} 将根据你的反馈修订计划。`
           }
           agentLabel={agentName}
           footer={starAskFooter}

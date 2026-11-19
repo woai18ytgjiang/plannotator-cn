@@ -79,7 +79,7 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
   for (const arg of args) {
     if (arg === "--check") checkOnly = true;
     else {
-      err(`Unknown option: ${arg}\n\n${UPDATE_COMMAND_USAGE}\n`);
+      err(`未知选项：${arg}\n\n${UPDATE_COMMAND_USAGE}\n`);
       return 2;
     }
   }
@@ -89,14 +89,14 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
   const command = installCommandFor(platform, flags);
   if (!current || !parseStableVersion(current)) {
     err(
-      "This is a development build of Plannotator (no release version), so there is nothing to update.\n" +
-        `To install a release: ${command}\n`,
+      "这是 Plannotator 的开发构建（没有发布版本号），因此无需更新。\n" +
+        `要安装发布版本：${command}\n`,
     );
     return 1;
   }
 
   const off = checksOffSource(env);
-  if (off) err(`Update checks are off (${off}). Checking because you asked.\n`);
+  if (off) err(`更新检查已关闭（${off}）。因为是你主动请求的，仍会检查。\n`);
 
   const checked = await runReleaseCheck({
     dataDir,
@@ -110,20 +110,20 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
     // The install script finds the newest release on its own (the API, else
     // the release page), so it works when this check does not.
     err(
-      `Could not ask GitHub for the latest release: ${checked.error}\n` +
-        `To install the newest release anyway, run:\n  ${command}\n`,
+      `无法向 GitHub 查询最新发布：${checked.error}\n` +
+        `如仍要安装最新发布，请运行：\n  ${command}\n`,
     );
     return 1;
   }
   const latest = knownLatestRelease(readUpdateState(dataDir))?.version ?? null;
   if (!latest || !isNewerStableVersion(latest, current)) {
-    out(`Plannotator ${current} is installed. Up to date (checked just now).\n`);
+    out(`已安装 Plannotator ${current}。已是最新版本（刚刚检查过）。\n`);
     return 0;
   }
 
-  out(`Plannotator ${latest} is available (you have ${current}).\n`);
+  out(`Plannotator ${latest} 可用（你当前是 ${current}）。\n`);
   if (checkOnly) {
-    out(`Update: plannotator update\nWhat's new: ${releaseUrlFor(latest)}\n`);
+    out(`更新：plannotator update\n更新内容：${releaseUrlFor(latest)}\n`);
     return 0;
   }
 
@@ -139,25 +139,25 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
   });
   if (begun.outcome === "unmanaged") {
     err(
-      "This copy of Plannotator was not installed by the install script, so it can't update itself\n" +
-        `(the install script manages ${managedBinaryPath(platform, env, home)}). Run:\n  ${command}\n`,
+      "这份 Plannotator 不是由安装脚本安装的，因此无法自行更新\n" +
+        `（安装脚本管理的是 ${managedBinaryPath(platform, env, home)}）。请运行：\n  ${command}\n`,
     );
     return 1;
   }
   if (begun.outcome === "locked") {
-    err(`Another update is already running. Its output is in ${autoUpdatePaths(dataDir).log}\n`);
+    err(`另一个更新已在运行。它的输出位于 ${autoUpdatePaths(dataDir).log}\n`);
     return 1;
   }
   if (begun.outcome !== "ready") {
-    out(`Plannotator ${current} is installed. Up to date.\n`);
+    out(`已安装 Plannotator ${current}。已是最新版本。\n`);
     return 0;
   }
 
   const shown = installerFlagArgs(begun.launch.flags, platform);
   out(
     shown.length > 0
-      ? `Installing v${latest} with your last install's choices: ${shown.join(" ")}\n`
-      : `Installing v${latest}.\n`,
+      ? `正在安装 v${latest}，沿用你上次安装时的选择：${shown.join(" ")}\n`
+      : `正在安装 v${latest}。\n`,
   );
   const run = deps.runInstaller ?? runInstallerForeground;
   let printed = "";
@@ -169,7 +169,7 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
   });
   if (code === 130) {
     err(
-      `The update was interrupted. Plannotator is still ${current}; the lock is released, so run plannotator update again when you like.\n`,
+      `更新已中断。Plannotator 仍是 ${current}；锁已释放，你随时可以再次运行 plannotator update。\n`,
     );
     return 130;
   }
@@ -177,9 +177,9 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
   // would send the person through the very connection that just failed.
   if (code === UPDATE_CHECKSUM_MISMATCH) {
     err(
-      `The update to ${latest} stopped: the download didn't match the checksum Plannotator fetched for it.\n` +
-        `${current} is still installed and works. Try again later, or on another network: plannotator update\n` +
-        `Details: ${autoUpdatePaths(dataDir).log}\n`,
+      `更新到 ${latest} 已停止：下载内容与 Plannotator 获取的校验和不一致。\n` +
+        `${current} 仍已安装且可正常使用。请稍后或在其他网络重试：plannotator update\n` +
+        `详情：${autoUpdatePaths(dataDir).log}\n`,
     );
     return 1;
   }
@@ -188,10 +188,10 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
     if (staging) {
       // Downloaded, but the temp folder could not hold it: not a network problem.
       err(
-        `Couldn't prepare the update: ${staging}. ${current} is still installed and works.\n` +
-          `${updateStagingAdvice(staging)}, then: plannotator update\n` +
-          `Or use another temp folder:\n  ${UPDATE_OTHER_TMPDIR_COMMAND}\n` +
-          `Details: ${autoUpdatePaths(dataDir).log}\n`,
+        `无法准备更新：${staging}。${current} 仍已安装且可正常使用。\n` +
+          `${updateStagingAdvice(staging)}，然后运行：plannotator update\n` +
+          `或换用其他临时文件夹：\n  ${UPDATE_OTHER_TMPDIR_COMMAND}\n` +
+          `详情：${autoUpdatePaths(dataDir).log}\n`,
       );
       return 1;
     }
@@ -199,55 +199,55 @@ export async function runUpdateCommand(args: string[], deps: UpdateCommandDeps):
     if (tls === "revoked") {
       // A blocked key: the network is the problem, and curl would trust it.
       err(
-        `Couldn't download the update: the connection presented a revoked certificate. ${current} is still installed and works.\n` +
-          `Don't install Plannotator over this network. Try again on another network: plannotator update\n` +
-          `Details: ${autoUpdatePaths(dataDir).log}\n`,
+        `无法下载更新：连接出示的证书已被吊销。${current} 仍已安装且可正常使用。\n` +
+          `不要在此网络上安装 Plannotator。请在其他网络重试：plannotator update\n` +
+          `详情：${autoUpdatePaths(dataDir).log}\n`,
       );
       return 1;
     }
     // A failed download can be a lasting local condition (a proxy, a network
     // that inspects HTTPS), so the way out is always shown.
     const extraCa =
-      "If your network inspects HTTPS with its own certificate, point NODE_EXTRA_CA_CERTS at that certificate:\n" +
+      "如果你的网络会用自有证书检查 HTTPS，请把 NODE_EXTRA_CA_CERTS 指向该证书：\n" +
       "  NODE_EXTRA_CA_CERTS=/path/to/its-root.pem plannotator update\n";
     if (tls === "untrusted" && platform === "darwin") {
       // macOS curl still trusts emSign G3: should a network that holds a
       // leaked key get "untrusted" instead of "revoked", the release page
       // (the browser's own trust) comes before the `curl | bash` line.
       err(
-        `Couldn't download the update. ${current} is still installed and works. Try again later: plannotator update\n` +
+        `无法下载更新。${current} 仍已安装且可正常使用。请稍后重试：plannotator update\n` +
           extraCa +
-          `If this keeps happening, download it from ${releaseUrlFor(latest)}\n` +
-          `or install it yourself:\n  ${command}\n` +
-          `Details: ${autoUpdatePaths(dataDir).log}\n`,
+          `如果问题持续，请从 ${releaseUrlFor(latest)} 下载\n` +
+          `或自行安装：\n  ${command}\n` +
+          `详情：${autoUpdatePaths(dataDir).log}\n`,
       );
       return 1;
     }
     err(
-      `Couldn't download the update. ${current} is still installed and works. Try again later: plannotator update\n` +
-        `If this keeps happening, install it yourself:\n  ${command}\n` +
-        `or download it from ${releaseUrlFor(latest)}\n` +
+      `无法下载更新。${current} 仍已安装且可正常使用。请稍后重试：plannotator update\n` +
+        `如果问题持续，请自行安装：\n  ${command}\n` +
+        `或从 ${releaseUrlFor(latest)} 下载\n` +
         (tls === "untrusted" ? extraCa : "") +
-        `Details: ${autoUpdatePaths(dataDir).log}\n`,
+        `详情：${autoUpdatePaths(dataDir).log}\n`,
     );
     return 1;
   }
   if (code !== 0) {
     err(
-      `The update didn't install: the install script exited with code ${code}. Plannotator is still ${current}.\n` +
-        `The log says what went wrong: ${autoUpdatePaths(dataDir).log}\n` +
-        `Or run the install script yourself: ${command}\n`,
+      `更新未安装：安装脚本以退出码 ${code} 结束。Plannotator 仍是 ${current}。\n` +
+        `日志说明了出错原因：${autoUpdatePaths(dataDir).log}\n` +
+        `也可以自行运行安装脚本：${command}\n`,
     );
     return 1;
   }
-  out(`Updated to ${latest}. What's new: ${releaseUrlFor(latest)}\n`);
+  out(`已更新到 ${latest}。更新内容：${releaseUrlFor(latest)}\n`);
   out(
     readInboxRegistry(dataDir)
-      ? `Open reviews keep running on ${current}. The Inbox shows Update to restart onto ${latest}.\n`
-      : `Open reviews keep running on ${current}; new ones start on ${latest}.\n`,
+      ? `已打开的审查仍在 ${current} 上运行。收件箱会显示「更新以重启到 ${latest}」。\n`
+      : `已打开的审查仍在 ${current} 上运行；新的审查将从 ${latest} 开始。\n`,
   );
   if (begun.launch.flags.includes("skip-claude-plugin")) {
-    out(`The Claude Code plugin updates separately: ${CLAUDE_PLUGIN_UPDATE_COMMANDS.join(" && ")}\n`);
+    out(`Claude Code 插件需单独更新：${CLAUDE_PLUGIN_UPDATE_COMMANDS.join(" && ")}\n`);
   }
   return 0;
 }

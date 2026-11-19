@@ -109,7 +109,7 @@ export function CloudflareForm({ onStarted, onCancel }: { onStarted: (view: Clou
   return (
     <form className="ib-flow" onSubmit={(event) => void submit(event)} data-cloudflare-form="">
       <div className="ib-flow-head">
-        <h3>Set up Cloudflare</h3>
+        <h3>设置 Cloudflare</h3>
       </div>
       <div className="ib-flow-body">
         <p className="ib-lead">

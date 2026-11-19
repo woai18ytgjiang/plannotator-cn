@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useCallback, useEffect, useRef, useState } from 'react';
 import type { AIContext } from '@plannotator/core';
 import type { AIQuestion, AIResponse } from '../types';
@@ -322,7 +323,7 @@ export function useAIChat({
       }, signal);
 
       if (!res.ok) {
-        const data = await res.json().catch(() => ({ error: 'Failed to create AI session' }));
+        const data = await res.json().catch(() => ({ error: '无法创建 AI 会话' }));
         throw new Error(data.error || `HTTP ${res.status}`);
       }
 
@@ -444,7 +445,7 @@ export function useAIChat({
       }, controller.signal);
 
       if (!res.ok || !res.body) {
-        const data = await res.json().catch(() => ({ error: 'Query failed' }));
+        const data = await res.json().catch(() => ({ error: '查询失败' }));
         throw new Error(data.error || `HTTP ${res.status}`);
       }
 

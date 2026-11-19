@@ -19,7 +19,7 @@ function UnsentRow({ comment, onSend }: { comment: CodeAnnotation; onSend: () =>
         <div className="line-clamp-2 text-[13px] leading-5 text-foreground">{comment.text}</div>
       </div>
       <button type="button" className="h-7 shrink-0 rounded px-2 text-[12px] text-muted-foreground hover:bg-muted hover:text-foreground" onClick={onSend}>
-        Send
+        发送
       </button>
     </li>
   );
@@ -28,7 +28,7 @@ function UnsentRow({ comment, onSend }: { comment: CodeAnnotation; onSend: () =>
 function ThreadRow({ thread, focused, posted, onOpen }: { thread: PlacedThread; focused: boolean; posted: boolean; onOpen: () => void }) {
   const { conversation, now } = thread;
   const last = conversation.messages[conversation.messages.length - 1]!;
-  const state = conversation.resolved ? 'Resolved' : now.place === 'changed' ? 'Code changed' : now.place === 'unknown' ? 'Not in this diff' : null;
+  const state = conversation.resolved ? '已解决' : now.place === 'changed' ? '代码已变更' : now.place === 'unknown' ? '不在本差异中' : null;
   return (
     <li>
       <button
@@ -42,7 +42,7 @@ function ThreadRow({ thread, focused, posted, onOpen }: { thread: PlacedThread; 
           <span className="truncate" title={conversation.anchor.file}>{short(conversation.anchor.file)}</span>
           <span>{threadLines(now)}</span>
           {state ? <span>· {state}</span> : null}
-          {posted ? <span>· On the forge</span> : null}
+          {posted ? <span>· 在代码平台上</span> : null}
         </span>
         <span className={`line-clamp-2 text-[13px] leading-5 ${conversation.resolved ? 'text-muted-foreground' : 'text-foreground'}`}>{conversation.messages[0]!.body}</span>
         {conversation.messages.length > 1 ? (
@@ -74,18 +74,18 @@ export function LiveThreadsTab(props: {
     <div className="flex flex-col text-[13px]" data-live-tab>
       <div className="flex items-center gap-1 border-b border-border px-3 py-1.5">
         <span className="whitespace-nowrap text-[12px] text-muted-foreground" data-live-count>
-          {props.order.length} open{resolvedCount > 0 ? ` · ${resolvedCount} resolved` : ''}
+          {props.order.length} open{resolvedCount > 0 ? ` · ${resolvedCount} 个已解决` : ''}
         </span>
         <span className="flex-1" />
         {props.threadUrl ? (
-          <a href={props.threadUrl} target="_blank" rel="noreferrer" title="Open in Inbox" aria-label="Open in Inbox" className={ICON} data-live-inbox-link>
+          <a href={props.threadUrl} target="_blank" rel="noreferrer" title="在收件箱中打开" aria-label="在收件箱中打开" className={ICON} data-live-inbox-link>
             <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="M9 3h4v4M13 3 7.5 8.5M11 9.5V13H3V5h3.5" strokeLinecap="round" strokeLinejoin="round" /></svg>
           </a>
         ) : null}
-        <button type="button" disabled={props.order.length === 0} title="Previous open thread" aria-label="Previous open thread" className={ICON} onClick={() => props.onStep(-1)}>
+        <button type="button" disabled={props.order.length === 0} title="上一个未解决话题" aria-label="上一个未解决话题" className={ICON} onClick={() => props.onStep(-1)}>
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m4 10 4-4 4 4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
-        <button type="button" disabled={props.order.length === 0} title="Next open thread" aria-label="Next open thread" className={ICON} onClick={() => props.onStep(1)}>
+        <button type="button" disabled={props.order.length === 0} title="下一个未解决话题" aria-label="下一个未解决话题" className={ICON} onClick={() => props.onStep(1)}>
           <svg viewBox="0 0 16 16" width="14" height="14" fill="none" stroke="currentColor" strokeWidth="1.5" aria-hidden="true"><path d="m4 6 4 4 4-4" strokeLinecap="round" strokeLinejoin="round" /></svg>
         </button>
       </div>
@@ -95,8 +95,8 @@ export function LiveThreadsTab(props: {
         </div>
       ) : null}
       {props.unsent.length > 0 ? (
-        <section className="border-b border-border py-1" aria-label="Not sent yet">
-          <h3 className="px-3 py-1 text-[12px] font-medium text-muted-foreground">Not sent yet</h3>
+        <section className="border-b border-border py-1" aria-label="尚未发送">
+          <h3 className="px-3 py-1 text-[12px] font-medium text-muted-foreground">尚未发送</h3>
           <ul>
             {props.unsent.map((comment) => (
               <UnsentRow key={comment.id} comment={comment} onSend={() => void actions.sendComments([comment], '', []).catch(() => {})} />
@@ -106,8 +106,8 @@ export function LiveThreadsTab(props: {
             <LiveComposer
               agents={actions.agents}
               allowEmpty
-              placeholder={to ? `To ${to}. Add a note or @ another agent` : '@ an agent to send these to'}
-              sendLabel={props.unsent.length === 1 ? 'Send' : `Send all ${props.unsent.length}`}
+              placeholder={to ? `致 ${to}。添加备注或 @ 另一个智能体` : '@ 一个智能体以发送这些内容'}
+              sendLabel={props.unsent.length === 1 ? '发送' : `发送全部 ${props.unsent.length}`}
               onFocus={actions.loadAgents}
               onSend={(words, tags) => actions.sendComments(props.unsent, words, tags)}
             />
@@ -129,7 +129,7 @@ export function LiveThreadsTab(props: {
       {props.pr ? <PRThreadsSection pr={props.pr} onOpen={(path, line, side) => actions.revealLines(path, line, side)} /> : null}
       {props.placed.length === 0 && props.unsent.length === 0 ? (
         <p className="px-3 py-3 text-[12px] leading-5 text-muted-foreground">
-          Comments you send to an agent become threads here. Write a comment on a line, then send it from this tab.
+          你发送给智能体的评论会在这里成为话题。在行上写评论，然后从此标签页发送。
         </p>
       ) : (
         <ul className="py-1">
@@ -143,7 +143,7 @@ export function LiveThreadsTab(props: {
 }
 
 function PRThreadsSection({ pr, onOpen }: { pr: { forge: string; threads: readonly PRReviewThread[] | null; load: () => void }; onOpen: (path: string, line: number, side: 'old' | 'new') => void }) {
-  const where = pr.forge === 'GitLab' ? 'merge request' : 'pull request';
+  const where = pr.forge === 'GitLab' ? '合并请求' : '拉取请求';
   const open = (pr.threads ?? []).filter((t) => !t.isResolved);
   return (
     <section className="border-b border-border py-1" aria-label={`On the ${where}`}>
@@ -151,7 +151,7 @@ function PRThreadsSection({ pr, onOpen }: { pr: { forge: string; threads: readon
       {pr.threads === null ? (
         <div className="px-3 pb-2">
           <button type="button" className="h-7 rounded px-2 text-[12px] text-muted-foreground hover:bg-muted hover:text-foreground" onClick={pr.load} data-pr-threads-load>
-            Show its threads on the lines
+            在行上显示其话题
           </button>
         </div>
       ) : open.length === 0 ? (
@@ -172,7 +172,7 @@ function PRThreadsSection({ pr, onOpen }: { pr: { forge: string; threads: readon
                   <span className="flex gap-1.5 text-[12px] text-muted-foreground">
                     <span className="truncate" title={thread.path}>{short(thread.path)}</span>
                     {place ? <span>line {place.line}</span> : null}
-                    {thread.isOutdated ? <span>· Outdated</span> : null}
+                    {thread.isOutdated ? <span>· 已过时</span> : null}
                     <span>· {thread.comments[0]?.author ?? ''}</span>
                   </span>
                   <span className="line-clamp-2 text-[13px] leading-5 text-foreground">{thread.comments[0]?.body ?? ''}</span>

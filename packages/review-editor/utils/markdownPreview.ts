@@ -127,7 +127,7 @@ export function isRemoteImageSource(src: string): boolean {
 }
 
 /** The title of a remote image a PR review holds back until the reviewer loads it. */
-export const REMOTE_IMAGE_HELD_TITLE = 'Remote image, not loaded: loading it tells that server your IP address';
+export const REMOTE_IMAGE_HELD_TITLE = '远程图片未加载：加载它会将该服务器获知你的 IP 地址';
 
 /** True for an image source the page may load as written (remote or inline). */
 export function isExternalImageSource(src: string): boolean {

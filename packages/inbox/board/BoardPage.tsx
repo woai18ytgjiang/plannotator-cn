@@ -210,9 +210,9 @@ export function BoardPage(props: BoardPageProps) {
       const { card: changed } = await inboxApi.setCardInitiative(card.id, value);
       props.onChanged(changed);
       const name = next ? (initiatives.find((i) => i.id === next)?.name ?? 'the tag') : null;
-      setSaid(name ? `“${card.title}” is in ${name} now.` : `“${card.title}” has no tag now.`);
+      setSaid(name ? `已将「${card.title}」归入 ${name}。` : `「${card.title}」现在没有标签。`);
     } catch (cause) {
-      if (!heldSaid(cause)) setFailed(`“${card.title}” did not change. Try again.`);
+      if (!heldSaid(cause)) setFailed(`「${card.title}」未更改，请重试。`);
     }
   };
   /** A write held for an asleep linked machine is not a failure: the window's clock toast says it waits. */
@@ -261,7 +261,7 @@ export function BoardPage(props: BoardPageProps) {
     const moved = await props.onMove(card, change);
     if (moved === 'held') return null;
     if (!moved) {
-      setFailed(`“${card.title}” did not move. Try again.`);
+      setFailed(`「${card.title}」未能移动，请重试。`);
       return null;
     }
     const toast = fromMenu && props.onToast ? cardMenuToast(card, moved) : null;
@@ -292,7 +292,7 @@ export function BoardPage(props: BoardPageProps) {
    */
   const undoMove = async (moved: InboxCardWire, change: BoardMove) => {
     if (!cardUndoStillApplies(moved, cardsRef.current.find((c) => c.id === moved.id) ?? null)) {
-      props.onToast?.({ icon: 'warn', lead: 'It has moved since', detail: `“${moved.title}”` });
+      props.onToast?.({ icon: 'warn', lead: '此后已被移动', detail: `「${moved.title}」` });
       return;
     }
     props.onToast?.(null);
@@ -404,7 +404,7 @@ export function BoardPage(props: BoardPageProps) {
       // card is read first: a drop whose answer was lost has landed, and dropping it again is refused.
       // A drop that fails stops here (the retry drops it), so two live cards never stand.
       const now = (await inboxApi.card(card.id)).card;
-      if (now.column !== 'dropped') await inboxApi.moveCard(card.id, { op: 'drop', reason: 'Made again in another project' });
+      if (now.column !== 'dropped') await inboxApi.moveCard(card.id, { op: 'drop', reason: '已在另一个项目中重新创建' });
       card = null;
       dialogCard.current = null;
       madeFrom.current = null;
@@ -443,37 +443,37 @@ export function BoardPage(props: BoardPageProps) {
     try {
       const card = await dialogCardFor(across ? { ...input, initiative: await across.here(input.initiative) } : input);
       // Made in another project than the Board shows: the card is not on screen, so the words say where it went.
-      const elsewhere = project && card.project_id !== project ? ` in ${names.get(card.project_id) ?? 'another project'}` : '';
+      const elsewhere = project && card.project_id !== project ? `（位于 ${names.get(card.project_id) ?? '另一个项目'}）` : '';
       if (input.mode === 'send' && input.to) {
         const sent = card.sent ? card : await sendCardTo(card, input.to, key);
         props.onChanged(sent);
-        setSaid(`Sent “${input.title}” to ${hostLabel(input.to.host)}${elsewhere}.`);
+        setSaid(`已将「${input.title}」发送给 ${hostLabel(input.to.host)}${elsewhere}。`);
       } else {
         props.onChanged(card);
-        setSaid(`Added “${input.title}” to Backlog${elsewhere}.`);
+        setSaid(`已将「${input.title}」添加到待办池${elsewhere}。`);
       }
       setCreating(null);
       resetDialog();
       return null;
     } catch (cause) {
       if (dialogCard.current) props.onChanged(dialogCard.current);
-      return cause instanceof Error ? cause.message : 'The card was not made. Try again.';
+      return cause instanceof Error ? cause.message : '卡片未能创建，请重试。';
     }
   };
 
   /** Send a card nobody was asked about: a new thread to the agent (its notes the message), then the card is sent. */
   const sendExisting = async (card: InboxCardWire, input: NewCardInput): Promise<string | null> => {
-    if (!input.to) return 'Choose an agent to send it to.';
+    if (!input.to) return '请选择要发送给的智能体。';
     const key = dialogKey.current || newUuid();
     dialogKey.current = key;
     try {
       const next = await sendCardTo(card, input.to, key);
       props.onChanged(next);
       setSendingCard(null);
-      setSaid(`Sent “${card.title}” to ${hostLabel(input.to.host)}.`);
+      setSaid(`已将「${card.title}」发送给 ${hostLabel(input.to.host)}。`);
       return null;
     } catch (cause) {
-      return cause instanceof Error ? cause.message : 'Nothing was sent. Try again.';
+      return cause instanceof Error ? cause.message : '未发送任何内容，请重试。';
     }
   };
 
@@ -568,7 +568,7 @@ export function BoardPage(props: BoardPageProps) {
   const filter = showFilter ? <BoardFilter {...filterProps} tokens={!phone && !narrowHead} /> : null;
   const tokenRow = showFilter && (phone || narrowHead) && filtered ? <BoardFilterTokens {...filterProps} /> : null;
   // What the filter shows, in words: "Shape", "plannotator", "Shape in plannotator".
-  const scope = initiativeName && projectName ? `${initiativeName} in ${projectName}` : (initiativeName ?? projectName ?? 'this project');
+  const scope = initiativeName && projectName ? `${initiativeName}（${projectName}）` : (initiativeName ?? projectName ?? '此项目');
   const inProject = <b dir="auto">{scope}</b>;
   const showAll = (
     <button
@@ -584,7 +584,7 @@ export function BoardPage(props: BoardPageProps) {
       }}
       data-board-show-all=""
     >
-      {initiative !== null ? 'Show all cards' : 'Show all projects'}
+      {initiative !== null ? '显示全部卡片' : '显示全部项目'}
     </button>
   );
   // Say a new filter once it lands (not on the first draw).
@@ -593,7 +593,7 @@ export function BoardPage(props: BoardPageProps) {
     const key = `${project}|${initiative}`;
     if (saidFilter.current === key) return;
     saidFilter.current = key;
-    setSaid(filtered ? `Showing the cards in ${scope}.` : 'Showing every card.');
+    setSaid(filtered ? `正在显示 ${scope} 中的卡片。` : '正在显示所有卡片。');
   }, [project, initiative, scope, filtered]);
 
   let body: ReactNode;
@@ -601,7 +601,7 @@ export function BoardPage(props: BoardPageProps) {
   else if (phone && filtered && cards.length === 0)
     body = (
       <div className="ib-bempty ib-bempty-in" data-board-empty="project">
-        <span>No cards in {inProject}</span>
+        <span>{inProject} 中没有卡片</span>
         {showAll}
       </div>
     );
@@ -609,8 +609,8 @@ export function BoardPage(props: BoardPageProps) {
   else if (view === 'done')
     body = (
       <CardList
-        title="Done"
-        empty={filtered ? <>Nothing done in {inProject} yet.</> : 'Nothing done yet. A card goes here when its work is merged, live or finished.'}
+        title="已完成"
+        empty={filtered ? <>{inProject} 中还没有已完成的工作。</> : '还没有已完成的工作。当卡片的工作已合并、上线或完成时，它会出现在这里。'}
         cards={cards.filter((c) => c.column === 'done')}
         {...common}
       />
@@ -649,7 +649,7 @@ export function BoardPage(props: BoardPageProps) {
   // On a phone an opened card is a screen of its own, over the Board.
   if (phone && panel) {
     return (
-      <section className="ib-bpage ib-bpage-card" aria-label={`Card: ${open!.title}`} data-board-page="" data-board-view="card">
+      <section className="ib-bpage ib-bpage-card" aria-label={`卡片：${open!.title}`} data-board-page="" data-board-view="card">
         {panel}
         {sendingCard && <SendDialog card={sendingCard} sessions={sessionsOf(sendingCard)} projects={props.projects} home={props.home} phone={phone} onClose={() => setSendingCard(null)} onSend={sendExisting} />}
       </section>
@@ -664,16 +664,16 @@ export function BoardPage(props: BoardPageProps) {
           <>
             <button type="button" className="ib-bback" data-board-back="" onClick={() => props.onView('lanes')}>
               <Icon name="chevL" size={16} />
-              Board
+              看板
             </button>
             <h1 id={titleId} tabIndex={-1}>
-              {view === 'done' ? 'Done' : 'Cancelled'}
+              {view === 'done' ? '已完成' : '已取消'}
             </h1>
           </>
         ) : (
           <>
             <h1 id={titleId} tabIndex={-1}>
-              Board
+              看板
             </h1>
           </>
         )}
@@ -682,20 +682,20 @@ export function BoardPage(props: BoardPageProps) {
         {filter}
         {/* The "?" sits left of Done and Cancelled (the intro mock). */}
         {(view === 'lanes' || phone) && (
-          <Tip content="About the Board">
-            <button type="button" className="ib-iconbtn ib-babout" aria-label="About the Board" aria-haspopup="dialog" onClick={() => setIntro(true)} data-board-about="">
+          <Tip content="关于看板">
+            <button type="button" className="ib-iconbtn ib-babout" aria-label="关于看板" aria-haspopup="dialog" onClick={() => setIntro(true)} data-board-about="">
               <Icon name="question" size={17} />
             </button>
           </Tip>
         )}
         {!phone && view === 'lanes' && model && (
-          <nav className="ib-blinks" aria-label="Cards out of the lanes">
+          <nav className="ib-blinks" aria-label="看板列以外的卡片">
             <a href="#board=done" data-board-link="done" onClick={(event) => (event.preventDefault(), props.onView('done'))}>
-              All done
+              全部已完成
             </a>
             <span aria-hidden="true">·</span>
             <a href="#board=cancelled" data-board-link="cancelled" onClick={(event) => (event.preventDefault(), props.onView('cancelled'))}>
-              Cancelled {formatCount(counts.dropped)}
+              已取消 {formatCount(counts.dropped)}
             </a>
           </nav>
         )}
@@ -732,16 +732,16 @@ export function BoardPage(props: BoardPageProps) {
         {panel}
         {model && view === 'lanes' && !phone && liveCount === 0 && !open && filtered && (
           <div className="ib-bempty" data-board-empty="project">
-            <span>Nothing in flight in {inProject}</span>
+            <span>{inProject} 中没有进行中的工作</span>
             {showAll}
           </div>
         )}
         {model && view === 'lanes' && !phone && liveCount === 0 && !open && !filtered && (
           <div className="ib-bempty" data-board-empty="">
-            No cards yet
+            还没有卡片
             <button type="button" className="ib-btn ib-sm" onClick={() => void promptCopy.copy()} data-board-empty-copy="">
               <Icon name={promptCopy.state === 'copied' ? 'check' : 'copy'} size={14} />
-              {promptCopy.state === 'copied' ? 'Copied' : 'Copy prompt'}
+              {promptCopy.state === 'copied' ? '已复制' : '复制提示词'}
             </button>
           </div>
         )}
@@ -838,12 +838,12 @@ interface CardCommon {
 
 function NewCardButton({ disabled, phone, onOpen }: { disabled: boolean; phone: boolean; onOpen: () => void }) {
   const button = (
-    <button type="button" className="ib-btn ib-sm ib-bnew" data-board-new="" disabled={disabled} aria-haspopup="dialog" onClick={onOpen} aria-label={phone ? 'New card' : undefined}>
+    <button type="button" className="ib-btn ib-sm ib-bnew" data-board-new="" disabled={disabled} aria-haspopup="dialog" onClick={onOpen} aria-label={phone ? '新建卡片' : undefined}>
       <Icon name="plus" size={15} />
-      {!phone && 'New card'}
+      {!phone && '新建卡片'}
     </button>
   );
-  return disabled ? <Tip content="A card needs a project: an agent's first message makes one.">{button}</Tip> : button;
+  return disabled ? <Tip content="卡片需要归属一个项目：智能体的第一条消息会创建项目。">{button}</Tip> : button;
 }
 
 function Lanes({
@@ -953,11 +953,11 @@ function Lanes({
 }
 
 const LANE_EMPTY: Partial<Record<InboxCardColumn, string>> = {
-  backlog: 'No ideas here. A card here is not sent to any agent.',
-  todo: 'Nothing asked and waiting to start.',
-  in_progress: 'No agent is working on anything.',
-  in_review: 'Nothing waits on your review.',
-  done: 'Nothing done in the last 7 days.',
+  backlog: '暂无想法。这里的卡片不会发送给任何智能体。',
+  todo: '没有已请求、等待开始的工作。',
+  in_progress: '没有智能体正在处理工作。',
+  in_review: '没有等待你审核的事项。',
+  done: '最近 7 天没有已完成的工作。',
 };
 
 /** A lane card's title is cut (clamped at three lines, or a word cut at the edge): its button overflows. */
@@ -990,7 +990,7 @@ function BoardCard({
   const age = cardAge(card.heard_at, now);
   const mark = markOf(card);
   const cardProject = projectOfCard(card);
-  const label = cardLabel(card, unread, now, cardProject?.name ?? null) + (sent ? `. Sent to ${sent}` : '') + (mark ? `. ${markLabel(mark)}` : '');
+  const label = cardLabel(card, unread, now, cardProject?.name ?? null) + (sent ? `. 已发送给 ${sent}` : '') + (mark ? `. ${markLabel(mark)}` : '');
   const thread = line?.you ? youThread(card, rowOf) : null;
   // "Waiting on you" (columns v2, display only): a card before In review whose linked thread waits on the person.
   const waiting = line?.you ? null : waitingThread(card, rowOf);
@@ -1004,12 +1004,12 @@ function BoardCard({
     <span className="ib-bc-meta">
       {mark && <RefMark mark={mark} />}
       <BoardProjectMark projectId={card.project_id} />
-      <Tip content={owner === 'You' ? 'Your card' : owner}>
+      <Tip content={owner === '你' ? '你的卡片' : owner}>
         <span className="ib-bc-who" data-host={card.agent?.kind === 'agent' ? card.agent.host : 'you'}>
           {card.agent ? <AuthorMark author={card.agent} /> : <span className="ib-lane-dot ib-bc-yourdot" data-col="backlog" aria-hidden="true" />}
         </span>
       </Tip>
-      <Tip content={`Last heard ${fullTime(card.heard_at)}`}>
+      <Tip content={`最后收到消息 ${fullTime(card.heard_at)}`}>
         <span className="ib-bc-age">{age.short.replace(' ago', '')}</span>
       </Tip>
     </span>
@@ -1065,22 +1065,22 @@ function BoardCard({
             {sent ? (
               <span className="ib-bc-sent">
                 {delivery ? <DeliveryTick delivery={delivery} /> : <Icon name="clock" size={13} />}
-                <span className="ib-bc-sentt">Sent to {sent}</span>
+                <span className="ib-bc-sentt">已发送给 {sent}</span>
               </span>
             ) : waiting ? (
               <button type="button" className="ib-bc-youlink" data-card-waiting={waiting} aria-label={waitingLinkLabel(waitingSubject)} onClick={() => onOpenThread(card, waiting)}>
-                <b className="ib-bc-youw">Waiting on you:</b> <span className="ib-bc-yout">{waitingSubject ?? 'a question'}</span>
+                <b className="ib-bc-youw">等待你处理：</b> <span className="ib-bc-yout">{waitingSubject ?? '一个问题'}</span>
                 <Icon name="arrowUpRight" size={12} />
               </button>
             ) : line?.you && thread ? (
               <button type="button" className="ib-bc-youlink" data-card-you-link={thread} aria-label={youLinkLabel(line.text)} onClick={() => onOpenThread(card, thread)}>
-                <b className="ib-bc-youw">You:</b> <span className="ib-bc-yout">{line.text}</span>
+                <b className="ib-bc-youw">你：</b> <span className="ib-bc-yout">{line.text}</span>
                 <Icon name="arrowUpRight" size={12} />
               </button>
             ) : (
               // No thread to go to: plain words (a click on them opens the card, as anywhere on it), no second tab stop.
               <>
-                <b className="ib-bc-youw">You:</b> {line?.text}
+                <b className="ib-bc-youw">你：</b> {line?.text}
               </>
             )}
           </span>
@@ -1108,16 +1108,16 @@ function DroppedNotice({
       <div className="ib-bdrops-h">
         <Icon name="warn" size={16} />
         <h2 id={headingId}>
-          {formatCount(drops.length)} cancelled by {drops.length === 1 ? 'an agent' : 'agents'}
+          {formatCount(drops.length)} 项工作被智能体取消
         </h2>
         <span className="ib-bsp" />
         {onOpenCancelled && (
           <button type="button" className="ib-lnk" onClick={onOpenCancelled}>
-            See Cancelled
+            查看已取消
           </button>
         )}
         <button type="button" className="ib-btn ib-sm" data-dropped-seen="" onClick={onSeen}>
-          Got it
+          知道了
         </button>
       </div>
       <ul>
@@ -1126,11 +1126,11 @@ function DroppedNotice({
             <span className="ib-bdrops-t" dir="auto">
               <b>{card.title}</b>
               {' · '}
-              {card.dropped?.by.kind === 'agent' ? cardOwnerName({ ...card, agent: card.dropped.by }) : 'An agent'}
+              {card.dropped?.by.kind === 'agent' ? cardOwnerName({ ...card, agent: card.dropped.by }) : '智能体'}
               {card.dropped?.reason ? `: ${card.dropped.reason}` : ''}
             </span>
-            <OnceButton className="ib-btn ib-sm" data-card-restore={card.id} onClick={() => onRestore(card)} aria-label={`Restore “${card.title}”`}>
-              Restore
+            <OnceButton className="ib-btn ib-sm" data-card-restore={card.id} onClick={() => onRestore(card)} aria-label={`恢复「${card.title}」`}>
+              恢复
             </OnceButton>
           </li>
         ))}
@@ -1215,12 +1215,12 @@ function DroppedList({ cards, onRestore, inProject = null }: { cards: readonly I
   return (
     <section className="ib-blist" aria-labelledby={id} data-dropped-list="">
       <h2 id={id} className="ib-blist-h" tabIndex={-1}>
-        Cancelled <span className="ib-lane-n">{formatCount(cards.length)}</span>
+        已取消 <span className="ib-lane-n">{formatCount(cards.length)}</span>
       </h2>
       {cards.length > 0 ? (
         <ul className="ib-drops">
           {cards.map((card) => {
-            const by = card.dropped?.by.kind === 'agent' ? cardOwnerName({ ...card, agent: card.dropped.by }) : 'you';
+            const by = card.dropped?.by.kind === 'agent' ? cardOwnerName({ ...card, agent: card.dropped.by }) : '你';
             return (
               <li key={card.id} className="ib-drop" data-dropped-row={card.id}>
                 <span className="ib-drop-t">
@@ -1228,19 +1228,19 @@ function DroppedList({ cards, onRestore, inProject = null }: { cards: readonly I
                     {card.title}
                   </span>
                   <span className="ib-drop-meta" dir="auto">
-                    {card.dropped ? `Cancelled ${whenTime(card.dropped.at)} by ${by}` : 'Cancelled'}
+                    {card.dropped ? `已于 ${whenTime(card.dropped.at)} 由${by}取消` : '已取消'}
                     {card.dropped?.reason ? `: ${card.dropped.reason}` : ''}
                   </span>
                 </span>
-                <OnceButton className="ib-btn ib-sm" data-card-restore={card.id} onClick={() => onRestore(card)} aria-label={`Restore “${card.title}” to ${INBOX_CARD_COLUMN_LABELS[card.aside_from ?? 'backlog']}`}>
-                  Restore
+                <OnceButton className="ib-btn ib-sm" data-card-restore={card.id} onClick={() => onRestore(card)} aria-label={`恢复「${card.title}」到 ${INBOX_CARD_COLUMN_LABELS[card.aside_from ?? 'backlog']}`}>
+                  恢复
                 </OnceButton>
               </li>
             );
           })}
         </ul>
       ) : (
-        <p className="ib-lane-empty">{inProject ? <>Nothing cancelled in {inProject}.</> : 'Nothing cancelled. A cancelled card is kept here and can be restored.'}</p>
+        <p className="ib-lane-empty">{inProject ? <>{inProject} 中没有已取消的工作。</> : '没有已取消的工作。被取消的卡片会保留在这里，可以恢复。'}</p>
       )}
     </section>
   );
@@ -1308,7 +1308,7 @@ function PhoneBoard({
                 setFocusCard(older[0]!.id);
               }}
             >
-              All done ({formatCount(done.length)})
+              全部已完成（{formatCount(done.length)}）
             </button>
           )}
         </>
@@ -1318,9 +1318,9 @@ function PhoneBoard({
   const dropped = cards.filter((c) => c.column === 'dropped');
   groups.push({
     key: 'dropped',
-    label: 'Cancelled',
+    label: '已取消',
     count: counts.dropped,
-    body: dropped.length > 0 ? <DroppedList cards={dropped} onRestore={onRestore} /> : <p className="ib-lane-empty">Nothing cancelled.</p>,
+    body: dropped.length > 0 ? <DroppedList cards={dropped} onRestore={onRestore} /> : <p className="ib-lane-empty">没有已取消的工作。</p>,
   });
   return (
     <div ref={stackRef} className="ib-bstack">

@@ -13,10 +13,10 @@ import {
 export type ImageViewChoice = ImageDiffMode | 'source';
 
 const DESCRIBE: Record<ImageViewChoice, string> = {
-  side: 'Before and after next to each other, same scale',
-  swipe: 'Stacked exactly; drag the divider or use the arrow keys',
-  onion: 'After over before; fade between them',
-  source: 'The SVG as a line diff · comment on lines',
+  side: '前后并排显示，比例相同',
+  swipe: '完全重叠；拖动分隔线或使用方向键',
+  onion: '后者覆盖前者；在两者间淡入淡出',
+  source: '以行差异形式显示 SVG · 可在行上评论',
 };
 
 function ModeIcon({ mode, className }: { mode: ImageViewChoice; className: string }) {
@@ -45,7 +45,7 @@ export const ImageViewMenu: React.FC<ImageViewMenuProps> = ({ filePath, comparab
   const name = filePath.slice(filePath.lastIndexOf('/') + 1);
   const modes: ImageDiffMode[] = comparable ? [...IMAGE_DIFF_MODES] : ['side'];
   const choice: ImageViewChoice = source?.active ? 'source' : comparable ? settings.mode : 'side';
-  const label = choice === 'source' ? 'Source' : comparable ? IMAGE_DIFF_MODE_LABEL[choice] : 'Image';
+  const label = choice === 'source' ? '源码' : comparable ? IMAGE_DIFF_MODE_LABEL[choice] : '图片';
   const options: ImageViewChoice[] = [...modes, ...(source ? (['source'] as const) : [])];
   const itemClass = `flex cursor-default select-none items-start gap-2.5 rounded-md outline-none data-[highlighted]:bg-muted ${touch ? 'min-h-14 px-3 py-2.5' : 'px-2.5 py-2'}`;
   const check = (
@@ -74,7 +74,7 @@ export const ImageViewMenu: React.FC<ImageViewMenuProps> = ({ filePath, comparab
         data-image-view-menu=""
         data-image-view={choice}
         aria-label={`${label} view of ${name}`}
-        title={touch ? undefined : `Show ${name} as ${modes.map((m) => IMAGE_DIFF_MODE_LABEL[m]).join(', ')}${source ? ' or Source' : ''}`}
+        title={touch ? undefined : `以 ${modes.map((m) => IMAGE_DIFF_MODE_LABEL[m]).join('、')}${source ? '或源码' : ''}显示 ${name}`}
         onClick={(event) => event.stopPropagation()}
       >
         <ModeIcon mode={choice} className="h-3.5 w-3.5 flex-none" />
@@ -113,7 +113,7 @@ export const ImageViewMenu: React.FC<ImageViewMenuProps> = ({ filePath, comparab
             >
               {touch && <Menu.GroupLabel className="truncate px-3 pb-1 pt-0.5 text-sm text-muted-foreground">Show {name} as</Menu.GroupLabel>}
               {options.map((option) => (
-                <Menu.RadioItem key={option} value={option} label={option === 'source' ? 'Source' : IMAGE_DIFF_MODE_LABEL[option]} closeOnClick data-image-view-option={option} className={itemClass}>
+                <Menu.RadioItem key={option} value={option} label={option === 'source' ? '源码' : IMAGE_DIFF_MODE_LABEL[option]} closeOnClick data-image-view-option={option} className={itemClass}>
                   <ModeIcon mode={option} className={`flex-none text-muted-foreground ${touch ? 'mt-0.5 h-[18px] w-[18px]' : 'mt-px h-4 w-4'}`} />
                   <span className="min-w-0 flex-1">
                     <span className={`block font-medium text-foreground ${touch ? 'text-base' : 'text-xs'}`}>
@@ -134,7 +134,7 @@ export const ImageViewMenu: React.FC<ImageViewMenuProps> = ({ filePath, comparab
                   data-image-zoom-option=""
                   className={itemClass}
                 >
-                  <span className={`min-w-0 flex-1 font-medium text-foreground ${touch ? 'text-base' : 'text-xs'}`}>Actual size</span>
+                  <span className={`min-w-0 flex-1 font-medium text-foreground ${touch ? 'text-base' : 'text-xs'}`}>实际大小</span>
                   <Menu.CheckboxItemIndicator className="flex-none self-center text-primary">{check}</Menu.CheckboxItemIndicator>
                 </Menu.CheckboxItem>
                 {comparable && differencesAvailable && (
@@ -144,13 +144,13 @@ export const ImageViewMenu: React.FC<ImageViewMenuProps> = ({ filePath, comparab
                     data-image-differences-option=""
                     className={itemClass}
                   >
-                    <span className={`min-w-0 flex-1 font-medium text-foreground ${touch ? 'text-base' : 'text-xs'}`}>Highlight differences</span>
+                    <span className={`min-w-0 flex-1 font-medium text-foreground ${touch ? 'text-base' : 'text-xs'}`}>高亮差异</span>
                     <Menu.CheckboxItemIndicator className="flex-none self-center text-primary">{check}</Menu.CheckboxItemIndicator>
                   </Menu.CheckboxItem>
                 )}
                 <Menu.Separator className="my-1 border-t border-border/60" />
                 <Menu.RadioGroup value={settings.background} onValueChange={(value) => setImageDiffSettings({ background: value as (typeof IMAGE_BACKGROUNDS)[number] })}>
-                  <Menu.GroupLabel className={`px-2.5 pb-0.5 pt-1 text-muted-foreground ${touch ? 'text-sm' : 'text-[11px]'}`}>Background</Menu.GroupLabel>
+                  <Menu.GroupLabel className={`px-2.5 pb-0.5 pt-1 text-muted-foreground ${touch ? 'text-sm' : 'text-[11px]'}`}>背景</Menu.GroupLabel>
                   {IMAGE_BACKGROUNDS.map((background) => (
                     <Menu.RadioItem key={background} value={background} label={IMAGE_BACKGROUND_LABEL[background]} closeOnClick={false} data-image-background-option={background} className={itemClass}>
                       <span className={`min-w-0 flex-1 font-medium text-foreground ${touch ? 'text-base' : 'text-xs'}`}>{IMAGE_BACKGROUND_LABEL[background]}</span>

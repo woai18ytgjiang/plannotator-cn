@@ -7,8 +7,8 @@ import { OWN_LABEL } from './FaceFan';
 import { isSetFace, setFaceParts, useIconSets, useSetListing } from './iconSets';
 import { setNumber } from './SetsBody';
 
-export const USE_THIS_ICON = 'Use this icon';
-export const OPTIONAL = 'Optional';
+export const USE_THIS_ICON = '使用此图标';
+export const OPTIONAL = '可选';
 
 /**
  * The agent icon dialog's page for one icon (AgentIconDialog.tsx), at 128 px and at the sizes the window shows it.

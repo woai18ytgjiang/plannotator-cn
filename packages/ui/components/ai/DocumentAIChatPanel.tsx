@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { memo, useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { hasPendingBusyChoice, type AIChatEntry, type PendingPermission } from '../../hooks/useAIChat';
 import { findSessionBridge, hasNonInterruptibleSession, type AIProviderOption } from '../../utils/aiProvider';
@@ -132,9 +133,9 @@ export const DocumentAIChatPanel: React.FC<DocumentAIChatPanelProps> = ({
               </div>
               <p className="text-xs">
                 {onAskGeneral ? (
-                  <>Select text and click <strong>Ask AI</strong>, or ask a general question below.</>
+                  <>选中文本并点击 <strong>Ask AI</strong>，或在下方提出一般性问题。</>
                 ) : (
-                  <>Select text and click <strong>Ask AI</strong>.</>
+                  <>选中文本并点击 <strong>Ask AI</strong>。</>
                 )}
               </p>
             </div>
@@ -142,7 +143,7 @@ export const DocumentAIChatPanel: React.FC<DocumentAIChatPanelProps> = ({
 
           {isCreatingSession && messages.length === 0 && (
             <div className="text-xs text-muted-foreground text-center py-4">
-              <span className="ai-streaming-cursor" /> Starting AI session...
+              <span className="ai-streaming-cursor" /> 正在启动 AI 会话…
             </div>
           )}
 
@@ -216,7 +217,7 @@ const DocumentQAPair = memo<{
           <div className="flex items-center gap-1.5 min-w-0">
             {scope?.kind === 'selection' && (
               <span className="text-[9px] font-semibold uppercase tracking-wider px-1.5 py-0.5 rounded bg-primary/10 text-primary">
-                selection
+                选中
               </span>
             )}
             {scope?.label && (
@@ -256,7 +257,7 @@ const DocumentQAPair = memo<{
           <SessionAskStatus response={response} />
         ) : response.isStreaming ? (
           <span className="text-xs text-muted-foreground">
-            <span className="ai-streaming-cursor" /> Thinking...
+            <span className="ai-streaming-cursor" /> 思考中…
           </span>
         ) : null}
         {!response.error && <SessionAskNote response={response} />}
@@ -275,7 +276,7 @@ const PermissionCard: React.FC<{
   return (
     <div className="p-2.5 rounded-lg border border-warning/30 bg-warning/5">
       <p className="text-[10px] font-medium text-warning uppercase tracking-wider mb-1">
-        Permission Request
+        权限请求
       </p>
       <p className="text-xs font-mono text-foreground/80 break-all">
         {label}
@@ -293,13 +294,13 @@ const PermissionCard: React.FC<{
           onClick={() => onRespond(permission.requestId, true)}
           className="flex-1 px-2 py-1.5 rounded-md bg-primary text-primary-foreground text-[10px] font-medium hover:opacity-90 transition-opacity"
         >
-          Allow
+          允许
         </button>
         <button
           onClick={() => onRespond(permission.requestId, false)}
           className="flex-1 px-2 py-1.5 rounded-md bg-muted text-foreground text-[10px] font-medium hover:bg-muted/80 transition-colors"
         >
-          Deny
+          拒绝
         </button>
       </div>
     </div>
@@ -332,7 +333,7 @@ const GeneralInput: React.FC<{
           ref={textareaRef}
           value={value}
           onChange={(event) => onChange(event.target.value)}
-          placeholder="Ask about this document..."
+          placeholder="询问关于此文档的问题…"
           rows={1}
           className="flex-1 px-2.5 py-1.5 bg-muted rounded-md text-xs text-foreground placeholder:text-muted-foreground/50 resize-none focus:outline-none focus:ring-1 focus:ring-primary/50 leading-relaxed"
           style={{ maxHeight: 120 }}
@@ -348,10 +349,10 @@ const GeneralInput: React.FC<{
           <button
             onClick={onStop}
             className="p-1.5 mb-px rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex-shrink-0"
-            title={observationOnly ? 'Stop listening; the question keeps running in the session' : 'Stop generating'}
-            aria-label={observationOnly ? 'Stop listening' : 'Stop generating'}
+            title={observationOnly ? '停止监听；问题仍在会话中继续运行' : '停止生成'}
+            aria-label={observationOnly ? '停止监听' : '停止生成'}
           >
-            {observationOnly && <span className="text-[10px] mr-1">Stop listening</span>}
+            {observationOnly && <span className="text-[10px] mr-1">停止监听</span>}
             <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
               <rect x="6" y="6" width="12" height="12" rx="2" />
             </svg>
@@ -361,8 +362,8 @@ const GeneralInput: React.FC<{
             onClick={onSubmit}
             disabled={disabled || !value.trim()}
             className="p-1.5 mb-px rounded-md text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex-shrink-0"
-            title={`Send (${submitHint})`}
-            aria-label="Send AI question"
+            title={`发送（${submitHint}）`}
+            aria-label="发送 AI 问题"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />

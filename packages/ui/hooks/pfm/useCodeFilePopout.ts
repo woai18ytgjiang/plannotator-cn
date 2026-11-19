@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useState, useCallback, useRef } from "react";
 import { parseCodePath } from "@plannotator/core/code-file";
 
@@ -86,7 +87,7 @@ export function useCodeFilePopout(
         setState({
           filepath: codePath,
           contents: "",
-          error: `Failed to load: ${codePath}`,
+          error: `加载失败：${codePath}`,
           requestedPath: codePath,
         });
         setIsLoading(false);

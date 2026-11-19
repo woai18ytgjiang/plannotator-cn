@@ -51,9 +51,9 @@ export const RUNTIME_NAMES: Record<InboxReloadRuntime, string> = {
 /** The row's words: "Reload Claude Code", "Restart Oh My Pi", or "Reload agents" for more than one runtime. */
 export function restartAgentsLabel(agents: InboxRestartAgents): string {
   const present = RUNTIMES.filter((runtime) => (agents.runtimes[runtime] ?? 0) > 0);
-  if (present.length !== 1) return 'Reload agents';
+  if (present.length !== 1) return '重新加载智能体';
   const only = present[0]!;
-  return `${only === 'oh-my-pi' ? 'Restart' : 'Reload'} ${RUNTIME_NAMES[only]}`;
+  return `${only === 'oh-my-pi' ? '重启' : '重新加载'} ${RUNTIME_NAMES[only]}`;
 }
 
 /** What the row does, said to a screen reader after its words: which sessions, and that it opens Settings → Agents. */
@@ -61,15 +61,15 @@ export function restartAgentsDescription(agents: InboxRestartAgents): string {
   const claude = agents.runtimes['claude-code'] ?? 0;
   // Their plugin on disk is itself behind: the update comes first (Settings, Agents shows both steps).
   if (claude > 0 && claude === agents.total && (agents.update_first ?? 0) > 0) {
-    return `${claude === 1 ? '1 Claude Code session runs' : `${claude} Claude Code sessions run`} an older plugin; update the plugin, then type /reload-plugins. Opens Settings, Agents.`;
+    return `${claude} 个 Claude Code 会话运行的是旧版插件；请先更新插件，然后输入 /reload-plugins。将打开「设置 > 智能体」。`;
   }
   if (claude > 0 && claude === agents.total) {
-    return `${claude === 1 ? '1 Claude Code session runs' : `${claude} Claude Code sessions run`} the plugin from before the update; /reload-plugins loads the new one. Opens Settings, Agents.`;
+    return `${claude} 个 Claude Code 会话运行的是更新前的插件；/reload-plugins 会加载新版。将打开「设置 > 智能体」。`;
   }
   const parts = RUNTIMES.filter((runtime) => (agents.runtimes[runtime] ?? 0) > 0).map((runtime) => {
     const n = agents.runtimes[runtime]!;
-    return `${n} ${RUNTIME_NAMES[runtime]} ${n === 1 ? 'session runs' : 'sessions run'}`;
+    return `${n} 个 ${RUNTIME_NAMES[runtime]} 会话`;
   });
-  const who = parts.length > 0 ? parts.join(', ') : `${agents.total} ${agents.total === 1 ? 'session runs' : 'sessions run'}`;
-  return `${who} Plannotator from before the update; a reload loads the new one. Opens Settings, Agents.`;
+  const who = parts.length > 0 ? parts.join('、') : `${agents.total} 个会话`;
+  return `${who}运行的是更新前的 Plannotator；重新加载即可加载新版。将打开「设置 > 智能体」。`;
 }

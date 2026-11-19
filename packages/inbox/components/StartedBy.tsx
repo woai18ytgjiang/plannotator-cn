@@ -13,14 +13,14 @@ export function StartedBy({ launched, root, project }: { launched: InboxLaunchRe
     <div className="ib-tmeta" data-started-by="" data-launched={launched.id}>
       <span>
         {startedWords(root)}
-        {hostName(launched.agent)} in <bdi>{project}</bdi>
+        {hostName(launched.agent)} 在 <bdi>{project}</bdi> 中
         {/* Started from another linked machine's window (remote launch): which one. */}
-        {launched.from && launched.from.machine !== selfMachineId() && <> from {launched.from.name}</>}
+        {launched.from && launched.from.machine !== selfMachineId() && <> 来自 {launched.from.name}</>}
       </span>
       {launched.full_permissions && (
         <>
           <span className="ib-tdot" aria-hidden="true" />
-          <span data-launch-full="">Full permissions</span>
+          <span data-launch-full="">完全权限</span>
         </>
       )}
       <LaunchChoiceMeta launch={launched} />

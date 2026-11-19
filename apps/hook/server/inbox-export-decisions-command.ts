@@ -117,7 +117,7 @@ export async function runInboxExportDecisionsCommand(argv: readonly string[], de
   if (parsed.pr) {
     const answer = JSON.parse(text) as { action: "created" | "updated"; ref: string; url: string; fallback?: "no_permission" | "too_long" };
     const instead = answer.fallback ? ` as a comment instead (${answer.fallback === "no_permission" ? "you can't edit its description" : "too long for its description"})` : "";
-    await out(`Decisions ${answer.action === "updated" ? "updated" : "posted"} on ${answer.ref}${instead}: ${answer.url}\n`);
+    await out(`决策已在 ${answer.ref} 上${answer.action === "updated" ? "更新" : "发布"}${instead}：${answer.url}\n`);
     return 0;
   }
   if (parsed.out) {

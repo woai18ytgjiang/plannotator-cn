@@ -123,7 +123,7 @@ async function readBodyWithLimit(res: Response): Promise<string> {
     const bytes = parseInt(contentLength, 10);
     if (bytes > MAX_BODY_BYTES) {
       res.body?.cancel();
-      throw new Error(`Response too large (${Math.round(bytes / 1024 / 1024)}MB, max 10MB)`);
+      throw new Error(`响应过大（${Math.round(bytes / 1024 / 1024)}MB，上限 10MB）`);
     }
   }
   const reader = res.body?.getReader();
@@ -132,7 +132,7 @@ async function readBodyWithLimit(res: Response): Promise<string> {
     // the size limit via the text result length as a best-effort fallback.
     const text = await res.text();
     if (text.length > MAX_BODY_BYTES) {
-      throw new Error(`Response too large (>${Math.round(MAX_BODY_BYTES / 1024 / 1024)}MB, max 10MB)`);
+      throw new Error(`响应过大（>${Math.round(MAX_BODY_BYTES / 1024 / 1024)}MB，上限 10MB）`);
     }
     return text;
   }
@@ -145,7 +145,7 @@ async function readBodyWithLimit(res: Response): Promise<string> {
     totalBytes += value.byteLength;
     if (totalBytes > MAX_BODY_BYTES) {
       reader.cancel();
-      throw new Error(`Response too large (>${Math.round(MAX_BODY_BYTES / 1024 / 1024)}MB, max 10MB)`);
+      throw new Error(`响应过大（>${Math.round(MAX_BODY_BYTES / 1024 / 1024)}MB，上限 10MB）`);
     }
     chunks.push(value);
   }
@@ -173,7 +173,7 @@ async function fetchRawText(url: string): Promise<string | null> {
       if (!location) break;
       currentUrl = new URL(location, currentUrl).href;
       if (isLocalUrl(currentUrl)) {
-        throw new Error(`Redirect to private/local URL blocked: ${currentUrl}`);
+        throw new Error(`已阻止重定向到私有/本地 URL：${currentUrl}`);
       }
       res.body?.cancel();
       res = await fetch(currentUrl, { headers, redirect: "manual", signal: controller.signal });
@@ -181,7 +181,7 @@ async function fetchRawText(url: string): Promise<string | null> {
 
     if (REDIRECT_STATUSES.has(res.status)) {
       res.body?.cancel();
-      throw new Error("Too many redirects");
+      throw new Error("重定向次数过多");
     }
     if (!res.ok) {
       res.body?.cancel();
@@ -197,7 +197,7 @@ async function fetchRawText(url: string): Promise<string | null> {
     return await readBodyWithLimit(res);
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") {
-      throw new Error(`Timed out fetching ${url}`);
+      throw new Error(`获取 ${url} 超时`);
     }
     throw err;
   } finally {
@@ -314,7 +314,7 @@ async function fetchViaTurndown(url: string): Promise<string> {
 
       currentUrl = new URL(location, currentUrl).href;
       if (isLocalUrl(currentUrl)) {
-        throw new Error(`Redirect to private/local URL blocked: ${currentUrl}`);
+        throw new Error(`已阻止重定向到私有/本地 URL：${currentUrl}`);
       }
       res.body?.cancel();
       res = await fetch(currentUrl, { headers, redirect: "manual", signal: controller.signal });
@@ -322,7 +322,7 @@ async function fetchViaTurndown(url: string): Promise<string> {
 
     if (REDIRECT_STATUSES.has(res.status)) {
       res.body?.cancel();
-      throw new Error("Too many redirects");
+      throw new Error("重定向次数过多");
     }
     if (!res.ok) {
       res.body?.cancel();
@@ -342,7 +342,7 @@ async function fetchViaTurndown(url: string): Promise<string> {
     return htmlToMarkdown(html);
   } catch (err) {
     if (err instanceof Error && err.name === "AbortError") {
-      throw new Error(`Timed out fetching ${url}`);
+      throw new Error(`获取 ${url} 超时`);
     }
     throw err;
   } finally {

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { imageRegionFileName, imageRegionLocationLines, parseImageRegion, type ImageRegion } from '@plannotator/core/image-region';
 import { AnnotationType, type Annotation, type ImageAttachment } from '../types';
@@ -94,7 +95,7 @@ export function lightboxImageName(image: Pick<LightboxImage, 'src' | 'alt' | 'na
   } catch {
     // Not a URL: fall back to the alt text.
   }
-  return image.alt || 'Image';
+  return image.alt || '图片';
 }
 
 /**
@@ -386,14 +387,14 @@ export const ImageLightbox: React.FC<{
   /** A box waiting for its comment keeps the viewer on it: stepping away would throw the words away. */
   const waitingComment = () => {
     if (!pending) return false;
-    showNote('Save or close the comment first');
+    showNote('请先保存或关闭这条评论');
     return true;
   };
   const step = (dir: 1 | -1) => {
     if (!stepping) return;
     const next = index + dir;
     if (next < 0 || next >= list!.length) {
-      showNote(dir > 0 ? 'Last image in this document' : 'First image in this document');
+      showNote(dir > 0 ? '这已是文档中的最后一张图片' : '这已是文档中的第一张图片');
       return;
     }
     go(next);
@@ -412,7 +413,7 @@ export const ImageLightbox: React.FC<{
     setPending(null);
     if (zoomOnLoad.current === null) setSelectedId(null);
     const image = list![next]!;
-    setAnnounced(`${next + 1} of ${list!.length}, ${lightboxImageName(image)}${image.section ? `, in “${image.section}”` : ''}`);
+    setAnnounced(`${next + 1} / ${list!.length}，${lightboxImageName(image)}${image.section ? `，位于「${image.section}」` : ''}`);
   };
   useLayoutEffect(() => {
     if (!refocusStage.current) return;
@@ -518,7 +519,7 @@ export const ImageLightbox: React.FC<{
         }
         if (r.tool === 'region') {
           r.setTool('move');
-          setAnnounced('Move: drag moves the image.');
+          setAnnounced('移动：拖动可移动图片。');
           return;
         }
         if (r.drawerOpen) {
@@ -582,7 +583,7 @@ export const ImageLightbox: React.FC<{
     if (!stepping) return [];
     const out: ImagePeekRow[] = [];
     list!.forEach((image, i) => {
-      const label = image.section ?? 'Document';
+      const label = image.section ?? '文档';
       let row = out.at(-1);
       if (!row || row.label !== label) {
         row = { key: `row-${i}`, label, items: [] };
@@ -600,7 +601,7 @@ export const ImageLightbox: React.FC<{
         tabIndex={-1}
         role="dialog"
         aria-modal="true"
-        aria-label={alt || 'Image'}
+        aria-label={alt || '图片'}
         data-image-lightbox=""
         className="fixed inset-0 z-[200] bg-black/80 text-white backdrop-blur-sm outline-none"
       >
@@ -610,7 +611,7 @@ export const ImageLightbox: React.FC<{
             key={src}
             src={src}
             alt={alt}
-            label={alt ? `Image: ${alt}` : 'Image'}
+            label={alt ? `图片：${alt}` : '图片'}
             mode={zoomMode}
             onModeChange={setZoomMode}
             inset={{ x: 0.9, y: 0.85 }}
@@ -643,8 +644,8 @@ export const ImageLightbox: React.FC<{
         setDraft(null);
         if (next === 'region') setSelectedId(null);
         setAnnounced(next === 'region'
-          ? 'Region: drag on the image to draw a box. Escape goes back to Move.'
-          : 'Move: drag moves the image.');
+          ? '区域：在图片上拖动即可画框。按 Escape 返回移动模式。'
+          : '移动：拖动可移动图片。');
       }}
       canDraw={canDraw}
       count={here.length}
@@ -660,19 +661,19 @@ export const ImageLightbox: React.FC<{
       ref={drawerRef}
       id={drawerId}
       data-region-drawer=""
-      aria-label="Comments on this image"
+      aria-label="此图片的评论"
       className={phone
         ? 'fixed inset-x-0 bottom-0 z-[205] flex h-[46vh] flex-col rounded-t-2xl border-t border-border bg-card shadow-[0_-12px_40px_-16px_rgb(0_0_0/0.5)]'
         : 'flex w-[320px] flex-none flex-col border-l border-border/50 bg-card'}
     >
       {phone && <div className="mx-auto mb-0.5 mt-2 h-[5px] w-9 flex-none rounded-full bg-border" aria-hidden="true" />}
       <div className="flex h-11 flex-none items-center gap-2 border-b border-border/50 px-3">
-        <h2 className="text-[13px] font-medium">{phone ? 'Comments on this image' : 'Comments'}</h2>
+        <h2 className="text-[13px] font-medium">{phone ? '此图片的评论' : '评论'}</h2>
         <span className="flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-primary/10 px-1 font-mono text-[10px] font-medium tabular-nums text-primary">
           {drawerAnnotations.length}
         </span>
         {stepping && (
-          <div role="group" aria-label="Show comments on" className="ml-auto flex items-center gap-0.5 rounded-md bg-muted/60 p-0.5">
+          <div role="group" aria-label="评论范围" className="ml-auto flex items-center gap-0.5 rounded-md bg-muted/60 p-0.5">
             {(['image', 'all'] as const).map((value) => (
               <button
                 key={value}
@@ -682,14 +683,14 @@ export const ImageLightbox: React.FC<{
                 onClick={() => setScope(value)}
                 className={`rounded px-2 py-0.5 text-[11px] font-medium transition-colors ${scope === value ? 'bg-card text-foreground shadow-sm' : 'text-muted-foreground hover:text-foreground'}`}
               >
-                {value === 'image' ? 'This image' : 'All'}
+                {value === 'image' ? '本图片' : '全部'}
               </button>
             ))}
           </div>
         )}
         <button
           type="button"
-          aria-label="Close comments"
+          aria-label="关闭评论"
           data-region-drawer-close=""
           onClick={() => {
             setDrawerOpen(false);
@@ -718,7 +719,7 @@ export const ImageLightbox: React.FC<{
           readOnly={!regions!.onDelete}
           imageRegionSrc={thumbFor}
           mentionSource={regions!.mentionSource}
-          emptyHint={canDraw ? 'Choose Region, then drag over the image to comment on part of it' : 'No comments on this image'}
+          emptyHint={canDraw ? '选择「区域」，然后在图片上拖动即可对局部添加评论' : '此图片暂无评论'}
         />
       </div>
     </aside>
@@ -730,7 +731,7 @@ export const ImageLightbox: React.FC<{
       tabIndex={-1}
       role="dialog"
       aria-modal="true"
-      aria-label={stepping ? `${name}, image ${index + 1} of ${total}` : name}
+      aria-label={stepping ? `${name}，第 ${index + 1}/${total} 张图片` : name}
       data-image-lightbox=""
       data-image-lightbox-stepping={stepping ? '' : undefined}
       // On a phone the drawer is a sheet over the lower part: the image sits above it.
@@ -742,7 +743,7 @@ export const ImageLightbox: React.FC<{
       <div className="flex h-14 flex-none items-center gap-3 px-5">
         {stepping ? (
           <span className="text-[15px] font-semibold tabular-nums" data-lightbox-count="">
-            {index + 1} of {total}
+            {index + 1} / {total}
           </span>
         ) : (
           <span className="min-w-0 truncate text-[15px] font-semibold" data-lightbox-name="">
@@ -757,7 +758,7 @@ export const ImageLightbox: React.FC<{
         <span className="flex-1" />
         {scale !== null && (
           <span className="text-[13px] tabular-nums text-muted-foreground" data-lightbox-zoom="">
-            <span className="sr-only">Zoom </span>
+            <span className="sr-only">缩放 </span>
             {Math.round(scale * 100)}%
           </span>
         )}
@@ -768,9 +769,9 @@ export const ImageLightbox: React.FC<{
           aria-pressed={zoomMode !== 'fit'}
           data-lightbox-fit=""
         >
-          {zoomMode === 'fit' ? 'Actual size' : 'Fit'}
+          {zoomMode === 'fit' ? '实际大小' : '适应窗口'}
         </button>
-        <button type="button" className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card hover:bg-muted" onClick={onClose} aria-label="Close" data-lightbox-close="">
+        <button type="button" className="flex h-9 w-9 items-center justify-center rounded-md border border-border bg-card hover:bg-muted" onClick={onClose} aria-label="关闭" data-lightbox-close="">
           <svg {...ICON}>
             <path d="M6 18 18 6M6 6l12 12" />
           </svg>
@@ -780,7 +781,7 @@ export const ImageLightbox: React.FC<{
         <div className="flex min-w-0 flex-1 flex-col">
           <div className="relative flex min-h-0 flex-1 items-center gap-3 px-4">
             {stepping && (
-              <button type="button" className={circle} onClick={() => step(-1)} aria-label="Previous image" aria-disabled={first || undefined} data-lightbox-prev="">
+              <button type="button" className={circle} onClick={() => step(-1)} aria-label="上一张图片" aria-disabled={first || undefined} data-lightbox-prev="">
                 <svg {...ICON}>
                   <path d="m15.75 19.5-7.5-7.5 7.5-7.5" />
                 </svg>
@@ -793,8 +794,8 @@ export const ImageLightbox: React.FC<{
                   key={`${index}:${current.src}`}
                   src={current.src}
                   alt={current.alt}
-                  label={`Image: ${name}`}
-                  description={drawing ? 'Region: drag to draw a box and comment on it. Or frame the spot with Actual size and the scroll keys, then press Enter to comment on what is on screen.' : undefined}
+                  label={`图片：${name}`}
+                  description={drawing ? '区域：拖动即可画框并对其添加评论。或者用「实际大小」和滚动键框住位置，然后按 Enter 对屏幕上的内容添加评论。' : undefined}
                   mode={zoomMode}
                   onModeChange={setZoomMode}
                   onScaleChange={setScale}
@@ -835,12 +836,12 @@ export const ImageLightbox: React.FC<{
               )}
               {regionsOn && phone && drawing && (
                 <div className="pointer-events-none absolute left-1/2 top-2.5 z-[3] -translate-x-1/2 whitespace-nowrap rounded-full border border-border bg-popover px-3 py-1.5 text-[12px] shadow-[0_8px_24px_-12px_rgb(0_0_0/0.4)]" data-region-hint="">
-                  One finger draws · two fingers move the image
+                  单指画框 · 双指移动图片
                 </div>
               )}
             </div>
             {stepping && (
-              <button type="button" className={circle} onClick={() => step(1)} aria-label="Next image" aria-disabled={last || undefined} data-lightbox-next="">
+              <button type="button" className={circle} onClick={() => step(1)} aria-label="下一张图片" aria-disabled={last || undefined} data-lightbox-next="">
                 <svg {...ICON}>
                   <path d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                 </svg>
@@ -852,7 +853,7 @@ export const ImageLightbox: React.FC<{
             {stepping && (
               <div className="relative flex items-center gap-3">
                 <span className="inline-flex items-center gap-px rounded-lg border border-border/70 bg-muted/40 p-0.5">
-                  <button type="button" className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted" onClick={() => step(-1)} aria-label="Previous image" tabIndex={-1}>
+                  <button type="button" className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted" onClick={() => step(-1)} aria-label="上一张图片" tabIndex={-1}>
                     <svg {...ICON} width={14} height={14}>
                       <path d="m15.75 19.5-7.5-7.5 7.5-7.5" />
                     </svg>
@@ -863,13 +864,13 @@ export const ImageLightbox: React.FC<{
                     className="flex h-7 max-w-[60vw] items-center gap-1.5 rounded-md px-2 text-[13.5px] hover:bg-muted"
                     aria-haspopup="grid"
                     aria-expanded={peekOpen}
-                    aria-label={`${index + 1} of ${total}, ${name}. Show every image in this document`}
+                    aria-label={`${index + 1} / ${total}，${name}。显示本文档中的所有图片`}
                     onClick={() => setPeekOpen((v) => !v)}
                     data-peek-opener=""
                     data-lightbox-pill=""
                   >
                     <span className="tabular-nums text-muted-foreground">
-                      {index + 1} of {total}
+                      {index + 1} / {total}
                     </span>
                     <span className="text-muted-foreground" aria-hidden="true">
                       ·
@@ -879,7 +880,7 @@ export const ImageLightbox: React.FC<{
                       <path d="m19.5 8.25-7.5 7.5-7.5-7.5" />
                     </svg>
                   </button>
-                  <button type="button" className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted" onClick={() => step(1)} aria-label="Next image" tabIndex={-1}>
+                  <button type="button" className="flex h-7 w-7 items-center justify-center rounded-md hover:bg-muted" onClick={() => step(1)} aria-label="下一张图片" tabIndex={-1}>
                     <svg {...ICON} width={14} height={14}>
                       <path d="m8.25 4.5 7.5 7.5-7.5 7.5" />
                     </svg>
@@ -894,7 +895,7 @@ export const ImageLightbox: React.FC<{
                       ref={peekRef}
                       rows={rows}
                       current={String(index)}
-                      label="Images in this document"
+                      label="本文档中的图片"
                       onPick={(key) => {
                         setPeekOpen(false);
                         go(Number(key));

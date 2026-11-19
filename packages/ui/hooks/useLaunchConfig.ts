@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { GUIDE_ENGINE_LABEL } from '@plannotator/core/guide';
 import {
@@ -25,10 +26,10 @@ export const ENGINE_ORDER: ReviewEngine[] = ['claude', 'codex', 'cursor', 'openc
 
 type MarkerEngine = 'cursor' | 'opencode' | 'pi' | 'copilot';
 const MARKER_FALLBACK: Record<MarkerEngine, LaunchChoice[]> = {
-  cursor: [{ value: 'auto', label: 'Auto' }],
-  opencode: [{ value: '', label: 'Default' }],
-  pi: [{ value: '', label: 'Default' }],
-  copilot: [{ value: '', label: 'Default' }],
+  cursor: [{ value: 'auto', label: '自动' }],
+  opencode: [{ value: '', label: '默认' }],
+  pi: [{ value: '', label: '默认' }],
+  copilot: [{ value: '', label: '默认' }],
 };
 
 export function markerModelChoices(capabilities: AgentCapabilities | null, engine: MarkerEngine): LaunchChoice[] {
@@ -109,7 +110,7 @@ export function useLaunchConfig(
   useEffect(() => loadCatalog(reviewEngine), [loadCatalog, reviewEngine]);
   useEffect(() => loadCatalog(guideEngine), [loadCatalog, guideEngine]);
 
-  const [profiles, setProfiles] = useState<LaunchProfile[]>([{ id: BUILTIN_PROFILE, label: 'Default', default: true }]);
+  const [profiles, setProfiles] = useState<LaunchProfile[]>([{ id: BUILTIN_PROFILE, label: '默认', default: true }]);
   const [profilesLoaded, setProfilesLoaded] = useState(false);
   const refreshProfiles = useCallback(() => {
     fetch('/api/agents/review-profiles')

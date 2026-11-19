@@ -283,7 +283,7 @@ function ActivityPlot({ size, rows, days, model, look, width, height, onOpen }: 
           <div className="ib-activity-tip-m">
             Started {facts.started}, last message {facts.last}, {plural(facts.total, 'message')} in all
           </div>
-          {pointerKind.current !== 'mouse' && <div className="ib-activity-tip-m">Tap again to open</div>}
+          {pointerKind.current !== 'mouse' && <div className="ib-activity-tip-m">再次点按以打开</div>}
         </div>
       )}
     </div>
@@ -400,7 +400,7 @@ export function ActivityChart({ projects, names, project: startProject, phone, r
   );
 
   return (
-    <section ref={section} className="ib-sgroup ib-activity" data-activity="" data-activity-look={look} aria-label="Activity" style={inkStyle} data-activity-ink={ink?.ink}>
+    <section ref={section} className="ib-sgroup ib-activity" data-activity="" data-activity-look={look} aria-label="活动" style={inkStyle} data-activity-ink={ink?.ink}>
       <div className="ib-activity-bar">
         <span className="ib-activity-sum" data-activity-summary="">
           {summary && (shownProject ? `${where}: ${summary}` : summary)}
@@ -415,7 +415,7 @@ export function ActivityChart({ projects, names, project: startProject, phone, r
           empty ||
           (model && previewSize.width > 0 ? (
             // The whole preview opens the full screen; Expand above is the same, for a keyboard or a screen reader.
-            <div className="ib-activity-preview" data-activity-preview="" onClick={() => setOpen(true)} title="Open full screen">
+            <div className="ib-activity-preview" data-activity-preview="" onClick={() => setOpen(true)} title="全屏打开">
               <ActivityPlot size="preview" rows={rows} days={days} model={model} look={look} width={previewSize.width} />
             </div>
           ) : (
@@ -477,8 +477,8 @@ function ActivityFull({ onClose, inkStyle, look, phone, range, onRange, project,
     <Modal labelledBy="ib-activity-title" onClose={onClose} testId="activity" ownKeys initialFocus="[data-activity-close]" className="ib-activity-lb">
       <div className="ib-activity ib-activity-full" style={inkStyle} data-activity-look={look}>
         <div className="ib-activity-lbhead">
-          <h2 id="ib-activity-title">Activity</h2>
-          <span className="ib-seg" role="radiogroup" aria-label="Range">
+          <h2 id="ib-activity-title">活动</h2>
+          <span className="ib-seg" role="radiogroup" aria-label="范围">
             {ACTIVITY_RANGES.filter((days) => !phone || days <= 7).map((days) => (
               <label key={days} className="ib-seg-o" data-on={range === days ? '' : undefined}>
                 <input type="radio" name="ib-activity-range" value={days} checked={range === days} onChange={() => onRange(days)} />
@@ -488,7 +488,7 @@ function ActivityFull({ onClose, inkStyle, look, phone, range, onRange, project,
           </span>
           {projects.length > 1 && <ProjectFilter projects={projects} names={names} value={project} phone={phone} onChange={onProject} />}
           <span className="ib-activity-sum">{summary}</span>
-          <button type="button" className="ib-btn ib-ghost ib-icon ib-activity-close" aria-label="Close" data-activity-close="" onClick={onClose}>
+          <button type="button" className="ib-btn ib-ghost ib-icon ib-activity-close" aria-label="关闭" data-activity-close="" onClick={onClose}>
             <Icon name="x" size={16} />
           </button>
         </div>

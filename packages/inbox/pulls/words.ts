@@ -40,4 +40,4 @@ export function facesOnce(words: Words, pictured: readonly (string | null | unde
 }
 
 /** "tomas's", "james'": the letters a possessive adds to a name. */
-export const possessiveTail = (name: string, apostrophe = "'"): string => (name.endsWith('s') ? apostrophe : `${apostrophe}s`);
+export const possessiveTail = (_name: string, _apostrophe = "'"): string => ' 的';

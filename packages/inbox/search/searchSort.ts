@@ -11,8 +11,8 @@ import { storage } from '@plannotator/ui/utils/storage';
 export const SEARCH_SORT_COOKIE = 'plannotator-inbox-search-sort';
 
 export const SEARCH_SORT_OPTIONS: readonly { value: InboxSearchSort; label: string }[] = [
-  { value: 'best', label: 'Best match' },
-  { value: 'newest', label: 'Newest' },
+  { value: 'best', label: '最佳匹配' },
+  { value: 'newest', label: '最新' },
 ];
 
 /** The cookie's value as an order; anything but "newest" reads as Best match. */

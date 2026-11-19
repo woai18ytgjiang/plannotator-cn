@@ -216,7 +216,7 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
             </>
           )}
         </span>
-        {isTest && <FileKindIcon kind="test" size={13} className="ml-1.5 flex-none text-muted-foreground" title="Test file" />}
+        {isTest && <FileKindIcon kind="test" size={13} className="ml-1.5 flex-none text-muted-foreground" title="测试文件" />}
         {(additions > 0 || deletions > 0 || (status && status !== 'modified') || isGenerated) && (
           <span className="min-w-0 shrink-[1000] ml-3 flex h-4 flex-wrap items-center gap-x-1.5 overflow-hidden text-[12px] leading-4 tabular-nums" data-file-header-counts="">
             {additions > 0 && <span className="text-success">+{formatCount(additions)}</span>}
@@ -226,9 +226,9 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
               <span
                 data-pn-generated-badge
                 className="flex-none rounded-sm border border-border/60 bg-muted/60 px-1.5 py-0.5 text-xs font-medium leading-none text-muted-foreground"
-                title="Marked linguist-generated in .gitattributes"
+                title="在 .gitattributes 中标记为 linguist-generated"
               >
-                generated
+                已生成
               </span>
             )}
           </span>
@@ -242,10 +242,10 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
         {!readOnly && <OpenInAppButton
           quiet
           extraItems={() => [
-            ...(tinyNow() && showStageControl && canStage && onStage ? [{ label: isStaged ? 'Unstage this file' : 'Stage this file', onSelect: onStage }] : []),
-            ...(tinyNow() && onFileComment ? [{ label: 'Comment on this file', onSelect: () => headerRef.current && onFileComment(headerRef.current) }] : []),
-            ...(tinyNow() && onEditFile && !isEditing && !editDisabledReason ? [{ label: 'Edit to suggest a change', onSelect: onEditFile }] : []),
-            ...(state?.onOpenToSide ? [{ label: 'Open to the side', onSelect: () => state.onOpenToSide!(filePath), icon: <OpenToSideIcon /> }] : []),
+            ...(tinyNow() && showStageControl && canStage && onStage ? [{ label: isStaged ? '取消暂存此文件' : '暂存此文件', onSelect: onStage }] : []),
+            ...(tinyNow() && onFileComment ? [{ label: '评论此文件', onSelect: () => headerRef.current && onFileComment(headerRef.current) }] : []),
+            ...(tinyNow() && onEditFile && !isEditing && !editDisabledReason ? [{ label: '编辑以提出更改建议', onSelect: onEditFile }] : []),
+            ...(state?.onOpenToSide ? [{ label: '在侧边打开', onSelect: () => state.onOpenToSide!(filePath), icon: <OpenToSideIcon /> }] : []),
           ]}
           filePath={filePath}
           base={state?.agentCwd ?? null}
@@ -267,7 +267,7 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
                 ? 'text-foreground hover:bg-muted'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
-            title={`${isViewed ? 'Mark as not viewed' : 'Mark as viewed'}${viewedKeyHint ? ' (V)' : ''}`}
+            title={`${isViewed ? '标记为未查看' : '标记为已查看'}${viewedKeyHint ? ' (V)' : ''}`}
             aria-pressed={isViewed}
             data-file-header-viewed=""
           >
@@ -280,7 +280,7 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
                 <circle cx="12" cy="12" r="9" />
               </svg>
             )}
-            <span className={TIGHT_LABEL}>Viewed</span>
+            <span className={TIGHT_LABEL}>已查看</span>
           </button>
         )}
         {showStageControl && canStage && onStage && (
@@ -294,8 +294,8 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
                   ? 'bg-primary/15 text-primary'
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
-            title={isStaged ? "Unstage this file (A)" : "Stage this file (A)"}
-            aria-label={isStaged ? "Unstage this file" : "Stage this file"}
+            title={isStaged ? "取消暂存此文件（A）" : "暂存此文件（A）"}
+            aria-label={isStaged ? "取消暂存此文件" : "暂存此文件"}
           >
             {isStaging ? (
               <svg className="w-3.5 h-3.5 animate-spin" fill="none" viewBox="0 0 24 24">
@@ -327,8 +327,8 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
             }}
             onClick={() => fileCommentRef.current && onFileComment(fileCommentRef.current)}
             className={`${actionFold} text-xs rounded transition-colors flex items-center text-muted-foreground hover:text-foreground hover:bg-muted ${commentLabel ? 'gap-1 px-2 py-1' : 'px-1.5 py-1'}`}
-            title="Add file-scoped comment"
-            aria-label="Comment on this file"
+            title="添加文件级评论"
+            aria-label="评论此文件"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 10h.01M12 10h.01M16 10h.01M9 16H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-4l-4 4v-4z" />
@@ -351,13 +351,13 @@ const FileHeaderView: React.FC<FileHeaderProps> = ({
                 ? 'opacity-50 cursor-not-allowed text-muted-foreground'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
-            title={editDisabledReason ?? 'Edit this file to author a suggestion (experimental)'}
+            title={editDisabledReason ?? '编辑此文件以撰写建议（实验性）'}
             data-testid="edit-session-start"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
             </svg>
-            <span className={TIGHT_LABEL}>Edit</span>
+            <span className={TIGHT_LABEL}>编辑</span>
           </button>
         )}
       </div>}

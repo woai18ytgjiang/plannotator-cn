@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { Button } from './ui/button';
 import { cn } from '../lib/utils';
@@ -118,7 +119,7 @@ export const ExitButton: React.FC<ExitButtonProps> = ({
   onClick,
   disabled = false,
   isLoading = false,
-  title = 'Close session without sending feedback',
+  title = '关闭会话且不发送反馈',
   labelBreakpoint = 'md',
   appearance = 'pill',
 }) => appearance === 'ghost' ? (
@@ -137,7 +138,7 @@ export const ExitButton: React.FC<ExitButtonProps> = ({
     {isLoading ? '…' : (
       <>
         <X className="size-3.5" aria-hidden="true" />
-        <span>Close</span>
+        <span>关闭</span>
       </>
     )}
   </Button>
@@ -154,6 +155,6 @@ export const ExitButton: React.FC<ExitButtonProps> = ({
     <span className={labelBreakpoint === 'lg' ? 'lg:hidden' : 'md:hidden'}>
       {isLoading ? '…' : <X className="size-3.5" aria-hidden="true" />}
     </span>
-    <span className={labelBreakpoint === 'lg' ? 'hidden lg:inline' : 'hidden md:inline'}>{isLoading ? 'Closing...' : 'Close'}</span>
+    <span className={labelBreakpoint === 'lg' ? 'hidden lg:inline' : 'hidden md:inline'}>{isLoading ? '关闭中…' : '关闭'}</span>
   </Button>
 );

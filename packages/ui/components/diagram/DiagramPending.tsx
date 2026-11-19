@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import type { DiagramKind } from '@plannotator/core/diagram-anchor';
 import type { Block } from '../../types';
@@ -5,7 +6,7 @@ import { sourceLineAttrs } from '../../utils/sourceLineAttrs';
 
 /**
  * The diagram fence before there is a diagram: the source under a quiet
- * "Rendering diagram…" status.
+ * "正在渲染图表…" status.
  *
  * It lives in its own file, importing nothing but React and two types,
  * because it is the ONE pending state two callers must agree on. The block
@@ -40,7 +41,7 @@ export const DiagramPending: React.FC<{ block: Block; kind: DiagramKind }> = ({ 
       className="mb-1.5 flex items-center gap-1.5 text-xs text-muted-foreground"
     >
       <span className="inline-block h-1.5 w-1.5 animate-pulse rounded-full bg-muted-foreground/70" aria-hidden="true" />
-      Rendering diagram…
+      正在渲染图表…
     </div>
     <DiagramInlineSource block={block} kind={kind} />
   </>

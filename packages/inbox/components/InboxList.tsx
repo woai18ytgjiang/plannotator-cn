@@ -267,7 +267,7 @@ function SnoozedUntil({ row }: { row: InboxListRow }) {
   return (
     <span className="ib-zwhen" data-snoozed-until={row.snoozed.until} title={fullTime(row.snoozed.until)}>
       <Icon name="clock" size={13} />
-      <span className="ib-sr">Snoozed until </span>
+      <span className="ib-sr">稍后提醒至 </span>
       {inboxSnoozeWhen(row.snoozed.until)}
     </span>
   );
@@ -290,7 +290,7 @@ function RowTime({ row, relative = false }: { row: InboxListRow; relative?: bool
   return (
     <>
       {row.snooze_back && (
-        <span className="ib-zback" data-snooze-back-mark="" role="img" aria-label="Back from snooze">
+        <span className="ib-zback" data-snooze-back-mark="" role="img" aria-label="从稍后提醒返回">
           <Icon name="clock" size={13} />
         </span>
       )}
@@ -315,7 +315,7 @@ function BadgeWords({ row, id }: { row: InboxListRow; id: string }) {
  * An older Inbox sends no `delivery`: its Sent row says it in words instead.
  */
 function subjectOf(row: InboxListRow): string {
-  return sentWordsOf(row) ?? row.subject ?? '(no subject)';
+  return sentWordsOf(row) ?? row.subject ?? '（无主题）';
 }
 
 /** A Sent row's own words in place of its subject, or null. */
@@ -469,18 +469,18 @@ function countWords(row: InboxListRow, now: number, tickAlone = false): { short:
   // the words saying why a row is Quiet (Archived, Read, 👍 Looks good). Any other words stay.
   const why = !(tickAlone && rowStatus(row) === 'done');
   // A Quiet row says why it is there: archived (resolved), or marked read.
-  if (why && inboxRowArchived(row)) return same('Archived');
+  if (why && inboxRowArchived(row)) return same('已归档');
   // What the person has not sent (approval "inbox-reply-drafts"): "Draft", and "Draft · Your reply, 2 picks" in full.
-  if (row.unsent && inboxHasUnsent(row.unsent)) return { short: <DraftLabel unsent={row.unsent} short />, long: <DraftLabel unsent={row.unsent} />, full: `Draft · ${unsentWords(rowUnsent(row.unsent))}` };
+  if (row.unsent && inboxHasUnsent(row.unsent)) return { short: <DraftLabel unsent={row.unsent} short />, long: <DraftLabel unsent={row.unsent} />, full: `草稿 · ${unsentWords(rowUnsent(row.unsent))}` };
   // Marked read with 👍 Looks good: the row says so in place of "Read".
   if (why && row.section === 'quiet' && (row.read_at ?? null) !== null && row.ack) return same(`👍 ${row.ack.label}`);
-  if (why && row.section === 'quiet' && (row.read_at ?? null) !== null) return same('Read');
+  if (why && row.section === 'quiet' && (row.read_at ?? null) !== null) return same('已读');
   // An older Inbox (no `unsent`): its own words.
-  if (row.answered_not_sent) return { short: 'Answered', long: 'Answered, not sent', full: 'Answered, not sent' };
+  if (row.answered_not_sent) return { short: '已回复', long: '已回复，未发送', full: '已回复，未发送' };
   // An agent the person started from New message (launch): one muted word while it starts or works.
-  if (row.run) return same(row.run === 'starting' ? 'Starting' : row.run === 'cloning' ? 'Cloning' : 'Working');
-  if (row.combining) return { short: <span className="ib-combining">Combining…</span>, long: <span className="ib-combining">Combining…</span>, full: 'Combining…' };
-  if (row.section === 'sent' && row.addressee) return same(`To ${agentName(rowAgent(row))}`);
+  if (row.run) return same(row.run === 'starting' ? '启动中' : row.run === 'cloning' ? '克隆中' : '工作中');
+  if (row.combining) return { short: <span className="ib-combining">正在合并…</span>, long: <span className="ib-combining">正在合并…</span>, full: '正在合并…' };
+  if (row.section === 'sent' && row.addressee) return same(`发送给 ${agentName(rowAgent(row))}`);
   return null;
 }
 
@@ -526,7 +526,7 @@ function EndedMark({ row }: { row: InboxListRow }) {
   if (!row.session_ended) return <ScheduledBadge row={row} />;
   return (
     <span className="ib-gone ib-rended" data-row-ended="">
-      Session ended
+      会话已结束
     </span>
   );
 }
@@ -633,7 +633,7 @@ function Preview({ row }: { row: InboxListRow }) {
   return preview ? <ClipText className="ib-pv" text={preview} /> : null;
 }
 
-const guideWord = (row: InboxListRow) => (row.guide_walkthrough ? 'Walkthrough' : 'Guided review');
+const guideWord = (row: InboxListRow) => (row.guide_walkthrough ? '引导演示' : '引导式审查');
 
 /** The record's 1.1: a thread that carries a guided review says so after its subject. */
 function GuideMark({ row }: { row: InboxListRow }) {
@@ -841,55 +841,55 @@ function RowWithAction({
       }}
     >
       {children}
-      {onUnarchive && <UnarchiveAction row={row} label={`Unarchive: ${rowLabel(row, titleOf(row))}`} onUnarchive={onUnarchive} />}
+      {onUnarchive && <UnarchiveAction row={row} label={`取消归档：${rowLabel(row, titleOf(row))}`} onUnarchive={onUnarchive} />}
       {sendNow && (
-        <RowTip armed={actionTip} content={`Send now: put your reply into ${agentName(rowAgent(row))}'s running turn without waiting for it to end`}>
+        <RowTip armed={actionTip} content={`立即发送：把你的回复插入 ${agentName(rowAgent(row))} 正在进行的轮次，无需等待它结束`}>
           <button
             type="button"
             className="ib-ract"
             data-row-send-now=""
-            aria-label={`Send now: ${rowLabel(row, titleOf(row))}`}
+            aria-label={`立即发送：${rowLabel(row, titleOf(row))}`}
             onClick={(event) => {
               event.stopPropagation();
               onSendNow(row);
             }}
           >
             <Icon name="send" size={15} />
-            Send now
+            立即发送
           </button>
         </RowTip>
       )}
       {offer && (
-        <RowTip armed={actionTip} content={withShortcut(`Mark read / quiet: out of the top until ${agentName(rowAgent(row))} writes again`, { scope: inboxThreadShortcuts, action: 'markRead' })}>
+        <RowTip armed={actionTip} content={withShortcut(`标记已读 / 安静：移出顶部，直到 ${agentName(rowAgent(row))} 再次写入`, { scope: inboxThreadShortcuts, action: 'markRead' })}>
           <button
             type="button"
             className="ib-ract"
             data-row-mark-read=""
-            aria-label={`Mark read: ${rowLabel(row, titleOf(row))}`}
+            aria-label={`标记已读：${rowLabel(row, titleOf(row))}`}
             onClick={(event) => {
               event.stopPropagation();
               onMarkRead(row);
             }}
           >
             <Icon name="checkCircle" size={15} />
-            Mark read
+            标记已读
           </button>
         </RowTip>
       )}
       {unread && (
-        <RowTip armed={actionTip} content="Mark unread: back to New, bold. Nothing is sent.">
+        <RowTip armed={actionTip} content="标记未读：回到「新消息」并加粗。不会发送任何内容。">
           <button
             type="button"
             className="ib-ract"
             data-row-mark-unread=""
-            aria-label={`Mark unread: ${rowLabel(row, titleOf(row))}`}
+            aria-label={`标记未读：${rowLabel(row, titleOf(row))}`}
             onClick={(event) => {
               event.stopPropagation();
               onMarkUnread(row);
             }}
           >
             <Icon name="envelope" size={15} />
-            Mark unread
+            标记未读
           </button>
         </RowTip>
       )}
@@ -1147,11 +1147,11 @@ function FoldedBlocker({ rows, group }: { rows: readonly InboxListRow[]; group: 
   const snoozed = group === 'snoozed';
   const words = snoozed
     ? stopped
-      ? 'A snoozed thread is stopped on you'
-      : 'A snoozed thread is holding up work'
+      ? '有稍后提醒的话题已停止'
+      : '有稍后提醒的话题在阻碍工作'
     : stopped
-      ? 'A closed thread is stopped on you'
-      : 'A closed thread is holding up work';
+      ? '有已收起的话题已停止'
+      : '有已收起的话题在阻碍工作';
   return (
     <span className="ib-zband-tri" data-stopped={stopped ? '' : undefined} data-snooze-blocker={snoozed ? '' : undefined} data-folded-blocker="" role="img" aria-label={words}>
       <Icon name="warn" size={14} />
@@ -1270,7 +1270,7 @@ export function InboxList(props: InboxListProps) {
   const refreshHintId = useId();
   /** Shift+R's name on the ↻ (approval "inbox-refresh-key"), gone with single keys off. */
   const refreshKeys = useShortcutAria({ scope: inboxAppShortcuts, action: 'refresh' });
-  const refreshTip = withShortcut('Refresh', { scope: inboxAppShortcuts, action: 'refresh' });
+  const refreshTip = withShortcut('刷新', { scope: inboxAppShortcuts, action: 'refresh' });
   /** The name's tooltip without a project: the name while the header cuts it, else the ↻'s own "Refresh ⇧R". */
   const [titleCut, setTitleCut] = useState(false);
   const titleTipWhen = useCallback((trigger: Element) => {
@@ -1515,20 +1515,20 @@ export function InboxList(props: InboxListProps) {
         {/* The button's description, outside the h1 so the heading reads only the name. */}
         {props.onRefresh && (
           <span id={refreshHintId} hidden>
-            Refresh the list
+            刷新列表
           </span>
         )}
         {/* The filter: the funnel alone, at every width (listFilter.ts). */}
         {props.listFilter && <ListFilterButton source={props.listFilter} phone={isMobile} />}
         {/* Search shows where New message does: a phone always, a wider window only while the main sidebar (which holds its own Search) is closed. */}
         {props.onSearch && headerCompose && (
-          <Tip content={withShortcut('Search', { scope: inboxSearchShortcuts, action: 'openSearch' })}>
+          <Tip content={withShortcut('搜索', { scope: inboxSearchShortcuts, action: 'openSearch' })}>
             <button
               type="button"
               className="ib-lhead-search"
               data-open-search=""
               data-sidebar-closed={isMobile ? undefined : ''}
-              aria-label="Search"
+              aria-label="搜索"
               aria-haspopup="dialog"
               aria-keyshortcuts={searchKeys}
               onClick={(event) => props.onSearch?.(event.currentTarget)}
@@ -1538,14 +1538,14 @@ export function InboxList(props: InboxListProps) {
           </Tip>
         )}
         {props.onCompose && headerCompose && (
-          <Tip content={withShortcut('New message', { scope: inboxAppShortcuts, action: 'compose' })}>
+          <Tip content={withShortcut('新消息', { scope: inboxAppShortcuts, action: 'compose' })}>
             <button
               type="button"
               className="ib-lhead-compose"
               data-open-compose=""
               // A wider window with the sidebar closed: the list header's own New message, at its far right.
               data-sidebar-closed={isMobile ? undefined : ''}
-              aria-label="New message"
+              aria-label="新消息"
               aria-keyshortcuts={shortcutAria({ scope: inboxAppShortcuts, action: 'compose' })}
               aria-haspopup="dialog"
               onClick={(event) => props.onCompose?.(event.currentTarget)}
@@ -1660,7 +1660,7 @@ export function InboxList(props: InboxListProps) {
                   {section.label}{' '}
                   <span className="ib-n" data-new={fresh ? '' : undefined}>
                     {formatCount(liveCount(section.threads))}
-                    {fresh && <span className="ib-sr">, new since closed</span>}
+                    {fresh && <span className="ib-sr">，收起后有新内容</span>}
                   </span>
                   {!open && <FoldedBlocker rows={section.threads} group={section.id} />}
                 </GroupBand>
@@ -1675,7 +1675,7 @@ export function InboxList(props: InboxListProps) {
       <HeldNoticeSaid words={bar.words} place={`${props.scope ?? ''}\n${props.title}`} />
       {props.reconnecting && (
         <p className="ib-relink" data-inbox-reconnecting="">
-          Reconnecting…
+          正在重新连接…
         </p>
       )}
       {resizable && <ListColumnEdge controls={columnId} onCollapse={props.onHide} />}
@@ -1697,7 +1697,7 @@ export const ListRow = memo(
     if (shape === 'phone') return <PhoneRow row={row} project={project} away={away} filtered={filtered} lit={lit} menu={menu} pinned={pinned} keys={keys} pill={pill} compact={compact} {...rowLook} {...pickState} onOpen={open} onUnstar={unstarRow} tint={tint} tagName={tagName} />;
     return (
       <RowWithAction row={row} drawn={drawn} menu={menu} onMarkRead={picking ? undefined : onMarkRead} onMarkUnread={picking ? undefined : onMarkUnread} onSendNow={picking ? undefined : onSendNow} onUnarchive={picking ? undefined : onUnarchive}>
-        {picking && onPick && <PickBox row state={picked ? 'all' : 'none'} label={`Select ${rowLabel(row, titleOf(row))}`} onPick={(event) => onPick(row, event)} />}
+        {picking && onPick && <PickBox row state={picked ? 'all' : 'none'} label={`选择 ${rowLabel(row, titleOf(row))}`} onPick={(event) => onPick(row, event)} />}
         {shape === 'narrow' ? (
           <NarrowRow row={row} project={project} away={away} filtered={filtered} lit={lit} pinned={pinned} keys={keys} selected={selected} pill={pill} compact={compact} {...rowLook} {...pickState} onOpen={open} onUnstar={unstarRow} tint={tint} tagName={tagName} />
         ) : (

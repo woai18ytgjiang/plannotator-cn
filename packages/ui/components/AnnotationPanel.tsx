@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { createContext, useContext, useMemo, useState, useRef, useEffect, useId } from 'react';
 import { AnnotationType, type Annotation, type Block, type CodeAnnotation, type EditorAnnotation } from '../types';
 import type { MentionSource } from '../utils/mentions';
@@ -42,9 +43,9 @@ const TYPE_COLOR: Record<AnnotationType, string> = {
 };
 
 const TYPE_LABEL: Record<AnnotationType, string> = {
-  [AnnotationType.DELETION]: 'Deletion',
-  [AnnotationType.COMMENT]: 'Comment',
-  [AnnotationType.GLOBAL_COMMENT]: 'Global',
+  [AnnotationType.DELETION]: '删除',
+  [AnnotationType.COMMENT]: '评论',
+  [AnnotationType.GLOBAL_COMMENT]: '全局',
 };
 
 const PencilIcon = () => (
@@ -268,7 +269,7 @@ interface PanelProps {
 }
 
 export const AnnotationPanel: React.FC<PanelProps> = ({
-  emptyHint = 'Select text to annotate',
+  emptyHint = '选择文本以添加批注',
   isOpen,
   annotations,
   blocks,
@@ -306,7 +307,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
   questionRows,
   onSelectQuestion,
   compareAnnotations,
-  title = 'Annotations',
+  title = '批注',
   titleNote,
   cardParts,
   renderCardBody,
@@ -384,7 +385,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
     <div
       data-annotation-scope-toggle="true"
       role="group"
-      aria-label="Annotation scope"
+      aria-label="批注范围"
       className="flex items-center gap-0.5 rounded-md bg-surface-1/60 p-0.5"
     >
       {(['current', 'all'] as const).map((value) => (
@@ -402,7 +403,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               : 'text-muted-foreground hover:text-foreground',
           )}
         >
-          {value === 'current' ? 'This file' : 'All files'}
+          {value === 'current' ? '本文件' : '全部文件'}
         </button>
       ))}
     </div>
@@ -444,11 +445,11 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
             </div>
             {titleNote && <span data-annotation-panel-note="" className="ml-auto mr-1 text-[11px] text-muted-foreground">{titleNote}</span>}
             {mobilePanel && onClose && (
-              <HostTitle title="Close panel">
+              <HostTitle title="关闭面板">
                 <button
                   onClick={onClose}
                   className="relative rounded-md p-1.5 text-muted-foreground transition-colors before:absolute before:-inset-1.5 before:content-[''] hover:text-foreground md:hidden"
-                  aria-label="Close panel"
+                  aria-label="关闭面板"
                 >
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -462,18 +463,18 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               {scopeToggle}
               {otherGroupCount > 0 && scope === 'current' && (
                 <span className="truncate text-[10px] text-muted-foreground/70">
-                  +{otherGroupCount} elsewhere
+                  另有 {otherGroupCount} 条
                 </span>
               )}
             </div>
           ) : (
             otherFileAnnotations && otherFileAnnotations.count > 0 && (
-              <HostTitle title="Show annotated files in sidebar">
+              <HostTitle title="在侧边栏显示已批注的文件">
                 <button
                   onClick={onOtherFileAnnotationsClick}
                   className="px-3 pb-2 text-[10px] text-primary/70 hover:text-primary transition-colors cursor-pointer"
                 >
-                  +{otherFileAnnotations.count} in {otherFileAnnotations.files} other file{otherFileAnnotations.files === 1 ? '' : 's'}
+                  +{otherFileAnnotations.count} 条位于 {otherFileAnnotations.files} 个其他文件
                 </button>
               </HostTitle>
             )
@@ -485,20 +486,20 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
         <div className="flex min-h-11 flex-shrink-0 items-center justify-between gap-2 border-b border-border/50 px-3">
           {scopeToggle}
           {otherGroupCount > 0 && scope === 'current' && (
-            <span className="truncate text-[10px] text-muted-foreground/70">+{otherGroupCount} elsewhere</span>
+            <span className="truncate text-[10px] text-muted-foreground/70">另有 {otherGroupCount} 条</span>
           )}
         </div>
       )}
 
       {embedded && !scopeEnabled && otherFileAnnotations && otherFileAnnotations.count > 0 && (
-        <HostTitle title="Show annotated files in navigator">
+        <HostTitle title="在导航器中显示已批注的文件">
           <button
             type="button"
             data-pn-touch-target="true"
             onClick={onOtherFileAnnotationsClick}
             className="min-h-11 flex-shrink-0 border-b border-border/50 px-3 text-left text-xs text-primary/80 active:bg-muted"
           >
-            {otherFileAnnotations.count} more in {otherFileAnnotations.files} other file{otherFileAnnotations.files === 1 ? '' : 's'}
+            另有 {otherFileAnnotations.count} 条位于 {otherFileAnnotations.files} 个其他文件
           </button>
         </HostTitle>
       )}
@@ -517,7 +518,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               onRemoveOrphan={readOnly ? undefined : (row) => { if (row.annotationId) onDelete(row.annotationId); }}
             />
             <div className="mx-0.5 mt-1 flex items-center gap-2 text-[11px] font-semibold uppercase tracking-[0.07em] text-muted-foreground">
-              <span className="flex-1">Comments</span>
+              <span className="flex-1">评论</span>
               <span className="tabular-nums">{showGroups ? groupedTotal : timelineCount}</span>
             </div>
           </>
@@ -558,7 +559,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
                       </span>
                     </HostTitle>
                     {group.isCurrent && (
-                      <span className="flex-shrink-0 text-[9px] text-muted-foreground/50">open</span>
+                      <span className="flex-shrink-0 text-[9px] text-muted-foreground/50">打开</span>
                     )}
                     <span className="flex h-[16px] min-w-[16px] flex-shrink-0 items-center justify-center rounded-full bg-primary/10 px-1 font-mono text-[9px] font-medium tabular-nums text-primary">
                       {group.annotations.length}
@@ -610,7 +611,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               <>
                 <div className="flex items-center gap-2 pt-2 pb-1">
                   <div className="flex-1 border-t border-border/30" />
-                  <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Code</span>
+                  <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">代码</span>
                   <div className="flex-1 border-t border-border/30" />
                 </div>
                 {sortedCodeAnnotations.map((annotation) => (
@@ -632,7 +633,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               <>
                 <div className="flex items-center gap-2 pt-2 pb-1">
                   <div className="flex-1 border-t border-border/30" />
-                  <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Editor</span>
+                  <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">编辑器</span>
                   <div className="flex-1 border-t border-border/30" />
                 </div>
                 {editorAnnotations.map(ann => (
@@ -645,7 +646,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               </>
             )}
             {otherGroups.length > 0 && onOtherFileAnnotationsClick && (
-              <HostTitle title="Show annotated files in the navigator">
+              <HostTitle title="在导航器中显示已批注的文件">
                 <button
                   type="button"
                   data-pn-touch-target="true"
@@ -653,14 +654,14 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
                   onClick={onOtherFileAnnotationsClick}
                   className="mt-1 cursor-pointer self-start px-1.5 text-[10px] text-muted-foreground/60 transition-colors hover:text-primary"
                 >
-                  Show in files
+                  在文件中显示
                 </button>
               </HostTitle>
             )}
           </>
         ) : timelineCount === 0 && showQuestions ? (
           <p className="px-1 py-2.5 text-[12.5px] text-muted-foreground">
-            Select text in the document to comment. Question and option text is selectable too.
+            在文档中选择文本即可添加评论。问题文本和选项文本也可以选中。
           </p>
         ) : timelineCount === 0 ? (
           (!directEdits || directEdits.length === 0) && (!hideEmptyMessage || (scopeEnabled && otherGroupCount > 0)) && (
@@ -668,7 +669,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               {!hideEmptyMessage && (
                 <>
                   <p className="text-xs text-muted-foreground/60">
-                    No annotations yet
+                    暂无批注
                   </p>
                   <p className="mt-1 text-[11px] text-muted-foreground/40">
                     {emptyHint}
@@ -683,7 +684,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
                   onClick={() => onAnnotationScopeChange!('all')}
                   className={`${hideEmptyMessage ? '' : 'mt-3 '}cursor-pointer rounded-md px-2 py-1 text-[11px] text-primary/80 transition-colors hover:bg-surface-1 hover:text-primary`}
                 >
-                  View all {otherGroupCount} in {otherGroups.length} other file{otherGroups.length === 1 ? '' : 's'}
+                  查看 {otherGroups.length} 个其他文件中的全部 {otherGroupCount} 条
                 </button>
               )}
             </div>
@@ -758,7 +759,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
                 {timelineEntries.length > 0 && (
                   <div className="flex items-center gap-2 pt-2 pb-1">
                     <div className="flex-1 border-t border-border/30" />
-                    <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">Editor</span>
+                    <span className="text-[9px] font-semibold uppercase tracking-wider text-muted-foreground/60">编辑器</span>
                     <div className="flex-1 border-t border-border/30" />
                   </div>
                 )}
@@ -798,14 +799,14 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  Copied
+                  已复制
                 </>
               ) : (
                 <>
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  Copy
+                  复制
                 </>
               )}
             </button>
@@ -818,7 +819,7 @@ export const AnnotationPanel: React.FC<PanelProps> = ({
               <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M13.828 10.172a4 4 0 00-5.656 0l-4 4a4 4 0 105.656 5.656l1.102-1.101m-.758-4.899a4 4 0 005.656 0l4-4a4 4 0 00-5.656-5.656l-1.1 1.1" />
               </svg>
-              Share
+              分享
             </button>
           )}
         </div>
@@ -849,10 +850,10 @@ function formatTimestamp(ts: number): string {
   const hours = Math.floor(minutes / 60);
   const days = Math.floor(hours / 24);
 
-  if (seconds < 60) return 'now';
-  if (minutes < 60) return `${minutes}m`;
-  if (hours < 24) return `${hours}h`;
-  if (days < 7) return `${days}d`;
+  if (seconds < 60) return '刚刚';
+  if (minutes < 60) return `${minutes} 分钟`;
+  if (hours < 24) return `${hours} 小时`;
+  if (days < 7) return `${days} 天`;
 
   // An older date names its year: "Oct 20" alone reads as this October.
   const date = new Date(ts);
@@ -878,7 +879,7 @@ const CardByline: React.FC<{ author?: string; isMe: boolean; timestamp: number }
             <bdi>{author}</bdi>
           </span>
         </HostTitle>
-        {isMe ? <span data-annotation-me="true" className="shrink-0 whitespace-pre"> (me)</span> : null}
+        {isMe ? <span data-annotation-me="true" className="shrink-0 whitespace-pre">（我）</span> : null}
         <span className="shrink-0 whitespace-pre"> · </span>
       </>
     ) : null}
@@ -897,7 +898,7 @@ const DirectEditsCard: React.FC<{
   diffText: string;
   description?: string;
   onDiscard?: () => void;
-}> = ({ title = 'Edits', label, added, removed, diffText, description, onDiscard }) => {
+}> = ({ title = '编辑', label, added, removed, diffText, description, onDiscard }) => {
   const [expanded, setExpanded] = useState(false);
   const [confirmDiscard, setConfirmDiscard] = useState(false);
 
@@ -938,7 +939,7 @@ const DirectEditsCard: React.FC<{
             className="cursor-pointer rounded px-1.5 py-0.5 text-[10px] text-muted-foreground transition-colors hover:bg-surface-1 hover:text-foreground"
             aria-expanded={expanded}
           >
-            {expanded ? 'Hide diff' : 'Diff'}
+            {expanded ? '隐藏差异' : '差异'}
           </button>
           {onDiscard && (
             <button
@@ -958,13 +959,13 @@ const DirectEditsCard: React.FC<{
                   : 'text-muted-foreground hover:bg-surface-1 hover:text-destructive',
               )}
             >
-              {confirmDiscard ? 'Confirm?' : 'Discard'}
+              {confirmDiscard ? '确认？' : '丢弃'}
             </button>
           )}
         </div>
       </div>
       <p className="mt-1 text-[10px] leading-snug text-muted-foreground/60">
-        {description ?? 'Your text changes — sent with the feedback as a diff.'}
+        {description ?? '你的文本修改会以差异形式随反馈一起发送。'}
       </p>
       {expanded && (
         <pre className="mt-2 max-h-56 overflow-auto rounded-md bg-muted/40 p-2 font-mono text-[10px] leading-relaxed">
@@ -1092,8 +1093,8 @@ const AnnotationEditComposer: React.FC<{
         onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => { onChange(e.target.value); mention.onSelect(); }}
         onSelect={mention.onSelect}
         onKeyDown={handleKeyDown}
-        placeholder="Add your comment..."
-        aria-label="Annotation comment"
+        placeholder="添加评论…"
+        aria-label="批注评论"
         aria-autocomplete={mentionSource ? 'list' : undefined}
         aria-haspopup={mentionSource ? 'listbox' : undefined}
         aria-controls={menuOpen ? listboxId : undefined}
@@ -1103,8 +1104,8 @@ const AnnotationEditComposer: React.FC<{
         style={{ fieldSizing: 'content', minHeight: 44 } as React.CSSProperties}
       />
       <div className="mt-1.5 flex justify-end gap-1.5">
-        <Button variant="ghost" size="xxs" onClick={onCancel}>Cancel</Button>
-        <Button size="xxs" disabled={!value.trim()} onClick={() => onSave(mention.mentionIds)}>Save</Button>
+        <Button variant="ghost" size="xxs" onClick={onCancel}>取消</Button>
+        <Button size="xxs" disabled={!value.trim()} onClick={() => onSave(mention.mentionIds)}>保存</Button>
       </div>
       <MentionAutocompleteMenu id={listboxId} menu={mention.menu} onSelect={mention.select} />
     </div>
@@ -1188,7 +1189,7 @@ const AnnotationCard: React.FC<{
   };
 
   const typeColor = TYPE_COLOR[annotation.type] ?? 'text-muted-foreground';
-  const typeLabel = TYPE_LABEL[annotation.type] ?? 'Note';
+  const typeLabel = TYPE_LABEL[annotation.type] ?? '备注';
   const isGlobal = annotation.type === AnnotationType.GLOBAL_COMMENT;
 
   // The edit box, mounted only while editing (see AnnotationEditComposer).
@@ -1226,12 +1227,12 @@ const AnnotationCard: React.FC<{
         {region && regionNumber !== undefined && <RegionNumber n={regionNumber} selected={isSelected} />}
         {region && (
           <span data-annotation-region="true" className="text-[9px] px-1.5 py-0.5 rounded font-medium bg-muted text-muted-foreground">
-            Region
+            区域
           </span>
         )}
         {annotation.diffContext && (
           <span className="text-[9px] px-1.5 py-0.5 rounded font-medium bg-muted text-muted-foreground">
-            diff
+            差异
           </span>
         )}
         {annotation.pageUrl && (
@@ -1242,9 +1243,9 @@ const AnnotationCard: React.FC<{
           </HostTitle>
         )}
         {unanchored && (
-          <HostTitle title="This comment no longer matches a location in the document">
+          <HostTitle title="此评论已不再对应文档中的位置">
             <span data-annotation-unanchored="true" className="text-[9px] px-1.5 py-0.5 rounded font-medium bg-muted text-muted-foreground">
-              Unanchored
+              未定位
             </span>
           </HostTitle>
         )}
@@ -1265,7 +1266,7 @@ const AnnotationCard: React.FC<{
         {!readOnly && (
           <div className="ml-auto flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100">
             {onEdit && annotation.type !== AnnotationType.DELETION && !isEditing && (
-              <HostTitle title="Edit annotation" name>
+              <HostTitle title="编辑批注" name>
                 <button
                   type="button"
                   onClick={handleStartEdit}
@@ -1275,7 +1276,7 @@ const AnnotationCard: React.FC<{
                 </button>
               </HostTitle>
             )}
-            <HostTitle title="Delete annotation" name>
+            <HostTitle title="删除批注" name>
               <button
                 type="button"
                 onClick={(e: React.MouseEvent<HTMLButtonElement>) => { e.stopPropagation(); onDelete(); }}
@@ -1416,8 +1417,8 @@ const CodeAnnotationCard: React.FC<{
   };
 
   const lineRange = annotation.lineStart === annotation.lineEnd
-    ? `line ${annotation.lineStart}`
-    : `lines ${annotation.lineStart}-${annotation.lineEnd}`;
+    ? `第 ${annotation.lineStart} 行`
+    : `第 ${annotation.lineStart}-${annotation.lineEnd} 行`;
   const fileName = basenameFromPath(annotation.filePath);
   // A comment on the whole review (a guided review's global comment): no file, no lines.
   const isGlobal = annotation.scope === 'general';
@@ -1448,12 +1449,12 @@ const CodeAnnotationCard: React.FC<{
       <div className="mb-1.5 flex items-center gap-1.5">
         {isGlobal
           ? <span className={cn('text-[11px] font-medium', TYPE_COLOR[AnnotationType.GLOBAL_COMMENT])}>{TYPE_LABEL[AnnotationType.GLOBAL_COMMENT]}</span>
-          : <span className="text-[11px] font-medium text-primary">Code</span>}
+          : <span className="text-[11px] font-medium text-primary">代码</span>}
         <CardByline author={annotation.author} isMe={isMe} timestamp={annotation.createdAt} />
         {!readOnly && (
           <div className="ml-auto flex items-center gap-0.5 opacity-0 transition-opacity group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100">
             {onEdit && !isEditing && (
-              <HostTitle title="Edit annotation" name>
+              <HostTitle title="编辑批注" name>
                 <button
                   type="button"
                   onClick={(e) => { e.stopPropagation(); setIsEditing(true); }}
@@ -1463,7 +1464,7 @@ const CodeAnnotationCard: React.FC<{
                 </button>
               </HostTitle>
             )}
-            <HostTitle title="Delete annotation" name>
+            <HostTitle title="删除批注" name>
               <button
                 type="button"
                 onClick={(e) => { e.stopPropagation(); onDelete(); }}
@@ -1508,14 +1509,14 @@ const CodeAnnotationCard: React.FC<{
                 handleCancelEdit();
               }
             }}
-            placeholder="Add your comment..."
-            aria-label="Annotation comment"
+            placeholder="添加评论…"
+            aria-label="批注评论"
             className="w-full resize-none rounded-lg border border-border/50 bg-card px-2.5 py-2 text-base leading-relaxed text-foreground outline-none transition-colors placeholder:text-muted-foreground/50 focus:border-primary/40 focus:ring-1 focus:ring-primary/20"
             style={{ fieldSizing: 'content', minHeight: 44 } as React.CSSProperties}
           />
           <div className="mt-1.5 flex justify-end gap-1.5">
-            <Button variant="ghost" size="xxs" onClick={handleCancelEdit}>Cancel</Button>
-            <Button size="xxs" disabled={!editText.trim()} onClick={handleSaveEdit}>Save</Button>
+            <Button variant="ghost" size="xxs" onClick={handleCancelEdit}>取消</Button>
+            <Button size="xxs" disabled={!editText.trim()} onClick={handleSaveEdit}>保存</Button>
           </div>
         </div>
       ) : (

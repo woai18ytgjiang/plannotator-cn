@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { createPortal } from 'react-dom';
 import type { MentionPerson } from '../utils/mentions';
 
@@ -113,7 +114,7 @@ export function MentionPicker({
     <div
       id={id}
       role="listbox"
-      aria-label="People"
+      aria-label="人员"
       data-mention-picker
       data-placement={above ? 'above' : 'below'}
       style={{ position: 'fixed', left: anchor.left, width: anchor.width, ...style }}

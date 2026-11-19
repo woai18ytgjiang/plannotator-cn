@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * SidebarContainer — Shared sidebar shell
  *
@@ -173,7 +174,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
       data-print-hide={compact ? true : undefined}
       role={compact ? "dialog" : undefined}
       aria-modal={compact ? true : undefined}
-      aria-label={compact ? "Plan navigator" : undefined}
+      aria-label={compact ? "计划导航器" : undefined}
       onKeyDown={compact ? handleCompactKeyDown : undefined}
       className={compact
         ? "pn-visible-viewport-stage z-[90] flex flex-col overflow-hidden bg-card text-foreground"
@@ -183,9 +184,9 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
       {compact && (
         <div className="flex h-[52px] flex-shrink-0 items-center justify-between border-b border-border/50 px-3">
           <div className="min-w-0">
-            <p className="text-sm font-semibold tracking-tight">Navigate</p>
+            <p className="text-sm font-semibold tracking-tight">导航</p>
             <p className="truncate text-[11px] text-muted-foreground" aria-live="polite">
-              {pendingFileLabel ? `Opening ${pendingFileLabel}…` : 'Choose what to review'}
+              {pendingFileLabel ? `正在打开 ${pendingFileLabel}…` : '选择要审查的内容'}
             </p>
           </div>
           <button
@@ -195,8 +196,8 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
             data-pn-touch-target="true"
             data-pn-touch-target-icon="true"
             className="flex h-9 w-9 items-center justify-center rounded-lg text-muted-foreground outline-none transition-colors hover:bg-muted hover:text-foreground focus-visible:ring-2 focus-visible:ring-ring/60"
-            aria-label="Close navigator"
-            title="Close navigator"
+            aria-label="关闭导航器"
+            title="关闭导航器"
           >
             <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -216,7 +217,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
             running={!!isAgentTerminalRunning}
             onClick={onToggleAgentTerminal}
             icon={<ReviewAgentsIcon className="w-3 h-3" />}
-            label="Agent"
+            label="智能体"
           />
         )}
         {showContentsTab && (
@@ -238,7 +239,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
                 />
               </svg>
             }
-            label="Contents"
+            label="目录"
             touch={compact}
           />
         )}
@@ -261,7 +262,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
                 />
               </svg>
             }
-            label="Versions"
+            label="版本"
             touch={compact}
           />
         )}
@@ -270,7 +271,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
             active={activeTab === "messages"}
             onClick={() => onTabChange("messages")}
             icon={<MessagesIcon className="w-3 h-3" />}
-            label="Messages"
+            label="消息"
             badge={messageAnnotationCounts !== undefined && messageAnnotationCounts.size > 0}
             touch={compact}
           />
@@ -294,7 +295,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
                 />
               </svg>
             }
-            label="Files"
+            label="文件"
             badge={hasFileAnnotations}
             touch={compact}
           />
@@ -318,7 +319,7 @@ export const SidebarContainer: React.FC<SidebarContainerProps> = ({
                 />
               </svg>
             }
-            label="Archive"
+            label="归档"
             touch={compact}
           />
         )}
@@ -433,7 +434,7 @@ const ActionButton: React.FC<{
     type="button"
     onClick={onClick}
     aria-pressed={active}
-    title={running ? "Agent running" : label}
+    title={running ? "智能体运行中" : label}
     className={`relative flex items-center gap-1 px-2 py-1 rounded text-xs font-medium transition-colors min-w-0 shrink-0 ${
       active || running
         ? "bg-primary/10 text-primary"

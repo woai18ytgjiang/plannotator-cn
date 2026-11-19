@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * FileBrowser — markdown/text file tree for the sidebar
  *
@@ -328,26 +329,26 @@ const TreeNode: React.FC<{
   const isSelectionDisabled = isFileTreeSelectionDisabled(workspaceChange, editStatus);
   const editMarker =
     editStatus?.status === "conflict" || editStatus?.status === "error"
-      ? { label: "!", className: "bg-destructive/15 text-destructive", title: editStatus.status === "conflict" ? "Save conflict" : "Save failed" }
+      ? { label: "!", className: "bg-destructive/15 text-destructive", title: editStatus.status === "conflict" ? "保存冲突" : "保存失败" }
       : editStatus?.status === "missing"
-        ? { label: "!", className: "bg-warning/15 text-warning-foreground", title: "File missing on disk" }
+        ? { label: "!", className: "bg-warning/15 text-warning-foreground", title: "文件在磁盘上缺失" }
       : editStatus?.status === "saving"
-        ? { label: "...", className: "bg-primary/10 text-primary", title: "Saving" }
+        ? { label: "...", className: "bg-primary/10 text-primary", title: "保存中" }
         : editStatus?.dirty
-          ? { label: "•", className: "bg-primary/10 text-primary", title: "Unsaved edits" }
+          ? { label: "•", className: "bg-primary/10 text-primary", title: "未保存的编辑" }
           : editStatus?.status === "saved"
-            ? { label: "✓", className: "bg-success/15 text-success", title: "Saved" }
+            ? { label: "✓", className: "bg-success/15 text-success", title: "已保存" }
             : null;
   const statusMarker = workspaceChange?.status === "added"
-    ? { label: "A", className: "text-success", title: "Added file" }
+    ? { label: "A", className: "text-success", title: "新增文件" }
     : workspaceChange?.status === "untracked"
-      ? { label: "U", className: "text-primary", title: "Untracked file" }
+      ? { label: "U", className: "text-primary", title: "未跟踪文件" }
       : workspaceChange?.status === "deleted"
-        ? { label: "D", className: "text-destructive", title: "Deleted file" }
+        ? { label: "D", className: "text-destructive", title: "已删除文件" }
         : workspaceChange?.status === "renamed"
-          ? { label: "R", className: "text-[#007aff]", title: workspaceChange.oldPath ? `Renamed from ${workspaceChange.oldPath}` : "Renamed file" }
+          ? { label: "R", className: "text-[#007aff]", title: workspaceChange.oldPath ? `从 ${workspaceChange.oldPath} 重命名` : "已重命名文件" }
           : workspaceChange?.status === "conflicted"
-            ? { label: "!", className: "text-destructive", title: "Git conflict" }
+            ? { label: "!", className: "text-destructive", title: "Git 冲突" }
             : null;
   return (
     <button
@@ -358,7 +359,7 @@ const TreeNode: React.FC<{
       aria-busy={isActive && selectionPending ? true : undefined}
       className={`file-tree-item w-full text-left group ${isActive ? "active" : ""} ${fileCount > 0 ? "has-annotations" : ""} ${isHighlighted ? 'file-annotation-flash' : ''} ${isSelectionDisabled ? 'opacity-70 cursor-default' : ''}`}
       style={{ paddingLeft: paddingLeft + 15 }}
-      title={isDeleted ? `${node.path} (${editStatus?.status === "missing" ? "missing on disk" : "deleted on disk"})` : node.path}
+      title={isDeleted ? `${node.path} (${editStatus?.status === "missing" ? "磁盘上缺失" : "磁盘上已删除"})` : node.path}
     >
       <svg className="w-3 h-3 flex-shrink-0 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
         <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
@@ -368,7 +369,7 @@ const TreeNode: React.FC<{
       </HostTitle>
       <div className="ml-auto flex flex-shrink-0 items-center gap-1.5 text-[10px]">
         {isActive && selectionPending && (
-          <span className="text-primary">Opening…</span>
+          <span className="text-primary">正在打开…</span>
         )}
         {editMarker && (
           <span
@@ -413,7 +414,7 @@ const DirSection: React.FC<{
   if (dir.isLoading) {
     return (
       <div className="p-3 text-[11px] text-muted-foreground">
-        Loading...
+        加载中…
       </div>
     );
   }
@@ -426,7 +427,7 @@ const DirSection: React.FC<{
           onClick={onRetry}
           className="text-[10px] text-primary hover:underline"
         >
-          Retry
+          重试
         </button>
       </div>
     );
@@ -435,7 +436,7 @@ const DirSection: React.FC<{
   if (dir.tree.length === 0) {
     return (
       <div className="px-3 py-2 text-[11px] text-muted-foreground">
-        No annotatable files found
+        没有找到可批注的文件
       </div>
     );
   }
@@ -468,8 +469,8 @@ const DirSection: React.FC<{
 /** The folder holds more supported files than the server lists; say so once, quietly, at the foot of its tree. */
 export const FileLimitNote: React.FC<{ limit?: number }> = ({ limit }) => (
   <div data-file-limit-note className="px-2 pt-2 pb-1 text-[10px] leading-snug text-muted-foreground">
-    {limit ? `Showing the first ${limit.toLocaleString("en-US")} files.` : "Showing some of the files."}{" "}
-    Raise <code className="font-mono">PLANNOTATOR_FILE_BROWSER_MAX_FILES</code> to see more.
+    {limit ? `仅显示前 ${limit.toLocaleString("en-US")} 个文件。` : "仅显示部分文件。"}{" "}
+    调高 <code className="font-mono">PLANNOTATOR_FILE_BROWSER_MAX_FILES</code> 可显示更多。
   </div>
 );
 
@@ -515,7 +516,7 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
   if (dirs.length === 0) {
     return (
       <div className="p-3 text-[11px] text-muted-foreground">
-        No directories configured. Add directories in Settings → Files.
+        尚未配置目录。请在 设置 → 文件 中添加目录。
       </div>
     );
   }
@@ -539,12 +540,12 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
     <div className="flex flex-col">
       {totalCount > 0 && (
         <div className="px-3 py-1.5 text-[10px] text-muted-foreground border-b border-border/30">
-          {totalCount} annotation{totalCount === 1 ? '' : 's'} in {fileCount} file{fileCount === 1 ? '' : 's'}
+          {totalCount} 条批注，分布在 {fileCount} 个文件
         </div>
       )}
       {workspaceTotals.files > 0 && (
         <div className="file-tree-status-summary flex items-center gap-1.5 px-3 py-1.5 text-[10px] text-muted-foreground border-b border-border/30">
-          <span>{workspaceTotals.files} changed</span>
+          <span>{workspaceTotals.files} 个文件已更改</span>
           {workspaceTotals.additions > 0 && <span className="additions ml-auto">+{workspaceTotals.additions}</span>}
           {workspaceTotals.deletions > 0 && <span className={`deletions ${workspaceTotals.additions > 0 ? "" : "ml-auto"}`}>-{workspaceTotals.deletions}</span>}
         </div>
@@ -566,8 +567,8 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
                 if (filterQuery) setFilterQuery("");
                 else setIsFilterOpen(false);
               }}
-              placeholder="Filter"
-              aria-label="Filter files"
+              placeholder="筛选"
+              aria-label="筛选文件"
               autoComplete="off"
               spellCheck={false}
               data-lpignore="true"
@@ -582,8 +583,8 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
                   inputRef.current?.focus();
                 }}
                 className="file-browser-filter-clear flex h-5 w-5 shrink-0 items-center justify-center rounded-sm text-muted-foreground/55 hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:bg-muted"
-                aria-label="Clear file filter"
-                title="Clear file filter"
+                aria-label="清除文件筛选"
+                title="清除文件筛选"
               >
                 <X size={12} aria-hidden="true" />
               </button>
@@ -594,17 +595,17 @@ export const FileBrowser: React.FC<FileBrowserProps> = ({
             type="button"
             onClick={() => setIsFilterOpen(true)}
             className="flex h-6 w-full items-center gap-1.5 rounded-sm px-1.5 text-left text-[10px] text-muted-foreground hover:bg-muted/40 hover:text-foreground focus-visible:outline-none focus-visible:bg-muted/50 focus-visible:text-foreground"
-            aria-label="Filter files"
-            title="Filter files"
+            aria-label="筛选文件"
+            title="筛选文件"
           >
             <Search size={12} className="shrink-0 text-muted-foreground/55" aria-hidden="true" />
-            <span className="truncate">Filter</span>
+            <span className="truncate">筛选</span>
           </button>
         )}
       </div>
       {isFiltering && visibleDirs.length === 0 && (
         <div className="px-3 py-8 text-center text-[11px] text-muted-foreground">
-          No files match "{deferredFilterQuery.trim()}"
+          没有匹配 "{deferredFilterQuery.trim()}" 的文件
         </div>
       )}
       {visibleDirs.map((dir) => {

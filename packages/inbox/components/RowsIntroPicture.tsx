@@ -133,12 +133,12 @@ export function RowsIntroWindow({ scene, moving }: { scene: RowsIntroScene; movi
     <div className="ib-rl-comp" data-marks={scene.marks} data-logos={scene.logos ? '' : undefined} data-moving={moving ? '' : undefined}>
       <aside className="ib-rl-sb">
         <div className="ib-rl-brand">
-          Plannotator<span>Inbox</span>
+          Plannotator<span>收件箱</span>
         </div>
         <div className="ib-rl-search">
           <span className="ib-rl-box">
             <Icon name="search" size={16} />
-            Search
+            搜索
             <ShortcutHint scope={inboxSearchShortcuts} action="openSearch" className="ib-kbd ib-rl-kbd" />
           </span>
           <span className="ib-rl-new">
@@ -147,11 +147,11 @@ export function RowsIntroWindow({ scene, moving }: { scene: RowsIntroScene; movi
         </div>
         <div className="ib-rl-nav">
           <Icon name="inbox" size={17} />
-          Inbox<span className="ib-rl-n">{waiting}</span>
+          收件箱<span className="ib-rl-n">{waiting}</span>
         </div>
         <div className="ib-rl-phead">
           <Icon name="folder" size={17} />
-          Projects
+          项目
         </div>
         {PROJECTS.map((project, j) => (
           <div className="ib-rl-prow" key={project.name}>
@@ -164,18 +164,18 @@ export function RowsIntroWindow({ scene, moving }: { scene: RowsIntroScene; movi
       <div className="ib-rl-lp">
         <div className="ib-rl-lhead">
           <Icon name="panelsHide" size={18} />
-          <span className="ib-rl-h">Inbox</span>
+          <span className="ib-rl-h">收件箱</span>
           <Icon name="dots" size={18} />
         </div>
         <div className="ib-rl-lbody">
           <div className="ib-rl-band">
-            Waiting on you <span className="ib-rl-n">{waiting}</span>
+            等待你处理 <span className="ib-rl-n">{waiting}</span>
           </div>
           {WAITING.map((row, i) => (
             <Row key={row.title} row={row} i={i} />
           ))}
           <div className="ib-rl-band">
-            New since you looked <span className="ib-rl-n">{NEW.length}</span>
+            自上次查看以来的新内容 <span className="ib-rl-n">{NEW.length}</span>
           </div>
           {NEW.map((row, i) => (
             <Row key={row.title} row={row} i={i + WAITING.length} />

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useId } from 'react';
 
 interface NewChatButtonProps {
@@ -20,19 +21,19 @@ interface NewChatButtonProps {
 export function newChatLabels(sessionBridge: boolean): { label: string; title: string } {
   return sessionBridge
     ? {
-        label: 'Clear chat',
-        title: 'Clear this panel. The session that opened Plannotator still remembers earlier questions.',
+        label: '清空对话',
+        title: '清空此面板。打开 Plannotator 的会话仍记得之前的问题。',
       }
     : {
-        label: 'New chat',
-        title: 'Clear this chat and start a fresh AI session',
+        label: '新对话',
+        title: '清空此对话并开始新的 AI 会话',
       };
 }
 
 /** Why the button is unavailable right now; null when it can be used. */
 export function newChatBlockedReason(options: { busy?: boolean; pendingChoice?: boolean }): string | null {
-  if (options.busy) return 'Wait for the answer, or stop it, before starting a new chat.';
-  if (options.pendingChoice) return 'First choose "Ask when it finishes" or "Interrupt and ask now" for the waiting question.';
+  if (options.busy) return '请等待回答结束或先停止它，再开始新对话。';
+  if (options.pendingChoice) return '请先为等待中的问题选择「完成后询问」或「打断并立即询问」。';
   return null;
 }
 

@@ -37,15 +37,15 @@ export const GuideDiffControls: React.FC<{
   const folded = collapseAll?.collapsed === true;
   return (
     <>
-      <div className="flex items-center gap-1 lg:gap-2" role="group" aria-label="Diff display" data-guide-diff-controls="">
+      <div className="flex items-center gap-1 lg:gap-2" role="group" aria-label="差异显示" data-guide-diff-controls="">
         <DiffLayoutToggle value={state.diffStyle} onChange={state.onDiffStyleChange} className={BUTTON} />
         {state.files.length > 1 && (
           <button
             type="button"
             onClick={onCollapseAll}
             className={BUTTON}
-            title={folded ? 'Expand all files' : 'Collapse all files'}
-            aria-label={folded ? 'Expand all files' : 'Collapse all files'}
+            title={folded ? '展开所有文件' : '折叠所有文件'}
+            aria-label={folded ? '展开所有文件' : '折叠所有文件'}
             data-guide-collapse-all={folded ? 'collapsed' : 'open'}
           >
             <svg className="w-3.5 h-3.5" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2} strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">

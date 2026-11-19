@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Permission Mode Settings Utility (Claude Code only)
  *
@@ -26,23 +27,23 @@ export interface PermissionModeSettings {
 export const PERMISSION_MODE_OPTIONS: { value: PermissionMode; label: string; description: string }[] = [
   {
     value: 'acceptEdits',
-    label: 'Auto-accept Edits',
-    description: 'Auto-approve file edits, ask for other tools',
+    label: '自动接受编辑',
+    description: '自动批准文件编辑，其他工具仍需询问',
   },
   {
     value: 'auto',
-    label: 'Auto Mode',
-    description: 'Autonomous execution with a safety classifier (requires Claude Code 2026-03+ and Sonnet 4.6+)',
+    label: '自动模式',
+    description: '带安全分类器的自主执行（需要 Claude Code 2026-03+ 和 Sonnet 4.6+）',
   },
   {
     value: 'bypassPermissions',
-    label: 'Bypass Permissions',
-    description: 'Auto-approve all tool calls (equivalent to --dangerously-skip-permissions)',
+    label: '绕过权限',
+    description: '自动批准所有工具调用（等同于 --dangerously-skip-permissions）',
   },
   {
     value: 'default',
-    label: 'Manual Approval',
-    description: 'Manually approve each tool call',
+    label: '手动批准',
+    description: '逐个手动批准每次工具调用',
   },
 ];
 

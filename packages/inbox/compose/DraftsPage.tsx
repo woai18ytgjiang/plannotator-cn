@@ -38,12 +38,12 @@ export function DraftsPage({
 }) {
   const list = drafts ?? [];
   return (
-    <section className="ib-dpage ib-drafts" aria-label="Drafts" data-drafts-page="">
+    <section className="ib-dpage ib-drafts" aria-label="草稿" data-drafts-page="">
       <div className="ib-dh">
         <SidebarTrigger />
-        <h1 tabIndex={-1}>Drafts</h1>
+        <h1 tabIndex={-1}>草稿</h1>
         {phone && (
-          <button type="button" className="ib-lhead-compose" aria-label="New message" aria-haspopup="dialog" onClick={(event) => onCompose(event.currentTarget)}>
+          <button type="button" className="ib-lhead-compose" aria-label="新消息" aria-haspopup="dialog" onClick={(event) => onCompose(event.currentTarget)}>
             <Icon name="compose" size={20} />
           </button>
         )}
@@ -51,25 +51,25 @@ export function DraftsPage({
       {error && <div className="ib-error">{error}</div>}
       {replies.length > 0 && onOpenReply && (
         <>
-          <h2 className="ib-drafts-h">Replies not sent</h2>
-          <div className="ib-drafts-list" role="list" aria-label="Replies not sent" data-reply-drafts="">
+          <h2 className="ib-drafts-h">未发送的回复</h2>
+          <div className="ib-drafts-list" role="list" aria-label="未发送的回复" data-reply-drafts="">
             {replies.map((row) => {
               const unsent = row.unsent!;
-              const subject = row.subject ?? '(no subject)';
+              const subject = row.subject ?? '（无主题）';
               return (
                 <div className="ib-draft" role="listitem" key={row.thread_id} data-reply-draft={row.thread_id}>
                   <button
                     type="button"
                     className="ib-draft-open"
                     onClick={() => onOpenReply(row)}
-                    aria-label={`Open thread: ${subject}. Draft: ${unsentWords(rowUnsent(unsent), false)}.${unsent.reply_at ? ` Saved ${whenTime(unsent.reply_at)}` : ''}`}
+                    aria-label={`打开话题：${subject}。草稿：${unsentWords(rowUnsent(unsent), false)}。${unsent.reply_at ? ` 保存于 ${whenTime(unsent.reply_at)}` : ''}`}
                   >
                     <span className="ib-draft-mk">
                       <AuthorMark author={row.author} big />
                     </span>
                     <span className="ib-draft-t">
                       <span className="ib-draft-to" dir="auto">
-                        Reply to <b>{agentName(row.author)}</b> in <bdi>{row.project.name}</bdi>
+                        回复 <b>{agentName(row.author)}</b> · <bdi>{row.project.name}</bdi>
                       </span>
                       <span className="ib-draft-s" dir="auto">
                         {subject}
@@ -81,7 +81,7 @@ export function DraftsPage({
                       )}
                     </span>
                     <span className="ib-draft-meta">
-                      {unsent.reply_at && <span className="ib-draft-when">Saved {shortTime(unsent.reply_at)}</span>}
+                      {unsent.reply_at && <span className="ib-draft-when">保存于 {shortTime(unsent.reply_at)}</span>}
                       <DraftLabel unsent={unsent} />
                     </span>
                   </button>
@@ -89,35 +89,35 @@ export function DraftsPage({
               );
             })}
           </div>
-          {list.length > 0 && <h2 className="ib-drafts-h">Messages</h2>}
+          {list.length > 0 && <h2 className="ib-drafts-h">消息</h2>}
         </>
       )}
-      {drafts && list.length === 0 && replies.length === 0 && <p className="ib-drafts-empty">No drafts. Closing a message you did not send asks whether to keep it here.</p>}
+      {drafts && list.length === 0 && replies.length === 0 && <p className="ib-drafts-empty">没有草稿。关闭未发送的消息时，会询问是否保留在此处。</p>}
       <div className="ib-drafts-list" role="list">
         {list.map((draft) => {
-          const subject = subjectPreview(draft.body) ?? '(no words yet)';
+          const subject = subjectPreview(draft.body) ?? '（暂无内容）';
           const snippet = draftSnippet(draft.body);
           const files = draft.files.length;
           return (
             <div className="ib-draft" role="listitem" key={draft.id} data-draft-id={draft.id} data-draft-status={draft.status}>
-              <button type="button" className="ib-draft-open" onClick={(event) => onOpen(draft, event.currentTarget)} aria-label={`Open draft: ${subject}. ${draftChip(draft)}. Saved ${whenTime(draft.updated_at)}`}>
+              <button type="button" className="ib-draft-open" onClick={(event) => onOpen(draft, event.currentTarget)} aria-label={`打开草稿：${subject}。${draftChip(draft)}。保存于 ${whenTime(draft.updated_at)}`}>
                 <span className="ib-draft-mk">{draft.to ? <HostMark host={draft.to.host} big agent={draft.to.session} /> : <Icon name="doc" size={17} />}</span>
                 <span className="ib-draft-t">
                   <span className="ib-draft-to" dir="auto">
                     {draft.to ? (
                       <>
-                        To <b>{hostLabel(draft.to.host)}</b>
+                        收件人 <b>{hostLabel(draft.to.host)}</b>
                         {draft.to.project_name ? (
                           <>
                             {' '}
-                            in <bdi>{draft.to.project_name}</bdi>
+                            · <bdi>{draft.to.project_name}</bdi>
                           </>
                         ) : null}
-                        {draft.to.started_at ? ` · started ${whenTime(draft.to.started_at)}` : ''}
+                        {draft.to.started_at ? ` · 开始于 ${whenTime(draft.to.started_at)}` : ''}
                       </>
                     ) : (
                       <>
-                        No agent{draft.project ? (
+                        未选择智能体{draft.project ? (
                           <>
                             {' · '}
                             <bdi>{draft.project.name}</bdi>
@@ -137,7 +137,7 @@ export function DraftsPage({
                 </span>
                 <span className="ib-draft-meta">
                   <span className="ib-draft-when">
-                    Saved {shortTime(draft.updated_at)}
+                    保存于 {shortTime(draft.updated_at)}
                     {files > 0 && (
                       <>
                         {' · '}
@@ -150,8 +150,8 @@ export function DraftsPage({
                   </span>
                 </span>
               </button>
-              <Tip content="Delete draft">
-                <button type="button" className="ib-draft-del" aria-label={`Delete draft: ${subject}`} onClick={() => onDelete(draft)} data-draft-delete="">
+              <Tip content="删除草稿">
+                <button type="button" className="ib-draft-del" aria-label={`删除草稿：${subject}`} onClick={() => onDelete(draft)} data-draft-delete="">
                   <Icon name="trash" size={17} />
                 </button>
               </Tip>

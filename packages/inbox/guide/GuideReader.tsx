@@ -545,7 +545,7 @@ function Reader({
       ...(revealFile ? { revealFile } : {}),
       ...(phone || asItIs || hostDiffControls ? {} : { renderSectionTab }),
       // A walkthrough's chapter can be words alone: nothing is missing, so it says that and not "out of date".
-      ...(asItIs && { renderSectionEmpty: () => <p className="ib-rv-nocode" data-section-no-code="">No code in this chapter.</p> }),
+      ...(asItIs && { renderSectionEmpty: () => <p className="ib-rv-nocode" data-section-no-code="">本章没有代码。</p> }),
       renderOverviewDiagram: drawOverviewDiagram,
       renderChapterDiagram: drawChapterDiagram,
       ...(chapterDiagramsFolded ? { chapterDiagramsFolded: true } : {}),

@@ -48,12 +48,12 @@ export const BITBUCKET_TOKEN_SCOPES = [
 ] as const;
 
 const TOKEN_HELP =
-  `Create an Atlassian API token with scopes (https://id.atlassian.com/manage-profile/security/api-tokens → "Create API token with scopes" → Bitbucket) ` +
-  `granting ${BITBUCKET_TOKEN_SCOPES.join(", ")}, then set PLANNOTATOR_BITBUCKET_EMAIL (your Atlassian account email) and PLANNOTATOR_BITBUCKET_TOKEN, ` +
-  `or put bitbucketEmail and a bitbucketTokenCommand that prints the token (e.g. a Keychain lookup) in ~/.plannotator/config.json.`;
+  `请在 Atlassian 创建带作用域的 API 令牌（https://id.atlassian.com/manage-profile/security/api-tokens → "Create API token with scopes" → Bitbucket）` +
+  `授予 ${BITBUCKET_TOKEN_SCOPES.join("、")}，然后设置 PLANNOTATOR_BITBUCKET_EMAIL（你的 Atlassian 账号邮箱）和 PLANNOTATOR_BITBUCKET_TOKEN，` +
+  `或在 ~/.plannotator/config.json 中填入 bitbucketEmail 和一个能输出令牌的 bitbucketTokenCommand（例如 Keychain 查询）。`;
 
 export const BITBUCKET_MISSING_TOKEN_MESSAGE =
-  `Bitbucket Cloud PR review needs an Atlassian API token. ${TOKEN_HELP}`;
+  `审查 Bitbucket Cloud PR 需要一个 Atlassian API 令牌。${TOKEN_HELP}`;
 
 /** A Bitbucket REST failure. `message` is safe to show: it never carries the token. */
 export class BitbucketApiError extends Error {

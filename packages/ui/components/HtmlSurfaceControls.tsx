@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Header controls for a raw-HTML or live-app annotation surface: the optional
  * back (leave a linked document), the eye (show/hide the floating tools over
@@ -136,16 +137,16 @@ export interface HtmlSurfaceControlLabels {
 export const DEFAULT_HTML_SURFACE_CONTROL_LABELS: Required<
   Omit<HtmlSurfaceControlLabels, 'annotateLabel' | 'interactLabel'>
 > = {
-  annotateTitle: `Annotate mode: click an element or select text to comment; links open (${modKey}-click one to comment on it). Esc to interact`,
-  interactTitle: 'Interact mode: clicks reach the page (text selection still comments). Click to annotate',
-  hideTools: 'Hide tools',
-  showTools: 'Show tools',
-  refresh: 'Refresh',
-  refreshing: 'Refreshing',
-  refreshTitle: 'Refresh document',
-  refreshingTitle: 'Refreshing document',
-  back: 'Back',
-  backTitle: 'Back to the document this one was opened from',
+  annotateTitle: `批注模式：点击某个元素或选中文本即可添加评论；链接会正常打开（按住 ${modKey} 点击链接可对其添加评论）。按 Esc 切换到交互模式`,
+  interactTitle: '交互模式：点击会作用于页面本身（选中文本仍可添加评论）。点击切换到批注模式',
+  hideTools: '隐藏工具',
+  showTools: '显示工具',
+  refresh: '刷新',
+  refreshing: '刷新中',
+  refreshTitle: '刷新文档',
+  refreshingTitle: '正在刷新文档',
+  back: '返回',
+  backTitle: '返回到打开此文档的原文档',
 };
 
 // Stable ids: one HTML surface renders at most one of each control.

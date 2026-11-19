@@ -68,7 +68,7 @@ export const ReviewSidebarTabs: React.FC<{
   };
 
   return (
-    <div ref={listRef} role="tablist" aria-label="Review panel" className="flex h-full min-w-0 flex-1 items-stretch gap-2 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" style={fadeMask(hidden)} onKeyDown={onKeyDown} data-review-sidebar-tablist="" data-hidden-start={hidden.start || undefined} data-hidden-end={hidden.end || undefined}>
+    <div ref={listRef} role="tablist" aria-label="审查面板" className="flex h-full min-w-0 flex-1 items-stretch gap-2 overflow-x-auto overflow-y-hidden [scrollbar-width:none] [&::-webkit-scrollbar]:hidden" style={fadeMask(hidden)} onKeyDown={onKeyDown} data-review-sidebar-tablist="" data-hidden-start={hidden.start || undefined} data-hidden-end={hidden.end || undefined}>
       {tabs.map((tab) => {
         const selected = tab.id === active;
         return (
@@ -92,7 +92,7 @@ export const ReviewSidebarTabs: React.FC<{
             {tab.count !== undefined && tab.count > 0 && (
               <span className="inline-flex h-[18px] min-w-[18px] items-center justify-center rounded-full bg-muted px-1 text-[12px] font-normal leading-none tabular-nums text-muted-foreground" data-tab-count="">{tab.count > 99 ? '99+' : tab.count}</span>
             )}
-            {tab.attention && !selected && <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-label="New activity" />}
+            {tab.attention && !selected && <span className="w-1.5 h-1.5 rounded-full bg-primary" aria-label="新动态" />}
             {selected && <span aria-hidden="true" className="pointer-events-none absolute inset-x-0 bottom-0 h-0.5 rounded-full bg-foreground" />}
           </button>
         );

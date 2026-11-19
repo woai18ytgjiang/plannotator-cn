@@ -12,7 +12,7 @@
 
 import type React from 'react';
 import { useEffect, useRef, useState } from 'react';
-import { formatCount, plural } from '@plannotator/core/inbox-format';
+import { formatCount } from '@plannotator/core/inbox-format';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@plannotator/ui/components/ui/dropdown-menu';
 import { Icon } from '../icons';
 import { isTextCut, Tip } from './Tip';
@@ -79,19 +79,19 @@ export function fileInView(body: HTMLElement): string | null {
 export function jumpPlace({ mode, chapters, files, current }: Pick<ReviewJumpProps, 'mode' | 'chapters' | 'files' | 'current'>): { lead: string; name: string; done: boolean } {
   if (mode === 'walkthrough') {
     const chapter = current === null ? undefined : chapters[current];
-    return chapter ? { lead: `${current! + 1} of ${chapters.length}`, name: chapter.title, done: chapter.reviewed } : { lead: '', name: 'Overview', done: false };
+    return chapter ? { lead: `${current! + 1}/${chapters.length}`, name: chapter.title, done: chapter.reviewed } : { lead: '', name: '概览', done: false };
   }
   const index = current ?? 0;
   const file = files[index];
-  if (!file) return { lead: '', name: plural(files.length, 'file'), done: false };
-  return { lead: `${index + 1} of ${files.length}`, name: file.path.slice(file.path.lastIndexOf('/') + 1), done: file.viewed };
+  if (!file) return { lead: '', name: `${files.length} 个文件`, done: false };
+  return { lead: `${index + 1}/${files.length}`, name: file.path.slice(file.path.lastIndexOf('/') + 1), done: file.viewed };
 }
 
 /** The menu's foot: how far the review has come, in the rail's words. */
 export function jumpProgress({ mode, chapters, files }: Pick<ReviewJumpProps, 'mode' | 'chapters' | 'files'>): string {
   return mode === 'walkthrough'
-    ? `${chapters.filter((chapter) => chapter.reviewed).length} of ${plural(chapters.length, 'chapter')} reviewed`
-    : `${files.filter((file) => file.viewed).length} of ${plural(files.length, 'file')} viewed`;
+    ? `已查看 ${chapters.filter((chapter) => chapter.reviewed).length}/${chapters.length} 章`
+    : `已查看 ${files.filter((file) => file.viewed).length}/${files.length} 个文件`;
 }
 
 export function ReviewJump({ mode, chapters, files, current, onChapter, onFile, head, counts = true, viewedTicks = true, progress = true }: ReviewJumpProps) {
@@ -119,7 +119,7 @@ export function ReviewJump({ mode, chapters, files, current, onChapter, onFile, 
             <button
               type="button"
               className="ib-rj-btn"
-              aria-label={`${walk ? 'Chapters' : 'Files'}: ${lead ? `${lead}, ` : ''}${name}${done ? (walk ? ', reviewed' : ', viewed') : ''}`}
+              aria-label={`${walk ? '章节' : '文件'}：${lead ? `${lead}，` : ''}${name}${done ? '，已查看' : ''}`}
               data-review-jump={mode}
             />
           }
@@ -130,14 +130,14 @@ export function ReviewJump({ mode, chapters, files, current, onChapter, onFile, 
           <Icon name="chevD" size={13} className="ib-rj-chev" />
         </DropdownMenuTrigger>
       </Tip>
-      <DropdownMenuContent align="start" sideOffset={6} className="ib-rj-menu" aria-label={walk ? 'Chapters' : 'Files'} data-review-jump-menu={mode}>
+      <DropdownMenuContent align="start" sideOffset={6} className="ib-rj-menu" aria-label={walk ? '章节' : '文件'} data-review-jump-menu={mode}>
         {head}
         <div ref={listRef} className="ib-rj-list" {...(walk ? { 'data-review-chapters': '' } : { 'data-review-files': '' })}>
           {walk ? (
             <>
               <DropdownMenuItem className="ib-rj-row" data-on={current === null || !chapters[current] ? '' : undefined} onClick={() => onChapter(null)} data-review-jump-row="overview">
                 <span className="ib-rj-mark" aria-hidden="true" />
-                <span className="ib-rj-t">Overview</span>
+                <span className="ib-rj-t">概览</span>
               </DropdownMenuItem>
               {chapters.map((chapter, index) => (
                 <DropdownMenuItem
@@ -145,7 +145,7 @@ export function ReviewJump({ mode, chapters, files, current, onChapter, onFile, 
                   className="ib-rj-row"
                   data-on={current === index ? '' : undefined}
                   onClick={() => onChapter(index)}
-                  aria-label={`Chapter ${index + 1}: ${chapter.title}${chapter.reviewed ? ', reviewed' : ''}`}
+                  aria-label={`第 ${index + 1} 章：${chapter.title}${chapter.reviewed ? '，已查看' : ''}`}
                   data-review-jump-row={index}
                 >
                   <span className="ib-rj-mark" data-done={chapter.reviewed ? '' : undefined} aria-hidden="true">
@@ -164,7 +164,7 @@ export function ReviewJump({ mode, chapters, files, current, onChapter, onFile, 
                   className="ib-rj-row"
                   data-on={(current ?? 0) === index ? '' : undefined}
                   onClick={() => onFile(file.path)}
-                  aria-label={`${file.path}${file.viewed ? ', viewed' : ''}`}
+                  aria-label={`${file.path}${file.viewed ? '，已查看' : ''}`}
                   data-review-jump-row={file.path}
                 >
                   <span className="ib-rj-mark" data-done={file.viewed ? '' : undefined} aria-hidden="true">

@@ -109,7 +109,7 @@ function TokenHoverCardContent({
         <div className="mx-3.5 mt-2 overflow-x-auto whitespace-pre rounded-md border border-border bg-muted/40 px-2.5 py-2 font-mono text-xs text-foreground">
           {definition.signature}
           {definition.signatureApproximate && (
-            <span className="text-muted-foreground"> {'// matched line'}</span>
+            <span className="text-muted-foreground"> {'// 匹配的行'}</span>
           )}
         </div>
       )}
@@ -124,7 +124,7 @@ function TokenHoverCardContent({
         <div className="mt-2.5 px-3.5 text-xs text-muted-foreground">
           <div className="flex flex-wrap items-center gap-1.5">
             <span aria-hidden="true">{'→'}</span>
-            <span>Defined at</span>
+            <span>定义于</span>
             <button
               type="button"
               {...inertProps}
@@ -137,7 +137,7 @@ function TokenHoverCardContent({
           {alternateDefinition && (
             <div className="mt-0.5 flex flex-wrap items-center gap-1.5">
               <span className="invisible" aria-hidden="true">{'→'}</span>
-              <span>or possibly</span>
+              <span>或可能是</span>
               <button
                 type="button"
                 {...inertProps}
@@ -174,7 +174,7 @@ function TokenHoverCardContent({
           ))}
           {remaining > 0 && (
             <div className="py-0.5 text-xs text-muted-foreground">
-              {`… ${remaining} more in the References panel`}
+              {`… 还有 ${remaining} 条见「引用」面板`}
             </div>
           )}
         </div>

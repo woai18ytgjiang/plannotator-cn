@@ -205,7 +205,7 @@ export function ProjectRow(props: ProjectRowProps) {
         </Tip>
       )}
       <Menu.Root open={menuOpen} onOpenChange={setMenuOpen} modal={false}>
-        <Menu.Trigger ref={more} className="ib-pmore" aria-label={`${project.name} options`} data-pmore={project.id}>
+        <Menu.Trigger ref={more} className="ib-pmore" aria-label={`${project.name} 选项`} data-pmore={project.id}>
           <Icon name="dots" size={16} />
         </Menu.Trigger>
         <Menu.Portal container={portal ?? undefined}>
@@ -272,27 +272,27 @@ function ProjectMenuItems(props: {
   return (
     <>
       {title}
-      <Menu.Item className="ib-pmi" label="Mark all as read" disabled={!readable} onClick={() => onAction('read')} data-project-action="read">
+      <Menu.Item className="ib-pmi" label="全部标记为已读" disabled={!readable} onClick={() => onAction('read')} data-project-action="read">
         <Icon name="checkCircle" size={15} />
-        Mark all as read
+        全部标记为已读
       </Menu.Item>
-      <Menu.Item className="ib-pmi" label="Archive all" onClick={() => onAction('archive')} data-project-action="archive">
+      <Menu.Item className="ib-pmi" label="全部归档" onClick={() => onAction('archive')} data-project-action="archive">
         <Icon name="archive" size={15} />
-        Archive all
+        全部归档
       </Menu.Item>
       {tags.item}
       {/* Only while project marks show (Settings → Rows), so it is not there by default. */}
       {props.picture && (
         <>
           <Menu.Separator className="ib-pm-sep" />
-          <Menu.Item className="ib-pmi" label="Set picture…" onClick={() => onAction('picture')} data-project-action="picture">
+          <Menu.Item className="ib-pmi" label="设置图片…" onClick={() => onAction('picture')} data-project-action="picture">
             <Icon name="photo" size={15} />
-            Set picture…
+            设置图片…
           </Menu.Item>
           {props.picture === 'set' && (
-            <Menu.Item className="ib-pmi" label="Remove picture" onClick={() => onAction('unpicture')} data-project-action="unpicture">
+            <Menu.Item className="ib-pmi" label="移除图片" onClick={() => onAction('unpicture')} data-project-action="unpicture">
               <Icon name="replay" size={15} />
-              Remove picture
+              移除图片
             </Menu.Item>
           )}
         </>
@@ -300,14 +300,14 @@ function ProjectMenuItems(props: {
       {props.rename && (
         <>
           <Menu.Separator className="ib-pm-sep" />
-          <Menu.Item className="ib-pmi" label="Rename…" onClick={() => onAction('rename')} data-project-action="rename">
+          <Menu.Item className="ib-pmi" label="重命名…" onClick={() => onAction('rename')} data-project-action="rename">
             <Icon name="pen" size={15} />
-            Rename…
+            重命名…
           </Menu.Item>
           {props.named && (
-            <Menu.Item className="ib-pmi" label="Reset name" onClick={() => onAction('reset')} data-project-action="reset">
+            <Menu.Item className="ib-pmi" label="重置名称" onClick={() => onAction('reset')} data-project-action="reset">
               <Icon name="replay" size={15} />
-              Reset name
+              重置名称
             </Menu.Item>
           )}
         </>
@@ -371,8 +371,8 @@ export function ProjectNameField(props: {
     matches.length === 0
       ? null
       : matches.length === 1
-        ? `${matches[0]!.name} already exists. Enter combines them, Escape cancels.`
-        : `${typed} matches ${formatCount(matches.length)} projects. Pick one to combine with, or press Escape to cancel.`;
+        ? `${matches[0]!.name} 已存在。按 Enter 合并，按 Escape 取消。`
+        : `${typed} 匹配 ${formatCount(matches.length)} 个项目。请选择一个合并，或按 Escape 取消。`;
   useEffect(() => {
     if (warning) props.announce?.(warning);
   }, [warning]);
@@ -394,8 +394,8 @@ export function ProjectNameField(props: {
     }
   };
   const save = async () => {
-    if (typed === '' && !props.emptyResets) return refuse('A name cannot be empty.');
-    if ([...typed].length > INBOX_PROJECT_NAME_MAX) return refuse(`A name can be at most ${INBOX_PROJECT_NAME_MAX} characters.`);
+    if (typed === '' && !props.emptyResets) return refuse('名称不能为空。');
+    if ([...typed].length > INBOX_PROJECT_NAME_MAX) return refuse(`名称最多 ${INBOX_PROJECT_NAME_MAX} 个字符。`);
     if (typed === props.name) return close(true);
     if (matches.length === 1) return combine(matches[0]!);
     if (warning) return props.announce?.(warning);
@@ -431,7 +431,7 @@ export function ProjectNameField(props: {
         ref={input}
         type="text"
         className="ib-proj-rename"
-        aria-label={props.label ?? 'Project name'}
+        aria-label={props.label ?? '项目名称'}
         aria-describedby={hint}
         aria-invalid={refused ? true : undefined}
         placeholder={props.folder}
@@ -459,20 +459,20 @@ export function ProjectNameField(props: {
           <span>
             {matches.length === 1 ? (
               <>
-                <b dir="auto">{matches[0]!.name}</b> already exists. Combine them?
+                <b dir="auto">{matches[0]!.name}</b> 已存在。要合并吗？
               </>
             ) : (
               <>
-                <b dir="auto">{typed}</b> matches {formatCount(matches.length)} projects. Combine with one?
+                <b dir="auto">{typed}</b> 匹配 {formatCount(matches.length)} 个项目。要与其中一个合并吗？
               </>
             )}
           </span>
           <button type="button" className="ib-btn ib-sm" disabled={busy} onMouseDown={stayFocused} onClick={() => close(true)} data-project-combine-cancel="">
-            Cancel
+            取消
           </button>
           {matches.length === 1 ? (
             <button type="button" className="ib-btn ib-pri ib-sm" disabled={busy} onMouseDown={stayFocused} onClick={() => void combine(matches[0]!)} data-project-combine={matches[0]!.id}>
-              Combine
+              合并
             </button>
           ) : (
             matches.map((match) => (
@@ -487,7 +487,7 @@ export function ProjectNameField(props: {
       )}
       <span id={hint} hidden>
         {refused ? `${refused} ` : ''}
-        {warning ?? 'Enter to save, Escape to cancel.'}
+        {warning ?? '按 Enter 保存，按 Escape 取消。'}
       </span>
     </div>
   );
@@ -505,7 +505,7 @@ export function ProjectTip({ name, root, refresh = false, children }: { name: st
   return (
     <>
       {/* The project the list shows says what a press does, like Inbox; its folder is in the list's header and the description. */}
-      <Tip side="right" content={refresh ? 'Refresh' : <ProjectTipText name={name} root={root} />}>
+        <Tip side="right" content={refresh ? '刷新' : <ProjectTipText name={name} root={root} />}>
         {cloneElement(children as ReactElement<{ 'aria-describedby'?: string }>, { 'aria-describedby': describedBy })}
       </Tip>
       {/* `hidden`: not read a second time in browse mode; aria-describedby still reads it. */}

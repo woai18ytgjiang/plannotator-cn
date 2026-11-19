@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import type { AlertKind, Block } from '../../types';
 import { sourceLineAttrs } from '../../utils/sourceLineAttrs';
@@ -21,11 +22,11 @@ interface AlertBlockProps {
 }
 
 const TITLE: Record<AlertKind, string> = {
-  note: 'Note',
-  tip: 'Tip',
-  warning: 'Warning',
-  caution: 'Caution',
-  important: 'Important',
+  note: '备注',
+  tip: '提示',
+  warning: '警告',
+  caution: '注意',
+  important: '重要',
 };
 
 /**

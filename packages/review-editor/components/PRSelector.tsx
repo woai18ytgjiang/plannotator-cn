@@ -14,8 +14,8 @@ const stateColors: Record<PRItem['state'], string> = {
 
 const stateLabels: Record<PRItem['state'], string> = {
   open: 'Open',
-  merged: 'Merged',
-  closed: 'Closed',
+  merged: '已合并',
+  closed: '已关闭',
 };
 
 interface PRSelectorProps {
@@ -58,7 +58,7 @@ export function PRSelector({ mrNumberLabel, numberPrefix, prTitle, currentNumber
       setLoading(true);
       fetch('/api/pr-list')
         .then(res => {
-          if (!res.ok) throw new Error('Failed to fetch');
+          if (!res.ok) throw new Error('获取失败');
           return res.json();
         })
         .then((data: { prs?: PRItem[] }) => {
@@ -87,8 +87,8 @@ export function PRSelector({ mrNumberLabel, numberPrefix, prTitle, currentNumber
           item.author.toLowerCase().includes(lower)
         );
       }}
-      placeholder="Search pull requests..."
-      emptyMessage={loading ? 'Loading...' : 'No pull requests found'}
+      placeholder="搜索拉取请求…"
+      emptyMessage={loading ? '加载中…' : '未找到拉取请求'}
       align="start"
       width="w-[min(20rem,calc(100vw-1rem))]"
       onOpenChange={handleOpen}
@@ -101,12 +101,12 @@ export function PRSelector({ mrNumberLabel, numberPrefix, prTitle, currentNumber
             data-pn-touch-target
             type="button"
             onClick={toggleHideMerged}
-            title={hideMerged ? 'Show merged PRs' : 'Hide merged PRs'}
+            title={hideMerged ? '显示已合并的 PR' : '隐藏已合并的 PR'}
             className={`cc-blocking-toggle ${hideMerged ? 'is-on' : ''}`}
             style={{ borderLeft: 'none', marginLeft: 0 }}
           >
             <span className="cc-toggle-track"><span className="cc-toggle-thumb" /></span>
-            <span>Hide merged</span>
+            <span>隐藏已合并</span>
           </button>
         </div>
       ) : undefined}

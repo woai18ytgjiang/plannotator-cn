@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The hover card for a Linear issue (core `linear-ref-card.ts`), drawn through the ref card providers seam
  * (utils/refCardProviders.ts) in the forge card's frame and with its parts: team, identifier, Linear's own state name
@@ -14,12 +15,12 @@ const BODY_MAX = 216;
 const BODY_MAX_PINNED = 340;
 
 const FAILURE_TEXT: Record<ForgeRefCardError, string> = {
-  unsupported: "Linear details don't load in this window.",
+  unsupported: "此窗口无法加载 Linear 详情。",
   cli_missing: 'Add a Linear API key to see details here.',
   signed_out: 'Add a Linear API key to see details here.',
-  not_found: "Your Linear key can't see this issue, or it doesn't exist.",
+  not_found: "你的 Linear 密钥看不到此议题，或该议题不存在。",
   rate_limited: 'Linear asked for a short break. Details come back in a minute.',
-  unavailable: "Details couldn't load right now.",
+  unavailable: "暂时无法加载详情。",
 };
 
 /** Open in Linear: the issue's own link only when it is an https link on linear.app, else the link the message had. */
@@ -164,7 +165,7 @@ export function LinearRefCardView({ target, href, result, pinned, onClose, sheet
       <div data-ref-card-linear="">
         <div className="px-3.5 pb-3 pt-3">
           <div className="text-[11.5px] text-muted-foreground">{target.owner}</div>
-          <div className="mt-1 text-[13.5px] font-semibold text-foreground">Issue {identifier}</div>
+          <div className="mt-1 text-[13.5px] font-semibold text-foreground">议题 {identifier}</div>
           <p className="mt-1.5 text-[12px] leading-relaxed text-muted-foreground" data-ref-card-error={error}>
             {noKeyText && (error === 'signed_out' || error === 'cli_missing') ? noKeyText : FAILURE_TEXT[error]}
           </p>
@@ -185,7 +186,7 @@ export function LinearRefCardView({ target, href, result, pinned, onClose, sheet
           <div className="flex items-center gap-1.5 text-[11.5px] text-muted-foreground">
             <span className="truncate">{ln.team || d.repo}</span>
             <span aria-hidden="true">·</span>
-            <span className="flex-none">opened {refCardTimeAgo(d.createdAt)}</span>
+            <span className="flex-none">创建于 {refCardTimeAgo(d.createdAt)}</span>
           </div>
           <div className="mt-1.5 flex items-start gap-2">
             <LinearStateIcon type={ln.stateType} color={ln.stateColor} className="mt-[3px]" />
@@ -231,7 +232,7 @@ export function LinearRefCardView({ target, href, result, pinned, onClose, sheet
                 </span>
               ))}
               {d.assignees.length > 0 ? (
-                <span className="ml-auto inline-flex items-center gap-1" role="img" aria-label={`Assigned to ${d.assignees.map((a) => a.login).join(', ')}`}>
+                <span className="ml-auto inline-flex items-center gap-1" role="img" aria-label={`负责人：${d.assignees.map((a) => a.login).join('、')}`}>
                   {d.assignees.map((a) => (
                     <RefCardAvatar key={a.login} person={a} size={16} />
                   ))}
@@ -245,13 +246,13 @@ export function LinearRefCardView({ target, href, result, pinned, onClose, sheet
           className={`mt-2.5 border-t border-border px-3.5 py-2.5 ${together ? '' : 'min-h-0 flex-1 overflow-y-auto overscroll-contain'}`}
           style={sheet || together ? undefined : { maxHeight: pinned ? BODY_MAX_PINNED : BODY_MAX }}
           data-ref-card-body=""
-          {...(together ? {} : { ...scroller, 'aria-label': 'Issue description' })}
+          {...(together ? {} : { ...scroller, 'aria-label': '议题描述' })}
         >
-          {d.body.trim() ? <RefCardMarkdown markdown={htmlAsText(d.body)} /> : <p className="text-[12px] italic text-muted-foreground">No description.</p>}
-          {d.bodyCut ? <p className="mt-1 text-[11px] text-muted-foreground">The rest is in Linear.</p> : null}
+          {d.body.trim() ? <RefCardMarkdown markdown={htmlAsText(d.body)} /> : <p className="text-[12px] italic text-muted-foreground">无描述。</p>}
+          {d.bodyCut ? <p className="mt-1 text-[11px] text-muted-foreground">其余内容在 Linear 中。</p> : null}
           {d.linked.length > 0 ? (
             <div className="mt-2.5 space-y-1">
-              <div className="text-[11.5px] font-medium text-muted-foreground">Pull requests</div>
+              <div className="text-[11.5px] font-medium text-muted-foreground">PR 列表</div>
               {d.linked.map((l) => (
                 <div key={l.number} className="flex items-center gap-1.5 text-[12px]">
                   <RefCardStateIcon kind="pull" tone={l.state === 'open' ? 'open' : l.state === 'merged' ? 'merged' : 'closed'} />
@@ -265,9 +266,9 @@ export function LinearRefCardView({ target, href, result, pinned, onClose, sheet
             <div className="mt-2.5 border-t border-border pt-2" data-ref-card-comment="">
               <div className="mb-1 flex items-center gap-1.5 text-[11px] text-muted-foreground">
                 {d.lastComment.author ? <RefCardAvatar person={d.lastComment.author} size={14} /> : null}
-                <span className="font-medium text-foreground">{d.lastComment.author?.login ?? 'someone'}</span>
-                <span>commented {refCardTimeAgo(d.lastComment.at)}</span>
-                <span className="ml-auto">latest</span>
+                <span className="font-medium text-foreground">{d.lastComment.author?.login ?? '某人'}</span>
+                <span>评论于 {refCardTimeAgo(d.lastComment.at)}</span>
+                <span className="ml-auto">最新</span>
               </div>
               <RefCardMarkdown markdown={htmlAsText(d.lastComment.body)} />
             </div>
@@ -276,8 +277,8 @@ export function LinearRefCardView({ target, href, result, pinned, onClose, sheet
       </div>
       {footer(
         <span className="inline-flex items-center gap-1">
-          <span aria-hidden="true">💬</span> {d.comments} comment{d.comments === 1 ? '' : 's'}
-          {pinned && !sheet ? <span className="ml-1.5 text-muted-foreground/80">· pinned</span> : null}
+          <span aria-hidden="true">💬</span> {d.comments} 条评论
+          {pinned && !sheet ? <span className="ml-1.5 text-muted-foreground/80">· 已置顶</span> : null}
         </span>,
       )}
     </div>

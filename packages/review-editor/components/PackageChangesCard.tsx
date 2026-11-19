@@ -68,12 +68,12 @@ export function isFreshRelease(iso: string | null | undefined, now = Date.now())
 }
 
 const KIND: Record<PackageChange['kind'], { glyph: string; label: string; tone: string }> = {
-  added: { glyph: '+', label: 'Added', tone: 'text-success' },
-  removed: { glyph: '−', label: 'Removed', tone: 'text-destructive' },
-  upgraded: { glyph: '↑', label: 'Upgraded', tone: 'text-foreground/70' },
-  downgraded: { glyph: '↓', label: 'Downgraded', tone: 'text-foreground/70' },
-  changed: { glyph: '~', label: 'Changed', tone: 'text-muted-foreground' },
-  moved: { glyph: '⇄', label: 'Moved', tone: 'text-muted-foreground' },
+  added: { glyph: '+', label: '新增', tone: 'text-success' },
+  removed: { glyph: '−', label: '移除', tone: 'text-destructive' },
+  upgraded: { glyph: '↑', label: '升级', tone: 'text-foreground/70' },
+  downgraded: { glyph: '↓', label: '降级', tone: 'text-foreground/70' },
+  changed: { glyph: '~', label: '更改', tone: 'text-muted-foreground' },
+  moved: { glyph: '⇄', label: '移动', tone: 'text-muted-foreground' },
 };
 
 const PackageIcon: React.FC<{ className?: string }> = ({ className }) => (
@@ -141,13 +141,13 @@ const NameTags: React.FC<{ change: PackageChange; meta?: PackageMetadata; withhe
     ) : null}
     {change.workspace && <span className="flex-none truncate font-mono text-xs text-muted-foreground">{change.workspace}</span>}
     {withheld && (
-      <Tooltip content="Not sent to npm">
-        <span className="flex-none text-muted-foreground"><LockIcon /><span className="sr-only">Not sent to npm</span></span>
+      <Tooltip content="未发布到 npm">
+        <span className="flex-none text-muted-foreground"><LockIcon /><span className="sr-only">未发布到 npm</span></span>
       </Tooltip>
     )}
     {meta?.deprecated && (
       <Tooltip content={meta.deprecated} wide>
-        <span><Pill tone="warning">deprecated</Pill></span>
+        <span><Pill tone="warning">已弃用</Pill></span>
       </Tooltip>
     )}
   </>
@@ -161,7 +161,7 @@ const VersionText: React.FC<{ version: string | null; spec: string | null; muted
   const specHint = spec && version && spec !== version ? spec : null;
   if (!specHint && !major) return <span className={cls}>{text}</span>;
   return (
-    <Tooltip content={<span>{major && 'Breaking under semver'}{major && specHint && ' · '}{specHint && <span className="font-mono">{specHint}</span>}</span>}>
+    <Tooltip content={<span>{major && '按语义化版本属于重大变更'}{major && specHint && ' · '}{specHint && <span className="font-mono">{specHint}</span>}</span>}>
       <span className={cls}>
         {text}
         {major && <span className="sr-only"> (major)</span>}
@@ -280,7 +280,7 @@ export const CardBody: React.FC<CardBodyProps> = ({ card, folded, lookup, lookup
     return (
       <div data-package-changes="error" className="flex items-center gap-2 border-b border-border bg-muted/20 px-4 py-1.5 text-xs text-muted-foreground">
         <PackageIcon className="h-3.5 w-3.5 flex-none" />
-        <Tooltip content={`${card.error.side === 'old' ? 'Previous' : 'New'} side: ${card.error.reason}`}>
+        <Tooltip content={`${card.error.side === 'old' ? '上一版本' : '新版本'}侧：${card.error.reason}`}>
           <span>Unreadable {card.path.split('/').pop()}</span>
         </Tooltip>
       </div>
@@ -307,8 +307,8 @@ export const CardBody: React.FC<CardBodyProps> = ({ card, folded, lookup, lookup
     </Tooltip>
   ) : failure ? (
     <span className="ml-auto flex flex-none items-center gap-1 text-xs text-muted-foreground" role="status" data-package-lookup-state="failed">
-      <span>{failure === 'offline' || failure === 'timed out' ? 'npm unreachable' : failure === 'rate limited' ? 'npm rate limited' : 'npm lookup failed'}</span>
-      <button type="button" data-pn-touch-target={touch} onClick={onRetry} className={quietButton}>Retry</button>
+      <span>{failure === 'offline' || failure === 'timed out' ? '无法访问 npm' : failure === 'rate limited' ? 'npm 触发速率限制' : 'npm 查询失败'}</span>
+      <button type="button" data-pn-touch-target={touch} onClick={onRetry} className={quietButton}>重试</button>
     </span>
   ) : null;
 
@@ -391,21 +391,21 @@ export const CardBody: React.FC<CardBodyProps> = ({ card, folded, lookup, lookup
         >
           <Chevron open={!folded} />
           <PackageIcon className="h-3.5 w-3.5 flex-none text-muted-foreground" />
-          <span className="whitespace-nowrap font-medium text-foreground">Packages</span>
+          <span className="whitespace-nowrap font-medium text-foreground">包</span>
           {total > 0 && <span className="rounded bg-muted px-1.5 text-xs tabular-nums text-muted-foreground">{total}</span>}
         </button>
         {!folded && narrow && total > 1 && (
           <label className="flex flex-none items-center text-muted-foreground">
-            <span className="sr-only">Sort packages by</span>
+            <span className="sr-only">排序包，依据</span>
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
               className="rounded border border-border bg-background px-1 py-0.5 text-xs text-foreground"
             >
-              <option value="change">Change</option>
-              <option value="name">Name</option>
-              {showMeta && <option value="released">Released</option>}
-              {showMeta && SHOW_DOWNLOADS && <option value="downloads">Downloads</option>}
+              <option value="change">更改</option>
+              <option value="name">名称</option>
+              {showMeta && <option value="released">发布时间</option>}
+              {showMeta && SHOW_DOWNLOADS && <option value="downloads">下载量</option>}
             </select>
           </label>
         )}
@@ -451,12 +451,12 @@ export const CardBody: React.FC<CardBodyProps> = ({ card, folded, lookup, lookup
               <caption className="sr-only">Package changes in {card.path}</caption>
               <thead className="border-b border-border/70 text-xs text-muted-foreground">
                 <tr>
-                  {sortHeader('name', 'Package')}
+                  {sortHeader('name', '包')}
                   <th scope="col" className="px-2 py-1 font-medium">Previous</th>
-                  <th scope="col" className="px-2 py-1 font-medium">Version</th>
-                  {showMeta && <th scope="col" className="px-2 py-1 font-medium">License</th>}
-                  {showMeta && sortHeader('released', 'Released')}
-                  {showMeta && SHOW_DOWNLOADS && sortHeader('downloads', 'Downloads', 'right', 'Last 7 days')}
+                  <th scope="col" className="px-2 py-1 font-medium">版本</th>
+                  {showMeta && <th scope="col" className="px-2 py-1 font-medium">许可证</th>}
+                  {showMeta && sortHeader('released', '发布时间')}
+                  {showMeta && SHOW_DOWNLOADS && sortHeader('downloads', '下载量', 'right', '最近 7 天')}
                 </tr>
               </thead>
               <tbody className="divide-y divide-border/50">
@@ -487,7 +487,7 @@ export const CardBody: React.FC<CardBodyProps> = ({ card, folded, lookup, lookup
           <div className="mt-1 flex flex-wrap items-center gap-2">
             {sorted.length > ROW_CAP && (
               <button type="button" data-pn-touch-target={touch} onClick={() => setShowAll((v) => !v)} className={quietButton}>
-                {showAll ? 'Fewer' : `${sorted.length - ROW_CAP} more`}
+                {showAll ? '收起' : `${sorted.length - ROW_CAP} more`}
               </button>
             )}
             {indirectToggle}

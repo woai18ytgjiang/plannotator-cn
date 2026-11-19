@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Plannotator Inbox: the browser-safe record and wire shapes.
  *
@@ -452,12 +453,12 @@ export const INBOX_HOST_NAMES: Readonly<Record<string, string>> = {
   muse: "Muse Code",
   openclaw: "OpenClaw",
   hermes: "Hermes Agent",
-  cloud: "Cloud agent",
-  "cloud-claude": "Claude Code routine",
+  cloud: "云端智能体",
+  "cloud-claude": "Claude Code 例程",
   "cloud-grok": "Grok Bot",
   "cloud-muse": "Muse by Meta",
-  "cloud-hermes": "Hermes Agent server",
-  "cloud-openclaw": "OpenClaw server",
+  "cloud-hermes": "Hermes Agent 服务器",
+  "cloud-openclaw": "OpenClaw 服务器",
 };
 
 /**
@@ -487,10 +488,10 @@ export const INBOX_MCP_WAKE_MIN_VERSIONS: Readonly<Record<string, string>> = { c
 
 /** How the person sees an agent: the name it gave, else its host's name, else "An agent". */
 export function inboxAgentName(author: { kind: string; host?: string | null; name?: string | null } | null | undefined): string {
-  if (!author || author.kind !== "agent") return "An agent";
+  if (!author || author.kind !== "agent") return "某个智能体";
   if (author.name) return author.name;
   if (author.host) return INBOX_HOST_NAMES[author.host] ?? author.host;
-  return "An agent";
+  return "某个智能体";
 }
 
 /**
@@ -1802,13 +1803,13 @@ export interface InboxThreadSummary {
 export type InboxSectionId = "stopped" | "holding" | "waiting" | "new" | "sent" | "quiet";
 
 export const INBOX_SECTIONS: readonly { readonly id: InboxSectionId; readonly label: string }[] = [
-  { id: "stopped", label: "Stopped on you" },
-  { id: "holding", label: "Holding up work" },
-  { id: "waiting", label: "Waiting on you" },
-  { id: "new", label: "New since you looked" },
+  { id: "stopped", label: "已停止" },
+  { id: "holding", label: "阻碍工作" },
+  { id: "waiting", label: "待你处理" },
+  { id: "new", label: "新消息" },
   // Sent waits on the agent, not on the person: below what is new to them.
-  { id: "sent", label: "Sent" },
-  { id: "quiet", label: "Quiet" },
+  { id: "sent", label: "已发送" },
+  { id: "quiet", label: "静默" },
 ];
 
 /**
@@ -2094,7 +2095,7 @@ export interface InboxPriorityBefore {
   off_at: string | null;
 }
 
-export const INBOX_PRIORITY_GROUP = { id: "priority", label: "Priority" } as const;
+export const INBOX_PRIORITY_GROUP = { id: "priority", label: "优先级" } as const;
 
 /**
  * The row is drawn in the Priority group: it carries `priority`, and is neither snoozed (the Snoozed band wins) nor
@@ -2684,18 +2685,18 @@ export const INBOX_AGENT_LABELS: Readonly<Record<InboxAgentId, string>> = {
 export function inboxAgentList(ids: readonly InboxAgentId[]): string {
   const names = ids.map((id) => INBOX_AGENT_LABELS[id]);
   if (names.length <= 1) return names.join("");
-  return `${names.slice(0, -1).join(", ")} and ${names[names.length - 1]}`;
+  return `${names.slice(0, -1).join("、")}和${names[names.length - 1]}`;
 }
 
 /** An agent connected in another file than this Inbox's environment names (`InboxConnectReport.elsewhere`): where, and how the person moves it. */
 export function inboxElsewhereText(moved: { agent: InboxAgentId; path: string | null; now: string | null }): string {
   const label = INBOX_AGENT_LABELS[moved.agent];
-  const why = `${moved.agent === "qwen" ? "this Inbox has another QWEN_HOME, so it" : "this Inbox"} looks in ${moved.now ?? "another file"}`;
-  return `${label} is connected in ${moved.path ?? "another file"}, but ${why}. Plannotator left both as they are; Settings → Agents shows it off here, and turning it on moves it.`;
+  const why = `${moved.agent === "qwen" ? "该收件箱使用了另一个 QWEN_HOME，因此它" : "该收件箱"}查看的是 ${moved.now ?? "另一个文件"}`;
+  return `${label} 已在 ${moved.path ?? "另一个文件"}中连接，但${why}。Plannotator 保持了这两处不变；「设置 → 智能体」中这里会显示为未启用，启用它会将连接移过来。`;
 }
 
 export function inboxGrantText(grant: { agent: InboxAgentId; setting: string; undo: string }): string {
-  return `Plannotator turned on ${INBOX_AGENT_LABELS[grant.agent]}'s ${grant.setting}, so your replies can start a turn in the session that asked. To turn it off: ${grant.undo}`;
+  return `Plannotator 已启用 ${INBOX_AGENT_LABELS[grant.agent]} 的 ${grant.setting}，这样你的回复就能在提问的会话中启动一轮对话。关闭方式：${grant.undo}`;
 }
 
 /** What one `plannotator inbox` run did to the agents on this computer. */

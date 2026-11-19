@@ -111,7 +111,7 @@ export function PullFilterControl({ count, filter, project, projects, names, pho
       <Menu.Portal container={portal ?? undefined}>
         {phone && <Menu.Backdrop className="ib-pm-scrim" />}
         <Menu.Positioner className="ib-pm-pos" side="bottom" align="end" sideOffset={6} data-phone={phone ? '' : undefined}>
-          <Menu.Popup className="ib-pm ib-pc-menu" aria-label="Filter" data-pulls-filter-menu="">
+          <Menu.Popup className="ib-pm ib-pc-menu" aria-label="筛选" data-pulls-filter-menu="">
             <div className="ib-pm-title" aria-hidden="true">
               Filter
             </div>
@@ -131,7 +131,7 @@ export function PullFilterControl({ count, filter, project, projects, names, pho
                 <Menu.RadioGroup value={project ?? ''} onValueChange={(next: string) => next !== (project ?? '') && onChange({ filter, project: next || null })}>
                   <Menu.RadioItem value="" closeOnClick className="ib-pmi" label="All projects" data-pulls-filter-project-option="">
                     <Glyph name="grid" />
-                    <span className="ib-pmi-l">All projects</span>
+                    <span className="ib-pmi-l">全部项目</span>
                     <span className="ib-pmi-n">{formatCount(count(null, filter))}</span>
                     {tick(project === null)}
                   </Menu.RadioItem>
@@ -156,7 +156,7 @@ export function PullFilterControl({ count, filter, project, projects, names, pho
                 <Menu.Separator className="ib-pm-sep" />
                 <Menu.Item className="ib-pmi" data-pulls-filter-clear-item="" onClick={clear}>
                   <Icon name="x" />
-                  <span className="ib-pmi-l">Clear filters</span>
+                  <span className="ib-pmi-l">清除筛选</span>
                 </Menu.Item>
               </>
             )}
@@ -193,7 +193,7 @@ export function PullScopeLine({ filter, projectName, triggerRef, onClear }: { fi
       <button
         type="button"
         className="ib-pscope-x"
-        aria-label="Clear filters"
+        aria-label="清除筛选"
         onClick={() => {
           onClear();
           requestAnimationFrame(() => triggerRef.current?.focus());

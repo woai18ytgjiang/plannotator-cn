@@ -97,10 +97,10 @@ export function findUnknownSubcommand(args: readonly string[]): string | null {
 export function formatUnknownSubcommandError(subcommand: string): string {
   const suggestion = findClosestSubcommand(subcommand);
   return [
-    `Unknown command: ${subcommand}`,
-    ...(suggestion ? ["", `Did you mean 'plannotator ${suggestion}'?`] : []),
+    `未知命令：${subcommand}`,
+    ...(suggestion ? ["", `你是想运行 'plannotator ${suggestion}' 吗？`] : []),
     "",
-    "Run 'plannotator --help' for the list of commands.",
+    "运行 'plannotator --help' 查看命令列表。",
   ].join("\n");
 }
 

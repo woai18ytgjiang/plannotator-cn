@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import { Canvas } from './Canvas';
 import { Toolbar } from './Toolbar';
@@ -244,7 +245,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({
         {/* Image name input */}
         {initialName && (
           <div className="flex items-center gap-2 w-full max-w-xs">
-            <label className="text-xs text-muted-foreground whitespace-nowrap">Name</label>
+            <label className="text-xs text-muted-foreground whitespace-nowrap">名称</label>
             <input
               ref={nameInputRef}
               type="text"
@@ -262,7 +263,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({
                 }
               }}
               className="flex-1 px-2 py-1 text-xs bg-muted/50 border border-border rounded-md text-foreground focus:outline-none focus:ring-1 focus:ring-primary"
-              placeholder="Image name..."
+              placeholder="图片名称…"
             />
           </div>
         )}
@@ -271,7 +272,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({
         <div className="text-xs text-muted-foreground" data-pn-image-annotator-hint>
           {hint ?? (
             <>
-              Press <kbd className="px-1.5 py-0.5 bg-muted rounded text-foreground">Esc</kbd> or <kbd className="px-1.5 py-0.5 bg-muted rounded text-foreground">Enter</kbd> or click outside to accept
+              按 <kbd className="px-1.5 py-0.5 bg-muted rounded text-foreground">Esc</kbd> 或 <kbd className="px-1.5 py-0.5 bg-muted rounded text-foreground">Enter</kbd>，或点击外部以确认
             </>
           )}
         </div>
@@ -280,7 +281,7 @@ export const ImageAnnotator: React.FC<ImageAnnotatorProps> = ({
       {/* Loading overlay */}
       {saving && (
         <div className="absolute inset-0 flex items-center justify-center bg-background/50">
-          <div className="text-sm text-muted-foreground">Saving...</div>
+          <div className="text-sm text-muted-foreground">正在保存…</div>
         </div>
       )}
     </div>

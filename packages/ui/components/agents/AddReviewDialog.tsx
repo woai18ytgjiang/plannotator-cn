@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useMemo, useState } from 'react';
 import { Loader2, Plus, Search, X } from 'lucide-react';
 
@@ -53,11 +54,11 @@ export function AddReviewDialog({
       });
       if (!res.ok) {
         const d = await res.json().catch(() => ({}));
-        throw new Error(d.error ?? 'Could not add review.');
+        throw new Error(d.error ?? '无法添加审查。');
       }
       onEnabled(name);
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not add review.');
+      setError(e instanceof Error ? e.message : '无法添加审查。');
       setBusy(null);
     }
   };
@@ -67,7 +68,7 @@ export function AddReviewDialog({
       <div className="absolute inset-0 bg-black/40" onClick={onClose} />
       <div className="relative z-10 flex max-h-[70vh] w-full max-w-sm flex-col overflow-hidden rounded-xl bg-card shadow-[var(--card-shadow)] ring-1 ring-border/20">
         <div className="flex items-center justify-between border-b border-border/40 px-3 py-2.5">
-          <span className="text-[12px] font-medium text-foreground">Add a review</span>
+          <span className="text-[12px] font-medium text-foreground">添加审查</span>
           <button type="button" onClick={onClose} className="text-muted-foreground/50 hover:text-foreground">
             <X size={13} />
           </button>
@@ -80,7 +81,7 @@ export function AddReviewDialog({
               autoFocus
               value={query}
               onChange={(e) => setQuery(e.target.value)}
-              placeholder="Filter your skills"
+              placeholder="筛选你的技能"
               className="min-w-0 flex-1 bg-transparent text-[12px] text-foreground/90 outline-none placeholder:text-muted-foreground/40"
             />
           </div>
@@ -93,7 +94,7 @@ export function AddReviewDialog({
             </div>
           ) : candidates.length === 0 ? (
             <p className="px-2 py-8 text-center text-[11px] text-muted-foreground/40">
-              {query ? 'No matching skills.' : 'No skills left to add.'}
+              {query ? '没有匹配的技能。' : '没有可添加的技能了。'}
             </p>
           ) : (
             candidates.map((s) => (

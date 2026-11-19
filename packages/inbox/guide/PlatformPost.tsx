@@ -53,7 +53,7 @@ function asSubmitted(comments: readonly KeptComment[], pull: PlatformPostPull, a
       ...c,
       prUrl: older ? `${pull.url}${AT}${older}` : pull.url,
       prNumber: pull.number,
-      prTitle: older ? `read at ${older.slice(0, 7)}` : pull.title,
+      prTitle: older ? `读取于 ${older.slice(0, 7)}` : pull.title,
       // The row cuts at its end, so nothing long stands before the commit it names.
       prRepo: older ? '' : pull.repo,
       ...(c.postAt && gone.has(c.postAt) && !c.postHere ? { outdated: true } : {}),
@@ -67,7 +67,7 @@ type Inline = SubmissionTarget['fileComments'][number];
 const inlineKey = (c: Inline) => JSON.stringify([c.path, c.line, c.side, c.start_line ?? null, c.start_side ?? null, c.body]);
 
 const OPEN_PR_KEY = 'plannotator-inbox-platform-open-pr';
-const TOO_MANY_FILE_COMMENTS = 'This review has too many file comments to post at once (500 at most). Nothing was sent.';
+const TOO_MANY_FILE_COMMENTS = '本次审查的文件评论过多，无法一次发布（最多 500 条）。未发送任何内容。';
 /** Between a PR's URL and a commit, in a target of that commit. */
 const AT = '#plannotator-at-';
 

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useState } from 'react';
 import { toast } from 'sonner';
 import { copyTextToClipboard } from '../utils/clipboard';
@@ -72,7 +73,7 @@ function CopyFeedbackButton({ getText }: { getText: () => string | undefined }) 
         void copyTextToClipboard(text).then((copied) => setState(copied ? 'copied' : 'failed'));
       }}
     >
-      {state === 'copied' ? 'Copied' : state === 'failed' ? 'Copy failed' : 'Copy feedback'}
+      {state === 'copied' ? '已复制' : state === 'failed' ? '复制失败' : '复制反馈'}
     </button>
   );
 }
@@ -96,7 +97,7 @@ export function showSendFailureToast(options: {
   const forget = () => {
     if (currentId === id) currentId = null;
   };
-  toast.error(what === 'approval' ? 'Approval not sent' : 'Feedback not sent', {
+  toast.error(what === 'approval' ? '批准未发送' : '反馈未发送', {
     id,
     onDismiss: forget,
     description: describeSendFailure(failure),
@@ -109,7 +110,7 @@ export function showSendFailureToast(options: {
     // An already-decided review cannot take the decision again.
     action: canRetrySend(failure)
       ? {
-          label: 'Retry',
+          label: '重试',
           onClick: () => {
             if (inFlight > 0) return;
             onRetry();

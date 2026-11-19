@@ -22,13 +22,13 @@ export function formatArtifactTimestamp(seconds: number): string {
 export function artifactAnchorLabel(anchor: ArtifactAnnotationAnchor): string {
   switch (anchor.kind) {
     case 'document':
-      return anchor.originalText ? 'Selected text' : 'Document note';
+      return anchor.originalText ? '选中的文本' : '文档备注';
     case 'image':
-      return `Pin at ${Math.round(anchor.x * 100)}%, ${Math.round(anchor.y * 100)}%`;
+      return `固定于 ${Math.round(anchor.x * 100)}%，${Math.round(anchor.y * 100)}%`;
     case 'video':
-      return `Video at ${formatArtifactTimestamp(anchor.timestamp)}`;
+      return `视频位置 ${formatArtifactTimestamp(anchor.timestamp)}`;
     case 'page':
-      return 'Whole artifact';
+      return '整个附件';
   }
 }
 

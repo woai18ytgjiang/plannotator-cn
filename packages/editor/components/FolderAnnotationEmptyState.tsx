@@ -11,11 +11,11 @@ export function FolderAnnotationEmptyState({
   return (
     <div className="w-full flex justify-center">
       <div className="w-full max-w-3xl p-12 text-center text-muted-foreground">
-        <p className="text-lg font-medium mb-2">Select a file to annotate</p>
+        <p className="text-lg font-medium mb-2">选择一个文件开始批注</p>
         <p className="text-sm">
           {compactTouchLayout
-            ? 'Choose a markdown, text, HTML, or diagram file to begin.'
-            : 'Pick a markdown, HTML, or diagram file from the sidebar to begin.'}
+            ? '选择一个 Markdown、文本、HTML 或图表文件开始。'
+            : '从侧边栏选择一个 Markdown、HTML 或图表文件开始。'}
         </p>
         {compactTouchLayout && (
           <Button
@@ -25,7 +25,7 @@ export function FolderAnnotationEmptyState({
             className="mt-4"
             onClick={onChooseFile}
           >
-            Choose a file
+            选择文件
           </Button>
         )}
       </div>

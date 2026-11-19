@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 // Moved from the Workspaces app's MarkdownContentsRail (apps/web/src/plannotator/
 // MarkdownContentsRail.tsx), the document contents rail approved 2026-10-03
 // ("it should just be on the right side": the ticks in the document's right
@@ -165,7 +166,7 @@ function buildContentsItems(blocks: readonly Block[]): readonly MarkdownContents
     const block = blocks[index];
     if (block.type !== 'heading' || !listed.has(block)) continue;
     const level = Math.min(6, Math.max(1, block.level ?? 1));
-    const label = plainText(block.content) || 'Untitled section';
+    const label = plainText(block.content) || '未命名章节';
     while (parents.length > 0 && parents.at(-1)!.level >= level) parents.pop();
     const breadcrumb = [...parents.map((entry) => entry.label), label].join(' / ');
     items.push({
@@ -697,7 +698,7 @@ export function MarkdownContentsRail({
     <nav
       ref={railRef}
       className="pn-contents-rail"
-      aria-label="Document contents"
+      aria-label="文档目录"
       data-revealed={titlesVisible ? '' : undefined}
       style={railStyle}
       onPointerLeave={() => setInteractionIndex(null)}
@@ -705,7 +706,7 @@ export function MarkdownContentsRail({
       <div className="pn-contents-rail-dock" aria-hidden="true" />
       <div className="pn-contents-rail-surface" aria-hidden="true" />
       <div className="pn-contents-rail-title" aria-hidden="true">
-        Contents
+        目录
       </div>
       <div ref={listRef} className="pn-contents-rail-list" role="list">
         {renderedItemIndexes.map((index, markerPosition) => {
@@ -730,8 +731,8 @@ export function MarkdownContentsRail({
               data-depth={Math.min(3, Math.max(0, item.level - baseLevel))}
               aria-label={
                 titlesVisible
-                  ? `Go to ${item.breadcrumb}`
-                  : `Open document contents at ${item.breadcrumb}`
+                  ? `前往 ${item.breadcrumb}`
+                  : `在 ${item.breadcrumb} 处打开文档目录`
               }
               aria-expanded={titlesVisible}
               aria-current={current ? 'location' : undefined}

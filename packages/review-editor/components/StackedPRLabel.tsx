@@ -193,12 +193,12 @@ export function StackedPRLabel({
                   data-pn-touch-target
                   type="button"
                   onClick={toggleHideMerged}
-                  title={hideMerged ? 'Show merged PRs' : 'Hide merged PRs'}
+                  title={hideMerged ? '显示已合并的 PR' : '隐藏已合并的 PR'}
                   className={`cc-blocking-toggle ${hideMerged ? 'is-on' : ''}`}
                   style={{ borderLeft: 'none', marginLeft: 0 }}
                 >
                   <span className="cc-toggle-track"><span className="cc-toggle-thumb" /></span>
-                  <span>Hide merged</span>
+                  <span>隐藏已合并</span>
                 </button>
               )}
             </div>
@@ -247,10 +247,10 @@ export function StackedPRLabel({
                     >
                       <span className={`truncate ${merged ? 'line-through' : ''}`}>{nodeLabel(node, numberPrefix)}</span>
                       {node.isCurrent && (
-                        <span className="text-xs text-annotation-comment/60 whitespace-nowrap">reviewing</span>
+                        <span className="text-xs text-annotation-comment/60 whitespace-nowrap">审查中</span>
                       )}
                       {merged && (
-                        <span className="text-xs text-muted-foreground/40 whitespace-nowrap border border-muted-foreground/20 rounded px-0.5 leading-tight">merged</span>
+                        <span className="text-xs text-muted-foreground/40 whitespace-nowrap border border-muted-foreground/20 rounded px-0.5 leading-tight">已合并</span>
                       )}
                       {action.kind === 'navigate' && node.url && !disabled && (
                         <svg className="w-2.5 h-2.5 flex-shrink-0 opacity-40" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -271,7 +271,7 @@ export function StackedPRLabel({
           {/* Section 2: Scope Selector */}
           <div className="px-3 py-2">
             <div className="text-xs font-medium text-muted-foreground mb-1.5">
-              Comparing against
+              对比
             </div>
             {layerOption && (
               <button
@@ -295,7 +295,7 @@ export function StackedPRLabel({
                     {parentNode ? nodeLabel(parentNode, numberPrefix) : (stackInfo?.baseBranch ?? 'base')}
                   </span>
                   <span className="block text-xs leading-snug text-muted-foreground">
-                    Only changes in this PR
+                    仅此 PR 中的更改
                   </span>
                 </span>
               </button>
@@ -306,7 +306,7 @@ export function StackedPRLabel({
                 type="button"
                 disabled={!fullStackOption.enabled || isSwitchingScope}
                 onClick={() => handleSelect('full-stack')}
-                title={!fullStackOption.enabled ? 'Requires local checkout' : undefined}
+                title={!fullStackOption.enabled ? '需要本地检出' : undefined}
                 className={`w-full flex items-start gap-2 rounded px-2 py-1.5 text-left transition-colors ${
                   scope === 'full-stack'
                     ? 'bg-muted text-foreground'

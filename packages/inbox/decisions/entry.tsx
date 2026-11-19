@@ -25,7 +25,7 @@ export function decideEntryShown(count: number): boolean {
  * thread's open action items ride the queue too, and the list leaves them out).
  */
 export function decideThreadLabel(count: number, listed: number): string {
-  return count === listed ? `Decide these ${formatCount(count)}` : `Decide ${formatCount(count)} one at a time`;
+  return count === listed ? `决策这 ${formatCount(count)} 项` : `逐项决策 ${formatCount(count)} 项`;
 }
 
 /**
@@ -84,12 +84,12 @@ export function DecisionPill({
       ref={markDecisionPill}
       className="ib-dm-pill"
       role="region"
-      aria-label="Decision mode"
+      aria-label="决策模式"
       data-decision-pill=""
       style={bottom !== null ? { bottom: `${bottom}px` } : undefined}
     >
       <span>
-        <b>Decisions</b> ·{' '}
+        <b>决策</b> ·{' '}
         {thread && (
           <>
             {/* Cut to its room; the whole subject in a component tooltip when cut. */}
@@ -101,11 +101,11 @@ export function DecisionPill({
             ·{' '}
           </>
         )}
-        {left === 0 ? 'nothing left' : `${formatCount(left)} left`}
-        {(paused ?? 0) > 0 && <span data-decision-pill-paused=""> · {paused === 1 ? 'a reply waits' : `${formatCount(paused!)} replies wait`}</span>}
+        {left === 0 ? '无待处理' : `剩余 ${formatCount(left)} 项`}
+        {(paused ?? 0) > 0 && <span data-decision-pill-paused=""> · {paused === 1 ? '1 条回复待发送' : `${formatCount(paused!)} 条回复待发送`}</span>}
       </span>
       <button type="button" className="ib-btn ib-pri ib-sm" data-decision-resume="" onClick={onResume}>
-        Resume
+        继续
       </button>
     </div>
   );

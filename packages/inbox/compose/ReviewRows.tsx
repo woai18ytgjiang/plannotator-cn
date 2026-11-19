@@ -25,8 +25,8 @@ const Row = ({ children }: { children: ReactNode }) => <div className="ib-cp-to 
 
 function SummaryLine({ summary }: { summary: ReviewSummary }) {
   if (!summary) return null;
-  if (!summary.git) return <span className="ib-cp-rvsize" data-review-size="">Not a git repository</span>;
-  if (summary.files === 0) return <span className="ib-cp-rvsize" data-review-size="">No changes</span>;
+  if (!summary.git) return <span className="ib-cp-rvsize" data-review-size="">不是 git 仓库</span>;
+  if (summary.files === 0) return <span className="ib-cp-rvsize" data-review-size="">无更改</span>;
   return (
     <span className="ib-cp-rvsize" data-review-size="">
       {plural(summary.files, 'file')} <b className="ib-add">+{summary.additions}</b> <b className="ib-del">-{summary.deletions}</b>
@@ -43,7 +43,7 @@ function LinkReadLine({ read, inReview }: { read: InboxReviewLinkAnswer; inRevie
     <p className={read.ok ? 'ib-cp-rvreadok' : undefined} role="status" data-review-link-read={read.ok ? 'ok' : read.reason}>
       {read.ok && <Icon name="check" size={13} />}
       {reviewLinkWords(read)}
-      {inReview ? ' · Already in review' : ''}
+      {inReview ? ' · 已在审查中' : ''}
     </p>
   );
 }
@@ -96,7 +96,7 @@ function PullMenu({ pulls, read, link, linkRead, linkInReview, onLink, onUseLink
             <Icon name="chevL" size={16} />
             Back
           </button>
-          <span>Pull request</span>
+          <span>拉取请求</span>
         </div>
       )}
       <div className="ib-cp-filter">
@@ -109,8 +109,8 @@ function PullMenu({ pulls, read, link, linkRead, linkInReview, onLink, onUseLink
           aria-autocomplete="list"
           aria-controls={`ib-cp-plist-${uid}`}
           aria-activedescendant={at >= 0 ? optionId(at) : undefined}
-          aria-label="Find a pull request, or paste a link"
-          placeholder="Find a pull request, or paste a link"
+          aria-label="查找拉取请求，或粘贴链接"
+          placeholder="查找拉取请求，或粘贴链接"
           autoComplete="off"
           spellCheck={false}
           value={query}
@@ -122,7 +122,7 @@ function PullMenu({ pulls, read, link, linkRead, linkInReview, onLink, onUseLink
           }}
         />
       </div>
-      <div className="ib-cp-list" role="listbox" id={`ib-cp-plist-${uid}`} aria-label="Pull requests">
+      <div className="ib-cp-list" role="listbox" id={`ib-cp-plist-${uid}`} aria-label="拉取请求">
         {asLink && !linkRead && <div className="ib-cp-none" data-review-link-reading="">Reading the link…</div>}
         {asLink && linkRead && !linkRead.ok && <div className="ib-cp-none"><LinkReadLine read={linkRead} inReview={false} /></div>}
         {asLink && linkRead?.ok && (
@@ -145,13 +145,13 @@ function PullMenu({ pulls, read, link, linkRead, linkInReview, onLink, onUseLink
         )}
         {!asLink && options.length === 0 && (
           <div className="ib-cp-none" data-review-pulls-none={read}>
-            {pulls.length > 0 ? 'No pull request matches.' : read === 'reading' ? 'Reading your pull requests…' : read === 'failed' ? "Couldn't read your pull requests." : 'No open pull requests.'}
+            {pulls.length > 0 ? '没有匹配的拉取请求。' : read === 'reading' ? '正在读取你的拉取请求…' : read === 'failed' ? "无法读取你的拉取请求。" : '没有打开的拉取请求。'}
           </div>
         )}
         {options.map((pull, i) => (
           <div key={pull.id}>
-            {i === 0 && firstInReview !== 0 && <div className="ib-cp-cap">Not reviewed yet</div>}
-            {i === firstInReview && <div className="ib-cp-cap">Already in review</div>}
+            {i === 0 && firstInReview !== 0 && <div className="ib-cp-cap">尚未审查</div>}
+            {i === firstInReview && <div className="ib-cp-cap">已在审查中</div>}
             <div
               id={optionId(i)}
               role="option"
@@ -208,11 +208,11 @@ export function ReviewRows(props: {
   return (
     <>
       <Row>
-        <Choices label="Review" name="kind" value={kind} onChange={props.onKind} options={[['local', 'Local'], ['pr', 'Pull request'], ['walkthrough', 'Walkthrough']]} />
+        <Choices label="审查" name="kind" value={kind} onChange={props.onKind} options={[['local', '本地'], ['pr', '拉取请求'], ['walkthrough', '引导浏览']]} />
       </Row>
       {kind === 'local' ? (
         <Row>
-          <Choices label="Changes" name="changes" value={props.changes} onChange={props.onChanges} options={[['uncommitted', 'Uncommitted'], ['last', 'Last commit'], ['branch', 'Whole branch']]} />
+          <Choices label="更改" name="changes" value={props.changes} onChange={props.onChanges} options={[['uncommitted', '未提交'], ['last', '上次提交'], ['branch', '整个分支']]} />
           <SummaryLine summary={props.summary} />
         </Row>
       ) : kind === 'walkthrough' ? null : (
@@ -236,7 +236,7 @@ export function ReviewRows(props: {
                   <b dir="auto">{pick.title}</b>
                 </>
               ) : (
-                <span className="ib-cp-tod">Choose or paste a pull request</span>
+                <span className="ib-cp-tod">选择或粘贴拉取请求</span>
               )}
               <Icon name="chevD" size={15} />
             </button>

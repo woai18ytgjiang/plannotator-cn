@@ -15,41 +15,41 @@ function Toggle({ on, labelledBy, onClick }: { on: boolean; labelledBy: string; 
   return <button type="button" role="switch" className="ib-sw" aria-checked={on} aria-labelledby={labelledBy} onClick={onClick} />;
 }
 
-const ROUTE_LINE = 'Your audio goes to OpenAI through your ChatGPT login in Codex. This route isn’t an official OpenAI API, so it can stop working without notice.';
+const ROUTE_LINE = '你的音频会通过 Codex 中的 ChatGPT 登录发送到 OpenAI。此通道并非 OpenAI 官方 API，可能随时停止工作，恕不另行通知。';
 const TERMS_LINE = 'OpenAI’s terms for your ChatGPT account apply.';
 
-const planName = (plan: string | null) => (plan ? `${plan.charAt(0).toUpperCase()}${plan.slice(1)} plan, through` : 'Through');
+const planName = (plan: string | null) => (plan ? `${plan.charAt(0).toUpperCase()}${plan.slice(1)} 套餐，经由` : '经由');
 
 function CodexStatus({ where, status, checking }: { where: string; status: InboxVoiceStatus | null; checking: boolean }) {
   const line = (): { label: ReactNode; desc: ReactNode; ok?: boolean } => {
-    if (checking || !status) return { label: 'Checking Codex', desc: `Asking Codex on ${where} who is signed in.` };
+    if (checking || !status) return { label: '正在检查 Codex', desc: `正在向 ${where} 上的 Codex 询问当前登录的是谁。` };
     switch (status.state) {
       case 'ready':
-        return { ok: true, label: 'Signed in with ChatGPT', desc: `${planName(status.plan)} Codex on ${where}.` };
+        return { ok: true, label: '已使用 ChatGPT 登录', desc: `${planName(status.plan)}：${where} 上的 Codex。` };
       case 'missing':
-        return { label: 'Codex isn’t installed', desc: `Install Codex on ${where}, then check again. Or use an OpenAI API key.` };
+        return { label: '未安装 Codex', desc: `请先在 ${where} 上安装 Codex，然后重新检查。或使用 OpenAI API 密钥。` };
       case 'signedout':
         return {
-          label: 'Codex isn’t signed in',
+          label: 'Codex 未登录',
           desc: (
             <>
-              Run <code>codex login</code> on {where} and choose ChatGPT, then check again.
+              在 {where} 上运行 <code>codex login</code> 并选择 ChatGPT，然后重新检查。
             </>
           ),
         };
       case 'apikey':
         return {
-          label: 'Codex is using an API key',
+          label: 'Codex 正在使用 API 密钥',
           desc: (
             <>
-              Voice through Codex needs a ChatGPT login. <code>codex login</code> changes the login Codex itself uses, so you may prefer an OpenAI API key here.
+              Codex 语音需要 ChatGPT 登录。<code>codex login</code> 会改变 Codex 自身使用的登录方式，因此你也可以改用 OpenAI API 密钥。
             </>
           ),
         };
       case 'other':
-        return { label: 'Codex is signed in another way', desc: 'Voice through Codex needs a ChatGPT login. Or use an OpenAI API key.' };
+        return { label: 'Codex 使用的是其他登录方式', desc: 'Codex 语音需要 ChatGPT 登录。或使用 OpenAI API 密钥。' };
       default:
-        return { label: 'Codex didn’t answer', desc: `Check again, or see that Codex runs on ${where}. Or use an OpenAI API key.` };
+        return { label: 'Codex 未响应', desc: `请重新检查，或确认 Codex 可在 ${where} 上运行。或使用 OpenAI API 密钥。` };
     }
   };
   const state = line();
@@ -183,14 +183,14 @@ export function VoiceSettings() {
   };
   return (
     <>
-      <section className="ib-sgroup ib-sgroup-first" data-settings-voice="" aria-label="Voice">
+      <section className="ib-sgroup ib-sgroup-first" data-settings-voice="" aria-label="语音">
         <div className="ib-card">
           <div className="ib-prow">
             <span className="ib-txt">
               <span className="ib-l" id="ib-voice-label">
                 Voice
               </span>
-              <span className="ib-desc">Adds a microphone to the reply box. Hold it to talk, or tap it. Your words land in the box, and you press Send.</span>
+              <span className="ib-desc">在回复框上添加麦克风。按住说话，或点按一下。你的话会出现在输入框中，然后按发送。</span>
             </span>
             <span className="ib-ctl">
               <Toggle on={on} labelledBy="ib-voice-label" onClick={() => void save({ on: !on })} />
@@ -218,7 +218,7 @@ export function VoiceSettings() {
       </section>
       {on && (
         <section className="ib-sgroup" aria-labelledby="ib-g-voice-engine">
-          <h2 id="ib-g-voice-engine">Transcription</h2>
+          <h2 id="ib-g-voice-engine">转写</h2>
           <p>{engine === 'codex' ? `${ROUTE_LINE} ${TERMS_LINE}` : 'Your audio goes to OpenAI’s public speech-to-text API under your own key. OpenAI bills your API account for each minute of audio.'}</p>
           <div className="ib-card">
             <div className="ib-prow">

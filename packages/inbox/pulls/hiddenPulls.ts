@@ -320,18 +320,18 @@ export async function showRepo(repoKey: string): Promise<void> {
 
 /** "Hid #12" for one, "Hid 3 pull requests" for several. */
 export function hidToast(pulls: readonly Pick<InboxPull, 'number' | 'platform'>[]): string {
-  return pulls.length === 1 ? `Hid ${inboxPullLabel(pulls[0]!)}` : `Hid ${formatCount(pulls.length)} pull requests`;
+  return pulls.length === 1 ? `已隐藏 ${inboxPullLabel(pulls[0]!)}` : `已隐藏 ${formatCount(pulls.length)} 个 PR`;
 }
 
 /** The Inbox list's Hide item: "Hide pull request", "Hide merge request" (GitLab), "Hide 3 pull requests". */
 export function hideKeysWords(keys: readonly string[]): string {
-  const noun = keys.length > 0 && keys.every((key) => key.endsWith(':pull')) ? 'merge request' : 'pull request';
-  return keys.length === 1 ? `Hide ${noun}` : `Hide ${formatCount(keys.length)} ${noun}s`;
+  const noun = keys.length > 0 && keys.every((key) => key.endsWith(':pull')) ? '合并请求' : 'PR';
+  return keys.length === 1 ? `隐藏${noun}` : `隐藏 ${formatCount(keys.length)} 个${noun}`;
 }
 
 /** "Showing #12 again", "Showing 3 again". */
 export function shownToast(labels: readonly string[]): string {
-  return labels.length === 1 ? `Showing ${labels[0]} again` : `Showing ${formatCount(labels.length)} again`;
+  return labels.length === 1 ? `已重新显示 ${labels[0]}` : `已重新显示 ${formatCount(labels.length)} 个`;
 }
 
 /** The PR's label from its key (`host/owner/repo#12`, a GitLab merge request's `…#12:pull`): "#12" or "!12". */
@@ -371,7 +371,7 @@ export async function hideWithUndo(pulls: readonly InboxPull[], toast: Toast | u
   try {
     threads = await hidePulls(pulls);
   } catch (cause) {
-    toast?.({ icon: 'warn', lead: 'Couldn’t hide', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
+    toast?.({ icon: 'warn', lead: '无法隐藏', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
     return false;
   }
   const keys = pulls.map((pull) => pull.key);
@@ -380,7 +380,7 @@ export async function hideWithUndo(pulls: readonly InboxPull[], toast: Toast | u
     {
       icon: 'check',
       lead: hidLead(hidToast(pulls), threads, pulls.length),
-      detail: `Still open on ${new Set(pulls.map((pull) => pull.platform)).size === 1 ? forgeName(pulls[0]!) : 'GitHub and GitLab'}`,
+      detail: `仍在 ${new Set(pulls.map((pull) => pull.platform)).size === 1 ? forgeName(pulls[0]!) : 'GitHub 和 GitLab'} 上打开`,
       onUndo: () => void showWithToast(keys, labels, toast),
       noKey: true,
     },
@@ -392,7 +392,7 @@ export async function hideWithUndo(pulls: readonly InboxPull[], toast: Toast | u
 /** Where a hidden PR is still open, from its keys: "GitHub", "GitLab" or both. */
 function stillOpenOn(keys: readonly string[]): string {
   const gitlab = keys.filter((key) => key.endsWith(':pull')).length;
-  return gitlab === 0 ? 'GitHub' : gitlab === keys.length ? 'GitLab' : 'GitHub and GitLab';
+  return gitlab === 0 ? 'GitHub' : gitlab === keys.length ? 'GitLab' : 'GitHub 和 GitLab';
 }
 
 /**
@@ -406,31 +406,31 @@ export async function hideThreadsWithUndo(threadIds: readonly string[], toast: T
   try {
     ({ hid, rehid, left: threads } = await hideThreadPulls(threadIds));
   } catch (cause) {
-    toast?.({ icon: 'warn', lead: 'Couldn’t hide', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
+    toast?.({ icon: 'warn', lead: '无法隐藏', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
     return false;
   }
   if (hid.length === 0 && rehid.length === 0) {
     // Hidden elsewhere meanwhile (another window, a phone): say so, rather than nothing at all.
-    toast?.({ icon: 'check', lead: 'Already hidden', detail: 'Its pull requests were hidden already.' }, HIDE_UNDO_MS);
+    toast?.({ icon: 'check', lead: '早已隐藏', detail: '它的 PR 之前已经隐藏。' }, HIDE_UNDO_MS);
     return false;
   }
   const labels = hid.map((key) => hiddenLabel({ key }));
   // Only threads hidden again (their PRs were hidden already): the toast names the threads.
   const lead =
     hid.length > 0
-      ? hidLead(hid.length === 1 ? `Hid ${labels[0]}` : `Hid ${formatCount(hid.length)} pull requests`, threads, hid.length)
+      ? hidLead(hid.length === 1 ? `已隐藏 ${labels[0]}` : `已隐藏 ${formatCount(hid.length)} 个 PR`, threads, hid.length)
       : rehid.length === 1
-        ? 'Hid the thread again'
-        : `Hid ${formatCount(rehid.length)} threads again`;
+        ? '再次隐藏了该话题'
+        : `又隐藏了 ${formatCount(rehid.length)} 个话题`;
   toast?.(
     {
       icon: 'check',
       lead,
-      detail: hid.length > 0 ? `Still open on ${stillOpenOn(hid)}` : 'Its pull requests were hidden already',
+      detail: hid.length > 0 ? `仍打开于 ${stillOpenOn(hid)}` : '它的 PR 之前已经隐藏了',
       onUndo: () =>
         void undoThreadHide(hid, rehid).then(
-          () => toast?.({ icon: 'check', lead: hid.length > 0 ? shownToast(labels) : rehid.length === 1 ? 'The thread is back' : `${formatCount(rehid.length)} threads are back` }, HIDE_UNDO_MS),
-          (cause: unknown) => toast?.({ icon: 'warn', lead: 'Couldn’t show it again', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS),
+          () => toast?.({ icon: 'check', lead: hid.length > 0 ? shownToast(labels) : rehid.length === 1 ? '话题已恢复' : `${formatCount(rehid.length)} 个话题已恢复` }, HIDE_UNDO_MS),
+          (cause: unknown) => toast?.({ icon: 'warn', lead: '无法重新显示', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS),
         ),
       noKey: true,
     },
@@ -444,7 +444,7 @@ export async function showWithToast(keys: readonly string[], labels: readonly st
   try {
     await showPulls(keys);
   } catch (cause) {
-    toast?.({ icon: 'warn', lead: 'Couldn’t show it again', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
+    toast?.({ icon: 'warn', lead: '无法重新显示', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
     return;
   }
   toast?.({ icon: 'check', lead: shownToast(labels) }, HIDE_UNDO_MS);
@@ -488,14 +488,14 @@ export async function hideRepoWithUndo(repo: Pick<InboxRepoHidden, 'key' | 'labe
   try {
     await hideRepo({ key: repo.key, label: repo.label });
   } catch (cause) {
-    toast?.({ icon: 'warn', lead: 'Couldn’t hide', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
+    toast?.({ icon: 'warn', lead: '无法隐藏', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
     return false;
   }
   toast?.(
     {
       icon: 'check',
-      lead: `Hid ${repo.label}`,
-      detail: `New pull requests there stay hidden too · Still open on ${forgeName(repo)}`,
+      lead: `已隐藏 ${repo.label}`,
+      detail: `那里的新 PR 也会保持隐藏 · 仍在 ${forgeName(repo)} 上打开`,
       onUndo: () => void showRepoWithToast({ key: repo.key, label: repo.label }, toast),
       noKey: true,
       wrap: true,
@@ -510,7 +510,7 @@ export async function showRepoWithToast(repo: Pick<InboxRepoHidden, 'key' | 'lab
   try {
     await showRepo(repo.key);
   } catch (cause) {
-    toast?.({ icon: 'warn', lead: 'Couldn’t show it again', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
+    toast?.({ icon: 'warn', lead: '无法重新显示', detail: cause instanceof Error ? cause.message : undefined, wrap: true }, HIDE_UNDO_MS);
     return;
   }
   toast?.({ icon: 'check', lead: shownToast([repo.label]) }, HIDE_UNDO_MS);

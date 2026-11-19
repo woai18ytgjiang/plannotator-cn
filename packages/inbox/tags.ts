@@ -54,19 +54,19 @@ export function agentName(host: string | null | undefined, name?: string | null)
   if (name) return name;
   // Own keys only: a host string like "constructor" is its own name, never Object's.
   if (host) return Object.hasOwn(INBOX_HOST_NAMES, host) ? INBOX_HOST_NAMES[host]! : host;
-  return 'An agent';
+  return '某个智能体';
 }
 
 function stateWords(session: TaggableSession, time: (iso: string) => string): string {
   const parts: string[] = [];
   if (session.project) parts.push(session.project.name);
   if (session.kind === 'mcp') {
-    parts.push(session.wrote_thread ? `wrote here at ${time(session.last_at)}` : `seen ${time(session.last_at)}`);
+    parts.push(session.wrote_thread ? `于 ${time(session.last_at)} 在此写入` : `于 ${time(session.last_at)} 查看`);
     return parts.join(' · ');
   }
-  if (session.busy === true) parts.push('working');
-  else if (session.busy === false) parts.push('idle');
-  if (session.started_at) parts.push(`since ${time(session.started_at)}`);
+  if (session.busy === true) parts.push('工作中');
+  else if (session.busy === false) parts.push('空闲');
+  if (session.started_at) parts.push(`自 ${time(session.started_at)} 起`);
   return parts.join(' · ');
 }
 
@@ -101,7 +101,7 @@ export function tagOptions(model: TaggableModel | null, ownerSession: string | n
     const sameAgent = sorted.filter((o) => (o.taggable || o === s) && agentName(o.host, o.kind === 'mcp' ? o.name : null) === agent);
     if (s.session === owner || sameAgent.length < 2) return agent;
     const here = !s.project || s.project.id === threadProjectId;
-    return here ? `${agent} (another session)` : `${agent} (${s.project!.name})`;
+    return here ? `${agent}（另一个会话）` : `${agent}（${s.project!.name}）`;
   };
   const plainLabels = new Set(sorted.filter((o) => o.taggable && !named(o)).map((o) => unnamedLabel(o, agentName(o.host, o.kind === 'mcp' ? o.name : null))));
   return sorted.map((s) => {
@@ -109,7 +109,7 @@ export function tagOptions(model: TaggableModel | null, ownerSession: string | n
     const own = named(s);
     let label = own ?? unnamedLabel(s, agent);
     // Two sessions named alike, or a name that reads as another row's ("Pi"): the agent after it.
-    if (own && (plainLabels.has(own) || sorted.some((o) => o !== s && o.taggable && named(o) === own))) label = `${own} (${agent})`;
+    if (own && (plainLabels.has(own) || sorted.some((o) => o !== s && o.taggable && named(o) === own))) label = `${own}（${agent}）`;
     // Two that would still read the same (two Pi sessions in infra): the later ones say "another session".
     const seen = used.get(label) ?? 0;
     used.set(label, seen + 1);
@@ -117,8 +117,9 @@ export function tagOptions(model: TaggableModel | null, ownerSession: string | n
       // Two Claude Code sessions both named "Fix login": "Fix login (Claude Code 2)".
       label = `${own} (${agent} ${seen + 1})`;
     } else if (seen > 0) {
-      const inner = label.endsWith(')') ? label.slice(label.lastIndexOf('(') + 1, -1) : null;
-      label = inner === null ? `${agent} (another session)` : inner === 'another session' ? `${agent} (another session ${seen + 1})` : `${agent} (${inner}, another session)`;
+      // The label reads with full-width brackets (above), so the inner words are cut with those.
+      const inner = label.endsWith('）') ? label.slice(label.lastIndexOf('（') + 1, -1) : null;
+      label = inner === null ? `${agent}（另一个会话）` : inner === '另一个会话' ? `${agent}（另一个会话 ${seen + 1}）` : `${agent}（${inner}，另一个会话）`;
     }
     return {
       id: s.session,
@@ -189,19 +190,19 @@ export function tagModeLine(tagged: readonly TagOption[], chosen: TagMode): TagM
   const canAdd = others.every((t) => t.wakes && t.taggable);
   const canHandOff = canAdd && others.length === 1;
   const mode = effectiveTagMode(tagged, chosen);
-  if (mode === 'add') return { mode, lead: 'Adds', names, after: ' to this thread', links: [{ mode: 'ask', label: 'Ask instead' }] };
-  if (mode === 'handoff') return { mode, lead: 'Hands this thread to', names, after: '', links: [{ mode: 'ask', label: 'Ask instead' }] };
+  if (mode === 'add') return { mode, lead: '添加', names, after: ' 到此话题', links: [{ mode: 'ask', label: '改为询问' }] };
+  if (mode === 'handoff') return { mode, lead: '将此话题移交给', names, after: '', links: [{ mode: 'ask', label: '改为询问' }] };
   const asleep = others.filter((t) => !t.wakes);
   const after =
     asleep.length === 0
       ? ''
-      : ` · ${shortNamesList(asleep.map((t) => t.label))} ${asleep.length === 1 ? "isn't" : "aren't"} woken: ${asleep.length === 1 ? 'it sees' : 'they see'} your reply the next time ${asleep.length === 1 ? 'it reads' : 'they read'} this thread`;
+      : ` · ${shortNamesList(asleep.map((t) => t.label))} 无法被唤醒：它会在下次读取此话题时看到你的回复`;
   return {
     mode,
-    lead: 'Asks',
+    lead: '询问',
     names,
     after,
-    links: [...(canAdd ? [{ mode: 'add' as const, label: 'Add instead' }] : []), ...(canHandOff ? [{ mode: 'handoff' as const, label: 'Hand off instead' }] : [])],
+    links: [...(canAdd ? [{ mode: 'add' as const, label: '改为添加' }] : []), ...(canHandOff ? [{ mode: 'handoff' as const, label: '改为移交' }] : [])],
   };
 }
 
@@ -236,22 +237,22 @@ export function handoffName(message: InboxMessageWire): string {
 /** What one heads-up under the field says (the approved words). */
 export function tagHeadsUp(option: TagOption, where: 'reply' | 'comment'): string {
   if (!option.wakes) {
-    return `${option.label} can't be woken: it reads the Inbox through MCP. It sees your ${where === 'comment' ? 'comment' : 'reply'} the next time it reads this thread.`;
+    return `${option.label} 无法被唤醒：它通过 MCP 读取收件箱。它会在下次读取此话题时看到你的${where === 'comment' ? '评论' : '回复'}。`;
   }
   return where === 'comment'
-    ? `${option.label} doesn't own this thread. It gets this comment with your next Send, and a pointer to this thread.`
-    : `${option.label} doesn't own this thread. It gets your reply and a pointer to this thread.`;
+    ? `${option.label} 不拥有此话题。它会在你下次发送时收到这条评论，以及指向此话题的链接。`
+    : `${option.label} 不拥有此话题。它会收到你的回复以及指向此话题的链接。`;
 }
 
 /** What the live region says when a row is picked. */
 export function tagPickedWords(option: TagOption): string {
-  if (option.owner) return `Tagged ${option.label}. It owns this thread; it gets your reply anyway.`;
-  if (!option.wakes) return `Tagged ${option.label}. It can't be woken; it sees your reply the next time it reads this thread.`;
-  return `Tagged ${option.label}. It doesn't own this thread; it gets your reply and a pointer to this thread.`;
+  if (option.owner) return `已标记 ${option.label}。它拥有此话题；无论如何它都会收到你的回复。`;
+  if (!option.wakes) return `已标记 ${option.label}。它无法被唤醒；它会在下次读取此话题时看到你的回复。`;
+  return `已标记 ${option.label}。它不拥有此话题；它会收到你的回复以及指向此话题的链接。`;
 }
 
 /** The words under a row that cannot be tagged yet. */
-export const TAG_UPDATE_WORDS = 'Update Plannotator to tag this session';
+export const TAG_UPDATE_WORDS = '更新 Plannotator 后才能标记此会话';
 
 /**
  * Who a reply's tags name in the person's view: "Pi", "Claude Code (another
@@ -261,7 +262,7 @@ export const TAG_UPDATE_WORDS = 'Update Plannotator to tag this session';
 export function tagName(tag: Pick<InboxTag, 'host' | 'name' | 'session' | 'label'>, ownerHost: string | null | undefined, ownerSession?: string | null): string {
   if (tag.label) return tag.label;
   const name = agentName(tag.host, tag.name);
-  if (tag.session !== ownerSession && ownerHost && tag.host && agentName(ownerHost) === name) return `${name} (another session)`;
+  if (tag.session !== ownerSession && ownerHost && tag.host && agentName(ownerHost) === name) return `${name}（另一个会话）`;
   return name;
 }
 
@@ -272,12 +273,12 @@ export function tagName(tag: Pick<InboxTag, 'host' | 'name' | 'session' | 'label
  */
 export function shortNamesList(names: readonly string[]): string {
   if (names.length <= 3) return namesList(names);
-  return `${names.slice(0, 2).join(', ')} and ${names.length - 2} more`;
+  return `${names.slice(0, 2).join('、')} 等 ${names.length} 个`;
 }
 
 export function namesList(names: readonly string[]): string {
   if (names.length <= 1) return names[0] ?? '';
-  return `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`;
+  return `${names.slice(0, -1).join('、')} 和 ${names[names.length - 1]}`;
 }
 
 /** One recipient's line under a sent reply (Lines variant). */
@@ -302,9 +303,9 @@ export function tagDeliveryLine(
   /** The reply's id: the server's clock for it on that session ("Undelivered 3 min"). */
   messageId?: string | null,
 ): DeliveryLine {
-  if (!tag.wakes && !tag.delivery && tag.read_at) return { state: 'delivered', text: `${name} read this thread, ${time(tag.read_at)}` };
+  if (!tag.wakes && !tag.delivery && tag.read_at) return { state: 'delivered', text: `${name} 已读取此话题，${time(tag.read_at)}` };
   // Not woken, or a Codex `codex queue` that ran out of time (it may not have gone): saved for the next read.
-  if ((!tag.wakes || (messageId && uncertainItem(connection, messageId))) && !tag.delivery) return { state: 'saved', text: `Saved for ${name}. It sees it the next time it reads this thread.` };
+  if ((!tag.wakes || (messageId && uncertainItem(connection, messageId))) && !tag.delivery) return { state: 'saved', text: `已为 ${name} 保存。它会在下次读取此话题时看到。` };
   return deliveryLine({
     name,
     deliveredAt: tag.delivery?.at ?? null,
@@ -349,9 +350,9 @@ export function sentRecipientsWords(recipients: readonly { host: string | null; 
   const waiting = recipients.filter((r) => r.delivered_at === null);
   const queued = waiting.filter((r) => r.wakes).map((r) => agentName(r.host, r.name));
   const saved = waiting.filter((r) => !r.wakes).map((r) => agentName(r.host, r.name));
-  const parts = [`${delivered} of ${recipients.length} delivered`];
-  if (queued.length > 0) parts.push(`${namesList(queued)} queued`);
-  if (saved.length > 0 && queued.length === 0) parts.push(`${namesList(saved)} not woken`);
+  const parts = [`${delivered}/${recipients.length} 已送达`];
+  if (queued.length > 0) parts.push(`${namesList(queued)} 已排队`);
+  if (saved.length > 0 && queued.length === 0) parts.push(`${namesList(saved)} 未能唤醒`);
   return parts.join(' · ');
 }
 

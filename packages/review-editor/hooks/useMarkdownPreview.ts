@@ -44,7 +44,7 @@ function writeStartingMarkdownView(view: MarkdownFileView): void {
 }
 
 /** Why a file's view cannot change while it holds the edit session. */
-export const MARKDOWN_VIEW_EDITING_REASON = 'Finish editing first';
+export const MARKDOWN_VIEW_EDITING_REASON = '请先完成编辑';
 
 /**
  * True when a key event comes from somewhere the person types. Reads

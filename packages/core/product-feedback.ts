@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Product feedback: the one client that sends what a person types about
  * Plannotator to the owner's feedback Worker (apps/feedback-service). The
@@ -61,7 +62,7 @@ export interface ProductFeedbackPayload {
  * that is not the Worker's JSON). One plain line, the same in the dialog and
  * the CLI, never a stack or a status code.
  */
-export const FEEDBACK_UNAVAILABLE = "Couldn't send feedback right now; nothing was saved.";
+export const FEEDBACK_UNAVAILABLE = "暂时无法发送反馈；没有任何内容被保存。";
 
 /**
  * The end word of the quoted heredoc that carries the message to
@@ -118,16 +119,23 @@ function lengthOf(value: string): number {
   return n;
 }
 
+/**
+ * The refusal for an empty message. `plannotator feedback` prints a usage hint instead of it
+ * (`apps/hook/server/feedback-command.ts`), so that reader compares this one constant rather
+ * than keeping a copy of the words.
+ */
+export const FEEDBACK_MESSAGE_REQUIRED = "请先写下你的反馈。";
+
 /** Checks a person's input the way the Worker will: an error to show, or null. */
 export function feedbackInputError(input: ProductFeedbackInput): string | null {
   const message = typeof input.message === "string" ? input.message.trim() : "";
-  if (!message) return "Write your feedback first.";
-  if (lengthOf(message) > FEEDBACK_MESSAGE_MAX) return `Keep it under ${FEEDBACK_MESSAGE_MAX.toLocaleString("en-US")} characters.`;
+  if (!message) return FEEDBACK_MESSAGE_REQUIRED;
+  if (lengthOf(message) > FEEDBACK_MESSAGE_MAX) return `请控制在 ${FEEDBACK_MESSAGE_MAX.toLocaleString("en-US")} 个字符以内。`;
   if (input.category != null && !(FEEDBACK_CATEGORIES as readonly string[]).includes(input.category)) {
-    return `Category must be one of: ${FEEDBACK_CATEGORIES.join(", ")}.`;
+    return `类别必须是以下之一：${FEEDBACK_CATEGORIES.join("、")}。`;
   }
   const contact = typeof input.contact === "string" ? input.contact.trim() : "";
-  if (lengthOf(contact) > FEEDBACK_CONTACT_MAX) return `Keep the contact under ${FEEDBACK_CONTACT_MAX} characters.`;
+  if (lengthOf(contact) > FEEDBACK_CONTACT_MAX) return `联系方式请控制在 ${FEEDBACK_CONTACT_MAX} 个字符以内。`;
   return null;
 }
 

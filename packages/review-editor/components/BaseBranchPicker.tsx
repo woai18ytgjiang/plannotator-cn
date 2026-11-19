@@ -150,7 +150,7 @@ export const BaseBranchPicker: React.FC<BaseBranchPickerProps> = ({
   const commitsContent = (
     <>
       {filtered.commits.length === 0 ? (
-        <div className="px-3 py-2 text-xs text-muted-foreground">No matching commits.</div>
+        <div className="px-3 py-2 text-xs text-muted-foreground">没有匹配的提交。</div>
       ) : (
         <CommitList commits={filtered.commits} selectedBase={selectedBase} onSelect={handleSelect} />
       )}
@@ -247,7 +247,7 @@ export const BaseBranchPicker: React.FC<BaseBranchPickerProps> = ({
                   Use <span className="font-mono">{trimmedQuery}</span> as base
                 </span>
                 <span className="text-xs text-muted-foreground px-1 py-0.5 rounded bg-muted">
-                  commit
+                  提交
                 </span>
               </button>
             </div>
@@ -255,10 +255,10 @@ export const BaseBranchPicker: React.FC<BaseBranchPickerProps> = ({
           {hasCommits && (
             <div className="flex border-b border-border/50 bg-muted/30">
               <TabButton active={tab === 'branches'} onClick={() => setTab('branches')}>
-                Branches
+                分支
               </TabButton>
               <TabButton active={tab === 'commits'} onClick={() => setTab('commits')}>
-                Commits
+                提交
               </TabButton>
             </div>
           )}
@@ -344,7 +344,7 @@ const BranchGroup: React.FC<BranchGroupProps> = ({
           <span className="truncate flex-1">{branch}</span>
           {isDetected && (
             <span className="text-xs text-muted-foreground px-1 py-0.5 rounded bg-muted">
-              detected
+              已检测
             </span>
           )}
         </button>

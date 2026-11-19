@@ -19,15 +19,15 @@ export function buildExplainFindingPrompt(annotation: CodeAnnotation): string {
   const reasoning = annotation.reasoning?.trim();
   return [
     EXPLAIN_FINDING_PROMPT,
-    finding ? fenceData('Finding', finding) : '',
-    reasoning ? fenceData('Agent reasoning', reasoning) : '',
+    finding ? fenceData('发现', finding) : '',
+    reasoning ? fenceData('智能体推理', reasoning) : '',
   ].filter(Boolean).join('\n\n');
 }
 
 /** What the chat shows for the question: the finding, not the instructions. */
 export function explainFindingDisplayPrompt(annotation: CodeAnnotation): string {
   const finding = (annotation.text ?? '').replace(/\s+/g, ' ').trim();
-  if (!finding) return 'Explain this finding';
+  if (!finding) return '解释此发现';
   const cut = finding.length > DISPLAY_MAX ? `${finding.slice(0, DISPLAY_MAX - 1).trimEnd()}…` : finding;
   return `Explain this finding: ${cut}`;
 }
@@ -62,14 +62,14 @@ export function buildExplainFindingRequest(
   });
 
   if ((annotation.commitSha || context.activeCommitSha) && annotation.commitSha !== context.activeCommitSha) {
-    return fileOnly('the finding was made on a different diff, so its line numbers may not match the code now.');
+    return fileOnly('该发现是在另一个差异上提出的，因此其行号可能与当前代码不符。');
   }
 
   const lineStart = Math.min(annotation.lineStart, annotation.lineEnd);
   const lineEnd = Math.max(annotation.lineStart, annotation.lineEnd);
   const selectedCode = patch ? extractLinesFromPatch(patch, lineStart, lineEnd, annotation.side) : '';
   if (!selectedCode) {
-    return fileOnly("the finding's lines are not in the diff on screen, so check the file as it is now.");
+    return fileOnly('该发现的行不在屏幕上的差异中，请检查该文件当前的内容。');
   }
 
   return {

@@ -29,7 +29,7 @@ export function useSavedGuides(enabled: boolean, refreshKey: unknown): SavedGuid
 
   const rename = useCallback(async (id: string, title: string) => {
     const next = title.trim();
-    if (!next) return 'A title cannot be empty.';
+    if (!next) return '标题不能为空。';
     const previous = guides;
     setGuides((list) => list?.map((g) => (g.id === id ? { ...g, title: next } : g)) ?? list);
     try {
@@ -41,10 +41,10 @@ export function useSavedGuides(enabled: boolean, refreshKey: unknown): SavedGuid
       if (res.ok) return null;
       const data = (await res.json().catch(() => ({}))) as { error?: string };
       setGuides(previous);
-      return data.error ?? 'Could not rename the guide.';
+      return data.error ?? '无法重命名引导。';
     } catch {
       setGuides(previous);
-      return 'Could not rename the guide.';
+      return '无法重命名引导。';
     }
   }, [guides]);
 

@@ -59,7 +59,7 @@ export const LiveLogViewer: React.FC<LiveLogViewerProps> = ({
   if (!content && !isLive) {
     return (
       <div className={`flex items-center justify-center py-8 ${className ?? ''}`}>
-        <p className="text-xs text-muted-foreground">No output captured.</p>
+        <p className="text-xs text-muted-foreground">未捕获任何输出。</p>
       </div>
     );
   }
@@ -73,7 +73,7 @@ export const LiveLogViewer: React.FC<LiveLogViewerProps> = ({
         <div className="p-3">
         {!content && isLive ? (
           <span className="text-xs text-muted-foreground/50 animate-pulse">
-            Waiting for output...
+            等待输出…
           </span>
         ) : (
           <pre className="text-xs leading-relaxed font-mono whitespace-pre-wrap break-words text-foreground/80">

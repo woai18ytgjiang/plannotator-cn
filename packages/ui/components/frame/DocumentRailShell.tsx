@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useEffect, useLayoutEffect, useRef, useState, type DragEventHandler, type ReactNode } from "react";
 
 import { useResizablePanel } from "../../hooks/useResizablePanel";
@@ -140,7 +141,7 @@ export function DocumentRailShell({
             className="z-[55] hidden md:flex"
             side="left"
             onCollapse={() => rail.setRailOpen(false)}
-            label="Collapse rail"
+            label="收起边栏"
             keyboard={{
               value: tocResize.width,
               min: RAIL_WIDTH.minWidth,

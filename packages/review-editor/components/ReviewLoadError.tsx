@@ -83,9 +83,9 @@ export const ReviewLoadError: React.FC<ReviewLoadErrorProps> = ({ failure, retry
       <div className="pn-app-viewport flex items-center justify-center bg-background px-6" data-review-load-error="done">
         <div role="status" className="max-w-md text-center space-y-2">
           <h1 ref={headingRef} tabIndex={-1} className="text-sm font-medium text-foreground outline-none">
-            {outcome === 'feedback' ? 'Feedback sent' : 'Review closed'}
+            {outcome === 'feedback' ? '反馈已发送' : '审查已关闭'}
           </h1>
-          <p className="text-xs text-muted-foreground">You can close this tab.</p>
+          <p className="text-xs text-muted-foreground">你可以关闭此标签页。</p>
         </div>
       </div>
     );
@@ -96,7 +96,7 @@ export const ReviewLoadError: React.FC<ReviewLoadErrorProps> = ({ failure, retry
       <div className="w-full max-w-md space-y-4">
         <div className="space-y-1.5">
           <h1 className="text-sm font-medium text-foreground">
-            This review could not load
+            无法加载本次审查
           </h1>
           <div role="alert" className="space-y-1">
             <p className="text-sm text-muted-foreground" data-review-load-error-message="">{failure.summary}</p>
@@ -115,12 +115,12 @@ export const ReviewLoadError: React.FC<ReviewLoadErrorProps> = ({ failure, retry
           disabled={retrying || busy}
           className="rounded-md bg-primary px-3 py-1.5 text-xs font-medium text-primary-foreground hover:bg-primary/90 disabled:opacity-60"
         >
-          {retrying ? 'Retrying…' : 'Retry'}
+          {retrying ? '重试中…' : '重试'}
         </button>
         {failure.canDecide && (
           <div className="space-y-2 border-t border-border pt-4">
             <label htmlFor="review-load-error-note" className="block text-xs text-muted-foreground">
-              Or answer the agent without the diff:
+              或者在不查看差异的情况下回复智能体：
             </label>
             <textarea
               id="review-load-error-note"
@@ -128,7 +128,7 @@ export const ReviewLoadError: React.FC<ReviewLoadErrorProps> = ({ failure, retry
               onChange={(event) => setNote(event.target.value)}
               rows={3}
               className="w-full resize-y rounded-md border border-border bg-background px-2 py-1.5 text-xs text-foreground"
-              placeholder="Feedback for the agent"
+              placeholder="给智能体的反馈"
             />
             <div className="flex flex-wrap items-center gap-2">
               <button
@@ -138,7 +138,7 @@ export const ReviewLoadError: React.FC<ReviewLoadErrorProps> = ({ failure, retry
                 disabled={busy || !note.trim()}
                 className="rounded-md bg-muted px-3 py-1.5 text-xs font-medium text-foreground hover:bg-muted/80 disabled:opacity-60"
               >
-                Send Feedback
+                发送反馈
               </button>
               <button
                 type="button"
@@ -147,7 +147,7 @@ export const ReviewLoadError: React.FC<ReviewLoadErrorProps> = ({ failure, retry
                 disabled={busy}
                 className="rounded-md px-3 py-1.5 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-60"
               >
-                Close review
+                关闭审查
               </button>
             </div>
             {actionError && <p role="alert" className="text-xs text-destructive">{actionError}</p>}

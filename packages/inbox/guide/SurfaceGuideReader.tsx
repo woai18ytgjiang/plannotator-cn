@@ -94,7 +94,7 @@ export default function SurfaceGuideReader({ snapshot, reviewed, onReviewedChang
         <p className="sf-gcounts">
           {guide.sections.length} section{guide.sections.length === 1 ? '' : 's'} · {files.length} file{files.length === 1 ? '' : 's'} · <Counts files={files} />
         </p>
-        <h2 className="sf-gsechead">Sections</h2>
+        <h2 className="sf-gsechead">章节</h2>
         <ol className="sf-gsections">
           {pages.map((p, i) => (
             <li key={`${p.section.title}:${i}`} className="sf-gsection" data-section={i}>
@@ -149,7 +149,7 @@ export default function SurfaceGuideReader({ snapshot, reviewed, onReviewedChang
             onRequestReveal={setFocusedFile}
           />
         </GuideViewportProvider>
-        <nav className="sf-gnav" aria-label="Sections">
+        <nav className="sf-gnav" aria-label="章节">
           {section > 0 ? (
             <button type="button" className="sf-gnavbtn" onClick={() => go(section - 1)} aria-label={`Previous: ${two(section - 1)}`}>
               <svg viewBox="0 0 16 16" fill="none" aria-hidden="true">

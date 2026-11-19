@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import {
   describeVimSelectionAction,
   vimSelectionShortcuts,
@@ -58,8 +59,8 @@ interface VimHudLegendGroupSpec {
 const VIM_HUD_LEGEND_GROUP_SPECS: readonly VimHudLegendGroupSpec[] = [
   {
     id: 'structure',
-    title: 'Document',
-    description: 'Move by blocks and semantic structure',
+    title: '文档',
+    description: '按块和语义结构移动',
     context: 'block',
     actionIds: [
       'moveDown',
@@ -72,8 +73,8 @@ const VIM_HUD_LEGEND_GROUP_SPECS: readonly VimHudLegendGroupSpec[] = [
   },
   {
     id: 'text',
-    title: 'Text',
-    description: 'Move by characters, lines, words, and paragraphs',
+    title: '文本',
+    description: '按字符、行、词和段落移动',
     context: 'text',
     actionIds: [
       'moveOut',
@@ -91,15 +92,15 @@ const VIM_HUD_LEGEND_GROUP_SPECS: readonly VimHudLegendGroupSpec[] = [
   },
   {
     id: 'selection',
-    title: 'Select',
-    description: 'Grow an exact or whole-block selection',
+    title: '选择',
+    description: '扩展精确选择或整块选择',
     context: 'block',
     actionIds: ['visual', 'visualBlock', 'swapSelectionEnds'],
   },
   {
     id: 'annotation',
-    title: 'Annotate',
-    description: 'Act on the current target or selection',
+    title: '批注',
+    description: '对当前目标或选择执行操作',
     context: 'block',
     actionIds: [
       'activeAnnotation',
@@ -113,8 +114,8 @@ const VIM_HUD_LEGEND_GROUP_SPECS: readonly VimHudLegendGroupSpec[] = [
   },
   {
     id: 'control',
-    title: 'Control',
-    description: 'Back out or show this key map',
+    title: '控制',
+    description: '退出或显示此键位表',
     context: 'block',
     actionIds: ['cancel', 'help'],
   },

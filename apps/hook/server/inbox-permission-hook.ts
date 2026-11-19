@@ -99,7 +99,7 @@ export async function permissionHookOutput(deps: PermissionHookDeps): Promise<st
       const tries: number = before !== null && before.token === entry.token ? before.tries + 1 : 1;
       refused = { token: entry.token, tries };
       if (tries >= REFUSED_TOKEN_TRIES) {
-        log("plannotator inbox permission-hook: the Inbox refuses this data dir's token; answer this prompt in Terminal.");
+        log("plannotator inbox permission-hook：收件箱拒绝了此数据目录的令牌；请在终端中回答此提示。");
         return null;
       }
       await sleep(PERMISSION_HOOK_RETRY_MS);
@@ -108,7 +108,7 @@ export async function permissionHookOutput(deps: PermissionHookDeps): Promise<st
     refused = null;
     const body = (await response.json().catch(() => null)) as { status?: string; message_id?: string; choice?: unknown; reason?: unknown; code?: string } | null;
     if (!response.ok || !body) {
-      log(`plannotator inbox permission-hook: the Inbox refused this prompt (${response.status}${body?.code ? ` ${body.code}` : ""}); answer it in Terminal.`);
+      log(`plannotator inbox permission-hook：收件箱拒绝了此提示（${response.status}${body?.code ? ` ${body.code}` : ""}）；请在终端中回答。`);
       return null;
     }
     if (body.status === "waiting" && typeof body.message_id === "string") {
@@ -117,7 +117,7 @@ export async function permissionHookOutput(deps: PermissionHookDeps): Promise<st
     }
     if (body.status === "decided" && body.choice === "terminal") {
       // The person approves it in Claude Code's own dialog: no decision, so the dialog comes up.
-      log("plannotator inbox permission-hook: approve this prompt in Claude Code (Terminal).");
+      log("plannotator inbox permission-hook：请在 Claude Code（终端）中批准此提示。");
       return null;
     }
     if (body.status === "decided") {

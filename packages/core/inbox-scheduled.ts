@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Routines, the pure part: the next-run math (croner, which knows time zones), the 15-minute rule, a
  * schedule in plain words, and the clock's one decision per check (run, skip or wait). Time always comes in as an
@@ -113,21 +114,21 @@ export function inboxScheduledDue(schedule: InboxScheduledSchedule, after: Date,
 
 /** "3 times", "1,000 or more times". */
 export function inboxScheduledTimes(count: number): string {
-  return count >= SCHEDULED_COUNT_MAX ? `${SCHEDULED_COUNT_MAX.toLocaleString("en-US")} or more times` : `${count} times`;
+  return count >= SCHEDULED_COUNT_MAX ? `${SCHEDULED_COUNT_MAX.toLocaleString("en-US")} 次或更多` : `${count} 次`;
 }
 
 // ─── Words ───
 
-const DAYS = ["Sunday", "Monday", "Tuesday", "Wednesday", "Thursday", "Friday", "Saturday"];
+const DAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
 
 const clock = (hour: number, minute: number): string => `${hour % 12 === 0 ? 12 : hour % 12}:${String(minute).padStart(2, "0")} ${hour < 12 ? "AM" : "PM"}`;
 
-const listed = (words: string[]): string => (words.length <= 1 ? words.join("") : `${words.slice(0, -1).join(", ")} and ${words.at(-1)}`);
+const listed = (words: string[]): string => (words.length <= 1 ? words.join("") : `${words.slice(0, -1).join("、")}和${words.at(-1)}`);
 
 /** A cron in plain words, for the patterns people write; any other reads as itself. */
 function cronWords(cron: string): string {
   const parts = cron.trim().split(/\s+/);
-  if (parts.length !== 5) return `On the schedule ${cron}`;
+  if (parts.length !== 5) return `按计划 ${cron}`;
   const [min, hour, dom, month, dow] = parts as [string, string, string, string, string];
   const num = (text: string) => (/^\d+$/.test(text) ? Number(text) : null);
   const m = num(min);
@@ -137,34 +138,34 @@ function cronWords(cron: string): string {
     const stepMin = /^\*\/(\d+)$/.exec(min);
     // `*/45` runs at :00 and :45, not every 45 minutes: a step that does not divide the hour says its minutes.
     const step = stepMin ? Number(stepMin[1]) : 0;
-    if (step > 0 && hour === "*") return 60 % step === 0 ? `Every ${step} minutes` : `Every hour at ${listed(Array.from({ length: Math.ceil(60 / step) }, (_, i) => `:${String(i * step).padStart(2, "0")}`))}`;
-    if (m !== null && hour === "*") return `Every hour at :${String(m).padStart(2, "0")}`;
+    if (step > 0 && hour === "*") return 60 % step === 0 ? `每 ${step} 分钟` : `每小时的 ${listed(Array.from({ length: Math.ceil(60 / step) }, (_, i) => `:${String(i * step).padStart(2, "0")}`))}`;
+    if (m !== null && hour === "*") return `每小时的第 :${String(m).padStart(2, "0")} 分钟`;
     const stepHour = /^\*\/(\d+)$/.exec(hour);
-    if (m !== null && stepHour && 24 % Number(stepHour[1]) === 0) return `Every ${stepHour[1]} hours, at minute ${m}`;
-    if (m !== null && h !== null) return `Every day at ${clock(h, m)}`;
+    if (m !== null && stepHour && 24 % Number(stepHour[1]) === 0) return `每 ${stepHour[1]} 小时，在第 ${m} 分钟`;
+    if (m !== null && h !== null) return `每天 ${clock(h, m)}`;
   }
   if (everyDay && m !== null && h !== null) {
-    if (dow === "1-5") return `Every weekday at ${clock(h, m)}`;
-    if (dow === "0,6" || dow === "6,0") return `Every weekend day at ${clock(h, m)}`;
+    if (dow === "1-5") return `每个工作日 ${clock(h, m)}`;
+    if (dow === "0,6" || dow === "6,0") return `每个周末日 ${clock(h, m)}`;
     if (/^[0-7](,[0-7])*$/.test(dow)) {
       const days = [...new Set(dow.split(",").map((d) => DAYS[Number(d) % 7]!))];
-      return days.length === 1 ? `Every week on ${days[0]} at ${clock(h, m)}` : `Every ${listed(days)} at ${clock(h, m)}`;
+      return days.length === 1 ? `每周 ${days[0]} ${clock(h, m)}` : `每周 ${listed(days)} ${clock(h, m)}`;
     }
   }
-  if (m !== null && h !== null && month === "*" && dow === "*" && /^\d+$/.test(dom)) return `Every month on day ${dom} at ${clock(h, m)}`;
+  if (m !== null && h !== null && month === "*" && dow === "*" && /^\d+$/.test(dom)) return `每月 ${dom} 日 ${clock(h, m)}`;
   return `On the schedule ${cron}`;
 }
 
 /** "Every weekday at 9:00 AM", "Once on Fri, Nov 20 at 5:00 PM", "Runs when you run it." */
 export function inboxScheduleWords(schedule: InboxScheduledSchedule): string {
-  if (schedule === null) return "Runs when you run it.";
+  if (schedule === null) return "由你手动运行。";
   if ("cron" in schedule) return cronWords(schedule.cron);
   const match = /^(\d{4})-(\d{2})-(\d{2})T(\d{2}):(\d{2})/.exec(schedule.at);
-  if (!match) return `Once on ${schedule.at}`;
+  if (!match) return `仅一次：${schedule.at}`;
   const [, y, mo, d, h, mi] = match.map(Number) as number[];
   // The wall date's own weekday and month name, read in UTC so no zone moves the day.
   const day = new Date(Date.UTC(y!, mo! - 1, d!)).toLocaleDateString("en-US", { timeZone: "UTC", weekday: "short", month: "short", day: "numeric" });
-  return `Once on ${day} at ${clock(h!, mi!)}`;
+  return `仅一次：${day} ${clock(h!, mi!)}`;
 }
 
 /** The zone's short name at `at` ("EST", "CET", else its offset "GMT+5:30"). */

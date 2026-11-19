@@ -126,7 +126,7 @@ export function CardMenu(props: CardMenuProps) {
       </ContextMenu.Trigger>
       <ContextMenu.Portal container={portal ?? undefined}>
         <ContextMenu.Positioner className="ib-pm-pos">
-          <ContextMenu.Popup className="ib-pm" aria-label={card?.title ?? 'Card'} data-card-context-menu={card?.id} {...menu.popup}>
+          <ContextMenu.Popup className="ib-pm" aria-label={card?.title ?? '卡片'} data-card-context-menu={card?.id} {...menu.popup}>
             {card &&
               groups.map((group, index) => {
                 if (group[0]?.kind === 'column' && index !== firstColumns) return null;
@@ -135,14 +135,14 @@ export function CardMenu(props: CardMenuProps) {
                   <>
                     <Menu.Separator className="ib-pm-sep" />
                     <Menu.SubmenuRoot>
-                      <Menu.SubmenuTrigger className="ib-pmi" label="Tag" data-card-menu-action="initiative">
+                      <Menu.SubmenuTrigger className="ib-pmi" label="标签" data-card-menu-action="initiative">
                         <Icon name="hash" size={15} />
-                        <span className="ib-pmi-l">Tag</span>
+                        <span className="ib-pmi-l">标签</span>
                         <Icon name="chevR" size={14} className="ib-pmi-check" />
                       </Menu.SubmenuTrigger>
                       <Menu.Portal container={portal ?? undefined}>
                         <Menu.Positioner className="ib-pm-pos" side="right" align="start" sideOffset={2}>
-                          <Menu.Popup className="ib-pm ib-bflt-menu" aria-label="Tag" data-card-initiative-menu="">
+                          <Menu.Popup className="ib-pm ib-bflt-menu" aria-label="标签" data-card-initiative-menu="">
                             <CardInitiativeItems initiatives={props.initiatives ?? []} value={card.initiative ?? null} onPick={(next) => {
                               menu.follow(card.id);
                               props.onInitiative?.(card, next);
@@ -166,7 +166,7 @@ export function CardMenu(props: CardMenuProps) {
                           const item = columnGroups.flat().find((choice) => choice.kind === 'column' && choice.column === value);
                           if (item) pick(item);
                         }}
-                        aria-label="Column"
+                        aria-label="列"
                       >
                         {columnGroups.map((choices, at) => (
                           <Fragment key={at}>

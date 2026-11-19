@@ -366,7 +366,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
       .catch((cause: unknown) => {
         if (controller.signal.aborted) return;
         again.current = !(cause instanceof InboxApiError && (cause.code === 'pull_diff_too_large' || cause.code === 'pull_diff_fork'));
-        if (!diff) setDiffError(cause instanceof Error ? cause.message : 'The diff could not be read.');
+        if (!diff) setDiffError(cause instanceof Error ? cause.message : '无法读取差异。');
       });
     return () => controller.abort();
     // A new layer or scope reads again; the same one keeps its diff.
@@ -819,7 +819,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
         onSent();
       } catch (cause) {
         if (!mounted.current) return;
-        setSendError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : 'Your verdict was not sent.');
+        setSendError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : '你的结论未发送。');
       } finally {
         if (mounted.current) setSending(false);
       }
@@ -844,28 +844,28 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
 
   if (!model || !stack || !layer) {
     return (
-      <section className={`ib-viewer ib-wlayer ib-review ib-prreview${phone ? '' : ' ib-prr-wide'}`} aria-label="Review" data-pull-review="">
+      <section className={`ib-viewer ib-wlayer ib-review ib-prreview${phone ? '' : ' ib-prr-wide'}`} aria-label="审查" data-pull-review="">
         <div className="ib-vhead">
           {!phone && <SidebarTrigger />}
-          <Tip content="Reviews">
-            <button type="button" className="ib-back" onClick={onBack} aria-label="Reviews">
+          <Tip content="审查">
+            <button type="button" className="ib-back" onClick={onBack} aria-label="审查">
               <Icon name="back" size={15} />
             </button>
           </Tip>
         </div>
         <div className="ib-pr-empty" role={modelError || model ? 'alert' : undefined}>
-          {modelError ?? (model ? 'This pull request is no longer in the list.' : 'Reading your pull requests…')}
+          {modelError ?? (model ? '此 PR 已不在列表中。' : '正在读取你的 PR…')}
         </div>
       </section>
     );
   }
 
   const label = inboxPullLabel(layer);
-  const wholeTip = `Whole stack: ${diff && scope === 'stack' ? `${diff.base}…${diff.head}` : `${stack.base} up to ${label}`}`;
+  const wholeTip = `整个堆叠：${diff && scope === 'stack' ? `${diff.base}…${diff.head}` : `${stack.base} 到 ${label}`}`;
   const scopeTitle = on?.title ?? null;
   const diffCounts = diff ? { add: files.reduce((sum, f) => sum + f.additions, 0), del: files.reduce((sum, f) => sum + f.deletions, 0) } : undefined;
 
-  const readOnlyParts: Words = layer.mine ? ['No review thread yet'] : layer.author ? ['by ', person(layer.author)] : ['by a deleted account'];
+  const readOnlyParts: Words = layer.mine ? ['还没有审查话题'] : layer.author ? ['由 ', person(layer.author)] : ['由已删除的账号'];
   const readOnlyWords = wordsText(readOnlyParts);
   const readOnlyNote = !canDecide && !posted && !diffError && (
     <Tip cut content={readOnlyWords}>
@@ -945,7 +945,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
       ref={paneRef}
       className={`ib-viewer ib-wlayer ib-review ib-prreview${folded ? ' ib-fold' : ''}${folded && sheet ? ' ib-panel-open' : ''}${!folded && !sheet ? ' ib-prr-panel-shut' : ''}${phone ? '' : ' ib-prr-wide'}${phone ? ' ib-railfold' : ''}${filesSheet ? ' ib-files-open' : ''}`}
       style={{ '--ib-rail-w': `${railWidth}px` } as React.CSSProperties}
-      aria-label={`Review ${label}`}
+      aria-label={`审查 ${label}`}
       data-pull-review={layer.key}
       data-pull-scope={scope}
       onFocusCapture={(event) => {
@@ -954,8 +954,8 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
     >
       <div className="ib-vhead">
         {!phone && <SidebarTrigger />}
-        <Tip content="Reviews">
-          <button type="button" className="ib-back" onClick={onBack} aria-label="Reviews">
+        <Tip content="审查">
+          <button type="button" className="ib-back" onClick={onBack} aria-label="审查">
             <Icon name="back" size={15} />
           </button>
         </Tip>
@@ -983,7 +983,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
             onClick={() => setSheet((v) => !v)}
             aria-expanded={sheet}
             aria-controls={sheetId}
-            aria-label={`Comments, ${comments.length}`}
+            aria-label={`评论，${comments.length} 条`}
           >
             <Icon name="comment" size={15} />
             {comments.length}
@@ -1034,7 +1034,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
         ) : (
           <a className="ib-btn ib-sm" href={layer.url} target="_blank" rel="noreferrer noopener" data-pull-review-forge="">
             <Icon name="external" size={14} />
-            {phone ? <span className="ib-sr">Open on {forgeName(stack)}</span> : `Open on ${forgeName(stack)}`}
+            {phone ? <span className="ib-sr">在 {forgeName(stack)} 中打开</span> : `在 ${forgeName(stack)} 中打开`}
           </a>
         )}
       </div>
@@ -1047,7 +1047,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
               <Icon name="chevD" size={13} />
             </button>
             {files.length > 0 && (
-              <button ref={filesButton} type="button" className={`ib-prp-jump${filesSheet ? ' ib-on' : ''}`} aria-expanded={filesSheet} aria-controls={filesSheetId} aria-label={`Files, ${files.length}`} onClick={toggleFiles} data-pull-review-files-button="">
+              <button ref={filesButton} type="button" className={`ib-prp-jump${filesSheet ? ' ib-on' : ''}`} aria-expanded={filesSheet} aria-controls={filesSheetId} aria-label={`文件，${files.length} 个`} onClick={toggleFiles} data-pull-review-files-button="">
                 <FileTreeMark />
                 <span>{files.length}</span>
               </button>
@@ -1078,7 +1078,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
             ) : undefined}
           />
         )}
-        <nav className="ib-rrail" id={filesSheetId} ref={railRef} aria-label="Changed files" {...sheetKeys}>
+        <nav className="ib-rrail" id={filesSheetId} ref={railRef} aria-label="已更改的文件" {...sheetKeys}>
           {rail}
         </nav>
         {!phone && (
@@ -1086,7 +1086,7 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
             className="ib-prp-handle"
             role="separator"
             aria-orientation="vertical"
-            aria-label="Width of the file rail"
+            aria-label="文件栏宽度"
             aria-valuemin={RAIL_WIDTH.min}
             aria-valuemax={RAIL_WIDTH.max}
             aria-valuenow={railWidth}
@@ -1180,34 +1180,34 @@ function LayerReview({ model, modelError, stackId, layerKey, scope: asked, onLay
           )}
           {next && scope === 'layer' && (diff || diffError) && (
             <button type="button" className="ib-prp-next" onClick={() => onLayer(next.key, 'layer')} data-pull-next-layer={next.key}>
-              <span className="ib-prp-nextw">Next layer</span>
+              <span className="ib-prp-nextw">下一层</span>
               <span className="ib-prp-num">{inboxPullLabel(next)}</span>
               <bdi className="ib-prp-title">{next.title}</bdi>
               <Icon name="chevR" size={15} />
             </button>
           )}
         </div>
-        <div className="ib-apanel ib-gpanel" id={sheetId} ref={panelRef} role={folded ? 'region' : undefined} aria-label={folded ? 'Comments' : undefined} {...sheetKeys}>
+        <div className="ib-apanel ib-gpanel" id={sheetId} ref={panelRef} role={folded ? 'region' : undefined} aria-label={folded ? '评论' : undefined} {...sheetKeys}>
           {folded && (
             <div className="ib-sheet-h">
-              <b>Comments</b>
+              <b>评论</b>
               <span className="ib-mut">{comments.length}</span>
               <span className="ib-sp" />
-              <button ref={sheetCloseRef} type="button" className="ib-iconbtn" onClick={closeComments} aria-label="Close the comments">
+              <button ref={sheetCloseRef} type="button" className="ib-iconbtn" onClick={closeComments} aria-label="关闭评论">
                 <Icon name="x" />
               </button>
             </div>
           )}
           {phone && <div ref={setControlsHost} className="ib-prr-controls ib-prp-sheetctl" data-pull-controls="" />}
           <AnnotationPanel
-            title="Comments"
-            emptyHint={readerComments ? 'Click a line number, drag across lines, or select code to comment' : undefined}
+            title="评论"
+            emptyHint={readerComments ? '点击行号、跨行拖动，或选中代码即可评论' : undefined}
             isOpen
             presentation={folded ? 'embedded' : undefined}
             annotations={NO_ANNOTATIONS}
             blocks={NO_BLOCKS}
             codeAnnotations={comments}
-            codeAnnotationNote={(c) => (here.includes(c) ? null : 'Written on older code')}
+            codeAnnotationNote={(c) => (here.includes(c) ? null : '写在旧版代码上')}
             onSelect={showFromPanel}
             onDelete={remove}
             selectedId={selectedId}

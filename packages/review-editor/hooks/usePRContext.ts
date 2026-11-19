@@ -57,7 +57,7 @@ export function usePRContext(prMetadata: PRMetadata | null) {
       setError(null);
     } catch (err) {
       if (requestUrl !== lastUrl.current) return;
-      const message = err instanceof Error ? err.message : 'Failed to load PR context';
+      const message = err instanceof Error ? err.message : '加载 PR 上下文失败';
       setError(message);
     } finally {
       if (requestUrl === lastUrl.current) setIsLoading(false);

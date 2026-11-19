@@ -11,7 +11,7 @@ export class LiveError extends Error {
 async function call<T>(path: string, init?: RequestInit): Promise<T> {
   const response = await fetch(path, init);
   const body = (await response.json().catch(() => ({}))) as T & { error?: string; code?: string };
-  if (!response.ok) throw new LiveError(response.status, body.code ?? 'error', body.error ?? 'The Inbox did not answer.');
+  if (!response.ok) throw new LiveError(response.status, body.code ?? 'error', body.error ?? '收件箱没有响应。');
   return body;
 }
 
@@ -35,7 +35,7 @@ export const liveApi = {
 export async function postThreadsToPR(input: { action: 'comment'; body: string; fileComments: unknown[]; fileLevelComments: unknown[] }): Promise<{ prUrl?: string }> {
   const response = await fetch('/api/pr-action', { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify(withServerSession(input)) });
   const answer = (await response.json().catch(() => ({}))) as { error?: string; prUrl?: string; submission?: { status?: string } };
-  if (!response.ok) throw new LiveError(response.status, 'pr_action', answer.error ?? 'The review was not posted.');
+  if (!response.ok) throw new LiveError(response.status, 'pr_action', answer.error ?? '审查未能发布。');
   return answer;
 }
 

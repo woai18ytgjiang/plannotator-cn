@@ -21,20 +21,20 @@ export const SETTINGS_SECTIONS = ['general', 'rows', 'agents', 'cloud-agents', '
 export type SettingsSection = (typeof SETTINGS_SECTIONS)[number];
 
 export const SETTINGS_SECTION_LABEL: Record<SettingsSection, string> = {
-  general: 'General',
-  rows: 'Rows',
-  agents: 'Agents',
-  'cloud-agents': 'Cloud agents',
-  accounts: 'Accounts',
-  prompts: 'Prompts',
-  devices: 'Remote devices',
-  machines: 'Machines',
-  voice: 'Voice',
-  archived: 'Archived',
-  storage: 'Storage',
-  about: 'About',
-  capabilities: 'Capabilities',
-  activity: 'Activity',
+  general: '通用',
+  rows: '行',
+  agents: '智能体',
+  'cloud-agents': '云端智能体',
+  accounts: '账户',
+  prompts: '提示词',
+  devices: '远程设备',
+  machines: '设备',
+  voice: '语音',
+  archived: '已归档',
+  storage: '存储',
+  about: '关于',
+  capabilities: '功能',
+  activity: '活动',
 };
 
 export interface SettingsAddress {

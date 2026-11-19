@@ -27,7 +27,7 @@ export function AddTagItem({ threadId, target, onOpen }: { threadId?: string; ta
   if (!host || (target === undefined && (!threadId || !host.can(threadId))) || target === null) return null;
   const n = (target ?? threadTarget(host, threadId!)).on.length;
   return (
-    <Menu.Item className="ib-pmi" label="Add tag" closeOnClick={false} onClick={onOpen} data-add-tag-item="">
+    <Menu.Item className="ib-pmi" label="添加标签" closeOnClick={false} onClick={onOpen} data-add-tag-item="">
       <TagIcon size={15} />
       Add tag
       <span className="ib-zsub">
@@ -85,7 +85,7 @@ export function AddTagList({ threadId, target: given, onBack }: { threadId?: str
     <div ref={body} data-add-tag-list="">
       {onBack && (
         <>
-          <Menu.Item className="ib-pmi ib-zb" label="Add tag" closeOnClick={false} onClick={onBack} data-add-tag-back="">
+          <Menu.Item className="ib-pmi ib-zb" label="添加标签" closeOnClick={false} onClick={onBack} data-add-tag-back="">
             <Icon name="chevL" size={14} />
             Add tag
           </Menu.Item>
@@ -94,7 +94,7 @@ export function AddTagList({ threadId, target: given, onBack }: { threadId?: str
       )}
       <label className="ib-tagm-find">
         <Icon name="search" size={15} />
-        <input ref={field} value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={onKeyDown} onBlur={onBlur} placeholder="Find or make a tag" aria-label="Find or make a tag" autoComplete="off" spellCheck={false} data-tag-find="" />
+        <input ref={field} value={query} onChange={(event) => setQuery(event.target.value)} onKeyDown={onKeyDown} onBlur={onBlur} placeholder="查找或新建标签" aria-label="查找或新建标签" autoComplete="off" spellCheck={false} data-tag-find="" />
       </label>
       {shown.map((tag) => {
         const ticked = on.has(tag.id);
@@ -118,7 +118,7 @@ export function AddTagList({ threadId, target: given, onBack }: { threadId?: str
           </span>
         </Menu.Item>
       ) : !typed ? (
-        <Menu.Item className="ib-pmi ib-tagm-quiet" label="New tag" closeOnClick={false} onClick={() => field.current?.focus({ preventScroll: true })} data-tag-new-focus="">
+        <Menu.Item className="ib-pmi ib-tagm-quiet" label="新标签" closeOnClick={false} onClick={() => field.current?.focus({ preventScroll: true })} data-tag-new-focus="">
           <Icon name="plus" size={15} />
           New tag…
         </Menu.Item>

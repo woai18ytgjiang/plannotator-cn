@@ -25,11 +25,11 @@ import { wallTypeLabel } from '../wallFaceText';
 import { Tip } from './Tip';
 
 const TYPES: { id: InboxArtifactType; name: string }[] = [
-  { id: 'images', name: 'Images' },
-  { id: 'videos', name: 'Videos' },
-  { id: 'pages', name: 'Pages' },
-  { id: 'documents', name: 'Documents' },
-  { id: 'other', name: 'Other files' },
+  { id: 'images', name: '图片' },
+  { id: 'videos', name: '视频' },
+  { id: 'pages', name: '页面' },
+  { id: 'documents', name: '文档' },
+  { id: 'other', name: '其他文件' },
 ];
 
 const SIZE_KEY = 'plannotator-inbox-artifacts-wall-size';
@@ -50,7 +50,7 @@ export function wallArtifact(row: InboxArtifactRow): Artifact {
 }
 
 function nameOf(row: InboxArtifactRow): string {
-  return row.attachment ? row.attachment.name : (row.guide?.title ?? 'Guided review');
+  return row.attachment ? row.attachment.name : (row.guide?.title ?? '引导式审查');
 }
 
 /** "Today", "Yesterday", "Nov 5": the day a row's message came. */
@@ -103,8 +103,8 @@ function WallFilterMenu({ archived, onArchived, phone }: { archived: boolean; on
   useEffect(() => setPortal(trigger.current?.closest<HTMLElement>('.pn-inbox') ?? null), []);
   return (
     <Menu.Root modal={false}>
-      <Tip content="Filter">
-        <Menu.Trigger ref={trigger} className="ib-bflt-btn ib-wall-fbtn" aria-label={archived ? 'Filter: showing archived' : 'Filter'} data-on={archived ? '' : undefined} data-wall-filter="">
+      <Tip content="筛选">
+        <Menu.Trigger ref={trigger} className="ib-bflt-btn ib-wall-fbtn" aria-label={archived ? '筛选：正在显示已归档' : '筛选'} data-on={archived ? '' : undefined} data-wall-filter="">
           <FilterGlyph size={phone ? 20 : 16} />
         </Menu.Trigger>
       </Tip>
@@ -223,13 +223,13 @@ export function ArtifactsWall({ pinned, onPinned, onOpen, phone, read = inboxApi
   const counts = page?.counts ?? null;
 
   return (
-    <section className="ib-dpage ib-wall" aria-label="Artifacts" data-artifacts-wall="" data-size={size} data-phone={phone ? '' : undefined}>
+    <section className="ib-dpage ib-wall" aria-label="产物" data-artifacts-wall="" data-size={size} data-phone={phone ? '' : undefined}>
       <div className="ib-dh ib-wall-h">
         <SidebarTrigger />
-        <h1 tabIndex={-1}>Artifacts</h1>
+        <h1 tabIndex={-1}>产物</h1>
       </div>
-      <div className="ib-wall-bar" role="toolbar" aria-label="Filter artifacts">
-        <div className="ib-seg" role="group" aria-label="Show">
+      <div className="ib-wall-bar" role="toolbar" aria-label="筛选产物">
+        <div className="ib-seg" role="group" aria-label="显示">
           <button type="button" className="ib-seg-o" aria-pressed={!pinned} data-on={!pinned ? '' : undefined} onClick={() => onPinned(false)} data-wall-show="all">
             All{counts && <span className="ib-wall-n">{formatCount(counts.all)}</span>}
           </button>
@@ -237,7 +237,7 @@ export function ArtifactsWall({ pinned, onPinned, onOpen, phone, read = inboxApi
             Pinned{counts && <span className="ib-wall-n">{formatCount(counts.pinned)}</span>}
           </button>
         </div>
-        <div className="ib-wall-types" role="group" aria-label="Type">
+        <div className="ib-wall-types" role="group" aria-label="类型">
           {TYPES.map((t) => (
             <button key={t.id} type="button" className="ib-wall-type" aria-pressed={type === t.id} data-on={type === t.id ? '' : undefined} onClick={() => setType(type === t.id ? null : t.id)} data-wall-type={t.id}>
               {t.name}
@@ -246,16 +246,16 @@ export function ArtifactsWall({ pinned, onPinned, onOpen, phone, read = inboxApi
         </div>
         <div className="ib-wall-end">
           {!phone && (
-            <div className="ib-wall-size" role="group" aria-label="Size">
-              <Tip content="Smaller">
-                <button type="button" className="ib-wall-sizeb" aria-label="Smaller" aria-pressed={size === 'small'} data-on={size === 'small' ? '' : undefined} onClick={() => pickSize('small')}>
+            <div className="ib-wall-size" role="group" aria-label="大小">
+              <Tip content="更小">
+                <button type="button" className="ib-wall-sizeb" aria-label="更小" aria-pressed={size === 'small'} data-on={size === 'small' ? '' : undefined} onClick={() => pickSize('small')}>
                   <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                     {[1, 6, 11].flatMap((x) => [1, 6, 11].map((y) => <rect key={`${x}-${y}`} x={x} y={y} width="4" height="4" rx="1" />))}
                   </svg>
                 </button>
               </Tip>
-              <Tip content="Larger">
-                <button type="button" className="ib-wall-sizeb" aria-label="Larger" aria-pressed={size === 'large'} data-on={size === 'large' ? '' : undefined} onClick={() => pickSize('large')}>
+              <Tip content="更大">
+                <button type="button" className="ib-wall-sizeb" aria-label="更大" aria-pressed={size === 'large'} data-on={size === 'large' ? '' : undefined} onClick={() => pickSize('large')}>
                   <svg width="15" height="15" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true">
                     {[1, 9].flatMap((x) => [1, 9].map((y) => <rect key={`${x}-${y}`} x={x} y={y} width="6" height="6" rx="1.5" />))}
                   </svg>
@@ -284,8 +284,8 @@ export function ArtifactsWall({ pinned, onPinned, onOpen, phone, read = inboxApi
           <span className="ib-art-empty-ic">
             <Icon name={pinned ? 'pin' : 'artifacts'} size={28} />
           </span>
-          <b>{pinned ? 'No pinned artifacts yet' : 'No artifacts yet'}</b>
-          <span>{pinned ? 'Pin a file in a thread’s Artifacts, or in the viewer, and it shows here.' : 'Files, images and guided reviews from your threads show here.'}</span>
+          <b>{pinned ? '暂无置顶产物' : '暂无产物'}</b>
+          <span>{pinned ? '在话题的产物中或查看器中置顶文件后，它会显示在这里。' : '你话题中的文件、图片和引导式审查会显示在这里。'}</span>
         </div>
       ) : (
         <>
@@ -302,7 +302,7 @@ export function ArtifactsWall({ pinned, onPinned, onOpen, phone, read = inboxApi
           <div ref={end} className="ib-wall-more">
             {page.next && (
               <button type="button" className="ib-wall-linkbtn" onClick={loadMore} disabled={more} aria-busy={more || undefined}>
-                {more ? 'Loading…' : 'Show more'}
+                {more ? '加载中…' : '显示更多'}
               </button>
             )}
           </div>

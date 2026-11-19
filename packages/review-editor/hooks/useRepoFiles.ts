@@ -75,7 +75,7 @@ export function useRepoFiles({
         if (!response.ok && !('available' in body)) return { error: (body as { error?: string }).error ?? `HTTP ${response.status}` };
         return body;
       } catch (error) {
-        return { error: error instanceof Error ? error.message : 'The repository could not be listed.' };
+        return { error: error instanceof Error ? error.message : '无法列出仓库文件。' };
       }
     },
     [fetchImpl],

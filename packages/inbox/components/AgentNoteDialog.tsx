@@ -181,7 +181,7 @@ export function AgentNoteDialog({ rows, noteText, onModel, onClosed }: AgentNote
       <div className="ib-anote-body">
         {done ? (
           <>
-            <ul className="ib-anote-table" aria-label="What was written">
+            <ul className="ib-anote-table" aria-label="写入的内容">
               {doneRows.map((row) => {
                 const s = status[row.id]!;
                 return (

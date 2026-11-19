@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * PlanDiffViewer — Orchestrator for plan diff views
  *
@@ -63,15 +64,15 @@ const defaultOpenVscodeDiff = async (
       body: JSON.stringify(withServerSession({ baseVersion })),
     });
     if (await noteServerSessionMismatch(res)) {
-      return { error: "This review was replaced. Reload the page." };
+      return { error: "此次审查已被替换，请重新加载页面。" };
     }
     const data = (await res.json()) as { ok?: boolean; error?: string };
     if (!res.ok || data.error) {
-      return { error: data.error || "Failed to open VS Code diff" };
+      return { error: data.error || "无法打开 VS Code 差异" };
     }
     return { ok: true };
   } catch {
-    return { error: "Failed to connect to server" };
+    return { error: "无法连接到服务器" };
   }
 };
 
@@ -112,7 +113,7 @@ export const PlanDiffViewer: React.FC<PlanDiffViewerProps> = ({
     } catch {
       // A host-supplied opener that throws (instead of returning { error }) must
       // not wedge the button in a permanent loading state.
-      setVscodeDiffError("Failed to open VS Code diff");
+      setVscodeDiffError("无法打开 VS Code 差异");
     } finally {
       setVscodeDiffLoading(false);
     }
@@ -165,9 +166,9 @@ export const PlanDiffViewer: React.FC<PlanDiffViewerProps> = ({
           <button
             onClick={onPlanDiffToggle}
             className="flex items-center gap-1 px-2 py-1.5 rounded-md text-xs text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
-            title="Back to plan view"
+            title="返回计划视图"
           >
-            <span className="hidden md:inline text-[10px] font-medium">Exit Diff</span>
+            <span className="hidden md:inline text-[10px] font-medium">退出差异</span>
             <svg
               className="w-3.5 h-3.5"
               fill="none"
@@ -189,7 +190,7 @@ export const PlanDiffViewer: React.FC<PlanDiffViewerProps> = ({
           <PlanDiffModeSwitcher mode={diffMode} onChange={onDiffModeChange} />
           {baseVersionLabel && (
             <span className="text-[10px] text-muted-foreground">
-              vs {baseVersionLabel}
+              对比 {baseVersionLabel}
             </span>
           )}
           {canOpenVscodeDiff && (
@@ -197,11 +198,11 @@ export const PlanDiffViewer: React.FC<PlanDiffViewerProps> = ({
               onClick={handleOpenVscodeDiff}
               disabled={vscodeDiffLoading}
               className="ml-auto flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium text-muted-foreground hover:text-foreground hover:bg-muted/50 border border-border/30 transition-colors disabled:opacity-50"
-              title="Open diff in VS Code"
+              title="在 VS Code 中打开差异"
             >
               <VSCodeIcon className="w-3.5 h-3.5 flex-shrink-0" />
               <span className="hidden md:inline">
-                {vscodeDiffLoading ? "Opening..." : "VS Code"}
+                {vscodeDiffLoading ? "打开中…" : "VS Code"}
               </span>
             </button>
           )}
@@ -215,7 +216,7 @@ export const PlanDiffViewer: React.FC<PlanDiffViewerProps> = ({
               onClick={() => setVscodeDiffError(null)}
               className="ml-2 text-destructive/60 hover:text-destructive"
             >
-              dismiss
+              忽略
             </button>
           </div>
         )}

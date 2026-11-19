@@ -41,7 +41,7 @@ export const ExpandedCommentDialog: React.FC<ExpandedCommentDialogProps> = ({
   const dialogRef = useRef<HTMLDivElement>(null);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
   const askAIEnabled = aiAvailable && !!onAskAI && commentText.trim().length > 0;
-  const submitLabel = isEditing ? 'Update' : 'Add Comment';
+  const submitLabel = isEditing ? '更新' : '添加评论';
   const enterSavesComment = useConfigValue('enterSavesComment');
 
   useReviewAnnotationToolbarShortcuts({
@@ -106,8 +106,8 @@ export const ExpandedCommentDialog: React.FC<ExpandedCommentDialogProps> = ({
                   type="button"
                   onClick={onCollapse}
                   className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                  title="Collapse"
-                  aria-label="Collapse expanded comment"
+                  title="折叠"
+                  aria-label="折叠已展开的评论"
                 >
                   <CollapseIcon />
                 </button>
@@ -116,8 +116,8 @@ export const ExpandedCommentDialog: React.FC<ExpandedCommentDialogProps> = ({
                 type="button"
                 onClick={onCancel}
                 className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                title="Close"
-                aria-label="Close expanded comment"
+                title="关闭"
+                aria-label="关闭已展开的评论"
               >
                 <CloseIcon />
               </button>
@@ -138,7 +138,7 @@ export const ExpandedCommentDialog: React.FC<ExpandedCommentDialogProps> = ({
                 event.preventDefault();
                 if (canSubmit) onSubmit();
               }}
-              placeholder="Leave feedback..."
+              placeholder="留下反馈…"
               className="w-full h-full min-h-0 max-h-full bg-muted text-sm leading-relaxed placeholder:text-muted-foreground resize-y focus:outline-none rounded-lg border-0 px-3 py-2"
             />
           </div>
@@ -151,10 +151,10 @@ export const ExpandedCommentDialog: React.FC<ExpandedCommentDialogProps> = ({
                   onClick={handleAskAI}
                   disabled={!askAIEnabled}
                   className="inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  title={askAIEnabled ? 'Ask AI this question' : 'Type a question to ask AI'}
+                  title={askAIEnabled ? '询问 AI 该问题' : '输入问题以询问 AI'}
                 >
                   <SparklesIcon className="w-3 h-3" />
-                  Ask AI
+                  询问 AI
                 </button>
               )}
               {onEditSuggestion && (
@@ -163,7 +163,7 @@ export const ExpandedCommentDialog: React.FC<ExpandedCommentDialogProps> = ({
                   onClick={onEditSuggestion}
                   className="text-xs text-muted-foreground hover:text-foreground transition-colors"
                 >
-                  {hasSuggestedCode ? 'Edit suggestion' : 'Suggest code'}
+                  {hasSuggestedCode ? '编辑建议' : '建议代码'}
                 </button>
               )}
             </div>
@@ -174,7 +174,7 @@ export const ExpandedCommentDialog: React.FC<ExpandedCommentDialogProps> = ({
                   onClick={onCollapse}
                   className="review-toolbar-btn"
                 >
-                  Collapse
+                  折叠
                 </button>
               )}
               <button

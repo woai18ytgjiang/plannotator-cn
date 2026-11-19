@@ -79,16 +79,16 @@ export function PlaybackSpeed({ rate, onRate, side, className, phone = false }: 
   const { ref, root } = useInboxRoot();
   return (
     <Menu.Root modal={false}>
-      <Menu.Trigger ref={ref} className={`ib-speed${className ? ` ${className}` : ''}`} aria-label={`Playback speed, ${label}`} data-playback-speed={rate}>
+      <Menu.Trigger ref={ref} className={`ib-speed${className ? ` ${className}` : ''}`} aria-label={`播放速度，${label}`} data-playback-speed={rate}>
         {label}
       </Menu.Trigger>
       <Menu.Portal container={root ?? undefined}>
         {phone && <Menu.Backdrop className="ib-pm-scrim" />}
         <Menu.Positioner className="ib-pm-pos" side={side} align="end" sideOffset={6} data-phone={phone ? '' : undefined}>
-          <Menu.Popup className="ib-pm ib-speed-menu" aria-label="Playback speed" data-playback-speed-menu="">
+          <Menu.Popup className="ib-pm ib-speed-menu" aria-label="播放速度" data-playback-speed-menu="">
             {/* The popup is named already (aria-label): the title is for the eye only, on a phone's sheet. */}
             <div className="ib-pm-title" aria-hidden="true">
-              Playback speed
+              播放速度
             </div>
             <Menu.RadioGroup value={rate} onValueChange={(next: number) => onRate(next)}>
               {PLAYBACK_RATES.map((value) => (

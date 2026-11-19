@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useEffect, useId, useLayoutEffect, useMemo, useRef, useCallback, useSyncExternalStore } from 'react';
 import { File, type LineAnnotation } from '@pierre/diffs/react';
 import type { SelectedLineRange as PierreSelectedLineRange, LineEventBaseProps } from '@pierre/diffs';
@@ -123,7 +124,7 @@ function getLineSlice(contents: string, start: number, end: number): string {
 }
 
 function lineLabel(start: number, end: number): string {
-  return start === end ? `line ${start}` : `lines ${start}-${end}`;
+  return start === end ? `第 ${start} 行` : `第 ${start}-${end} 行`;
 }
 
 function getLineNumberFromSelectionNode(node: Node | null): number | null {
@@ -221,19 +222,19 @@ const CodeInlineAnnotation: React.FC<{
       }}
     >
       <div className={`flex items-center gap-2 text-muted-foreground ${plain ? 'text-[length:var(--ib-fs-11,11px)]' : 'text-[10px] uppercase tracking-wide'}`}>
-        <span className={plain ? 'font-medium text-foreground/80' : 'font-semibold text-primary'}>Comment</span>
+        <span className={plain ? 'font-medium text-foreground/80' : 'font-semibold text-primary'}>评论</span>
         <span className={plain ? 'tabular-nums' : 'rounded bg-muted px-1.5 py-0.5 font-mono normal-case text-foreground'}>
           {lineLabel(annotation.lineStart, annotation.lineEnd)}
         </span>
-        {annotation.author && <span className="truncate normal-case">by <bdi>{annotation.author}</bdi></span>}
+        {annotation.author && <span className="truncate normal-case">由 <bdi>{annotation.author}</bdi></span>}
         {annotation.outsideDiff && (
           <span
             className="rounded px-1.5 py-0.5 normal-case font-medium"
             style={{ background: 'color-mix(in oklab, var(--warning) 18%, transparent)', color: 'var(--warning)' }}
             data-code-annotation-outside-diff=""
-            title="A comment on lines outside the diff"
+            title="对差异之外代码行的评论"
           >
-            not in the diff
+            不在差异中
           </span>
         )}
         <div className="ml-auto flex items-center gap-1 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100">
@@ -245,7 +246,7 @@ const CodeInlineAnnotation: React.FC<{
                 setIsEditing(true);
               }}
               className="rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
-              title="Edit comment"
+              title="编辑评论"
             >
               <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
@@ -260,8 +261,8 @@ const CodeInlineAnnotation: React.FC<{
                 onDelete(annotation.id);
               }}
               className="rounded p-1 text-muted-foreground hover:bg-destructive/10 hover:text-destructive"
-              title="Delete comment"
-              aria-label="Delete comment"
+              title="删除评论"
+              aria-label="删除评论"
             >
               {inFold ? (
                 <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -283,8 +284,8 @@ const CodeInlineAnnotation: React.FC<{
               onHide();
             }}
             className="-my-1 rounded p-1 text-muted-foreground hover:bg-muted hover:text-foreground"
-            title="Hide comment"
-            aria-label="Hide comment"
+            title="隐藏评论"
+            aria-label="隐藏评论"
             data-code-comment-hide=""
           >
             <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
@@ -323,7 +324,7 @@ const CodeInlineAnnotation: React.FC<{
               }}
               className={`rounded bg-primary px-2 py-1 font-medium text-primary-foreground hover:opacity-90 ${plain ? 'text-[length:var(--ib-fs-12,12px)]' : 'text-[10px]'}`}
             >
-              Save
+              保存
             </button>
             <button
               type="button"
@@ -334,7 +335,7 @@ const CodeInlineAnnotation: React.FC<{
               }}
               className={`rounded bg-muted px-2 py-1 font-medium text-muted-foreground hover:bg-muted/80 ${plain ? 'text-[length:var(--ib-fs-12,12px)]' : 'text-[10px]'}`}
             >
-              Cancel
+              取消
             </button>
           </div>
         </div>
@@ -465,7 +466,7 @@ const CodeCommentFold: React.FC<{
   const count = annotations.length;
   const where = annotations.length === 1 && annotations[0].lineStart !== annotations[0].lineEnd
     ? lineLabel(annotations[0].lineStart, annotations[0].lineEnd)
-    : `line ${line}`;
+    : `第 ${line} 行`;
   const toggle = () => onToggle(line);
   // Hide and a delete sit in the part that folds away (inert once closed): keyboard focus goes to the bubble, not to
   // the page.
@@ -488,8 +489,8 @@ const CodeCommentFold: React.FC<{
         data-code-comment-bubble={line}
         aria-expanded={open}
         aria-controls={revealId}
-        aria-label={`${count === 1 ? 'Comment' : `${count} comments`} on ${where}`}
-        title={open ? 'Hide comment' : count === 1 ? 'Show comment' : `Show ${count} comments`}
+        aria-label={`${count === 1 ? '评论' : `${count} 条评论`}：${where}`}
+        title={open ? '隐藏评论' : count === 1 ? '显示评论' : `显示 ${count} 条评论`}
         onClick={(e) => {
           e.stopPropagation();
           toggle();
@@ -994,7 +995,7 @@ export const CodeFileView: React.FC<CodeFileViewProps> = ({
       <button
         type="button"
         style={gutterButtonStyle}
-        title="Add code comment"
+        title="添加代码评论"
         onMouseEnter={(e) => {
           e.currentTarget.style.filter = 'brightness(1.2)';
         }}
@@ -1214,8 +1215,8 @@ export const CodeFilePopout: React.FC<CodeFilePopoutProps> = ({
           </code>
           {isNotFound && (
             <p className="text-xs text-muted-foreground mt-1">
-              The path was referenced in the document but no matching file was found
-              in this project. It may describe a planned/future file.
+              文档中引用了该路径，但在当前项目里没有找到匹配的文件。
+              它可能指向一个计划中或尚未创建的文件。
             </p>
           )}
         </div>
@@ -1243,11 +1244,11 @@ export const CodeFilePopout: React.FC<CodeFilePopoutProps> = ({
         <div className="ml-auto flex items-center gap-2">
           {headerAction}
           <span className="text-xs text-muted-foreground tabular-nums">
-            {lineCount} lines
+            {lineCount} 行
           </span>
           <button
             onClick={handleCopy}
-            title={copied ? 'Copied!' : 'Copy file contents'}
+            title={copied ? '已复制' : '复制文件内容'}
             className={`p-1.5 rounded-md transition-colors ${
               copied ? 'text-success' : 'text-muted-foreground hover:bg-muted hover:text-foreground'
             }`}

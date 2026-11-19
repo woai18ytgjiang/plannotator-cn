@@ -69,7 +69,7 @@ export function RiskRulesDialog({ answer, onSaved, onClose }: { answer: InboxPul
           void save();
         }}
       >
-        <h2 id={titleId}>Set risk rules</h2>
+        <h2 id={titleId}>设置风险规则</h2>
         <label className="ib-sub ib-riskd-l" htmlFor={rulesId}>
           What makes a pull request high risk for you? Every open one is ranked against this: not touched is low, maybe is medium, definitely is high.
         </label>
@@ -99,7 +99,7 @@ export function RiskRulesDialog({ answer, onSaved, onClose }: { answer: InboxPul
                 <InlinePicker keysStayInList plainGroupLabels label="Model" value={list ? (model ?? '') : ''} options={modelOptions} onChange={(next) => setModel(next || null)} />
               </div>
             </div>
-            <p className="ib-quietline">A cheap model is plenty: Sonnet, Luna or similar. Diffs go only to the provider you choose here.</p>
+            <p className="ib-quietline">便宜模型就够用：Sonnet、Luna 或类似模型。差异只会发送到你在那里选择的服务商。</p>
             {answer.last_failure && (
               <p className="ib-quietline" data-pull-risk-failed="">
                 The last ranking didn&rsquo;t finish. {answer.last_failure}
@@ -111,7 +111,7 @@ export function RiskRulesDialog({ answer, onSaved, onClose }: { answer: InboxPul
           <>
             <label className="ib-opt" data-pull-risk-branches="">
               <input type="checkbox" checked={branches} onChange={(event) => setBranches(event.target.checked)} />
-              <span>Also rank branches agents report ready</span>
+              <span>同时评估智能体报告就绪的分支</span>
             </label>
             <p className="ib-quietline" data-pull-risk-branches-words="">
               When an agent reports a branch ready for review, its whole diff against its base (up to 8 MB), pushed or not, goes to the risk agent above and its provider, once per commit, and only when that commit is on this computer. Branches nobody reported are never sent.

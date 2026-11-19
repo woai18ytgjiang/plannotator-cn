@@ -66,7 +66,7 @@ export function RailStack({ layers, here, scope, wholeTip, wholeCounts, onLayer 
         <button type="button" className={`ib-prp-row${on ? ' ib-on' : ''}`} aria-current={on ? 'step' : undefined} disabled={!isOpen(l)} onClick={() => onLayer(l.key, 'layer')} data-pull-layer-row={l.key}>
           <RefMarkIcon kind="pr" state={l.state} size={14} />
           <span className="ib-prp-num">{inboxPullLabel(l)}</span>
-          {on ? <span className="ib-prp-rowtitle ib-prp-here">This layer</span> : <bdi className="ib-prp-rowtitle">{l.title}</bdi>}
+          {on ? <span className="ib-prp-rowtitle ib-prp-here">这一层</span> : <bdi className="ib-prp-rowtitle">{l.title}</bdi>}
           {on && <Counts add={l.additions} del={l.deletions} />}
         </button>
       </Tip>
@@ -85,12 +85,12 @@ export function RailStack({ layers, here, scope, wholeTip, wholeCounts, onLayer 
         <Tip content={wholeTip}>
           <button type="button" className={`ib-prp-row ib-prp-all${onWhole ? ' ib-on' : ''}`} aria-pressed={onWhole} onClick={() => tip && onLayer(tip.key, 'stack')} data-pull-layer-all="">
             <Icon name="layers" size={15} />
-            <span className="ib-prp-rowtitle">All {whole.length} layers</span>
+            <span className="ib-prp-rowtitle">全部 {whole.length} 层</span>
             <Counts add={onWhole && wholeCounts ? wholeCounts.add : whole.reduce((sum, l) => sum + l.additions, 0)} del={onWhole && wholeCounts ? wholeCounts.del : whole.reduce((sum, l) => sum + l.deletions, 0)} />
           </button>
         </Tip>
       )}
-      <div className="ib-prp-layers" ref={list} role="list" aria-label="Layers, bottom first">
+      <div className="ib-prp-layers" ref={list} role="list" aria-label="各层，从底层开始">
         {start > 0 && fold(foldWords(start, 'earlier', layers.slice(0, start)), () => setShowEarlier(true), 'earlier')}
         {foldable && showEarlier && at - NEAR > 1 && fold('Fold earlier', () => setShowEarlier(false), 'fold-earlier')}
         {layers.slice(start, end).map(row)}

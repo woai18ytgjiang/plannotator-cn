@@ -20,9 +20,9 @@ const ICON = 'w-4 h-4';
 
 export const CompactFileActions: React.FC<CompactFileActionsProps> = ({ filePath, patch, line, canOpen, base, markdownView, viewSwitch, viewed, onComment, stage, onEdit }) => {
   const items = [
-    onComment && { label: 'Comment on this file', onSelect: onComment, icon: <MessageSquare className={ICON} /> },
-    stage && { label: stage.isStaged ? 'Unstage this file' : 'Stage this file (git add)', onSelect: () => { if (!stage.isStaging) stage.onStage(); }, icon: <GitBranchPlus className={ICON} /> },
-    onEdit && { label: 'Edit to suggest a change', onSelect: onEdit, icon: <PencilLine className={ICON} /> },
+    onComment && { label: '评论此文件', onSelect: onComment, icon: <MessageSquare className={ICON} /> },
+    stage && { label: stage.isStaged ? '取消暂存此文件' : '暂存此文件（git add）', onSelect: () => { if (!stage.isStaging) stage.onStage(); }, icon: <GitBranchPlus className={ICON} /> },
+    onEdit && { label: '编辑以提出更改建议', onSelect: onEdit, icon: <PencilLine className={ICON} /> },
   ].filter((item): item is { label: string; onSelect: () => void; icon: React.ReactElement } => !!item);
   return (
     <div className="flex flex-none items-center" data-compact-file-actions="">
@@ -32,7 +32,7 @@ export const CompactFileActions: React.FC<CompactFileActionsProps> = ({ filePath
           type="button"
           onClick={viewed.onToggle}
           aria-pressed={viewed.isViewed}
-          aria-label={viewed.isViewed ? 'Mark as not viewed' : 'Mark as viewed'}
+          aria-label={viewed.isViewed ? '标记为未查看' : '标记为已查看'}
           data-file-header-viewed=""
           data-pn-touch-target=""
           data-pn-touch-target-icon=""

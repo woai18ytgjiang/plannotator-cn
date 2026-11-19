@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * A list row's grey line (approval "inbox-row-latest-preview", 2026-11-09): the thread's latest message as plain
  * text, like a mail app's. The store picks the message (`InboxStore.listRow`: the newest unread agent message while
@@ -64,7 +65,7 @@ export function inboxRowPreview(input: InboxRowPreviewInput): string | null {
     const answers = (input.answered ?? []).filter((q) => q.answer !== null && q.kind !== 'action');
     const picked = answers.filter((q) => q.answer!.skipped !== true);
     if (picked.length > 0) return cut(`You answered: ${picked.map((q) => answerWords(q.answer!)).join('; ')}`);
-    if (answers.length > 0) return `You skipped ${answers.length} ${answers.length === 1 ? 'question' : 'questions'}`;
+    if (answers.length > 0) return `你跳过了 ${answers.length} 个问题`;
     if (files.length > 0) return cut(`You: ${filesLine(files)}`);
     return null;
   }

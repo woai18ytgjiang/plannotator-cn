@@ -28,19 +28,19 @@ export function UnreportedBranches({ projectId, now, onStart }: { projectId: str
   }, [open, projectId]);
   const branches = read.answer?.branches ?? [];
   return (
-    <div className="ib-group ib-pr-fold" role="group" aria-label="Branches nobody reported" data-reviews-unreported={projectId}>
+    <div className="ib-group ib-pr-fold" role="group" aria-label="无人报告的分支" data-reviews-unreported={projectId}>
       <button type="button" className="ib-pr-foldbtn" onClick={() => setOpen((v) => !v)} aria-expanded={open} data-reviews-unreported-toggle="">
         <Icon name={open ? 'chevD' : 'chevR'} size={14} />
         Branches nobody reported {read.answer && branches.length > 0 && <span className="ib-n">{formatCount(branches.length)}</span>}
       </button>
-      {open && !read.answer && !read.error && <p className="ib-pr-risknote">Reading the branches…</p>}
+      {open && !read.answer && !read.error && <p className="ib-pr-risknote">正在读取分支…</p>}
       {open && read.error && (
         <p className="ib-error" role="alert">
           {read.error}
         </p>
       )}
-      {open && read.answer && !read.answer.git && <p className="ib-pr-risknote">This project's folder isn't a git repository on this computer.</p>}
-      {open && read.answer?.git && branches.length === 0 && <p className="ib-pr-risknote">No other branch had a commit in the last {INBOX_UNREPORTED_BRANCH_DAYS} days.</p>}
+      {open && read.answer && !read.answer.git && <p className="ib-pr-risknote">此项目的文件夹在这台电脑上不是 git 仓库。</p>}
+      {open && read.answer?.git && branches.length === 0 && <p className="ib-pr-risknote">最近 {INBOX_UNREPORTED_BRANCH_DAYS} 天内没有其他分支有提交。</p>}
       {open &&
         branches.map((branch) => (
           <div key={branch.branch} className="ib-pr-unrep" data-reviews-unreported-branch={branch.branch}>

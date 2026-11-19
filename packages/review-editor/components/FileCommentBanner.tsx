@@ -99,7 +99,7 @@ export const FileCommentCard: React.FC<{
             <button
               className="flex-none -ml-0.5 rounded p-0.5 text-muted-foreground hover:text-foreground hover:bg-muted transition-colors"
               onClick={(e) => { e.stopPropagation(); setCollapsed((c) => !c); }}
-              title={collapsed ? 'Expand comment' : 'Collapse comment'}
+              title={collapsed ? '展开评论' : '折叠评论'}
             >
               <svg className={`w-3.5 h-3.5 transition-transform ${collapsed ? '' : 'rotate-90'}`} fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M9 5l7 7-7 7" />
@@ -121,7 +121,7 @@ export const FileCommentCard: React.FC<{
         <div
           data-file-comment-markdown-quote=""
           className="mt-1 mb-1 border-l-2 border-border/40 pl-1.5 text-xs italic text-muted-foreground/80 line-clamp-2"
-          title="Commented in the rendered Markdown preview"
+          title="在渲染后的 Markdown 预览中添加的评论"
         >
           {comment.markdownPreview.originalText}
         </div>
@@ -138,11 +138,11 @@ export const FileCommentCard: React.FC<{
               else if (isCommentSubmitKey(e, enterSavesComment)) { e.preventDefault(); saveEdit(); }
             }}
             className="w-full min-h-[80px] resize-y rounded border border-border bg-background p-2 text-xs leading-relaxed focus:outline-none focus:ring-1 focus:ring-primary/40"
-            placeholder="File comment (markdown supported)…"
+            placeholder="文件评论（支持 Markdown）…"
           />
           <div className="mt-1 flex items-center justify-end gap-2">
             <button className="text-xs px-2 py-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted" onClick={() => setIsEditing(false)}>
-              Cancel
+              取消
             </button>
             <button className="text-xs px-2 py-1 rounded bg-primary/15 text-primary hover:bg-primary/25" onClick={saveEdit}>
               Save

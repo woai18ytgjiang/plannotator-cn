@@ -173,11 +173,11 @@ export async function startGoalSetupServer(
                 toSave.conventionalLabels = body.conventionalLabels;
               }
               if (Object.keys(toSave).length > 0 && !saveConfig(toSave as Parameters<typeof saveConfig>[0])) {
-                return Response.json({ error: "config.json could not be saved; nothing changed. A config.json that is not valid JSON is never written over: fix or remove it." }, { status: 500 });
+                return Response.json({ error: "config.json 无法保存；未做任何更改。内容不是有效 JSON 的 config.json 绝不会被覆盖：请修复或删除它。" }, { status: 500 });
               }
               return Response.json({ ok: true });
             } catch {
-              return Response.json({ error: "Invalid request" }, { status: 400 });
+              return Response.json({ error: "请求无效" }, { status: 400 });
             }
           }
 

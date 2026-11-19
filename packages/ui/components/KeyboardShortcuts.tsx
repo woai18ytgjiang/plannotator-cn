@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import {
   formatShortcutBindingTokens,
@@ -81,42 +82,42 @@ interface ShortcutSection {
 }
 
 const inputMethodShortcuts: ShortcutSection = {
-  title: 'Input Method',
+  title: '输入方式',
   shortcuts: [
-    { keys: [altKey, 'hold'], desc: 'Temporarily switch mode', hint: 'Hold to switch between Select and Pinpoint, release to revert' },
-    { keys: [altKey, altKey], desc: 'Toggle mode', hint: 'Double-tap to permanently switch between Select and Pinpoint' },
+    { keys: [altKey, 'hold'], desc: '临时切换模式', hint: '按住可在「选择」和「精确定位」之间切换，松开还原' },
+    { keys: [altKey, altKey], desc: '切换模式', hint: '双击可在「选择」和「精确定位」之间永久切换' },
   ],
 };
 
 const documentViewShortcuts: ShortcutSection = {
-  title: 'View',
+  title: '视图',
   shortcuts: [
-    { keys: [modKey, '.'], desc: 'Toggle focus mode', hint: 'Collapses the Contents sidebar and the right-hand panel together; press again to restore whatever was open before. Markdown documents only; HTML pages keep their own layout.' },
-    { keys: [modKey, 'E'], desc: 'Toggle edit mode', hint: 'Opens the markdown source editor in place, keeping your scroll position; press again to commit your edits and return to annotating. Markdown documents only; a source-backed document with unsaved changes keeps its two-step discard.' },
+    { keys: [modKey, '.'], desc: '切换专注模式', hint: '同时收起目录侧边栏和右侧面板；再次按下可恢复之前打开的内容。仅适用于 Markdown 文档；HTML 页面保留自身的布局。' },
+    { keys: [modKey, 'E'], desc: '切换编辑模式', hint: '就地打开 Markdown 源码编辑器，并保持你的滚动位置；再次按下可提交修改并返回批注。仅适用于 Markdown 文档；有未保存修改的源文件文档仍保留两步丢弃流程。' },
   ],
 };
 
 const annotationShortcuts: ShortcutSection = {
-  title: 'Annotations',
+  title: '批注',
   shortcuts: [
-    { keys: [shiftKey, '1-4'], desc: 'Switch annotation mode', hint: '1 Markup, 2 Comment, 3 Redline, 4 Label — matches the toolstrip order' },
-    { keys: ['a-z'], desc: 'Start typing comment', hint: 'When the annotation toolbar is open, any letter key opens the comment editor with that character' },
-    { keys: [altKey, '1-0'], desc: 'Apply quick label', hint: 'Instantly applies the Nth preset label (0 = 10th). When the label picker is open, bare digits also work.' },
-    { keys: [modKey, enter], desc: 'Submit comment' },
-    { keys: [modKey, 'C'], desc: 'Copy selected text' },
-    { keys: ['Esc'], desc: 'Close toolbar / Cancel' },
+    { keys: [shiftKey, '1-4'], desc: '切换批注模式', hint: '1 标注、2 评论、3 删改、4 标签——与工具条顺序一致' },
+    { keys: ['a-z'], desc: '直接开始输入评论', hint: '批注工具栏打开时，按任意字母键即可用该字符打开评论编辑器' },
+    { keys: [altKey, '1-0'], desc: '应用快捷标签', hint: '立即应用第 N 个预设标签（0 表示第 10 个）。标签选择器打开时，直接按数字也可生效。' },
+    { keys: [modKey, enter], desc: '提交评论' },
+    { keys: [modKey, 'C'], desc: '复制选中文本' },
+    { keys: ['Esc'], desc: '关闭工具栏 / 取消' },
   ],
 };
 
 const imageAnnotatorShortcuts: ShortcutSection = {
-  title: 'Image Annotator',
+  title: '图片批注器',
   shortcuts: [
-    { keys: ['1'], desc: 'Pen tool' },
-    { keys: ['2'], desc: 'Arrow tool' },
-    { keys: ['3'], desc: 'Circle tool' },
-    { keys: [modKey, 'Z'], desc: 'Undo' },
-    { keys: [enter], desc: 'Finish' },
-    { keys: ['Esc'], desc: 'Cancel' },
+    { keys: ['1'], desc: '画笔工具' },
+    { keys: ['2'], desc: '箭头工具' },
+    { keys: ['3'], desc: '圆形工具' },
+    { keys: [modKey, 'Z'], desc: '撤销' },
+    { keys: [enter], desc: '完成' },
+    { keys: ['Esc'], desc: '取消' },
   ],
 };
 
@@ -163,30 +164,30 @@ function scopeSections(scope: ShortcutScopeDefinition<any>): ShortcutSection[] {
 }
 
 const planActionShortcuts: ShortcutSection = {
-  title: 'Actions',
+  title: '操作',
   shortcuts: [
-    { keys: [modKey, enter], desc: 'Submit / Approve' },
-    { keys: [modKey, 'S'], desc: 'Save to notes app' },
-    { keys: [modKey, 'P'], desc: 'Print plan' },
-    { keys: ['Esc'], desc: 'Close dialog' },
+    { keys: [modKey, enter], desc: '提交 / 批准' },
+    { keys: [modKey, 'S'], desc: '保存到笔记应用' },
+    { keys: [modKey, 'P'], desc: '打印计划' },
+    { keys: ['Esc'], desc: '关闭对话框' },
   ],
 };
 
 const annotateActionShortcuts: ShortcutSection = {
-  title: 'Actions',
+  title: '操作',
   shortcuts: [
-    { keys: [modKey, enter], desc: 'Send annotations' },
-    { keys: [modKey, 'S'], desc: 'Save to notes app' },
-    { keys: [modKey, 'P'], desc: 'Print document' },
+    { keys: [modKey, enter], desc: '发送批注' },
+    { keys: [modKey, 'S'], desc: '保存到笔记应用' },
+    { keys: [modKey, 'P'], desc: '打印文档' },
   ],
 };
 
 const annotateSidebarShortcuts: ShortcutSection = {
-  title: 'Sidebar',
+  title: '侧边栏',
   shortcuts: [
-    { keys: [modKey, 'B'], desc: 'Toggle Contents sidebar' },
-    { keys: [modKey, shiftKey, 'B'], desc: 'Toggle Files sidebar', hint: 'Available when the Files tab is shown.' },
-    { keys: [shiftKey, shiftKey], desc: 'Toggle Agent TUI sidebar', hint: 'Available when the Agent control is shown.' },
+    { keys: [modKey, 'B'], desc: '切换目录侧边栏' },
+    { keys: [modKey, shiftKey, 'B'], desc: '切换文件侧边栏', hint: '显示「文件」标签页时可用。' },
+    { keys: [shiftKey, shiftKey], desc: '切换智能体 TUI 侧边栏', hint: '显示智能体控件时可用。' },
   ],
 };
 
@@ -203,45 +204,45 @@ const annotateShortcuts: ShortcutSection[] = [
 
 const reviewShortcuts: ShortcutSection[] = [
   {
-    title: 'Actions',
+    title: '操作',
     shortcuts: [
-      { keys: [modKey, enter], desc: 'Approve / Send feedback' },
-      { keys: [modKey, shiftKey, 'Y'], desc: 'Copy feedback', hint: 'Copies the same feedback that gets submitted' },
-      { keys: [altKey, altKey], desc: 'Toggle destination', hint: 'Double-tap to switch between GitHub and Agent in PR review mode' },
-      { keys: [modKey, 'B'], desc: 'Toggle file tree' },
-      { keys: [modKey, '.'], desc: 'Toggle sidebar' },
-      { keys: ['Esc'], desc: 'Collapse sidebar' },
+      { keys: [modKey, enter], desc: '批准 / 发送反馈' },
+      { keys: [modKey, shiftKey, 'Y'], desc: '复制反馈', hint: '复制的反馈与提交的内容相同' },
+      { keys: [altKey, altKey], desc: '切换目标', hint: '双击可在 PR 审查模式下于 GitHub 和智能体之间切换' },
+      { keys: [modKey, 'B'], desc: '切换文件树' },
+      { keys: [modKey, '.'], desc: '切换侧边栏' },
+      { keys: ['Esc'], desc: '收起侧边栏' },
     ],
   },
   {
-    title: 'File Navigation',
+    title: '文件导航',
     shortcuts: [
-      { keys: ['J'], desc: 'Next file' },
-      { keys: ['K'], desc: 'Previous file' },
-      { keys: ['['], desc: 'Scroll to previous file', hint: 'In all-files view, scrolls the viewport to the previous file' },
-      { keys: [']'], desc: 'Scroll to next file', hint: 'In all-files view, scrolls the viewport to the next file' },
-      { keys: ['Home'], desc: 'First file' },
-      { keys: ['End'], desc: 'Last file' },
+      { keys: ['J'], desc: '下一个文件' },
+      { keys: ['K'], desc: '上一个文件' },
+      { keys: ['['], desc: '滚动到上一个文件', hint: '在全部文件视图中，将视口滚动到上一个文件' },
+      { keys: [']'], desc: '滚动到下一个文件', hint: '在全部文件视图中，将视口滚动到下一个文件' },
+      { keys: ['Home'], desc: '第一个文件' },
+      { keys: ['End'], desc: '最后一个文件' },
     ],
   },
   {
-    title: 'File Actions',
+    title: '文件操作',
     shortcuts: [
-      { keys: ['V'], desc: 'Toggle viewed', hint: 'In all-files view, also collapses the file' },
-      { keys: ['A'], desc: 'Toggle git add / stage' },
-      { keys: ['C'], desc: 'File comment', hint: 'In all-files view, opens the comment popover for the focused file' },
-      { keys: ['X'], desc: 'Collapse / expand file', hint: 'In all-files view, toggles the focused file' },
-      { keys: ['Z'], desc: 'Undo collapse', hint: 'Reopens the last collapsed file and scrolls to it' },
+      { keys: ['V'], desc: '切换已查看状态', hint: '在全部文件视图中，还会折叠该文件' },
+      { keys: ['A'], desc: '切换 git add / 暂存' },
+      { keys: ['C'], desc: '文件评论', hint: '在全部文件视图中，为目标文件打开评论浮层' },
+      { keys: ['X'], desc: '折叠 / 展开文件', hint: '在全部文件视图中，切换目标文件的展开状态' },
+      { keys: ['Z'], desc: '撤销折叠', hint: '重新打开上次折叠的文件并滚动到它' },
     ],
   },
   ...scopeSections(reviewExplorerShortcuts),
   ...scopeSections(reviewMarkdownPreviewShortcuts),
   {
-    title: 'Annotations',
+    title: '批注',
     shortcuts: [
-      { keys: [modKey, enter], desc: 'Submit comment' },
-      { keys: ['Tab'], desc: 'Indent in editor' },
-      { keys: ['Esc'], desc: 'Close toolbar / Cancel' },
+      { keys: [modKey, enter], desc: '提交评论' },
+      { keys: ['Tab'], desc: '在编辑器中缩进' },
+      { keys: ['Esc'], desc: '关闭工具栏 / 取消' },
     ],
   },
 ];

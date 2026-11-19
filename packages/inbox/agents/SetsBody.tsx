@@ -139,8 +139,8 @@ export function SetsBody({ face, builtInOnly = false, onPick }: { face: AgentFac
         ref={input}
         className="am-sets-q"
         type="search"
-        placeholder="Search by name or number"
-        aria-label="Search by name or number"
+        placeholder="按名称或编号搜索"
+        aria-label="按名称或编号搜索"
         value={query}
         onChange={(event) => setQuery(event.target.value)}
         onKeyDown={onSearchKey}
@@ -169,7 +169,7 @@ export function SetsBody({ face, builtInOnly = false, onPick }: { face: AgentFac
       {set && (
         <div className="am-sets-head">
           <span>{set.name}</span>
-          <span>{query.trim() ? `${found.length} found` : count.toLocaleString('en-US')}</span>
+          <span>{query.trim() ? `找到 ${found.length} 个` : count.toLocaleString('zh-CN')}</span>
         </div>
       )}
       {set && fetchable && state !== 'done' && (
@@ -180,10 +180,10 @@ export function SetsBody({ face, builtInOnly = false, onPick }: { face: AgentFac
             </span>
           ) : (
             <button type="button" className="am-sets-getb" data-get={set.id} onClick={() => void getIconSet(set.id)}>
-              Get
+              获取
             </button>
           )}
-          <span role="status">{state === 'none' ? `${count.toLocaleString('en-US')} icons` : `${(set.get?.have ?? 0).toLocaleString('en-US')} of ${count.toLocaleString('en-US')}`}</span>
+          <span role="status">{state === 'none' ? `${count.toLocaleString('zh-CN')} 个图标` : `${(set.get?.have ?? 0).toLocaleString('zh-CN')} / ${count.toLocaleString('zh-CN')}`}</span>
         </div>
       )}
       <div className="am-sets-scroll" ref={scroller}>
@@ -218,9 +218,9 @@ export function SetsBody({ face, builtInOnly = false, onPick }: { face: AgentFac
       </div>
       {set?.credits && (
         <div className="am-sets-credit">
-          Icons by {set.name} authors · {licenceLabel(set.licence)} ·{' '}
+          图标作者：{set.name} 的作者 · {licenceLabel(set.licence)} ·{' '}
           <a href={setCreditsHref(set.id)} target="_blank" rel="noopener noreferrer">
-            Credits
+            致谢
           </a>
         </div>
       )}

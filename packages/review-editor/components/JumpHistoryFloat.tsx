@@ -9,21 +9,21 @@ const keyHint = (action: 'navigateBack' | 'navigateForward') => {
 };
 
 const VIA: Record<JumpCrumb['via'], string> = {
-  definition: 'Go to Definition',
+  definition: '转到定义',
   references: 'References',
-  file: 'Go to File',
+  file: '转到文件',
 };
 
 const samePlace = (a: NavLocation, b: NavLocation) => a.path === b.path && (a.line ?? null) === (b.line ?? null);
 
 function backLabel(to: NavLocation | null | undefined, crumb: JumpCrumb | null | undefined): string {
-  if (!to) return 'Go back';
+  if (!to) return '返回';
   const via = crumb && samePlace(crumb.from, to) ? ` · ${VIA[crumb.via]}` : '';
   return `Back to ${navLocationLabel(to)}${via}`;
 }
 
 function forwardLabel(to: NavLocation | null | undefined): string {
-  return to ? `Forward to ${navLocationLabel(to)}` : 'Go forward';
+  return to ? `Forward to ${navLocationLabel(to)}` : '前进';
 }
 
 const Chevron: React.FC<{ d: string }> = ({ d }) => (
@@ -56,7 +56,7 @@ export const JumpHistoryFloat: React.FC<{ active: boolean; focusHome?: () => HTM
   return (
     <div
       role="group"
-      aria-label="Jump history"
+      aria-label="跳转历史"
       data-jump-float=""
       className="absolute z-10 flex items-center gap-0.5 p-0.5 rounded-lg border border-border bg-popover text-popover-foreground shadow-lg motion-safe:animate-[fade-in_150ms_ease-out]"
       style={compact

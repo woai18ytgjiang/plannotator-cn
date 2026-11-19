@@ -13,10 +13,10 @@ export function CallTreeHunkEntry({ title, onOpen }: { readonly title: string; r
         type="button"
         className="call-tree-hunk-entry"
         onClick={onOpen}
-        aria-label={`Call tree ${title}`}
+        aria-label={`调用树 ${title}`}
       >
         <ListTree aria-hidden="true" size={12} strokeWidth={2} />
-        <span>Call tree</span>
+        <span>调用树</span>
         <span className="call-tree-hunk-entry-name">{title}</span>
       </button>
     </div>

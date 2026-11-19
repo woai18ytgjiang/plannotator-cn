@@ -9,7 +9,7 @@ import type { PullFilter } from './model';
 
 type Cli = 'gh' | 'glab';
 
-const joinAnd = (names: readonly string[]) => (names.length <= 1 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} and ${names[names.length - 1]}`);
+const joinAnd = (names: readonly string[]) => (names.length <= 1 ? (names[0] ?? '') : `${names.slice(0, -1).join('、')}和${names[names.length - 1]}`);
 
 /** What a forge's own list of the person's PRs is: the search the capped answer comes from. */
 function forgeListUrl(host: string, cli: Cli): string {
@@ -53,9 +53,9 @@ export function pullsNotices(model: Pick<InboxPullsAnswer, 'hosts' | 'clis' | 'u
       if (hosts.length === 0) continue;
       const names = joinAnd([...new Set(hosts.map((h) => hostName(h.host)))]);
       const many = hosts.length > 1;
-      const head = error === 'unavailable' ? `${names} didn't answer` : `${names} asked to slow down`;
-      const tail = shown ? `showing ${many ? 'their' : 'its'} last read.` : `${many ? 'their' : 'its'} pull requests aren't shown.`;
-      out.push({ key: `${error}:${shown}`, head, line: `${head}; ${tail}${error === 'rate_limited' && !shown ? ' Try again in a minute.' : ''}` });
+      const head = error === 'unavailable' ? `${names} 没有响应` : `${names} 要求降低频率`;
+      const tail = shown ? `显示${many ? '它们' : '它'}上次读取的结果。` : `${many ? '它们' : '它'}的 PR 不显示。`;
+      out.push({ key: `${error}:${shown}`, head, line: `${head}；${tail}${error === 'rate_limited' && !shown ? ' 请过一分钟再试。' : ''}` });
     }
   }
   // Others (every open PR of the projects' repositories) is a read of its own: it failed while the person's own lists
@@ -65,9 +65,9 @@ export function pullsNotices(model: Pick<InboxPullsAnswer, 'hosts' | 'clis' | 'u
       const hosts = model.hosts.filter((h) => !h.error && h.others_error === error && !!h.others_last_read === shown);
       if (hosts.length === 0) continue;
       const names = joinAnd([...new Set(hosts.map((h) => hostName(h.host)))]);
-      const head = error === 'unavailable' ? `${names} didn't answer` : `${names} asked to slow down`;
-      const tail = shown ? `showing ${hosts.length > 1 ? 'their' : 'its'} last read.` : "pull requests by others aren't shown.";
-      out.push({ key: `${error}:others:${shown}`, head, line: `${head}; ${tail}${error === 'rate_limited' && !shown ? ' Try again in a minute.' : ''}` });
+      const head = error === 'unavailable' ? `${names} 没有响应` : `${names} 要求降低频率`;
+      const tail = shown ? `显示${hosts.length > 1 ? '它们' : '它'}上次读取的结果。` : '其他人的 PR 不显示。';
+      out.push({ key: `${error}:others:${shown}`, head, line: `${head}；${tail}${error === 'rate_limited' && !shown ? ' 请过一分钟再试。' : ''}` });
     }
   }
   for (const h of model.hosts) {
@@ -75,16 +75,16 @@ export function pullsNotices(model: Pick<InboxPullsAnswer, 'hosts' | 'clis' | 'u
     const ofOthers = h.capped.of === 'others';
     if (ofOthers && !othersShown) continue;
     const forge = h.cli === 'glab' ? 'GitLab' : 'GitHub';
-    const link = { href: forgeListUrl(h.host, h.cli), label: `Open on ${forge}` };
+    const link = { href: forgeListUrl(h.host, h.cli), label: `在 ${forge} 中打开` };
     if (typeof h.capped.total === 'number') {
       if (h.capped.total <= h.capped.shown) continue;
-      out.push({ key: `capped:${h.host}`, head: `Showing ${h.capped.shown} of ${h.capped.total}`, line: `Showing ${h.capped.shown} of ${h.capped.total} from ${h.host}`, link });
+      out.push({ key: `capped:${h.host}`, head: `显示 ${h.capped.shown} / ${h.capped.total}`, line: `从 ${h.host} 显示 ${h.capped.shown} / ${h.capped.total}`, link });
     } else {
       // How many are left out is not known: Others searched only the most active repositories, or the person's own
       // searches were not limited to the projects' repositories (and found more than one read takes).
-      const noun = h.cli === 'glab' ? 'merge request' : 'pull request';
-      const line = ofOthers ? `Not every ${noun} on ${h.host} was read.` : `Not every ${noun} on ${h.host} was read: it has more than one read takes.`;
-      out.push({ key: `capped:${h.host}`, head: `Not every ${noun} was read`, line, link });
+      const noun = h.cli === 'glab' ? '合并请求' : 'PR';
+      const line = ofOthers ? `${h.host} 上的${noun}没有全部读取。` : `${h.host} 上的${noun}没有全部读取：数量超过一次读取的上限。`;
+      out.push({ key: `capped:${h.host}`, head: `${noun}未全部读取`, line, link });
     }
   }
   // Each host no CLI is signed in to, by the CLIs that could read it and whether they are installed.
@@ -107,15 +107,15 @@ export function pullsNotices(model: Pick<InboxPullsAnswer, 'hosts' | 'clis' | 'u
       clis.length === 1
         ? TOOL_WORDS[missing ? 'missing' : 'signed_out']({ cli: clis[0]!, host: where }).title
         : missing
-          ? `${names} aren't installed`
-          : `Neither ${clis.join(' nor ')} is signed in to ${where}`;
-    const line = missing ? `${head}${clis.length === 1 ? '' : ' here'}, so pull requests on ${where} aren't shown.` : `${head}, so ${hosts.length > 1 ? 'their' : 'its'} pull requests aren't shown.`;
+          ? `未安装 ${names}`
+          : `${clis.join(' 和 ')} 都未登录 ${where}`;
+    const line = missing ? `${head}${clis.length === 1 ? '' : '（此处）'}，因此不显示 ${where} 上的 PR。` : `${head}，因此不显示${hosts.length > 1 ? '它们' : '它'}的 PR。`;
     out.push({ key, head, line });
   }
   return out;
 }
 
-const SIGN_IN_LINE = 'Pull requests show here when this computer’s gh or glab is signed in to the host of a project’s origin.';
+const SIGN_IN_LINE = '当此电脑的 gh 或 glab 登录了项目源站主机后，PR 会显示在这里。';
 
 /**
  * What the empty list says, by cause: a host that failed ("GitHub didn't answer", never "Nothing open"), a read cut
@@ -138,19 +138,19 @@ export function pullsEmptyWords(
   if (unsigned.length > 0 && model.hosts.length === 0) {
     if (unsigned.every((n) => n.key.startsWith('unsigned:missing:'))) {
       const clis = [...new Set(unsigned.flatMap((n) => n.key.slice('unsigned:missing:'.length).split('+')))];
-      const head = clis.length === 1 ? TOOL_WORDS.missing({ cli: clis[0] as Cli, host: '' }).title : `${joinAnd(clis)} aren't installed`;
+      const head = clis.length === 1 ? TOOL_WORDS.missing({ cli: clis[0] as Cli, host: '' }).title : `未安装 ${joinAnd(clis)}`;
       return { kind: 'missing', head, lines: [...unsigned.map((n) => n.line), SIGN_IN_LINE] };
     }
-    return { kind: 'signed-out', head: 'No signed-in GitHub or GitLab here', lines: [...unsigned.map((n) => n.line), SIGN_IN_LINE] };
+    return { kind: 'signed-out', head: '这里没有已登录的 GitHub 或 GitLab', lines: [...unsigned.map((n) => n.line), SIGN_IN_LINE] };
   }
   if (model.hosts.length === 0) {
     // An older Inbox says nothing of its CLIs: the words it always had.
     if (model.clis && Object.keys(model.projects).length === 0) {
-      return { kind: 'no-repos', head: 'No project here is on GitHub or GitLab', lines: ['Pull requests show here for projects whose origin is on GitHub or GitLab.'] };
+      return { kind: 'no-repos', head: '这里没有位于 GitHub 或 GitLab 的项目', lines: ['源在 GitHub 或 GitLab 上的项目，其 PR 会显示在这里。'] };
     }
-    return { kind: 'signed-out', head: 'No signed-in GitHub or GitLab here', lines: [SIGN_IN_LINE] };
+    return { kind: 'signed-out', head: '这里没有已登录的 GitHub 或 GitLab', lines: [SIGN_IN_LINE] };
   }
-  return { kind: 'nothing', head: 'Nothing open in your projects', lines: ['Open pull requests in your projects show here.', ...unsigned.map((n) => n.line)] };
+  return { kind: 'nothing', head: '你的项目中没有打开的 PR', lines: ['你项目中打开的 PR 会显示在这里。', ...unsigned.map((n) => n.line)] };
 }
 
 /** The CLIs whose hosts answered this read, for the foot ("From gh on this computer"). */

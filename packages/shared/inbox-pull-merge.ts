@@ -130,9 +130,9 @@ function notNowWords(platform: PullMergeTarget["platform"], detail: string): str
  */
 export function pullMergeVerdict(platform: PullMergeTarget["platform"], state: PullMergeState | null, seenHead: string): { ok: true } | { ok: false; code: PullMergeRefusal; message: string } {
   if (!state) return { ok: false, code: "pull_merge_unknown", message: `Couldn't ask ${platform === "gitlab" ? "GitLab" : "GitHub"} whether it can merge. Try again.` };
-  if (!state.open) return { ok: false, code: "pull_closed", message: "That pull request is no longer open." };
-  if (state.draft) return { ok: false, code: "pull_draft", message: "It is a draft: mark it ready for review first." };
-  if (!state.head_sha || state.head_sha !== seenHead.toLowerCase()) return { ok: false, code: "pull_moved", message: "It has new commits since you looked. Look again before you merge." };
+  if (!state.open) return { ok: false, code: "pull_closed", message: "该拉取请求已不再处于打开状态。" };
+  if (state.draft) return { ok: false, code: "pull_draft", message: "它是草稿：请先标记为可供审查。" };
+  if (!state.head_sha || state.head_sha !== seenHead.toLowerCase()) return { ok: false, code: "pull_moved", message: "自你查看后它有了新提交。请在合并前再查看一次。" };
   const can = platform === "github" ? state.mergeable === true && GITHUB_MERGEABLE.has(state.detail) : state.mergeable === true;
   if (!can) return { ok: false, code: "pull_not_mergeable", message: notNowWords(platform, state.detail || (state.mergeable === false ? "dirty" : "unknown")) };
   return { ok: true };
@@ -201,12 +201,12 @@ export async function mergePull(run: RefRunner, pull: PullMergeTarget, seenHead:
     const method = settings && settings.exitCode === 0 ? githubMergeMethodOf(settings.stdout) : null;
     if (!method) return { ok: false, code: "pull_merge_method", message: "Couldn't read which merge method the repository allows. Merge it on GitHub." };
     const merged = await run("gh", ["api", "--hostname", pull.host, "-X", "PUT", `repos/${parts.owner}/${parts.name}/pulls/${pull.number}/merge`, "-f", `merge_method=${method}`, "-f", `sha=${sha}`]).catch(() => null);
-    if (!merged) return { ok: false, code: "pull_merge_failed", message: "The merge didn't go: gh didn't answer." };
+    if (!merged) return { ok: false, code: "pull_merge_failed", message: "合并未成功：gh 没有响应。" };
     if (merged.exitCode !== 0) return { ok: false, code: "pull_merge_failed", message: forgeMessage(merged) };
     return { ok: true, method, sha };
   }
   const merged = await run("glab", ["api", "--hostname", pull.host, "-X", "PUT", `projects/${encodeURIComponent(pull.repo)}/merge_requests/${pull.number}/merge`, "-f", `sha=${sha}`]).catch(() => null);
-  if (!merged) return { ok: false, code: "pull_merge_failed", message: "The merge didn't go: glab didn't answer." };
+  if (!merged) return { ok: false, code: "pull_merge_failed", message: "合并未成功：glab 没有响应。" };
   if (merged.exitCode !== 0) return { ok: false, code: "pull_merge_failed", message: forgeMessage(merged) };
   return { ok: true, method: null, sha };
 }

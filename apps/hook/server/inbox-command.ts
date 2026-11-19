@@ -190,7 +190,7 @@ export function startTimeoutMs(env: NodeJS.ProcessEnv = process.env): number {
 async function waitForBusyInbox(dataDir: string, pid: number): Promise<InboxRegistryEntry> {
   const running = await waitUntilRunning(dataDir);
   if (!running) {
-    throw new Error(`The Plannotator Inbox (pid ${pid}) is running but not answering; quit it and try again.`);
+    throw new Error(`Plannotator 收件箱（pid ${pid}）正在运行但没有响应；请退出它后重试。`);
   }
   return running;
 }
@@ -258,21 +258,21 @@ export function inboxRemoteOpenHint(port: number): string {
 /** Where the Inbox is on the tailnet, or why it is not there; the Inbox runs locally either way. Stderr only. */
 function reportTailnet(state: Partial<InboxTailscaleState> & { url: string | null; error: string | null } | undefined, requested: boolean): void {
   if (!state) {
-    if (requested) process.stderr.write("Over your tailnet: not published.\n");
+    if (requested) process.stderr.write("通过你的尾网：未发布。\n");
     return;
   }
-  if (state.exposed?.length) process.stderr.write(`Warning: ${exposureWarning(state.exposed)} Open Settings > Over your tailnet to replace it.\n`);
+  if (state.exposed?.length) process.stderr.write(`警告：${exposureWarning(state.exposed)} 打开 设置 > 通过你的尾网 来替换它。\n`);
   if (requested && state.on === false && state.source === "env") {
-    process.stderr.write("Not published over your tailnet: PLANNOTATOR_INBOX_TAILSCALE turns it off in the Inbox's environment.\n");
+    process.stderr.write("未通过你的尾网发布：收件箱环境中的 PLANNOTATOR_INBOX_TAILSCALE 已将其关闭。\n");
     return;
   }
   if (state.url) {
     const who = state.allowed?.length ? ` (only ${state.allowed.join(", ")})` : "";
-    process.stderr.write(`Over your tailnet: ${state.url}${who}\n`);
+    process.stderr.write(`通过你的尾网：${state.url}${who}\n`);
     writeUrlQr(state.url);
     return;
   }
-  if (state.error) process.stderr.write(`Not published over your tailnet: ${state.error} The Inbox runs on this computer as usual.\n`);
+  if (state.error) process.stderr.write(`未通过你的尾网发布：${state.error} 收件箱仍照常在这台电脑上运行。\n`);
 }
 
 /** `--tailscale` is for this run; say how to keep it. */
@@ -296,18 +296,18 @@ async function publishRunningInbox(entry: InboxRegistryEntry): Promise<void> {
       signal: AbortSignal.timeout(30_000),
     });
     if (response.status === 404) {
-      process.stderr.write("The running Inbox is an older version without --tailscale; quit it and run plannotator inbox --tailscale again.\n");
+      process.stderr.write("正在运行的收件箱是旧版本，不支持 --tailscale；请退出它，并再次运行 plannotator inbox --tailscale。\n");
       return;
     }
     if (!response.ok) {
-      process.stderr.write(`The running Inbox did not publish over your tailnet (HTTP ${response.status}).\n`);
+      process.stderr.write(`正在运行的收件箱未能通过你的尾网发布（HTTP ${response.status}）。\n`);
       return;
     }
     const body = (await response.json()) as { tailscale?: InboxTailscaleState };
     reportTailnet(body.tailscale, true);
     if (body.tailscale?.url && body.tailscale.source === "flag") reportFlagScope();
   } catch (error) {
-    process.stderr.write(`Could not reach the running Inbox: ${error instanceof Error ? error.message : String(error)}\n`);
+    process.stderr.write(`无法连接正在运行的收件箱：${error instanceof Error ? error.message : String(error)}\n`);
   }
 }
 
@@ -380,7 +380,7 @@ async function reportDebugNeedsStart(dataDir: string): Promise<void> {
   if (process.env.PLANNOTATOR_INBOX_DEBUG !== "1") return;
   const status = await inboxStatus(dataDir);
   if (status.state !== "running" && status.state !== "busy") return;
-  process.stderr.write("PLANNOTATOR_INBOX_DEBUG is read at start, so it does nothing for the Inbox already running. Run plannotator inbox stop first, or set inboxDebug: true in config.json and Restart.\n");
+  process.stderr.write("PLANNOTATOR_INBOX_DEBUG 只在启动时读取，因此对已在运行的收件箱不起作用。请先运行 plannotator inbox stop，或在 config.json 中设置 inboxDebug: true 后重启。\n");
 }
 
 /** Run the Inbox server in this process until a signal or the stop route ends it. */
@@ -397,10 +397,10 @@ async function serveInbox(dataDir: string, open: boolean, htmlContent: string | 
   if (!lockHeldByStarter && !release) {
     const running = await waitUntilRunning(dataDir);
     if (!running) {
-      process.stderr.write("Another Plannotator Inbox is starting and did not come up; try again.\n");
+      process.stderr.write("另一个 Plannotator 收件箱正在启动但没有起来；请重试。\n");
       process.exit(1);
     }
-    process.stderr.write(`Plannotator Inbox: ${running.url}\n`);
+    process.stderr.write(`Plannotator 收件箱：${running.url}\n`);
     if (tailscale) await publishRunningInbox(running);
     if (open) await openBrowser(running.url);
     if (connect) await connectRunningInbox(running);
@@ -412,7 +412,7 @@ async function serveInbox(dataDir: string, open: boolean, htmlContent: string | 
     if (status.state === "running" || status.state === "busy") {
       trace.step(status.state === "running" ? "already_running" : "busy_wait", { inbox: status.entry.pid });
       const entry = status.state === "running" ? status.entry : await waitForBusyInbox(dataDir, status.entry.pid);
-      process.stderr.write(`Plannotator Inbox: ${entry.url}\n`);
+      process.stderr.write(`Plannotator 收件箱：${entry.url}\n`);
       if (tailscale) await publishRunningInbox(entry);
       if (open) await openBrowser(entry.url);
       if (connect) await connectRunningInbox(entry);
@@ -450,7 +450,7 @@ async function serveInbox(dataDir: string, open: boolean, htmlContent: string | 
       onRestartRequested: () => {
         trace.step("restart");
         ensureInboxRunning(dataDir, { tailscale: inbox.tailscale.runOnly() })
-          .catch((error) => process.stderr.write(`Restart failed: ${error instanceof Error ? error.message : String(error)}\n`))
+          .catch((error) => process.stderr.write(`重启失败：${error instanceof Error ? error.message : String(error)}\n`))
           .finally(() => process.exit(0));
       },
     });
@@ -492,12 +492,12 @@ async function writeNotes(dataDir: string, list: string): Promise<number> {
   const ids = [...new Set(list.split(",").map((id) => id.trim()).filter(Boolean))];
   const unknown = ids.filter((id) => !(INBOX_NOTE_AGENT_IDS as readonly string[]).includes(id));
   if (ids.length === 0 || unknown.length > 0) {
-    process.stderr.write(`Unknown agent${unknown.length === 1 ? "" : "s"} for --notes: ${unknown.join(", ") || "(none)"}. Use any of: ${INBOX_NOTE_AGENT_IDS.join(", ")}.\n`);
+    process.stderr.write(`--notes 中有未知的智能体：${unknown.join(", ") || "(none)"}。可使用：${INBOX_NOTE_AGENT_IDS.join(", ")}。\n`);
     return 1;
   }
   const environment = createAgentEnvironment();
   if (inboxNotesDisabled(environment.env)) {
-    process.stderr.write("PLANNOTATOR_INBOX_NOTES=0 is set: notes are off, nothing was written.\n");
+    process.stderr.write("已设置 PLANNOTATOR_INBOX_NOTES=0：备注已关闭，未写入任何内容。\n");
     return 1;
   }
   let ok = true;
@@ -513,7 +513,7 @@ async function writeNotes(dataDir: string, list: string): Promise<number> {
     if (id === "cursor") {
       // Cursor keeps its rules in the app: nothing is written; the note (without the markers) goes to stdout to copy.
       process.stdout.write(`${INBOX_NOTE_BODY}\n\n`);
-      process.stderr.write("Cursor: nothing written. Cursor keeps its rules in the app: copy the note above into Customize → Rules in Cursor. Plannotator can't see, update or remove that copy.\n");
+      process.stderr.write("Cursor：未写入任何内容。Cursor 把规则保存在应用内：请把上面的备注复制到 Cursor 的 Customize → Rules。Plannotator 无法查看、更新或移除那份副本。\n");
       added.push(id);
       continue;
     }
@@ -539,7 +539,7 @@ async function writeNotes(dataDir: string, list: string): Promise<number> {
   }
   // The window never asks about an agent whose note is there now; the others are still asked, once each.
   await markNotesAsked(added, { dataDir, selfCommand: selfCommand(), environment });
-  if (ok && added.some((id) => id !== "cursor")) process.stderr.write("Each agent reads it from its next session. Remove it in the Inbox's Settings or with plannotator uninstall.\n");
+  if (ok && added.some((id) => id !== "cursor")) process.stderr.write("每个智能体会在下一个会话中读取它。可在收件箱的设置中移除，或使用 plannotator uninstall。\n");
   return ok ? 0 : 1;
 }
 
@@ -576,28 +576,28 @@ async function statusCommand(dataDir: string, asJson: boolean): Promise<number> 
   let lines = "";
   const out = (line: string) => void (lines += `${line}\n`);
   if (status.state === "missing") {
-    out("Plannotator Inbox: not running (it has never run with this data dir)");
+    out("Plannotator 收件箱：未运行（此数据目录从未运行过它）");
   } else if (status.state === "stopped") {
-    const why = { dead_pid: "that process has exited", other_session: "its port answers for another Inbox now", no_answer: `nothing answers on its port; pid ${status.entry.pid} may be another program now` }[status.reason];
-    out("Plannotator Inbox: not running");
-    out(`  last ran: pid ${status.entry.pid} on port ${status.entry.port}, version ${status.entry.version}, started ${status.entry.startedAt} (${why})`);
+    const why = { dead_pid: "该进程已退出", other_session: "它的端口现在由另一个收件箱应答", no_answer: `它的端口没有应答；pid ${status.entry.pid} 现在可能是其他程序` }[status.reason];
+    out("Plannotator 收件箱：未运行");
+    out(`  上次运行：pid ${status.entry.pid}，端口 ${status.entry.port}，版本 ${status.entry.version}，启动于 ${status.entry.startedAt}（${why}）`);
   } else {
     const live = status.entry;
-    out(status.state === "running" ? "Plannotator Inbox: running" : `Plannotator Inbox: not answering (pid ${live.pid} holds port ${live.port} but did not answer)`);
-    out(`  URL:      ${live.url}`);
-    if (status.state === "running" && live.tailscale?.url) out(`  tailnet:  ${live.tailscale.url}`);
-    if (status.state === "running" && live.cloudflare_access) out(`  cloudflare: ${describeCfAccessRecord(live.cloudflare_access)}`);
-    out(`  pid:      ${live.pid}`);
-    out(`  version:  ${status.state === "running" ? status.health.version : live.version}`);
-    out(`  started:  ${live.startedAt}`);
+    out(status.state === "running" ? "Plannotator 收件箱：正在运行" : `Plannotator 收件箱：无应答（pid ${live.pid} 占用端口 ${live.port}，但没有应答）`);
+    out(`  URL：     ${live.url}`);
+    if (status.state === "running" && live.tailscale?.url) out(`  尾网：    ${live.tailscale.url}`);
+    if (status.state === "running" && live.cloudflare_access) out(`  Cloudflare：${describeCfAccessRecord(live.cloudflare_access)}`);
+    out(`  pid：     ${live.pid}`);
+    out(`  版本：    ${status.state === "running" ? status.health.version : live.version}`);
+    out(`  启动于：  ${live.startedAt}`);
   }
-  out(`  data dir: ${dataDir}`);
+  out(`  数据目录：${dataDir}`);
   if (status.state === "running" && status.health.version !== cliVersion) {
     // Restart runs this binary, so it is advised only when that is an update, never a downgrade.
     out(
       isNewerStableVersion(cliVersion, status.health.version)
-        ? `This plannotator is ${cliVersion}; plannotator inbox restart starts it in the Inbox's place.`
-        : `This plannotator is ${cliVersion}; the Inbox runs ${status.health.version}.`,
+        ? `此 plannotator 是 ${cliVersion}；plannotator inbox restart 会让它取代收件箱运行。`
+        : `此 plannotator 是 ${cliVersion}；收件箱运行的是 ${status.health.version}。`,
     );
   }
   await writeWholeToStdout(lines);
@@ -672,7 +672,7 @@ function stopReport(result: InboxStopResult, hadRecord: boolean): { ok: boolean;
 
 /** `plannotator inbox stop`. Exit 0 when no Inbox of this data dir runs afterwards, 1 when one still does. */
 async function stopCommand(dataDir: string): Promise<number> {
-  if (await waitOutStartLock(dataDir)) process.stderr.write("Removed a stale start lock (a start that never finished).\n");
+  if (await waitOutStartLock(dataDir)) process.stderr.write("已移除过期的启动锁（一次始终未完成的启动）。\n");
   const hadRecord = readInboxRegistry(dataDir) !== null;
   const report = stopReport(await stopInbox(dataDir, { escalate: true }), hadRecord);
   if (!report.ok) {
@@ -699,7 +699,7 @@ async function restartCommand(dataDir: string, tailscale: boolean): Promise<numb
   }
   const release = await takeStartLock(dataDir);
   if (!release) {
-    process.stderr.write("Another Plannotator Inbox start holds the start lock and did not finish; try again.\n");
+    process.stderr.write("另一个 Plannotator 收件箱启动持有启动锁且未完成；请重试。\n");
     return 1;
   }
   let handedOver = false;
@@ -711,7 +711,7 @@ async function restartCommand(dataDir: string, tailscale: boolean): Promise<numb
     if (!report.ok) return 1;
     if (stopped.state === "not_running" && stopped.stale?.reason === "not_ours") {
       // A start would find that Inbox through this record and start nothing: say so instead of naming it as restarted.
-      process.stderr.write("Nothing was restarted: while that Inbox runs, this data dir's record names it.\n");
+      process.stderr.write("未重启任何内容：那个收件箱运行期间，此数据目录的记录指向它。\n");
       return 1;
     }
     // The stop can take a while; the lock's age starts again, so no starter takes it as stale meanwhile.
@@ -723,7 +723,7 @@ async function restartCommand(dataDir: string, tailscale: boolean): Promise<numb
     }
     handedOver = true;
     const entry = await startDetachedInbox(dataDir, release, tailscale || (stopped.state === "stopped" && stopped.tailscaleRunOnly));
-    process.stderr.write(`Started the Plannotator Inbox (pid ${entry.pid}, version ${entry.version}).\n`);
+    process.stderr.write(`已启动 Plannotator 收件箱（pid ${entry.pid}，版本 ${entry.version}）。\n`);
     reportTailnet(readInboxRegistry(dataDir)?.tailscale ?? entry.tailscale, tailscale);
     process.stdout.write(`${entry.url}\n`);
     return 0;
@@ -754,7 +754,7 @@ export async function runInboxCommand(args: readonly string[], assets: InboxComm
   const dataDir = getPlannotatorDataDir();
   // A launched Claude Code session's PermissionRequest hook (inbox-permission-hook.ts): never starts or connects anything.
   if (args[0] === "permission-hook") {
-    if (args.length > 1) usageError(`Unknown inbox permission-hook option: ${args[1]}`);
+    if (args.length > 1) usageError(`未知的 inbox permission-hook 选项：${args[1]}`);
     return runPermissionHook(dataDir);
   }
   // Only a person's `plannotator inbox` connects agents, never a detached start.
@@ -770,7 +770,7 @@ export async function runInboxCommand(args: readonly string[], assets: InboxComm
   if (args[0] === "mcp") {
     // `--t3`: the entry the T3 Code setup adds (`plannotator t3 --help`). It lists its tools only inside a T3 thread.
     const unknown = args.slice(1).find((arg) => arg !== "--t3");
-    if (unknown !== undefined) usageError(`Unknown inbox mcp option: ${unknown}`);
+    if (unknown !== undefined) usageError(`未知的 inbox mcp 选项：${unknown}`);
     assertTestHome();
     await runInboxMcpShim({
       dataDir,
@@ -796,24 +796,24 @@ export async function runInboxCommand(args: readonly string[], assets: InboxComm
   }
 
   if (args[0] === "status") {
-    if (args.length > 1) usageError(`Unknown inbox status option: ${args[1]} (status takes only --json)`);
+    if (args.length > 1) usageError(`未知的 inbox status 选项：${args[1]}（status 只接受 --json）`);
     process.exit(await statusCommand(dataDir, assets.json === true));
   }
 
   // index.ts takes the global --json out of the arguments; only status prints JSON.
   if ((args[0] === "stop" || args[0] === "restart") && assets.json === true) {
-    usageError(`inbox ${args[0]} has no --json output; plannotator inbox status --json reports the Inbox as JSON.`);
+    usageError(`inbox ${args[0]} 没有 --json 输出；plannotator inbox status --json 会以 JSON 报告收件箱状态。`);
   }
 
   if (args[0] === "stop") {
-    if (args.length > 1) usageError(`Unknown inbox stop option: ${args[1]}`);
+    if (args.length > 1) usageError(`未知的 inbox stop 选项：${args[1]}`);
     process.exit(await stopCommand(dataDir));
   }
 
   if (args[0] === "restart") {
     const rest = args.slice(1);
     const unknown = rest.find((arg) => arg !== "--tailscale");
-    if (unknown) usageError(`Unknown inbox restart option: ${unknown} (restart takes only --tailscale)`);
+    if (unknown) usageError(`未知的 inbox restart 选项：${unknown}（restart 只接受 --tailscale）`);
     process.exit(await restartCommand(dataDir, rest.includes("--tailscale")));
   }
 
@@ -839,7 +839,7 @@ export async function runInboxCommand(args: readonly string[], assets: InboxComm
   }
 
   if (args[0] === "--notes") {
-    if (args.length !== 2) usageError("--notes takes one list of agents, e.g. --notes codex,gemini, and no other option.");
+    if (args.length !== 2) usageError("--notes 只接受一个智能体列表，例如 --notes codex,gemini，且不能带其他选项。");
     process.exit(await writeNotes(dataDir, args[1]!));
   }
 
@@ -858,17 +858,17 @@ export async function runInboxCommand(args: readonly string[], assets: InboxComm
       const next = args[i + 1];
       if (next !== undefined && !next.startsWith("--")) {
         thread = inboxThreadRef(next);
-        if (!thread) usageError(`--open takes a thread id, a message id or a #thread= link, not ${next}`);
+        if (!thread) usageError(`--open 需要话题 id、消息 id 或 #thread= 链接，而不是 ${next}`);
         i++;
       }
     }
     else if (arg === "--tailscale") tailscale = true;
-    else if (arg === "--notes") usageError("--notes goes first and alone: plannotator inbox --notes codex,gemini");
-    else usageError(`Unknown inbox option: ${arg}`);
+    else if (arg === "--notes") usageError("--notes 必须放在最前面且单独使用：plannotator inbox --notes codex,gemini");
+    else usageError(`未知的 inbox 选项：${arg}`);
   }
 
   if (open && (background || noOpen)) {
-    usageError(`--open does not go with ${background ? "--background" : "--no-open"}: it starts the Inbox in the background itself and opens it.`);
+    usageError(`--open 不能与 ${background ? "--background" : "--no-open"} 同时使用：它会自行在后台启动收件箱并打开它。`);
   }
 
   await reportDebugNeedsStart(dataDir);
@@ -915,7 +915,7 @@ export async function runInboxCommand(args: readonly string[], assets: InboxComm
       process.stderr.write(`${error instanceof Error ? error.message : String(error)}\n`);
       process.exit(1);
     }
-    process.stderr.write(`Plannotator Inbox: ${entry.url}\n`);
+    process.stderr.write(`Plannotator 收件箱：${entry.url}\n`);
     if (tailscale) await publishRunningInbox(entry);
     if (!noOpen) await openBrowser(entry.url);
     if (connect) await connectRunningInbox(entry);

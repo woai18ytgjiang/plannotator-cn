@@ -65,8 +65,8 @@ export function annotationTargetForCallFlowRawLine(
 ): CallFlowRawAnnotationTarget {
   return {
     treePath: `raw:${line.rawLine}`,
-    entry: 'Raw CallDiff output',
-    label: line.content || '(blank line)',
+    entry: '原始 CallDiff 输出',
+    label: line.content || '（空行）',
     rawLine: line.rawLine,
     side: line.kind === 'removed' ? 'old' : 'new',
   };

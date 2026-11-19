@@ -24,7 +24,7 @@ function focusAfterMove(messageId: string): void {
 }
 
 /**
- * "Send to another session" (compose): a message of the person's that the
+ * "发送到另一个会话" (compose): a message of the person's that the
  * session it was addressed to never took, because that session stopped. It
  * moves the same message to another live session of the thread's project
  * (`POST /api/inbox/messages/:id/to`). Nothing moves on its own; a session
@@ -32,7 +32,7 @@ function focusAfterMove(messageId: string): void {
  *
  * The choice is the ended-session reply's radio rows (ReplyRoute's
  * `RouteChoice` look): one radio group of the live sessions, arrows move the
- * selection, Enter or the primary moves the message, Esc or Cancel closes it.
+ * selection, Enter or the primary moves the message, Esc or 取消 closes it.
  */
 export function SendToAnotherSession({
   messageId,
@@ -113,7 +113,7 @@ export function SendToAnotherSession({
         focusAfterMove(messageId);
         return;
       }
-      setError(cause instanceof InboxApiError ? cause.message : 'It was not moved; try again.');
+      setError(cause instanceof InboxApiError ? cause.message : '未能移动；请重试。');
       void onReload();
     } finally {
       setBusy(false);
@@ -128,7 +128,7 @@ export function SendToAnotherSession({
       {!open && (
         <button type="button" ref={openRef} className="ib-btn ib-sm" aria-expanded={false} onClick={() => setOpen(true)} data-readdress-open="">
           <Icon name="forward" size={14} />
-          Send to another session
+          发送到另一个会话
         </button>
       )}
       {open && (
@@ -148,12 +148,12 @@ export function SendToAnotherSession({
           }}
         >
           <fieldset className="ib-route">
-            <legend>Send it to another session</legend>
+            <legend>发送到另一个会话</legend>
             {others.length === 0 ? (
               <p className="ib-why">
                 {stuck
-                  ? `No other session is running in ${project}. It waits here until you send it to one.`
-                  : `No other session is running in ${project}. It waits here; a resumed session still gets it.`}
+                  ? `${project} 中没有其他运行中的会话。它会留在这里，直到你把它发送给某个会话。`
+                  : `${project} 中没有其他运行中的会话。它会留在这里；恢复后的会话仍会收到它。`}
               </p>
             ) : (
               <div className="ib-gl">Live sessions in {project}</div>
@@ -206,18 +206,18 @@ export function SendToAnotherSession({
               <button type="submit" className="ib-btn ib-pri" disabled={busy} data-readdress-send="">
                 <Icon name="send" size={15} />
                 {chosen.label ? (
-                  // One flex item, so the button's gap does not open between "Send to" and the label.
+                  // One flex item, so the button's gap does not open between "发送到" and the label.
                   <span>
-                    Send to {agentFirst(chosen.label, chosen.host)}
+                    发送到 {agentFirst(chosen.label, chosen.host)}
                     <bdi>{shortLabel(chosen.label, SEND_LABEL_MAX)}</bdi>
                   </span>
                 ) : (
-                  <>Send to {hostLabel(chosen.host)}</>
+                  <>发送到 {hostLabel(chosen.host)}</>
                 )}
               </button>
             )}
             <button type="button" className="ib-btn ib-ghost" onClick={close}>
-              Cancel
+              取消
             </button>
           </div>
         </form>

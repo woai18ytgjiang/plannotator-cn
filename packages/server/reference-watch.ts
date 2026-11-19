@@ -82,7 +82,7 @@ export function handleFileBrowserFilesStream(
 	const rawDirPaths = url.searchParams.getAll("dirPath");
 	const rawFilePaths = url.searchParams.getAll("filePath");
 	if ((rawDirPaths.length > 0) === (rawFilePaths.length > 0)) {
-		return Response.json({ error: "Provide exactly one of dirPath or filePath" }, { status: 400 });
+		return Response.json({ error: "请在 dirPath 和 filePath 中只提供一个" }, { status: 400 });
 	}
 
 	const targets = new Map<string, FileBrowserWatchTarget & { clientDirPath: string }>();
@@ -90,7 +90,7 @@ export function handleFileBrowserFilesStream(
 		for (const rawDirPath of rawDirPaths) {
 			const dirPath = resolveUserPath(rawDirPath);
 			if (!isValidDirectory(dirPath)) {
-				return Response.json({ error: "Invalid directory path" }, { status: 400 });
+				return Response.json({ error: "目录路径无效" }, { status: 400 });
 			}
 			const key = `dir:${dirPath}`;
 			if (!targets.has(key)) {
@@ -107,7 +107,7 @@ export function handleFileBrowserFilesStream(
 		for (const rawFilePath of rawFilePaths) {
 			const filePath = resolveUserPath(rawFilePath);
 			if (!isValidFileTarget(filePath)) {
-				return Response.json({ error: "Invalid file path" }, { status: 400 });
+				return Response.json({ error: "文件路径无效" }, { status: 400 });
 			}
 			const key = `file:${filePath}`;
 			if (!targets.has(key)) {

@@ -120,9 +120,9 @@ export function reviewLinkStack(pull: InboxPull): InboxPullStack {
 export function reviewLinkWords(link: InboxReviewLinkAnswer): string {
   if (link.ok) return `Read with ${link.cli}, signed in to ${link.pull.host}`;
   if (link.reason === 'unreadable') return `${link.cli} couldn't read it. Check the link, and that ${link.cli} is signed in to ${link.host}.`;
-  if (link.reason === 'bitbucket') return "Bitbucket links aren't supported yet.";
-  if (link.reason === 'failed') return "Couldn't check that link. Try again.";
-  return link.reason === 'host' ? "Plannotator can't read that host yet." : "That isn't a pull request link.";
+  if (link.reason === 'bitbucket') return '暂不支持 Bitbucket 链接。';
+  if (link.reason === 'failed') return '无法检查该链接。请重试。';
+  return link.reason === 'host' ? 'Plannotator 暂时无法读取该主机。' : '那不是拉取请求链接。';
 }
 
 const CHANGES_WORDS: Record<InboxReviewChanges, string> = {

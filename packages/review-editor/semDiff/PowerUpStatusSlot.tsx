@@ -13,15 +13,15 @@ export const PowerUpStatusSlot: React.FC<{
   const text =
     state === 'unavailable'
       ? status.unavailable === 'refusedKey'
-        ? 'Power Up: key refused'
+        ? 'Power Up：密钥被拒绝'
         : status.unavailable === 'noCredit'
-          ? 'Power Up: no credit left'
-          : 'Power Up unavailable'
+          ? 'Power Up：额度已用完'
+          : 'Power Up 不可用'
       : state === 'asking'
         ? `Asking ${model} · ${status.asking}`
         : state === 'powered'
           ? `Powered up · ${status.links} ${status.links === 1 ? 'link' : 'links'}`
-          : 'Nothing to add';
+          : '没有可补充的内容';
   const title =
     state === 'unavailable'
       ? "You're seeing the engine's diff. Nothing is guessed."
@@ -57,18 +57,18 @@ export const PowerUpStatusSlot: React.FC<{
           data-power-up-card=""
           className="absolute right-0 top-full z-50 mt-1 flex w-max flex-col gap-0.5 rounded-md border border-border bg-popover px-2.5 py-2 text-xs text-popover-foreground shadow-md"
         >
-          <span className="font-medium">{state === 'unavailable' ? 'Power Up is unavailable' : 'Your diffs are powered up'}</span>
+          <span className="font-medium">{state === 'unavailable' ? 'Power Up 不可用' : '你的差异已由 Power Up 增强'}</span>
           <span className="text-muted-foreground">Second opinion from {model}</span>
           <span className="max-w-64 text-muted-foreground">{title}</span>
           <button type="button" className="mt-1 self-start text-primary hover:underline" onClick={onSettings}>
-            Power Up settings
+            Power Up 设置
           </button>
         </span>
       )}
       {state === 'unavailable' && (
         <>
-          <button type="button" className="rounded px-1 hover:bg-muted hover:text-foreground" onClick={onRetry}>Retry</button>
-          <button type="button" className="rounded px-1 hover:bg-muted hover:text-foreground" onClick={onSettings}>Settings</button>
+          <button type="button" className="rounded px-1 hover:bg-muted hover:text-foreground" onClick={onRetry}>重试</button>
+          <button type="button" className="rounded px-1 hover:bg-muted hover:text-foreground" onClick={onSettings}>设置</button>
         </>
       )}
     </span>

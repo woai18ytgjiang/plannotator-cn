@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The document's font in plan review and annotate (Settings → Display →
  * Document font, #1657): the family the document's text is drawn in. Empty by
@@ -27,10 +28,10 @@ export const DOCUMENT_FONT_PRESETS = {
 
 /** The options of the Settings select, Theme Default first. */
 export const DOCUMENT_FONT_OPTIONS = [
-  { value: '', label: 'Theme Default' },
-  { value: 'serif', label: 'Serif' },
-  { value: 'sans-serif', label: 'Sans Serif' },
-  { value: 'monospace', label: 'Monospace' },
+  { value: '', label: '主题默认' },
+  { value: 'serif', label: '衬线体' },
+  { value: 'sans-serif', label: '无衬线体' },
+  { value: 'monospace', label: '等宽字体' },
 ] as const;
 
 /** The attribute theme.css keys on; present only away from the default. */

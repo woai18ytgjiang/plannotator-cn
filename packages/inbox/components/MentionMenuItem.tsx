@@ -20,9 +20,9 @@ export function MentionMenuItem({ rows, phone }: { rows: readonly InboxListRow[]
   const target = aim.thread;
   const others = rows.filter((row) => row.thread_id !== target);
   const same = others.length === 0;
-  const label = rows.length > 1 ? `Mention ${formatCount(rows.length)} in reply` : 'Mention in reply';
+  const label = rows.length > 1 ? `在回复中提及 ${formatCount(rows.length)} 个` : '在回复中提及';
   // A reply that is not the thread on screen (a phone's sheet, phone.html, or a computer with none open) is named.
-  const into = !aim.open && !same ? (knownMentionRef(client, target)?.title ?? 'the reply you last wrote') : null;
+  const into = !aim.open && !same ? (knownMentionRef(client, target)?.title ?? '你上次写的回复') : null;
   return (
     <Menu.Item
       className="ib-pmi"
@@ -38,7 +38,7 @@ export function MentionMenuItem({ rows, phone }: { rows: readonly InboxListRow[]
     >
       <ThreadGlyph size={15} />
       {label}
-      {same ? <span className="ib-zsub ib-pmi-hint">This thread</span> : into ? <span className="ib-zsub ib-pmi-hint" dir="auto">{into}</span> : null}
+      {same ? <span className="ib-zsub ib-pmi-hint">此话题</span> : into ? <span className="ib-zsub ib-pmi-hint" dir="auto">{into}</span> : null}
     </Menu.Item>
   );
 }

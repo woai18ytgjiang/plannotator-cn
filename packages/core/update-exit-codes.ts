@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The update results Plannotator tells apart (safe updates, step 1). One
  * definition for the server (packages/server/auto-update.ts), `plannotator
@@ -26,8 +27,8 @@ export const UPDATE_OTHER_TMPDIR_COMMAND = "TMPDIR=/another/folder plannotator u
  * for `plannotator update` and the Inbox's failure dialog.
  */
 export function updateStagingAdvice(reason: string): string {
-  if (/ is full \(/.test(reason)) return "Free some space there";
-  if (/ can't be written \(/.test(reason)) return "Make it writable";
-  if (/ does not exist \(/.test(reason)) return "Create it";
-  return "Check that folder";
+  if (/ is full \(/.test(reason)) return "请在那里腾出一些空间";
+  if (/ can't be written \(/.test(reason)) return "请让它可写";
+  if (/ does not exist \(/.test(reason)) return "请创建它";
+  return "请检查该文件夹";
 }

@@ -668,7 +668,7 @@ const cloudflareAccessIdx = args[0] === "inbox" ? -1 : args.indexOf("--cloudflar
 if (cloudflareAccessIdx !== -1) {
   args.splice(cloudflareAccessIdx, 1);
   if (!TAILSCALE_COMMANDS.has(args[0] ?? "")) {
-    console.error("--cloudflare-access is only supported with: plannotator review, annotate, annotate-last (last)");
+    console.error("--cloudflare-access 仅支持以下命令：plannotator review、annotate、annotate-last（last）");
     process.exit(1);
   }
 }
@@ -678,7 +678,7 @@ if (tailscaleIdx !== -1) {
   args.splice(tailscaleIdx, 1);
   if (!TAILSCALE_COMMANDS.has(args[0] ?? "")) {
     console.error(
-      "--tailscale is only supported with: plannotator review, annotate, annotate-last (last)",
+      "--tailscale 仅支持以下命令：plannotator review、annotate、annotate-last（last）",
     );
     process.exit(1);
   }
@@ -687,7 +687,7 @@ if (tailscaleIdx !== -1) {
 // for the same subcommands (every other subcommand ignores them), so a host
 // or agent need not pass it on every call.
 if (cloudflareAccessFlag && tailscaleIdx !== -1) {
-  console.error("Use --tailscale or --cloudflare-access, not both.");
+  console.error("不能同时使用 --tailscale 和 --cloudflare-access。");
   process.exit(1);
 }
 if (cloudflareAccessFlag) {
@@ -752,7 +752,7 @@ async function handleTailscaleReady(port: number): Promise<void> {
   const owners = readTailnetOwners();
   const failStartup = (lines: string[]): never => {
     for (const line of lines) process.stderr.write(`${line}\n`);
-    process.stderr.write(`To keep working on this computer, ${tailscaleOptOut}.\n`);
+    process.stderr.write(`要在这台电脑上继续工作，${tailscaleOptOut}.\n`);
     return process.exit(
       annotateStartupFailureExitCode({
         requireApproval: requireApprovalFlag,
@@ -785,7 +785,7 @@ async function handleTailscaleReady(port: number): Promise<void> {
 
 async function handleCloudflareAccessReady(port: number): Promise<void> {
   const failStartup = (line: string): never => {
-    process.stderr.write(`${line}\nTo keep working on this computer, run the same command without --cloudflare-access.\n`);
+    process.stderr.write(`${line}\n要在这台电脑上继续工作，请去掉 --cloudflare-access 后重新运行同一命令。\n`);
     return process.exit(annotateStartupFailureExitCode({ requireApproval: requireApprovalFlag, resultFile }));
   };
   const resolved = resolveCfAccess(loadConfig());
@@ -991,7 +991,7 @@ exitOnUnknownSubcommand(args);
 // nothing. Skills ask this instead of naming ~/.plannotator (#2305).
 if (args[0] === "data-dir") {
   if (args.length > 1) {
-    console.error(`plannotator data-dir takes no arguments.\n\n${DATA_DIR_COMMAND_USAGE}`);
+    console.error(`plannotator data-dir 不接受参数。\n\n${DATA_DIR_COMMAND_USAGE}`);
     process.exit(2);
   }
   console.log(getPlannotatorDataDir());
@@ -1000,7 +1000,7 @@ if (args[0] === "data-dir") {
   // person's older plans and history.
   if (unused) {
     console.error(
-      `Note: ${unused} also exists. It may hold older Plannotator data, so leave it alone: do not delete, move or write to it. Plannotator uses the folder above.`,
+      `注意：${unused} 也存在。它可能保存着较早的 Plannotator 数据，请勿改动：不要删除、移动或写入它。Plannotator 使用的是上面的文件夹。`,
     );
   }
   process.exit(0);
@@ -1029,12 +1029,12 @@ async function readStaticPatch(patchFile: string, cwd: string): Promise<{ rawPat
       ? await Bun.stdin.text()
       : await Bun.file(path.resolve(cwd, patchFile)).text();
     if (!rawPatch.trim()) {
-      console.error("Static patch review requires non-empty unified-diff content.");
+      console.error("静态补丁审查需要非空的 unified diff 内容。");
       process.exit(1);
     }
     return { rawPatch, gitRef: patchFile === "-" ? "stdin patch" : patchFile };
   } catch (err) {
-    console.error(`Failed to read patch file: ${err instanceof Error ? err.message : String(err)}`);
+    console.error(`读取补丁文件失败：${err instanceof Error ? err.message : String(err)}`);
     process.exit(1);
   }
 }
@@ -1045,7 +1045,7 @@ if (args[0] === "uninstall") {
     options = parseUninstallOptions(rawArgs.slice(1));
   } catch (error) {
     console.error(error instanceof Error ? error.message : String(error));
-    console.error("Run 'plannotator uninstall --help' for usage.");
+    console.error("运行 'plannotator uninstall --help' 查看用法。");
     process.exit(1);
   }
 
@@ -1054,7 +1054,7 @@ if (args[0] === "uninstall") {
   if (!options.dryRun && !options.yes) {
     if (process.stdin.isTTY !== true || process.stdout.isTTY !== true) {
       console.error(
-        "Uninstall requires confirmation. Re-run with --yes in a non-interactive shell.",
+        "卸载需要确认。在非交互式 shell 中请加 --yes 重新运行。",
       );
       process.exit(1);
     }
@@ -1063,13 +1063,13 @@ if (args[0] === "uninstall") {
       console.error(formatPurgeWarning(environment.dataDir));
     } else {
       console.error(
-        `Local Plannotator data in ${environment.dataDir} will be preserved.`,
+        `位于 ${environment.dataDir} 的本地 Plannotator 数据将被保留。`,
       );
     }
 
     const prompt = options.purge
-      ? "Type 'purge' to permanently uninstall and delete local data: "
-      : "Remove Plannotator-installed components? [y/N] ";
+      ? "输入 'purge' 以永久卸载并删除本地数据："
+      : "要移除 Plannotator 安装的组件吗？[y/N] ";
     const readline = createInterface({
       input: process.stdin,
       output: process.stdout,
@@ -1082,7 +1082,7 @@ if (args[0] === "uninstall") {
     }
 
     if (!isUninstallConfirmationAccepted(answer, options.purge)) {
-      console.log("Uninstall cancelled.");
+      console.log("已取消卸载。");
       process.exit(0);
     }
   } else if (options.purge && !options.dryRun) {
@@ -1100,11 +1100,11 @@ if (args[0] === "uninstall") {
   if (formatted) console.log(formatted);
 
   if (options.dryRun) {
-    console.log("Dry run complete; no changes were made.");
+    console.log("试运行完成；未做任何更改。");
   } else if (options.purge && result.ok) {
-    console.log(`Known local Plannotator data was purged from ${result.dataDir}.`);
+    console.log(`已知的本地 Plannotator 数据已从 ${result.dataDir} 清除。`);
   } else if (!options.purge) {
-    console.log(`Local Plannotator data was preserved in ${result.dataDir}.`);
+    console.log(`本地 Plannotator 数据已保留在 ${result.dataDir}。`);
   }
 
   process.exit(result.ok ? 0 : 1);
@@ -1127,7 +1127,7 @@ if (args[0] === "update-prepare") {
 if (args[0] === "install-runtime") {
   const runtime = args[1];
   if (runtime !== "agent-terminal" && runtime !== "call-flow") {
-    console.error("Usage: plannotator install-runtime <agent-terminal|call-flow>");
+    console.error("用法：plannotator install-runtime <agent-terminal|call-flow>");
     process.exit(1);
   }
   const result = runtime === "call-flow"
@@ -1245,7 +1245,7 @@ function parseOpenCodeBridgeInput<T extends object>(
   try {
     return JSON.parse(inputJson) as T & OpenCodeBridgeInput;
   } catch (error) {
-    console.error(`Failed to parse ${mode} input: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`解析 ${mode} 输入失败：${error instanceof Error ? error.message : String(error)}`);
     process.exit(1);
   }
 }
@@ -1343,7 +1343,7 @@ if (args[0] === "sessions") {
   );
 
   if (args.includes("--clean")) {
-    console.error(`Cleaned up stale sessions. ${sessions.length} active session(s) remain.`);
+    console.error(`已清理过期会话。剩余 ${sessions.length} 个活跃会话。`);
     process.exit(0);
   }
 
@@ -1352,7 +1352,7 @@ if (args[0] === "sessions") {
   if (sessions.length === 0) {
     // --json: an empty list on stdout, so a script never parses a sentence.
     if (sessionsJson) console.log("[]");
-    else console.error("No active Plannotator sessions.");
+    else console.error("当前没有活跃的 Plannotator 会话。");
     process.exit(0);
   }
 
@@ -1363,15 +1363,15 @@ if (args[0] === "sessions") {
     const n = nArg ? parseInt(nArg, 10) : 1;
     const session = sessions[n - 1];
     if (!session) {
-      console.error(`Session #${n} not found. ${sessions.length} active session(s).`);
+      console.error(`未找到会话 #${n}。当前有 ${sessions.length} 个活跃会话。`);
       process.exit(1);
     }
     // false when nothing opened (PLANNOTATOR_BROWSER=none says why on its own
     // line, a failed launch is left to the URL): never claim a tab that isn't there.
     const opened = await openBrowser(session.url);
     console.error(opened
-      ? `Opened ${session.mode} session in browser: ${session.url}`
-      : `${session.mode} session: ${session.url}`);
+      ? `已在浏览器中打开 ${session.mode} 会话：${session.url}`
+      : `${session.mode} 会话：${session.url}`);
     process.exit(0);
   }
 
@@ -1395,7 +1395,7 @@ if (args[0] === "sessions") {
 
   if ((stage !== "interview" && stage !== "facts") || !bundlePath) {
     console.error(
-      "Usage: plannotator setup-goal <interview|facts> <bundle.json | -> [--json]"
+      "用法：plannotator setup-goal <interview|facts> <bundle.json | -> [--json]"
     );
     process.exit(1);
   }
@@ -1405,7 +1405,7 @@ if (args[0] === "sessions") {
     bundle = await loadGoalSetupBundle(stage, bundlePath);
   } catch (err) {
     console.error(
-      `Failed to load goal setup bundle: ${err instanceof Error ? err.message : String(err)}`
+      `加载目标设置包失败：${err instanceof Error ? err.message : String(err)}`
     );
     process.exit(1);
   }
@@ -1459,7 +1459,7 @@ if (args[0] === "sessions") {
   // every other review startup failure.
   if (reviewArgs.errors.length > 0) {
     for (const parseError of reviewArgs.errors) console.error(parseError);
-    console.error("Run 'plannotator review --help' for usage.");
+    console.error("运行 'plannotator review --help' 查看用法。");
     process.exit(1);
   }
   const urlArg = reviewArgs.prUrl;
@@ -1504,8 +1504,8 @@ if (args[0] === "sessions") {
     });
     const prRef = parsePRUrl(urlArg);
     if (!prRef) {
-      console.error(`Invalid PR/MR URL: ${urlArg}`);
-      console.error("Supported formats:");
+      console.error(`无效的 PR/MR URL：${urlArg}`);
+      console.error("支持以下格式：");
       console.error("  GitHub: https://github.com/owner/repo/pull/123");
       console.error("  GitLab: https://gitlab.com/group/project/-/merge_requests/42");
       console.error("  Bitbucket Cloud: https://bitbucket.org/workspace/repo/pull-requests/7");
@@ -1524,15 +1524,15 @@ if (args[0] === "sessions") {
       // REST-only platforms (Bitbucket) have no CLI to be missing; their auth
       // error already names the env vars and token scopes to set.
       if (cliName && (msg.includes("not found") || msg.includes("ENOENT"))) {
-        console.error(`${getPlatformLabel(prRef)} CLI (${cliName}) is not installed.`);
-        console.error(`Install it from ${cliUrl}`);
+        console.error(`${getPlatformLabel(prRef)} CLI（${cliName}）未安装。`);
+        console.error(`请从 ${cliUrl} 安装`);
       } else {
         console.error(msg);
       }
       process.exit(1);
     }
 
-    console.error(`Fetching ${getMRLabel(prRef)} ${getMRNumberLabel(prRef)} from ${getDisplayRepo(prRef)}...`);
+    console.error(`正在从 ${getDisplayRepo(prRef)} 获取 ${getMRLabel(prRef)} ${getMRNumberLabel(prRef)}...`);
     try {
       const pr = await fetchPR(prRef);
       rawPatch = pr.rawPatch;
@@ -1540,7 +1540,7 @@ if (args[0] === "sessions") {
       prMetadata = pr.metadata;
       prPatchIncomplete = pr.patchIncomplete ?? false;
     } catch (err) {
-      console.error(err instanceof Error ? err.message : "Failed to fetch PR");
+      console.error(err instanceof Error ? err.message : "获取 PR 失败");
       process.exit(1);
     }
 
@@ -1570,8 +1570,8 @@ if (args[0] === "sessions") {
         const headRemote = headFetch.remote ?? "origin";
 
         // Validate inputs from platform API to prevent git flag/path injection
-        if (prMetadata.baseBranch.includes('..') || prMetadata.baseBranch.startsWith('-')) throw new Error(`Invalid base branch: ${prMetadata.baseBranch}`);
-        if (!/^[0-9a-f]{40,64}$/i.test(prMetadata.baseSha)) throw new Error(`Invalid base SHA: ${prMetadata.baseSha}`);
+        if (prMetadata.baseBranch.includes('..') || prMetadata.baseBranch.startsWith('-')) throw new Error(`base 分支无效：${prMetadata.baseBranch}`);
+        if (!/^[0-9a-f]{40,64}$/i.test(prMetadata.baseSha)) throw new Error(`base SHA 无效：${prMetadata.baseSha}`);
 
         // Detect same-repo vs cross-repo (must match both owner/repo AND host)
         let isSameRepo = false;
@@ -1598,7 +1598,7 @@ if (args[0] === "sessions") {
         const prRepo = getDisplayRepo(prMetadata);
         const cloneCommand = getPRCloneCommand(prMetadata, localPath);
         // Validate repo identifier to prevent flag injection via crafted URLs
-        if (/^-/.test(prRepo)) throw new Error(`Invalid repository identifier: ${prRepo}`);
+        if (/^-/.test(prRepo)) throw new Error(`仓库标识无效：${prRepo}`);
 
         // Async spawn for background steps — spawnSync would block the event
         // loop and freeze the review server while cloning. Children are
@@ -1683,7 +1683,7 @@ if (args[0] === "sessions") {
 
               // Best-effort: create base refs so `git diff main...HEAD` and `git diff origin/main...HEAD` work
               const baseFetch = await runStep(["git", "fetch", "--depth=200", "origin", baseSha], { cwd: warmupPath });
-              if (baseFetch.exitCode !== 0) console.error("Warning: failed to fetch baseSha, agent diffs may be inaccurate");
+              if (baseFetch.exitCode !== 0) console.error("警告：获取 baseSha 失败，智能体差异可能不准确");
               await runStep(["git", "branch", "--", baseBranch, baseSha], { cwd: warmupPath });
               await runStep(["git", "update-ref", `refs/remotes/origin/${baseBranch}`, baseSha], { cwd: warmupPath });
 
@@ -1725,18 +1725,18 @@ if (args[0] === "sessions") {
         });
 
         console.error(isSameRepo
-          ? "Preparing local worktree in the background..."
-          : `Cloning ${prRepo} (shallow) in the background...`);
+          ? "正在后台准备本地 worktree..."
+          : `正在后台浅克隆 ${prRepo}...`);
         warmup.then(
-          () => console.error(`Local checkout ready at ${warmupPath}`),
+          () => console.error(`本地检出已就绪：${warmupPath}`),
           (err) => {
-            console.error("Warning: local checkout failed — features needing local files (agents, full-stack diff) are limited");
+            console.error("警告：本地检出失败——需要本地文件的功能（智能体、全栈差异）将受限");
             console.error(err instanceof Error ? err.message : String(err));
             try { rmSync(warmupSessionDir, { recursive: true, force: true }); } catch {}
           },
         );
       } catch (err) {
-        console.error(`Warning: --local failed, falling back to remote diff`);
+        console.error(`警告：--local 失败，回退到远程差异`);
         console.error(err instanceof Error ? err.message : String(err));
         if (sessionDir) try { rmSync(sessionDir, { recursive: true, force: true }); } catch {}
         agentCwd = undefined;
@@ -1799,7 +1799,7 @@ if (args[0] === "sessions") {
         hideWhitespace: config.diffOptions?.hideWhitespace ?? false,
       });
       if (workspace.repos.length === 0) {
-        console.error("Not in a VCS repo and no nested Git/JJ/GitButler repositories were found.");
+        console.error("当前不在 VCS 仓库中，也未找到嵌套的 Git/JJ/GitButler 仓库。");
         process.exit(1);
       }
       rawPatch = workspace.rawPatch;
@@ -1928,12 +1928,12 @@ if (args[0] === "sessions") {
   }
 
   if (appFlag && staticFlag) {
-    exitAnnotateStartupFailure("--app and --static are mutually exclusive");
+    exitAnnotateStartupFailure("--app 与 --static 互斥");
   }
 
   const rawFilePath = args[1];
   if (!rawFilePath) {
-    exitAnnotateStartupFailure("Usage: plannotator annotate <file.md | file.txt | file.html | https://... | folder/>  [--markdown] [--no-jina] [--app] [--static] [--gate] [--json] [--hook] [--require-approval] [--result-file <path>]");
+    exitAnnotateStartupFailure("用法：plannotator annotate <file.md | file.txt | file.html | https://... | folder/>  [--markdown] [--no-jina] [--app] [--static] [--gate] [--json] [--hook] [--require-approval] [--result-file <path>]");
   }
 
   // Use PLANNOTATOR_CWD if set (original working directory before script cd'd)
@@ -2304,8 +2304,8 @@ if (args[0] === "sessions") {
       lastMessage = recentMessages[0] ?? null;
     } else {
       console.error(dshSessionId
-        ? `No DeepSeek Harness session log for DSH_SESSION_ID=${dshSessionId} under ${path.join(resolveDshHome(), "sessions")}.`
-        : "DSH_SESSION_ID is not set: run plannotator last from a DeepSeek Harness agent shell, or pass the message with --stdin.");
+        ? `在 ${path.join(resolveDshHome(), "sessions")} 下未找到 DSH_SESSION_ID=${dshSessionId} 对应的 DeepSeek Harness 会话日志。`
+        : "未设置 DSH_SESSION_ID：请在 DeepSeek Harness 智能体的 shell 中运行 plannotator last，或用 --stdin 传入消息。");
     }
   } else if (codexThreadId) {
     // Codex path: find rollout by thread ID
@@ -2453,8 +2453,8 @@ if (args[0] === "sessions") {
 
   if (!lastMessage) {
     console.error(stdinFlag
-      ? "No message content received on stdin."
-      : "No rendered assistant message found in session logs.");
+      ? "未从 stdin 收到任何消息内容。"
+      : "会话日志中未找到可渲染的助手消息。");
     process.exit(1);
   }
 
@@ -2595,7 +2595,7 @@ if (args[0] === "sessions") {
 
   const planContent = typeof input.plan === "string" ? input.plan : "";
   if (!planContent.trim()) {
-    console.error("No plan content in opencode-plan input");
+    console.error("opencode-plan 输入中没有计划内容");
     process.exit(1);
   }
 
@@ -2683,7 +2683,7 @@ if (args[0] === "sessions") {
     try {
       process.chdir(planCwd);
     } catch (error) {
-      console.error(`dsh-plan cannot use cwd ${planCwd}: ${error instanceof Error ? error.message : String(error)}`);
+      console.error(`dsh-plan 无法使用工作目录 ${planCwd}：${error instanceof Error ? error.message : String(error)}`);
       process.exit(1);
     }
   }
@@ -2755,7 +2755,7 @@ if (args[0] === "sessions") {
   // bridge's machine-readable stdout contract stays untouched.
   if (reviewArgs.errors.length > 0) {
     for (const parseError of reviewArgs.errors) console.error(parseError);
-    console.error("Run 'plannotator review --help' for usage.");
+    console.error("运行 'plannotator review --help' 查看用法。");
     process.exit(1);
   }
   const urlArg = reviewArgs.prUrl;
@@ -2785,7 +2785,7 @@ if (args[0] === "sessions") {
     if (reviewArgs.patchFile === "-") {
       // The bridge's stdin carries the input JSON; a stdin patch has no
       // channel. Direct `plannotator review --patch-file -` remains the way.
-      console.error("--patch-file - (stdin) is not available through the OpenCode bridge; pass a file path");
+      console.error("--patch-file -（stdin）无法通过 OpenCode 桥接使用；请传入文件路径");
       process.exit(1);
     }
     const patch = await readStaticPatch(reviewArgs.patchFile, process.env.PLANNOTATOR_CWD || process.cwd());
@@ -2800,17 +2800,17 @@ if (args[0] === "sessions") {
     });
     const prRef = parsePRUrl(urlArg);
     if (!prRef) {
-      console.error(`Invalid PR/MR URL: ${urlArg}`);
+      console.error(`无效的 PR/MR URL：${urlArg}`);
       process.exit(1);
     }
 
-    console.error(`Fetching ${getMRLabel(prRef)} ${getMRNumberLabel(prRef)} from ${getDisplayRepo(prRef)}...`);
+    console.error(`正在从 ${getDisplayRepo(prRef)} 获取 ${getMRLabel(prRef)} ${getMRNumberLabel(prRef)}...`);
 
     try {
       noteGhAccountForThisRun(await checkPRAuth(prRef));
     } catch (err) {
       const cliName = getCliName(prRef);
-      console.error(err instanceof Error ? err.message : `${cliName} auth check failed`);
+      console.error(err instanceof Error ? err.message : `${cliName} 认证检查失败`);
       process.exit(1);
     }
 
@@ -2821,11 +2821,11 @@ if (args[0] === "sessions") {
       prMetadata = pr.metadata;
       prPatchIncomplete = pr.patchIncomplete ?? false;
     } catch (err) {
-      console.error(err instanceof Error ? err.message : `Failed to fetch ${getMRLabel(prRef)} ${getMRNumberLabel(prRef)}`);
+      console.error(err instanceof Error ? err.message : `获取 ${getMRLabel(prRef)} ${getMRNumberLabel(prRef)} 失败`);
       process.exit(1);
     }
   } else {
-    console.error("Opening code review UI...");
+    console.error("正在打开代码审查界面...");
 
     const config = loadConfig();
     const managedVcs = await detectManagedVcs(reviewCwd, reviewArgs.vcsType);
@@ -2877,7 +2877,7 @@ if (args[0] === "sessions") {
         hideWhitespace: config.diffOptions?.hideWhitespace ?? false,
       });
       if (workspace.repos.length === 0) {
-        console.error("Not in a VCS repo and no nested Git/JJ/GitButler repositories were found.");
+        console.error("当前不在 VCS 仓库中，也未找到嵌套的 Git/JJ/GitButler 仓库。");
         process.exit(1);
       }
       rawPatch = workspace.rawPatch;
@@ -3011,11 +3011,11 @@ if (args[0] === "sessions") {
 
   const lastMessage = recentMessages[0] ?? null;
   if (!lastMessage) {
-    console.error("No assistant message found in opencode-annotate-last input.");
+    console.error("opencode-annotate-last 输入中未找到助手消息。");
     process.exit(1);
   }
 
-  console.error("Opening annotation UI for last message...");
+  console.error("正在为最后一条消息打开批注界面...");
 
   const bridgeSharingEnabled = getBridgeSharingEnabled(input);
   const bridgeShareBaseUrl = getBridgeShareBaseUrl(input);
@@ -3177,7 +3177,7 @@ if (args[0] === "sessions") {
   const sessionDir = lockSessionDir ?? findCopilotSessionForCwd(projectRoot);
 
   if (!sessionDir) {
-    console.error("No Copilot CLI session found.");
+    console.error("未找到 Copilot CLI 会话。");
     process.exit(1);
   }
 
@@ -3188,7 +3188,7 @@ if (args[0] === "sessions") {
   const recent = getRecentCopilotMessages(sessionDir, 25);
   const msg = recent[0] ?? null;
   if (!msg) {
-    console.error("No assistant message found in Copilot CLI session.");
+    console.error("Copilot CLI 会话中未找到助手消息。");
     process.exit(1);
   }
 
@@ -3289,7 +3289,7 @@ if (args[0] === "sessions") {
 
   const input = parseModPlanInput(await Bun.stdin.text());
   if (!input) {
-    console.error("claude-mod-plan: expected { plan, planFilePath?, permissionMode?, revisionFile? } JSON on stdin");
+    console.error("claude-mod-plan：期望在 stdin 上收到 { plan, planFilePath?, permissionMode?, revisionFile? } JSON");
     process.exit(1);
   }
 
@@ -3382,7 +3382,7 @@ if (args[0] === "sessions") {
   try {
     event = JSON.parse(eventJson);
   } catch (e: any) {
-    console.error(`Failed to parse hook event from stdin: ${e?.message || e}`);
+    console.error(`解析 stdin 上的 hook 事件失败：${e?.message || e}`);
     process.exit(1);
   }
 
@@ -3500,7 +3500,7 @@ if (args[0] === "sessions") {
     const vibePlanContent = resolveLatestVibePlan({ transcriptPath: vibeTranscript });
     if (!vibePlanContent) {
       console.error(
-        "No plan file found in $VIBE_HOME/plans. Vibe may not have written the plan yet, or VIBE_HOME is set to a non-default location."
+        "在 $VIBE_HOME/plans 中未找到计划文件。Vibe 可能尚未写入计划，或 VIBE_HOME 指向了非默认位置。"
       );
       // Fail open: empty stdout + exit 0 lets Vibe pass the tool through.
       process.exit(0);
@@ -3605,7 +3605,7 @@ if (args[0] === "sessions") {
   permissionMode = event.permission_mode || "default";
 
   if (!planContent) {
-    console.error("No plan content in hook event");
+    console.error("hook 事件中没有计划内容");
     process.exit(1);
   }
 

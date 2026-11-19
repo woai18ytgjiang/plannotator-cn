@@ -48,7 +48,7 @@ export function useReviewProgress({
   const warn = useCallback(() => {
     if (warned.current) return;
     warned.current = true;
-    toast.error('Could not save or restore viewed-file progress');
+    toast.error('无法保存或恢复已查看文件的进度');
   }, []);
   const recovered = useCallback(() => { warned.current = false; }, []);
 

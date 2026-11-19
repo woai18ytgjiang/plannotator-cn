@@ -83,10 +83,10 @@ export async function inboxDecisionExportRoute(url: URL, store: InboxStore, opti
   if (!match) return null;
   const threadId = match[1]!;
   const raw = url.searchParams.get("format") ?? "md";
-  if (!(raw in FORMATS)) return Response.json({ error: "format: md, html or json.", code: "validation_error" }, { status: 422 });
+  if (!(raw in FORMATS)) return Response.json({ error: "format：md、html 或 json。", code: "validation_error" }, { status: 422 });
   const format = raw as DecisionExportFormat;
   const built = threadDecisionExport(store, threadId, { tz: url.searchParams.get("tz") ?? "UTC", version: options.version, now: options.now });
-  if (!built) return Response.json({ error: "No such thread.", code: "thread_not_found" }, { status: 404 });
+  if (!built) return Response.json({ error: "没有该话题。", code: "thread_not_found" }, { status: 404 });
   const { doc, pictures } = built;
   if (format !== "md") await withPictures(doc, pictures, store);
   const body = format === "md" ? renderDecisionExportMarkdown(doc) : format === "html" ? renderDecisionExportHtml(doc) : `${JSON.stringify(doc, null, 2)}\n`;

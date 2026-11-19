@@ -182,8 +182,8 @@ function Activity({ versions, decisions }: { versions: readonly PlanVersion[]; d
     .sort((a, b) => b.at.localeCompare(a.at))
     .slice(0, 20);
   return (
-    <section className="ib-plan-activity" aria-label="Activity">
-      <h3>Activity</h3>
+    <section className="ib-plan-activity" aria-label="动态">
+      <h3>动态</h3>
       <ol>
         {items.map((item) => (
           <li key={item.key}>

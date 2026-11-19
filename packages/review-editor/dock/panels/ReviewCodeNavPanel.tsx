@@ -65,7 +65,7 @@ const CodePreview: React.FC<{
   if (!preview) {
     return (
       <div className="flex items-center justify-center h-full text-muted-foreground text-xs">
-        Select a reference to preview
+        选择一个引用以预览
       </div>
     );
   }

@@ -28,14 +28,14 @@ import { RexMarkArc, RexMarkGlyph, RexMarkShape, rexMarkDiameter, rexMarkKey, re
 
 /** The state's words, for the mark's text alternative only (never shown). */
 export const REX_MARK_WORDS: Record<Exclude<RexMarkKey, 'answered'>, string> = {
-  working: 'Working',
-  question: 'Asking a question',
-  permission: 'Asking for permission',
-  signin: 'Needs sign-in',
-  blocked: 'Waiting on you',
-  done: 'Done',
-  idle: 'Idle',
-  error: 'Stopped on an error',
+  working: '工作中',
+  question: '正在提问',
+  permission: '正在请求权限',
+  signin: '需要登录',
+  blocked: '等待你处理',
+  done: '已完成',
+  idle: '空闲',
+  error: '因错误停止',
 };
 
 /**
@@ -46,8 +46,8 @@ export type ShownMark = InboxRexMark & { where?: 'inbox' | 'terminal' };
 
 /** A mark of an agent that waits on the person in its own terminal (its connection said so): words that say where. */
 export const TERMINAL_MARK_WORDS: Record<'permission' | 'question', string> = {
-  permission: 'Waiting for your permission in the agent',
-  question: 'Waiting for your answer in the agent',
+  permission: '在智能体中等待你授予权限',
+  question: '在智能体中等待你的回答',
 };
 
 /**

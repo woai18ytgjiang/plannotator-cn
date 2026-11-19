@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { forwardRef, useCallback, useEffect, useImperativeHandle, useLayoutEffect, useRef, useState } from 'react';
 import {
   actualViewport,
@@ -50,8 +51,8 @@ export const WHEEL_HINT_FADE_MS = 300;
 
 /** What the hint says, on screen and to a screen reader. */
 export const wheelHintText = {
-  visible: { before: 'Use', key: modKey, after: '+ scroll to zoom' },
-  spoken: `Scrolling moves the image. To zoom, hold ${modKeySpoken} and scroll.`,
+  visible: { before: '使用', key: modKey, after: '+ 滚轮缩放' },
+  spoken: `滚动可移动图片。要缩放，请按住 ${modKeySpoken} 并滚动。`,
 };
 
 /** A device with a mouse or trackpad (a touch-only one never sends a wheel, and gets no hint). */
@@ -820,7 +821,7 @@ export const ImageZoomStage = forwardRef<ImageZoomStageHandle, {
       )}
       {failed && !onImageError && (
         <div className="absolute inset-0 flex items-center justify-center text-sm opacity-70" data-lightbox-failed="">
-          This image could not be loaded.
+          这张图片无法加载。
         </div>
       )}
     </div>

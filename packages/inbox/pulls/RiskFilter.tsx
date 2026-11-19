@@ -16,7 +16,7 @@ export function RiskFilter({ value, rulesSet, phone, onChange, onRules }: { valu
       <Menu.Root open={open} onOpenChange={setOpen} modal={false}>
         <Menu.Trigger ref={trigger} className="ib-bpf-btn" data-pulls-risk-chip="">
           <span className="ib-bpf-l">
-            <span className="ib-sr">Risk: </span>
+            <span className="ib-sr">风险：</span>
             {value === 'all' ? 'Risk' : riskFilterWords[value]}
           </span>
           <Icon name="chevD" size={13} />
@@ -25,7 +25,7 @@ export function RiskFilter({ value, rulesSet, phone, onChange, onRules }: { valu
           {phone && <Menu.Backdrop className="ib-pm-scrim" />}
           <Menu.Positioner className="ib-pm-pos" side="bottom" align="end" sideOffset={4} data-phone={phone ? '' : undefined}>
             {/* The way back is keyboard's alone: after a click or a tap, no ring stays on the chip. */}
-            <Menu.Popup className="ib-pm ib-bpf-menu" aria-label="Risk" finalFocus={(closeType) => closeType === 'keyboard'} data-pulls-risk-menu="">
+            <Menu.Popup className="ib-pm ib-bpf-menu" aria-label="风险" finalFocus={(closeType) => closeType === 'keyboard'} data-pulls-risk-menu="">
               {rulesSet && (
                 <>
                   <div className="ib-pm-title" aria-hidden="true">
@@ -43,7 +43,7 @@ export function RiskFilter({ value, rulesSet, phone, onChange, onRules }: { valu
                 </>
               )}
               <Menu.Item className="ib-pmi" label="Set risk rules" onClick={onRules} data-pulls-risk-rules="">
-                <span className="ib-pmi-l">Set risk rules…</span>
+                <span className="ib-pmi-l">设置风险规则…</span>
               </Menu.Item>
             </Menu.Popup>
           </Menu.Positioner>

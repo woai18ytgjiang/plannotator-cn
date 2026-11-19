@@ -97,7 +97,7 @@ export const ReviewDiffBody: React.FC<{
   if (!file) {
     return (
       <div className="h-full flex items-center justify-center text-muted-foreground text-sm">
-        File not found
+        未找到文件
       </div>
     );
   }
@@ -108,9 +108,9 @@ export const ReviewDiffBody: React.FC<{
   const fileView = view ?? (state.fileViewOf ? state.fileViewOf(file.path) : 'changes');
   const markdownFile = !!state.markdownPreview?.isPreviewable(file);
   const wholeUnavailableReason = file.status === 'deleted'
-    ? 'The diff deletes this file'
+    ? '该差异删除了此文件'
     : null;
-  const originalUnavailableReason = file.status === 'added' ? 'The diff adds this file: it has no original' : null;
+  const originalUnavailableReason = file.status === 'added' ? '该差异新增了此文件：没有原始版本' : null;
   const showSwitch = !!state.onFileViewChange && !markdownFile;
   const wholeView = showSwitch && fileView === 'whole' && !wholeUnavailableReason;
   const originalView = showSwitch && fileView === 'original' && !originalUnavailableReason;

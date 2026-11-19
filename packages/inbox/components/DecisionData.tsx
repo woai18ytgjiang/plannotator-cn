@@ -7,7 +7,6 @@
 import { useEffect, useMemo, useRef, useState, type ReactNode } from 'react';
 import type { DecisionDataSummary, DecisionGroup, DecisionTrend } from '@plannotator/core/inbox-types';
 import { inboxApi } from '../api';
-import { plural } from '../format';
 import { HostMark, Icon } from '../icons';
 import { inboxUrl } from '../inboxUrl';
 import { DecisionAsk } from './DecisionAsk';
@@ -144,9 +143,9 @@ function DayColumns({ days, since, until, height }: { days: DecisionDataSummary[
       {shown && hover !== null && (
         <div className="ib-dd-tip" role="status" style={{ left: Math.min(Math.max(0, left + hover * band - 80), Math.max(0, width - 170)), top: 2 }}>
           <b>{dayLabel(shown.day)}</b>
-          <span>{plural(shown.answered, 'decision')}</span>
-          {shown.skipped > 0 && <span>{shown.skipped} skipped</span>}
-          {shown.own_words > 0 && <span>{plural(shown.own_words, 'plain reply', 'plain replies')}</span>}
+          <span>{shown.answered} 次决策</span>
+          {shown.skipped > 0 && <span>{shown.skipped} 次跳过</span>}
+          {shown.own_words > 0 && <span>{shown.own_words} 条普通回复</span>}
         </div>
       )}
     </div>
@@ -156,15 +155,15 @@ function DayColumns({ days, since, until, height }: { days: DecisionDataSummary[
 function ByDay({ days }: { days: DecisionDataSummary['days'] }) {
   return (
     <details className="ib-dd-byday">
-      <summary>See by day</summary>
+      <summary>按天查看</summary>
       <div className="ib-dd-byday-in">
         <table className="ib-dd-tbl">
           <thead>
             <tr>
-              <th>Day</th>
-              <th className="ib-dd-r">Decisions</th>
-              <th className="ib-dd-r">Skipped</th>
-              <th className="ib-dd-r">Plain replies</th>
+              <th>日期</th>
+              <th className="ib-dd-r">决策</th>
+              <th className="ib-dd-r">已跳过</th>
+              <th className="ib-dd-r">普通回复</th>
             </tr>
           </thead>
           <tbody>
@@ -206,15 +205,15 @@ function GroupRows({ groups, min, kind, narrow }: { groups: DecisionGroup[]; min
     return (
       <ul className="ib-card ib-dd-gl" data-group={kind}>
         {groups.map((group) => {
-          const facts = [took(group) !== '–' ? `Took the recommendation ${took(group)}` : null, closed(group) !== '–' ? `Skipped or closed ${closed(group)}` : null, wait(group) !== '–' ? `Usually waited ${wait(group)}` : null].filter(Boolean);
+          const facts = [took(group) !== '–' ? `采纳推荐 ${took(group)}` : null, closed(group) !== '–' ? `已跳过或关闭 ${closed(group)}` : null, wait(group) !== '–' ? `通常等待 ${wait(group)}` : null].filter(Boolean);
           return (
             <li key={group.id}>
               <div className="ib-dd-gl-top">
                 {name(group)}
-                <span className="ib-dd-tnum">{plural(group.answered, 'decision')}</span>
+                <span className="ib-dd-tnum">{group.answered} 次决策</span>
               </div>
               {bar(group)}
-              <div className="ib-dd-gl-sub">{facts.join(' · ') || 'Too few for a fair number'}</div>
+              <div className="ib-dd-gl-sub">{facts.join(' · ') || '数据太少，不足以给出可靠数字'}</div>
             </li>
           );
         })}
@@ -226,11 +225,11 @@ function GroupRows({ groups, min, kind, narrow }: { groups: DecisionGroup[]; min
       <table className="ib-dd-tbl">
         <thead>
           <tr>
-            <th>{kind === 'agent' ? 'Agent' : 'Project'}</th>
-            <th className="ib-dd-r">Decisions</th>
-            <th className="ib-dd-r">Took recommendation</th>
-            <th className="ib-dd-r">Skipped or closed</th>
-            <th className="ib-dd-r">Usual wait</th>
+            <th>{kind === 'agent' ? '智能体' : '项目'}</th>
+            <th className="ib-dd-r">决策</th>
+            <th className="ib-dd-r">采纳推荐</th>
+            <th className="ib-dd-r">已跳过或关闭</th>
+            <th className="ib-dd-r">通常等待</th>
           </tr>
         </thead>
         <tbody>
@@ -255,52 +254,52 @@ function GroupRows({ groups, min, kind, narrow }: { groups: DecisionGroup[]; min
 function Meaning() {
   return (
     <details className="ib-dd-meaning" data-decision-meaning="">
-      <summary>What counts as a decision</summary>
+      <summary>什么算作一次决策</summary>
       <ul>
         <li>
-          <b>A decision</b> is a question card you sent, with a choice, your own words on the card, or a typed answer. A quick go-ahead counts the same as a hard call.
+          <b>一次决策</b>指你发出的问题卡片，带有选项、你在卡片上写的文字，或输入的回答。快速同意与艰难抉择同样计入。
         </li>
         <li>
-          <b>Plain replies are not counted.</b> "Go with B" can settle something, but nothing stored says what it settled. Ask can still find them.
+          <b>普通回复不计入。</b> 「就选 B」可以敲定事情，但存储内容里没有说明它敲定了什么。询问仍能找到它们。
         </li>
         <li>
-          <b>Replaced questions are not decisions.</b> A pick saved on one was never sent. Its replacement counts once you send it.
+          <b>被替换的问题不算决策。</b> 保存在旧问题上的选择从未发出。替换后的问题在你发出后计为一次。
         </li>
         <li>
-          <b>Took the recommendation</b> is exact when the question named one. It can be real agreement; the numbers can't tell.
+          <b>采纳推荐</b>在问题指明了推荐项时是准确的。它可能是真正的认同；数字无法分辨。
         </li>
         <li>
-          <b>Pace</b> is measured in sittings: 3 or more decisions with under 5 minutes between them. Easy questions are also quick. The reading you did before your first pick is not in it.
+          <b>节奏</b>按连续作答时段统计：3 次或更多决策，且相邻间隔不到 5 分钟。简单的问题也会很快。你首次选择之前的阅读不计入。
         </li>
         <li>
-          <b>Trends</b> show only with two full 30-day periods, 20 or more in each, and a change too big to be chance.
+          <b>趋势</b>仅在有两个完整的 30 天周期、每个周期 20 次以上，且变化大到不可能是偶然时显示。
         </li>
         <li>
-          <b>Waiting</b> runs from when the agent asked to when you sent, nights included. Most agents keep working meanwhile; only a question marked Stopped holds one still.
+          <b>等待</b>从智能体发问到发出回复计算，包含夜间。大多数智能体在此期间继续工作；只有标记为已停止的问题会让一个智能体停住。
         </li>
         <li>
-          <b>Nothing here says what you read.</b> The Inbox does not record which files you opened.
+          <b>这里不记录你读过什么。</b> 收件箱不记录你打开过哪些文件。
         </li>
         <li>
-          <b>Deleting a thread</b> removes its words, but its line stays in these totals with no words in it. Ask can't read a deleted thread. <code>plannotator uninstall --purge</code> removes the lines too.
+          <b>删除话题</b>会移除其文字，但它的记录会以无文字的形式留在这些总计中。询问无法读取已删除的话题。<code>plannotator uninstall --purge</code> 会一并移除这些记录。
         </li>
-        <li>All of this is on this computer. Nothing here is sent anywhere.</li>
+        <li>所有内容都在本机，不会发送到任何地方。</li>
       </ul>
     </details>
   );
 }
 
 const RANGES = [
-  { days: 7, label: '7 days' },
-  { days: 30, label: '30 days' },
-  { days: 90, label: '90 days' },
-  { days: 0, label: 'All' },
+  { days: 7, label: '7 天' },
+  { days: 30, label: '30 天' },
+  { days: 90, label: '90 天' },
+  { days: 0, label: '全部' },
 ];
 
 function Range({ days, onDays }: { days: number; onDays: (days: number) => void }) {
   return (
     <div className="ib-dd-range">
-      <span className="ib-seg" role="radiogroup" aria-label="Range">
+      <span className="ib-seg" role="radiogroup" aria-label="范围">
         {RANGES.map((range) => (
           <label key={range.days} className="ib-seg-o" data-on={days === range.days ? '' : undefined}>
             <input type="radio" name="ib-dd-range" checked={days === range.days} onChange={() => onDays(range.days)} />
@@ -326,10 +325,10 @@ export function insightsOf(model: DecisionDataSummary): Insight[] {
   if (byTaken && share(byTaken.taken, byTaken.offered) >= 0.75) {
     out.push({
       key: 'taken',
-      label: `Took ${byTaken.label}'s recommendation`,
+      label: `采纳了 ${byTaken.label} 的推荐`,
       value: (
         <>
-          <b>{byTaken.taken}</b> of {byTaken.offered}
+          共 <b>{byTaken.offered}</b> 次中的 {byTaken.taken} 次
         </>
       ),
     });
@@ -337,29 +336,29 @@ export function insightsOf(model: DecisionDataSummary): Insight[] {
   if (model.stopped_wait.n >= model.median_min) {
     out.push({
       key: 'stopped',
-      label: 'Stopped agents waited',
+      label: '已停止的智能体等待时长',
       value: (
         <>
-          <b>{waitWords(model.stopped_wait.median_ms!)}</b>, {plural(model.stopped_wait.n, 'time')}
+          <b>{waitWords(model.stopped_wait.median_ms!)}</b>，共 {model.stopped_wait.n} 次
         </>
       ),
     });
   }
   const byReplaced = model.agents.filter((group) => group.replaced >= 5).sort((a, b) => b.replaced - a.replaced)[0];
-  if (byReplaced) out.push({ key: 'replaced', label: `${byReplaced.label} replaced before you answered`, value: <b>{byReplaced.replaced}</b> });
+  if (byReplaced) out.push({ key: 'replaced', label: `${byReplaced.label} 在你回答前被替换`, value: <b>{byReplaced.replaced}</b> });
   const closedShare = (group: DecisionGroup) => share(group.skipped + group.set_aside, group.answered + group.skipped + group.set_aside);
   const byClosed = model.projects.filter((group) => group.answered + group.skipped + group.set_aside >= model.rate_min).sort((a, b) => closedShare(b) - closedShare(a))[0];
   if (byClosed && closedShare(byClosed) >= 0.15) {
-    out.push({ key: 'closed', label: `Skipped or closed in ${byClosed.label}`, value: <b>{percent(byClosed.skipped + byClosed.set_aside, byClosed.answered + byClosed.skipped + byClosed.set_aside)}</b> });
+    out.push({ key: 'closed', label: `在 ${byClosed.label} 中跳过或关闭`, value: <b>{percent(byClosed.skipped + byClosed.set_aside, byClosed.answered + byClosed.skipped + byClosed.set_aside)}</b> });
   }
   const { fast, slow } = model.pace;
   if (fast.offered >= model.rate_min && slow.offered >= model.rate_min) {
     out.push({
       key: 'pace',
-      label: 'Took the recommendation, by pace',
+      label: '按节奏统计的采纳推荐',
       value: (
         <>
-          <b>{percent(fast.taken, fast.offered)}</b> over 2 a minute, <b>{percent(slow.taken, slow.offered)}</b> under 1
+          每分钟超过 2 个时 <b>{percent(fast.taken, fast.offered)}</b>，低于 1 个时 <b>{percent(slow.taken, slow.offered)}</b>
         </>
       ),
     });
@@ -367,10 +366,10 @@ export function insightsOf(model: DecisionDataSummary): Insight[] {
   if (model.settled_in_words > 0) {
     out.push({
       key: 'words',
-      label: 'Ended in your own words, not on the card',
+      label: '以你自己的文字结束，而非卡片选项',
       value: (
         <>
-          about <b>{model.settled_in_words}</b>
+          约 <b>{model.settled_in_words}</b> 次
         </>
       ),
     });
@@ -379,9 +378,9 @@ export function insightsOf(model: DecisionDataSummary): Insight[] {
 }
 
 const TREND_WORDS = {
-  recommendations: { up: 'Taking more recommendations', down: 'Taking fewer recommendations' },
-  waits: { up: 'Stopped agents wait longer', down: 'Stopped agents wait less' },
-  skips: { up: 'Skipping more questions', down: 'Skipping fewer questions' },
+  recommendations: { up: '采纳更多推荐', down: '采纳更少推荐' },
+  waits: { up: '已停止的智能体等待更久', down: '已停止的智能体等待更短' },
+  skips: { up: '跳过更多问题', down: '跳过更少问题' },
 };
 
 /** Up or down is the number's direction, not a verdict: no good or bad colour. No trend, no block. */
@@ -389,7 +388,7 @@ function Trends({ trends }: { trends: DecisionTrend[] }) {
   if (trends.length === 0) return null;
   return (
     <div className="ib-dd-trends" data-decision-trends="">
-      <p>Last 30 days, compared with the 30 before</p>
+      <p>最近 30 天，与前 30 天对比</p>
       <ul>
         {trends.map((trend) => (
           <li key={trend.key} data-trend={trend.key} data-direction={trend.direction}>
@@ -424,17 +423,17 @@ function Insights({ model, days, onDays, narrow }: { model: DecisionDataSummary;
   return (
     <>
       <section className="ib-sgroup" data-decision-insights="">
-        <h2>Insights</h2>
+        <h2>洞察</h2>
         <Trends trends={model.trends} />
         <Range days={days} onDays={onDays} />
         <p data-decision-lede="">
-          Since {dayLabel(started)}: <b>{plural(counts.answered, 'decision')}</b>, {counts.skipped} skipped, {counts.set_aside} closed with Mark read, {model.waiting} waiting on you.
+          Since {dayLabel(started)}: <b>{counts.answered} 次决策</b>，{counts.skipped} 次跳过，{counts.set_aside} 次标为已读关闭，{model.waiting} 个等待你处理。
         </p>
         {counts.answered + counts.skipped === 0 ? (
           <div className="ib-card ib-sempty" data-decision-filtered="">
-            Nothing answered in this range.{' '}
+            此范围内没有已回答的内容。{' '}
             <button type="button" className="ib-lnk" onClick={() => onDays(0)}>
-              Show everything
+              显示全部
             </button>
           </div>
         ) : (
@@ -449,19 +448,19 @@ function Insights({ model, days, onDays, narrow }: { model: DecisionDataSummary;
                 ))}
               </ul>
             )}
-            <h3 className="ib-dd-sub">Decisions by day</h3>
+            <h3 className="ib-dd-sub">按天统计的决策</h3>
             <DayColumns days={model.days} since={started} until={model.range.until} height={130} />
             <ByDay days={model.days} />
-            <h3 className="ib-dd-sub">Who asks</h3>
+            <h3 className="ib-dd-sub">谁在提问</h3>
             <GroupRows groups={model.agents} min={model.rate_min} kind="agent" narrow={narrow} />
             <div className="ib-dd-gap" />
             <GroupRows groups={model.projects} min={model.rate_min} kind="project" narrow={narrow} />
-            <p className="ib-dd-dash">A dash means too few to give a fair number.</p>
+            <p className="ib-dd-dash">破折号表示数据太少，不足以给出可靠数字。</p>
             <div className="ib-dd-foot">
               <a className="ib-lnk" href={inboxUrl('/decision-data', new URLSearchParams({ format: 'csv', days: String(days) }).toString())} data-decision-csv="">
-                Download as CSV
+                下载为 CSV
               </a>
-              <span>One line per question: times and ids, no words.</span>
+              <span>每个问题一行：时间与 ID，不含文字。</span>
             </div>
           </>
         )}
@@ -501,7 +500,7 @@ export function DecisionData() {
     content = (
       <div className="ib-card ib-sempty" data-decision-empty="">
         <Icon name="inbox" />
-        No decisions yet.
+        暂无决策。
       </div>
     );
   } else {
@@ -512,18 +511,18 @@ export function DecisionData() {
         {model.history.answered < 20 && ageDays < 7 ? (
           <>
             <p className="ib-lede" data-decision-lede="">
-              So far: <b>{plural(model.counts.answered, 'decision')}</b>
-              {model.counts.skipped > 0 ? `, ${model.counts.skipped} skipped` : ''}.
+              So far: <b>{model.counts.answered} 次决策</b>
+              {model.counts.skipped > 0 ? `，${model.counts.skipped} 次跳过` : ''}。
               {model.waiting > 0 && (
                 <>
                   {' '}
-                  {model.waiting} {model.waiting === 1 ? 'waits' : 'wait'} on you now.
+                  当前有 {model.waiting} 个等待你处理。
                 </>
               )}
             </p>
             <div className="ib-card ib-sempty" data-decision-early="">
               <Icon name="clock" />
-              Insights show after about a week, or 20 decisions.
+              约一周或 20 次决策后显示洞察。
             </div>
           </>
         ) : (

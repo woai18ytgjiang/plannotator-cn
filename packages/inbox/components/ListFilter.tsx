@@ -93,11 +93,11 @@ function usePortal(anchor: RefObject<HTMLElement | null>) {
 const tick = (on: boolean) => <span className="ib-pc-tick">{on && <Icon name="check" />}</span>;
 
 /** The search's words (the field's placeholder and name; the line and the count a screen reader hears). */
-const FIND_WORDS = 'Search filters';
+const FIND_WORDS = '搜索筛选条件';
 /** The × in the field: its name, for a screen reader's touch or virtual cursor (Escape does the same from the keyboard).
  * Base UI hides its clear button from screen readers; `aria-hidden={false}` puts it back. */
-const CLEAR_WORDS = 'Clear search';
-const nothingMatches = (query: string) => `Nothing matches “${query}”`;
+const CLEAR_WORDS = '清除搜索';
+const nothingMatches = (query: string) => `没有匹配“${query}”的项目`;
 const matchWords = (n: number, query: string) => (n === 0 ? nothingMatches(query) : n === 1 ? '1 match' : `${formatCount(n)} matches`);
 
 /** A row's label with the search's match drawn bold, from `labelStart` ("…" for what it drops). */
@@ -217,7 +217,7 @@ export function ListFilterButton({ source, phone }: { source: ListFilterSource; 
     {
       id: 'notSeen',
       title: null,
-      rows: [{ key: 'notSeen', label: 'Not seen', on: filter.notSeen, count: countOf('notSeen', rowNotSeen), onToggle: () => set({ notSeen: !source.filter.notSeen }), mark: <Icon name="envelope" />, data: { 'data-list-filter-not-seen': '' } }],
+      rows: [{ key: 'notSeen', label: '未查看', on: filter.notSeen, count: countOf('notSeen', rowNotSeen), onToggle: () => set({ notSeen: !source.filter.notSeen }), mark: <Icon name="envelope" />, data: { 'data-list-filter-not-seen': '' } }],
     },
     {
       id: 'updated',
@@ -234,7 +234,7 @@ export function ListFilterButton({ source, phone }: { source: ListFilterSource; 
         })),
         {
           key: 'range',
-          label: custom ? rangeWords(custom) : 'Custom range…',
+          label: custom ? rangeWords(custom) : '自定义范围…',
           on: custom !== null,
           count: custom ? countOf('updated', inSpan(custom, now)) : null,
           onToggle: () => {
@@ -243,7 +243,7 @@ export function ListFilterButton({ source, phone }: { source: ListFilterSource; 
           },
           mark: <Icon name="clock" />,
           data: { 'data-list-filter-updated': 'range' },
-          opens: 'Custom range',
+          opens: '自定义范围',
         },
       ],
     },
@@ -283,7 +283,7 @@ export function ListFilterButton({ source, phone }: { source: ListFilterSource; 
     },
     {
       id: 'pulls',
-      title: 'Pull request',
+      title: 'PR',
       rows: pulls
         ? PULL_OPTIONS.map((o) => ({
             key: o.value,
@@ -431,7 +431,7 @@ function FilterMenu({
           {found.sections.length > 0 && <Menu.Separator className="ib-pm-sep" />}
           <Menu.Item key={found.searching && found.matches === 0 ? 'clear:kept' : 'clear'} className="ib-pmi" onClick={onClear} data-list-filter-clear="">
             <Icon name="x" />
-            <span className="ib-pmi-l">Clear filters</span>
+            <span className="ib-pmi-l">清除筛选</span>
           </Menu.Item>
         </>
       )}
@@ -443,7 +443,7 @@ function FilterMenu({
       <Menu.Portal container={portal ?? undefined}>
         {phone && <Menu.Backdrop className="ib-pm-scrim" />}
         <Menu.Positioner className="ib-pm-pos" side="bottom" align="end" sideOffset={6} data-phone={phone ? '' : undefined} data-list-filter-searchable={searchable ? '' : undefined}>
-          <Menu.Popup className="ib-pm ib-pc-menu ib-lflt-menu" aria-label="Filter" data-list-filter-menu="" data-list-filter-searchable={searchable ? '' : undefined}>
+          <Menu.Popup className="ib-pm ib-pc-menu ib-lflt-menu" aria-label="筛选" data-list-filter-menu="" data-list-filter-searchable={searchable ? '' : undefined}>
             <div className="ib-pm-title" aria-hidden="true">
               Filter
             </div>
@@ -565,7 +565,7 @@ function RangePanel({
       <Popover.Portal container={portal ?? undefined}>
         {phone && <Popover.Backdrop className="ib-pm-scrim" />}
         <Popover.Positioner className="ib-tidy-pos" anchor={anchor} side="bottom" align="end" sideOffset={6} data-phone={phone ? '' : undefined}>
-          <Popover.Popup className="ib-tidy ib-lflt-range" aria-label="Custom range" finalFocus={anchor} data-list-filter-range="">
+          <Popover.Popup className="ib-tidy ib-lflt-range" aria-label="自定义范围" finalFocus={anchor} data-list-filter-range="">
             <form
               onSubmit={(event) => {
                 event.preventDefault();
@@ -574,10 +574,10 @@ function RangePanel({
                 onOpenChange(false);
               }}
             >
-              <div className="ib-lflt-range-h">Updated between</div>
+              <div className="ib-lflt-range-h">更新时间介于</div>
               <div className="ib-lflt-range-days">
                 <label>
-                  <span>From</span>
+                  <span>从</span>
                   <input type="date" value={from} max={to || today} onChange={(e) => setFrom(e.target.value)} required data-list-filter-from="" />
                 </label>
                 <label>
@@ -605,7 +605,7 @@ function RangePanel({
 export function ListFilterEmpty({ onClear }: { onClear: () => void }) {
   return (
     <div className="ib-empty-list ib-lflt-empty" data-list-filter-empty="">
-      <b>No threads match</b>
+      <b>没有匹配的话题</b>
       <button
         type="button"
         className="ib-btn"

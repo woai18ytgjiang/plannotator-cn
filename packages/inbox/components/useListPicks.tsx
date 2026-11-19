@@ -144,7 +144,7 @@ export function useListPicks(input: ListPicksInput) {
   const groupBox = (section: InboxListSection, open: boolean) => {
     if (!picks.on || !open || !act) return null;
     const ids = section.threads.map((row) => row.thread_id);
-    return <PickBox state={boxState(ids, picks.picked)} label={`Select all in ${section.label}`} onPick={() => picks.all(ids)} />;
+    return <PickBox state={boxState(ids, picks.picked)} label={`全选${section.label}中的条目`} onPick={() => picks.all(ids)} />;
   };
   const bar =
     picks.on && act ? (

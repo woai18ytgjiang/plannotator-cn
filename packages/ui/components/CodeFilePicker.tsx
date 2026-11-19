@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { useDismissOnOutsideAndEscape } from "../hooks/useDismissOnOutsideAndEscape";
@@ -36,7 +37,7 @@ export const CodeFilePicker: React.FC<{
 		<div
 			ref={popoverRef}
 			role="menu"
-			aria-label="Choose file"
+			aria-label="选择文件"
 			className="fixed z-[100] min-w-[240px] max-w-[480px] bg-popover text-popover-foreground border border-border/70 rounded-lg shadow-xl py-1"
 			style={{ top: pos.top, left: pos.left }}
 		>

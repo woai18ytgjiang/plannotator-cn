@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type React from 'react';
 import { getProviderMeta } from './ProviderIcons';
 import { ModelSourceHint, modelSourceToolForProvider } from './ModelSourceHint';
@@ -54,13 +55,13 @@ export const AISettingsTab: React.FC<AISettingsTabProps> = ({
     return (
       <>
         <div>
-          <div className="text-sm font-medium">AI Provider</div>
+          <div className="text-sm font-medium">AI 服务商</div>
         </div>
         <div className="flex items-start gap-2 p-3 bg-amber-500/10 border border-amber-500/30 rounded-lg text-xs text-amber-600 dark:text-amber-400">
           <svg className="w-4 h-4 flex-shrink-0 mt-0.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
           </svg>
-          <span>No AI providers detected. Install the <strong>claude</strong> or <strong>codex</strong> CLI and make sure you're authenticated. <a href="https://plannotator.ai/docs/guides/ai-features/" target="_blank" rel="noopener noreferrer" className="underline hover:text-amber-700 dark:hover:text-amber-300">Setup guide</a></span>
+          <span>未检测到 AI 服务商。请安装 <strong>claude</strong> 或 <strong>codex</strong> CLI 并确保已完成认证。 <a href="https://plannotator.ai/docs/guides/ai-features/" target="_blank" rel="noopener noreferrer" className="underline hover:text-amber-700 dark:hover:text-amber-300">设置指南</a></span>
         </div>
       </>
     );
@@ -76,9 +77,9 @@ export const AISettingsTab: React.FC<AISettingsTabProps> = ({
     return (
       <>
         <div>
-          <div className="text-sm font-medium">AI Provider</div>
+          <div className="text-sm font-medium">AI 服务商</div>
           <div className="text-xs text-muted-foreground">
-            Ask AI is answered by the agent session that opened Plannotator.
+            Ask AI 由打开 Plannotator 的智能体会话回答。
           </div>
         </div>
         <div
@@ -91,7 +92,7 @@ export const AISettingsTab: React.FC<AISettingsTabProps> = ({
           <div className="text-sm font-medium">{meta.label}</div>
         </div>
         <div className="text-[10px] text-muted-foreground/70">
-          Your provider choice applies when Plannotator is opened without an attached session.
+          当你未附加会话打开 Plannotator 时，将使用你选择的服务商。
         </div>
       </>
     );
@@ -100,9 +101,9 @@ export const AISettingsTab: React.FC<AISettingsTabProps> = ({
   return (
     <>
       <div>
-        <div className="text-sm font-medium">AI Provider</div>
+        <div className="text-sm font-medium">AI 服务商</div>
         <div className="text-xs text-muted-foreground">
-          Choose which AI provider and model to use for inline chat
+          选择行内聊天使用的 AI 服务商和模型
         </div>
       </div>
 
@@ -143,7 +144,7 @@ export const AISettingsTab: React.FC<AISettingsTabProps> = ({
               {isSelected && models.length > 1 && (
                 <div className="border border-t-0 border-primary bg-primary/5 rounded-b-lg px-3 pb-3 pt-1">
                   <label className="flex items-center gap-2">
-                    <span className="text-[11px] text-muted-foreground">Model</span>
+                    <span className="text-[11px] text-muted-foreground">模型</span>
                     <select
                       value={selectedModel ?? ''}
                       onChange={(e) => handleModelChange(p.id, e.target.value)}
@@ -176,8 +177,8 @@ export const AISettingsTab: React.FC<AISettingsTabProps> = ({
       </div>
 
       <div className="text-[10px] text-muted-foreground/70">
-        Providers are detected from installed CLI tools. No API keys are managed by Plannotator — you must be authenticated with each CLI independently.{' '}
-        <a href="https://plannotator.ai/docs/guides/ai-features/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">Learn more</a>
+        服务商通过已安装的 CLI 工具检测。Plannotator 不管理任何 API 密钥——你需要分别在各 CLI 中完成认证。{' '}
+        <a href="https://plannotator.ai/docs/guides/ai-features/" target="_blank" rel="noopener noreferrer" className="text-primary hover:underline">了解更多</a>
       </div>
     </>
   );

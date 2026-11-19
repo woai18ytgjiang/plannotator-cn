@@ -66,7 +66,7 @@ export function AgentIconDialog({ place, agent, host, name, face, shared = false
             ))}
           </div>
         )}
-        <button type="button" className="ib-btn ib-ghost ib-icon ib-agi-x" aria-label="Close" onClick={onClose}>
+        <button type="button" className="ib-btn ib-ghost ib-icon ib-agi-x" aria-label="关闭" onClick={onClose}>
           <Icon name="x" />
         </button>
       </div>

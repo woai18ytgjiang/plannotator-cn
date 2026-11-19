@@ -6,9 +6,9 @@ import { ChevronDown } from 'lucide-react';
 export type ChangedFileView = 'changes' | 'whole' | 'original';
 
 const LABELS: Record<ChangedFileView, { label: string; title: string }> = {
-  changes: { label: 'Diff', title: 'The diff' },
-  whole: { label: 'Current', title: "The whole file at the diff's new side, with change bars" },
-  original: { label: 'Original', title: "The whole file at the diff's old side, with the removed lines marked" },
+  changes: { label: '差异', title: '差异视图' },
+  whole: { label: '当前', title: '差异新侧的完整文件，并标出更改' },
+  original: { label: '原始', title: '差异旧侧的完整文件，并标出被删除的行' },
 };
 
 export const FileViewSwitch: React.FC<{
@@ -40,7 +40,7 @@ export const FileViewSwitch: React.FC<{
   const reasonOf = (key: ChangedFileView) => (key === 'whole' ? wholeUnavailableReason : key === 'original' ? originalUnavailableReason : null);
   return (
     <>
-      <div className="flex-none flex items-center bg-muted/50 rounded p-0.5 mr-1 @max-[600px]/file-header:hidden" role="group" aria-label="File view" data-file-view-switch>
+      <div className="flex-none flex items-center bg-muted/50 rounded p-0.5 mr-1 @max-[600px]/file-header:hidden" role="group" aria-label="文件视图" data-file-view-switch>
         {segment('changes')}
         {segment('whole')}
         {segment('original')}
@@ -48,7 +48,7 @@ export const FileViewSwitch: React.FC<{
       <Menu.Root>
         <Menu.Trigger
           data-file-view-menu=""
-          aria-label={`File view: ${LABELS[view].label}`}
+          aria-label={`文件视图：${LABELS[view].label}`}
           className="hidden @max-[600px]/file-header:flex flex-none items-center gap-0.5 h-6 px-1.5 mr-1 rounded text-xs font-medium bg-muted/50 text-foreground hover:bg-muted"
         >
           {LABELS[view].label}

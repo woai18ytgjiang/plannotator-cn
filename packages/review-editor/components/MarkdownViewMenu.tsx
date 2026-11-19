@@ -11,14 +11,14 @@ import type { MarkdownFileView } from '../utils/markdownPreview';
  * FileHeader read-only, never carries it.
  */
 
-const LABEL: Record<MarkdownFileView, string> = { source: 'Source', changes: 'Changes', read: 'Read' };
+const LABEL: Record<MarkdownFileView, string> = { source: 'Source', changes: 'Changes', read: '已读' };
 
 function describe(view: MarkdownFileView, status: MarkdownViewMenuProps['status']): string {
-  if (view === 'source') return 'The line diff · comment on lines';
-  if (view === 'changes') return 'Rendered, changes marked · select to comment';
-  if (status === 'deleted') return 'The deleted version, rendered · select to comment';
-  if (status === 'added') return 'The new file, rendered · select to comment';
-  return 'The new version, rendered · select to comment';
+  if (view === 'source') return '行差异 · 可在行上评论';
+  if (view === 'changes') return '已渲染并标出更改 · 选择文本即可评论';
+  if (status === 'deleted') return '已删除版本的渲染结果 · 选择文本即可评论';
+  if (status === 'added') return '新文件的渲染结果 · 选择文本即可评论';
+  return '新版本的渲染结果 · 选择文本即可评论';
 }
 
 function ViewIcon({ view, className }: { view: MarkdownFileView; className: string }) {
@@ -63,8 +63,8 @@ export const MarkdownViewMenu: React.FC<MarkdownViewMenuProps> = ({
   const title = disabledReason
     ? disabledReason
     : rendered
-    ? `Showing ${LABEL[view]}. Select text to comment. P: next view`
-    : 'Show this Markdown file as Source, Changes or Read. P: next view';
+    ? `正在显示${LABEL[view]}。选择文本即可评论。P：下一个视图`
+    : '以源码、更改或阅读视图显示此 Markdown 文件。P：下一个视图';
 
   const trigger = touch ? (
     // Drawn 36 px; the ::after box makes the hit area 44 px (4 px past each
@@ -166,7 +166,7 @@ export const MarkdownViewMenu: React.FC<MarkdownViewMenuProps> = ({
             {!touch && (
               <div aria-hidden="true" className="mt-1 border-t border-border/60 px-2.5 pb-1 pt-2 text-xs text-muted-foreground">
                 <kbd className="mr-1 rounded border border-border bg-muted px-1 font-mono text-xs text-foreground">P</kbd>
-                next view · files you have not set follow your choice
+                下一个视图 · 未单独设置的文件会跟随你的选择
               </div>
             )}
           </Menu.Popup>

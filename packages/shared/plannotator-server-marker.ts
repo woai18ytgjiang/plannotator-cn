@@ -36,7 +36,7 @@ export const LIVE_PROXIED_REFUSED_CODE = "live_proxy_refused";
 
 /** The refusal's text body. */
 export const LIVE_PROXIED_REFUSED_MESSAGE =
-  "This is a Plannotator server; annotate's live app proxy never fronts one.";
+  "这是一个 Plannotator 服务器；批注的实时应用代理从不会转发它。";
 
 /** True when a request came through annotate's live app proxy. */
 export function isLiveProxiedRequest(headers: { get(name: string): string | null }): boolean {

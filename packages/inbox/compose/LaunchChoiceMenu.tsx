@@ -23,7 +23,7 @@ export function LaunchChoiceButton({ choice, choices, open, onToggle, className 
   );
 }
 
-/** What the menu picks: "Model and variant", or with OpenCode's agents "Model, variant and agent". */
+/** What the menu picks: "模型与变体", or with OpenCode's agents "模型、变体与智能体". */
 function launchChoiceMenuName(choices: InboxLaunchChoices): string {
   const effort = choices.effort_word.toLowerCase();
   return choices.primary_agents?.length ? `Model, ${effort} and agent` : `Model and ${effort}`;
@@ -90,7 +90,7 @@ export function LaunchChoiceMenu({
             }}
           >
             <span className="ib-cp-op">
-              {value === null ? 'Default' : show(value)}
+              {value === null ? '默认' : show(value)}
             </span>
             <span className="ib-cp-check" aria-hidden="true">
               {on && <Icon name="check" size={15} />}
@@ -108,7 +108,7 @@ export function LaunchChoiceMenu({
         <div className="ib-cp-pickhead">
           <button type="button" className="ib-cp-back" onClick={back}>
             <Icon name="chevL" size={16} />
-            Back
+            返回
           </button>
           <span>{launchChoiceMenuName(choices)}</span>
         </div>
@@ -121,7 +121,7 @@ export function LaunchChoiceMenu({
         )}
         {efforts.length > 0 && column('effort', effortWord, efforts, (v) => v)}
         {/* OpenCode's own agents (build, plan, …), the session's from its start. */}
-        {choices.primary_agents && choices.primary_agents.length > 0 && column('primary_agent', 'Agent', choices.primary_agents, (v) => v)}
+        {choices.primary_agents && choices.primary_agents.length > 0 && column('primary_agent', '智能体', choices.primary_agents, (v) => v)}
       </div>
     </div>
   );
@@ -168,8 +168,8 @@ function ModelFilterColumn({ models, picked, onPick }: { models: string[]; picke
     }
   };
   return (
-    <div ref={list} className="ib-cp-list ib-cp-lchcol" role="group" aria-label="Model" data-compose-choice-menu="model" data-filterable="" data-typing={typing ? '' : undefined}>
-      <div className="ib-cp-cap">Model</div>
+    <div ref={list} className="ib-cp-list ib-cp-lchcol" role="group" aria-label="模型" data-compose-choice-menu="model" data-filterable="" data-typing={typing ? '' : undefined}>
+      <div className="ib-cp-cap">模型</div>
       <div className="ib-cp-filter ib-cp-lchfilter">
         <Icon name="search" size={14} />
         <input
@@ -179,8 +179,8 @@ function ModelFilterColumn({ models, picked, onPick }: { models: string[]; picke
           aria-autocomplete="list"
           aria-controls={`${uid}-rows`}
           aria-activedescendant={`${uid}-${hl}`}
-          aria-label="Find a model"
-          placeholder="Find a model"
+          aria-label="查找模型"
+          placeholder="查找模型"
           autoComplete="off"
           spellCheck={false}
           value={query}
@@ -206,7 +206,7 @@ function ModelFilterColumn({ models, picked, onPick }: { models: string[]; picke
             onClick={() => pick(value)}
           >
             <span className="ib-cp-op ib-cp-lchname">
-              <span>{value === null ? 'Default' : idOf(value)}</span>
+              <span>{value === null ? '默认' : idOf(value)}</span>
               {value !== null && providerOf(value) && <span className="ib-cp-lchprov">{providerOf(value)}</span>}
             </span>
             <span className="ib-cp-check" aria-hidden="true">
@@ -214,7 +214,7 @@ function ModelFilterColumn({ models, picked, onPick }: { models: string[]; picke
             </span>
           </button>
         ))}
-        {shown.length === 0 && <div className="ib-cp-none">No matching models</div>}
+        {shown.length === 0 && <div className="ib-cp-none">没有匹配的模型</div>}
       </div>
     </div>
   );

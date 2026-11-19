@@ -58,7 +58,7 @@ export function DiffControls({
   if (phone) return null;
   const folded = collapseAll?.collapsed === true;
   return (
-    <span className="ib-dctl" role="group" aria-label="Diff display" data-diff-controls="">
+    <span className="ib-dctl" role="group" aria-label="差异显示" data-diff-controls="">
       {layout && (
         <Tip content={diffLayoutToggleTip(style)} side="bottom">
           <DiffLayoutToggle className="ib-iconbtn ib-dctl-b ib-dctl-layout" value={style} onChange={(next) => chooseDiffOption('diffStyle', next)} nativeTitle={false} />

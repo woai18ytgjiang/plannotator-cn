@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useMemo, useRef, useCallback, type ReactElement, type ReactNode } from 'react';
 import { Popover, PopoverTrigger, PopoverContent } from './Popover';
 
@@ -24,8 +25,8 @@ export function SearchableSelect<T extends { id: string }>({
   renderItem,
   renderTrigger,
   headerContent,
-  placeholder = 'Search...',
-  emptyMessage = 'No results',
+  placeholder = '搜索…',
+  emptyMessage = '无结果',
   align = 'start',
   width = 'w-64',
   onOpenChange,

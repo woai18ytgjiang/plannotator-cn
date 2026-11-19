@@ -7,7 +7,7 @@
 import type { InboxPullChecks } from '@plannotator/core/inbox-types';
 
 export function checksLabel(checks: InboxPullChecks | null): string | null {
-  return checks === 'success' ? 'checks passed' : checks === 'failure' ? 'checks failing' : checks === 'pending' ? 'checks running' : null;
+  return checks === 'success' ? '检查通过' : checks === 'failure' ? '检查失败' : checks === 'pending' ? '检查运行中' : null;
 }
 
 export function ChecksMark({ checks }: { checks: InboxPullChecks | null }) {

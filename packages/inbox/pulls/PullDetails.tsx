@@ -56,9 +56,9 @@ function useReached(at: number | null): boolean {
   return reached;
 }
 
-const REVIEW_WORDS: Record<InboxPullReviewState, string> = { approved: 'Approved', changes: 'Changes requested', commented: 'Commented', waiting: 'Waiting' };
+const REVIEW_WORDS: Record<InboxPullReviewState, string> = { approved: '已批准', changes: '已请求修改', commented: '已评论', waiting: '等待中' };
 const REVIEW_ORDER: InboxPullReviewState[] = ['changes', 'approved', 'commented', 'waiting'];
-export const DELETED = 'A deleted account';
+export const DELETED = '已删除的账号';
 export const shortName = (login: string) => login.replace(/\[bot\]$/, '');
 const checkName = (check: InboxPullCheck) => (check.workflow ? `${check.workflow} / ${check.name}` : check.name);
 /** A bot that only commented says nothing about where the review stands: it follows the people who were asked. */
@@ -70,14 +70,14 @@ const worst = (checks: readonly InboxPullCheck[]): InboxPullCheckState => (check
 function checkWords(checks: readonly InboxPullCheck[]) {
   const fail = checks.filter((c) => c.state === 'fail').length;
   const pending = checks.filter((c) => c.state === 'pending').length;
-  return fail ? `${fail} failed` : pending ? `${pending} running` : 'All passed';
+  return fail ? `${fail} 个失败` : pending ? `${pending} 个运行中` : '全部通过';
 }
 export function reviewWords(all: readonly InboxPullReviewer[]) {
   const people = all.filter((r) => !quietBot(r));
   const reviewers = people.length ? people : all;
-  if (reviewers.some((r) => r.state === 'changes')) return 'Changes requested';
+  if (reviewers.some((r) => r.state === 'changes')) return '已请求修改';
   const approved = reviewers.filter((r) => r.state === 'approved').length;
-  return approved ? `${approved} approved` : reviewers.some((r) => r.state === 'commented') ? 'Commented' : 'Waiting';
+  return approved ? `${approved} 人已批准` : reviewers.some((r) => r.state === 'commented') ? '已评论' : '等待中';
 }
 
 const CheckMark = ({ state, quiet }: { state: InboxPullCheckState; quiet?: boolean }) =>
@@ -117,7 +117,7 @@ export const DETAILS_BUTTON: boolean = false;
 export function DetailsButton({ open, data, onToggle }: { open: boolean; data: InboxPullDetailsAnswer | null; onToggle: (event: React.MouseEvent<HTMLElement>) => void }) {
   if (!DETAILS_BUTTON) return null;
   return (
-    <Tip content="Description, comments, checks and reviewers">
+    <Tip content="描述、评论、检查与审查者">
       <button type="button" className={`ib-prp-dbtn${open ? ' ib-on' : ''}`} aria-expanded={open} onClick={onToggle} data-pull-details-button="">
         Details
         <DetailsStatus data={data} />
@@ -145,11 +145,11 @@ export function DetailsTitle({ name, tip, open, data, onToggle, className, child
       content={
         <span className="ib-tip-proj">
           {tip}
-          <span className="ib-tip-sub" data-pull-details-hint="">{open ? 'Click to close Details' : 'Click for Details: description, comments, checks and reviewers'}</span>
+          <span className="ib-tip-sub" data-pull-details-hint="">{open ? '点击关闭详情' : '点击查看详情：描述、评论、检查与审查者'}</span>
         </span>
       }
     >
-      <button type="button" className={`${className} ib-dtitle${open ? ' ib-on' : ''}`} aria-expanded={open} aria-label={`${name}, opens details`} onClick={onToggle} data-pull-details-title="" {...rest}>
+      <button type="button" className={`${className} ib-dtitle${open ? ' ib-on' : ''}`} aria-expanded={open} aria-label={`${name}，打开详情`} onClick={onToggle} data-pull-details-title="" {...rest}>
         {children}
         {!DETAILS_BUTTON && <DetailsStatus data={data} />}
       </button>
@@ -260,7 +260,7 @@ function CheckRow({ check, label }: { check: InboxPullCheck; label: string }) {
   return (
     <li data-pull-details-check={check.state}>
       {check.url ? (
-        <a className="ib-prd-rlink" href={check.url} target="_blank" rel="noreferrer noopener" aria-label={`${whole}, ${check.state === 'pass' ? (check.note ?? 'passed') : check.state === 'fail' ? (check.note ?? 'failed') : 'running'}`}>
+        <a className="ib-prd-rlink" href={check.url} target="_blank" rel="noreferrer noopener" aria-label={`${whole}，${check.state === 'pass' ? (check.note ?? '通过') : check.state === 'fail' ? (check.note ?? '失败') : '运行中'}`}>
           {inner}
         </a>
       ) : (
@@ -308,7 +308,7 @@ export function CheckRows({ checks }: { checks: readonly InboxPullCheck[] }) {
       )}
       {folds && (
         <button type="button" className="ib-prd-more" aria-expanded={all} onClick={() => setAll(!all)}>
-          {all ? 'Show less' : words}
+          {all ? '收起' : words}
         </button>
       )}
     </>
@@ -403,10 +403,10 @@ export function PullDetails({ layer, description, headSha, data, failed, heldUnt
   const threadsMissing = data?.threads_incomplete && (
     <p className="ib-prd-none" role="status" data-pull-details-threads-missing="">
       {forge} did not answer for all the comments on lines.{' '}
-      <button type="button" className="ib-prd-more" onClick={onRetry}>Try again</button>
+      <button type="button" className="ib-prd-more" onClick={onRetry}>重试</button>
     </p>
   );
-  const reading = words ? <PullDescription markdown={words} layer={layer} headSha={headSha} /> : data || (failed && !descriptionUnread) ? <p className="ib-prd-none">No description.</p> : null;
+  const reading = words ? <PullDescription markdown={words} layer={layer} headSha={headSha} /> : data || (failed && !descriptionUnread) ? <p className="ib-prd-none">没有描述。</p> : null;
   // Held, Try again waits for the time it names: before it, a click could only be refused again.
   const canRetry = useReached(heldUntil);
   const failedNote = failed && (
@@ -414,7 +414,7 @@ export function PullDetails({ layer, description, headSha, data, failed, heldUnt
       {heldUntil
         ? `${layer.host} asked to slow down.${canRetry ? '' : ` Try again after ${new Date(heldUntil).toLocaleTimeString([], { hour: 'numeric', minute: '2-digit' })}.`}`
         : `${forge} did not answer about the ${descriptionUnread ? 'description, ' : ''}reviewers and checks.`}{' '}
-      {canRetry && <button type="button" className="ib-prd-more" onClick={onRetry}>Try again</button>}
+      {canRetry && <button type="button" className="ib-prd-more" onClick={onRetry}>重试</button>}
     </p>
   );
   const labelRow = labels.length > 0 && (
@@ -432,7 +432,7 @@ export function PullDetails({ layer, description, headSha, data, failed, heldUnt
     );
   };
   return (
-    <aside ref={panel as RefObject<HTMLElement>} className="ib-prd" aria-label="Details" tabIndex={-1} data-pull-details="" data-layout={phone ? 'column' : 'columns'} data-headless={headless ? '' : undefined} {...keys}>
+    <aside ref={panel as RefObject<HTMLElement>} className="ib-prd" aria-label="详情" tabIndex={-1} data-pull-details="" data-layout={phone ? 'column' : 'columns'} data-headless={headless ? '' : undefined} {...keys}>
       {!headless && <header className="ib-prd-head">
         <Face login={layer.author ?? ''} host={layer.host} size={32} />
         <div className="ib-prd-who">
@@ -444,10 +444,10 @@ export function PullDetails({ layer, description, headSha, data, failed, heldUnt
           </span>
         </div>
         <Tip content={`Open on ${forge}`}>
-          <a className="ib-prd-iconbtn" href={layer.url} target="_blank" rel="noreferrer noopener" aria-label={`Open on ${forge}`}><Icon name="external" size={15} /></a>
+          <a className="ib-prd-iconbtn" href={layer.url} target="_blank" rel="noreferrer noopener" aria-label={`在 ${forge} 中打开`}><Icon name="external" size={15} /></a>
         </Tip>
-        <Tip content="Close">
-          <button type="button" className="ib-prd-iconbtn" aria-label="Close the details" onClick={onClose} data-pull-details-close=""><Icon name="x" size={15} /></button>
+        <Tip content="关闭">
+          <button type="button" className="ib-prd-iconbtn" aria-label="关闭详情" onClick={onClose} data-pull-details-close=""><Icon name="x" size={15} /></button>
         </Tip>
       </header>}
       <div className="ib-prd-body">
@@ -491,9 +491,9 @@ export function PullDetails({ layer, description, headSha, data, failed, heldUnt
               <div className="ib-prd-side" aria-busy={!data && !failed}>
                 {failedNote}
                 {!data && !failed && <div className="ib-prd-waiting" aria-hidden="true"><i /><i /><i /></div>}
-                {reviewers.length > 0 && <section><h3>Reviewers</h3><ReviewerRows reviewers={reviewers} host={layer.host} words={false} /></section>}
-                {checks.length > 0 && <section><h3>Checks</h3><CheckRows checks={checks} /></section>}
-                {labels.length > 0 && <section><h3>Labels</h3>{labelRow}</section>}
+                {reviewers.length > 0 && <section><h3>审查者</h3><ReviewerRows reviewers={reviewers} host={layer.host} words={false} /></section>}
+                {checks.length > 0 && <section><h3>检查</h3><CheckRows checks={checks} /></section>}
+                {labels.length > 0 && <section><h3>标签</h3>{labelRow}</section>}
               </div>
             )}
           </div>

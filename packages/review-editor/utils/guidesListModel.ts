@@ -9,9 +9,9 @@ export interface GuideGroup {
 }
 
 export function guideGroupLabel(key: SavedGuideWhere, prMode: boolean): string {
-  if (key === 'diff') return 'This diff';
-  if (key === 'target') return prMode ? 'This PR' : 'This branch';
-  return 'Earlier';
+  if (key === 'diff') return '此差异';
+  if (key === 'target') return prMode ? '此 PR' : '此分支';
+  return '更早';
 }
 
 export function groupSavedGuides(
@@ -40,14 +40,14 @@ export function guideProgressText(progress: SavedGuideListEntry['progress']): st
 }
 
 export function guideMismatchText(entry: Pick<SavedGuideListEntry, 'moved' | 'where'>): string | null {
-  if (entry.where === 'target' || (entry.where === undefined && entry.moved)) return 'Written for an earlier version of this diff';
+  if (entry.where === 'target' || (entry.where === undefined && entry.moved)) return '针对此差异的较早版本编写';
   return null;
 }
 
 export function savedAgo(savedAt: number, now = Date.now()): string {
   if (!savedAt) return '';
   const minutes = Math.floor((now - savedAt) / 60000);
-  if (minutes < 1) return 'just now';
+  if (minutes < 1) return '刚刚';
   if (minutes < 60) return `${minutes}m ago`;
   const hours = Math.floor(minutes / 60);
   if (hours < 24) return `${hours}h ago`;

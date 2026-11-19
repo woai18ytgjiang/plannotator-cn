@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { X } from "lucide-react";
 import { Dialog as SheetPrimitive } from "@base-ui/react/dialog";
 import type * as React from "react";
@@ -72,7 +73,7 @@ function SheetContent({
                 variant="ghost"
                 size="icon"
                 className="absolute top-3 right-3"
-                aria-label="Close"
+                aria-label="关闭"
               >
                 <X className="size-3.5" />
               </Button>

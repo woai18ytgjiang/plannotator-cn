@@ -148,7 +148,7 @@ export async function runCardCommand(argv: readonly string[], deps: CardCommandD
     });
     text = await response.text();
   } catch (error) {
-    err(`Plannotator Inbox did not answer: ${error instanceof Error ? error.message : String(error)}\n`);
+    err(`Plannotator 收件箱没有响应：${error instanceof Error ? error.message : String(error)}\n`);
     return 1;
   }
   const answer = mcpAnswerOf(text);
@@ -162,8 +162,8 @@ export async function runCardCommand(argv: readonly string[], deps: CardCommandD
   const result = answer.result as { content?: { type?: string; text?: string }[]; structuredContent?: unknown; isError?: boolean } | undefined;
   const body = (result?.content ?? []).map((part) => part.text ?? "").join("\n");
   if (result?.isError) {
-    err(`${body || "The card call was refused."}\n`);
-    if (noCards(body)) err("This Plannotator Inbox does not offer cards yet.\n");
+    err(`${body || "卡片调用被拒绝。"}\n`);
+    if (noCards(body)) err("此 Plannotator 收件箱尚不支持卡片。\n");
     return 1;
   }
   await out(parsed.json ? `${JSON.stringify(result?.structuredContent ?? null, null, 2)}\n` : `${body}\n`);

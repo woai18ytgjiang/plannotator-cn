@@ -346,7 +346,7 @@ export async function handleRepoFilesRequest(input: RepoFilesRequestInput): Prom
   if (!listing) {
     return {
       status: 200,
-      body: { available: false, reason: "failed", message: "The repository's files could not be listed." } satisfies RepoFilesResponse,
+      body: { available: false, reason: "failed", message: "无法列出仓库中的文件。" } satisfies RepoFilesResponse,
     };
   }
   // The snapshot can move while the listing loads.

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { ReactNode } from "react";
 
 import { Sheet, SheetContent } from "../primitives/sheet";
@@ -28,7 +29,7 @@ export function VersionsSheet({
       <SheetContent
         side="bottom"
         closeButton={false}
-        aria-label="Versions"
+        aria-label="版本"
         data-versions-sheet=""
         initialFocus={firstFocus}
         className="h-[70dvh] gap-0 overflow-hidden p-0 [&_[data-versions-panel]]:min-h-0 [&_[data-versions-panel]]:w-full [&_[data-versions-panel]]:flex-1 [&_[data-versions-panel]]:border-l-0"

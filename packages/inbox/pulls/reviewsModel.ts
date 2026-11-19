@@ -12,7 +12,6 @@ import {
   type InboxReviewRow,
   type InboxReviewsAnswer,
 } from '@plannotator/core/inbox-types';
-import { plural } from '@plannotator/core/inbox-format';
 import { holdingsOf } from '@plannotator/core/inbox-folding';
 import { inboxReviewTitleLine } from '@plannotator/core/inbox-review';
 import { checksWords, inboxPullLabel, isPullThread, linkAgentName, openLayers, pullInProject, pullViewOf, requestedParts, type PullFilter } from './model';
@@ -109,33 +108,33 @@ function statusOf(row: InboxReviewRow): { status: Words; tone: ReviewRowLine['to
   const checks = pull ? checksWords(pull) : null;
   switch (row.reason) {
     case 'review_ready':
-      return { status: ['Review ready'], tone: null };
+      return { status: ['审查已就绪'], tone: null };
     case 'branch_ready':
-      return { status: ['Ready for review'], tone: null };
+      return { status: ['可供审查'], tone: null };
     case 'curating':
       return { status: ['Curating…'], tone: null };
     case 'feedback_sent': {
       const verdict = row.review?.verdict;
-      if (verdict?.verdict !== 'changes_requested') return { status: ['You answered'], tone: null };
-      return { status: [verdict.comments > 0 ? `Changes requested · ${plural(verdict.comments, 'comment')}` : 'Changes requested'], tone: 'warn' };
+      if (verdict?.verdict !== 'changes_requested') return { status: ['你已回答'], tone: null };
+      return { status: [verdict.comments > 0 ? `已请求修改 · ${verdict.comments} 条评论` : '已请求修改'], tone: 'warn' };
     }
     case 'approved':
-      return { status: [`You approved${checks ? ` · ${lower(checks)}` : ''}`], tone: 'ok' };
+      return { status: [`你已批准${checks ? ` · ${lower(checks)}` : ''}`], tone: 'ok' };
     case 'requested':
       return { status: requestedParts(pull?.author), tone: null };
     case 'assigned':
       return { status: ['assigned to you'], tone: null };
     case 'changes':
-      return { status: ['Changes requested'], tone: 'warn' };
+      return { status: ['已请求修改'], tone: 'warn' };
     case 'failing':
-      return { status: ['Checks failed'], tone: 'warn' };
+      return { status: ['检查失败'], tone: 'warn' };
     case 'checks_running':
-      return { status: ['You approved · checks running'], tone: null };
+      return { status: ['你已批准 · 检查运行中'], tone: null };
     case 'draft':
-      return { status: ['You approved · draft'], tone: null };
+      return { status: ['你已批准 · 草稿'], tone: null };
     case 'forge_review': {
       const reviewer = pull?.reviewers[0];
-      return { status: reviewer ? ['Waiting on ', person(reviewer, '’s'), ' review'] : ['Waiting on a review'], tone: null };
+      return { status: reviewer ? ['等待 ', person(reviewer, ' 的'), '审查'] : ['等待审查'], tone: null };
     }
     case 'others':
     case 'not_reviewed':
@@ -194,14 +193,14 @@ export function reviewContextLine(row: InboxReviewRow, projectName: string | nul
     : line.kind !== 'local' || reviewIsWalkthrough(row)
       ? line.lead
       : source?.branch
-        ? `Local changes on ${source.branch}${source.base ? `, against ${source.base.replace(/^origin\//, '')}` : ''}`
+        ? `${source.branch} 上的本地更改${source.base ? `，基于 ${source.base.replace(/^origin\//, '')}` : ''}`
         : started?.branch
           ? started.changes === 'uncommitted'
-            ? `Uncommitted changes on ${started.branch}`
+            ? `${started.branch} 上未提交的更改`
             : started.changes === 'last'
-              ? `Last commit on ${started.branch}`
-              : `Local changes on ${started.branch}${started.base ? `, against ${started.base}` : ''}`
-          : 'Local changes';
+              ? `${started.branch} 上的最后一次提交`
+              : `${started.branch} 上的本地更改${started.base ? `，基于 ${started.base}` : ''}`
+          : '本地更改';
   return [projectName, what].filter(Boolean).join(' · ');
 }
 
@@ -328,8 +327,8 @@ export function reviewViewOf(
     name: row.review && !stack ? inboxReviewTitleLine(row.review.title) : null,
     firstReviewId: folds ? first : null,
     latestReviewId: row.review?.latest_review_id ?? null,
-    curating: row.reason !== 'curating' ? null : reviewIsWalkthrough(row) ? 'Writing the walkthrough…' : 'Curating the review…',
-    asked: ask ? `New review · ${reviewIsWalkthrough(row) ? 'Walkthrough' : ask === 'custom' ? 'Custom curation' : 'Guided review'}` : null,
+    curating: row.reason !== 'curating' ? null : reviewIsWalkthrough(row) ? '正在撰写讲解…' : '正在整理审查…',
+    asked: ask ? `新审查 · ${reviewIsWalkthrough(row) ? '讲解' : ask === 'custom' ? '定制整理' : '引导式审查'}` : null,
     fromThread: folds ? (thread.thread_name ?? thread.subject ?? null) : null,
     onWholeThread: options.onWholeThread,
     onOpenPull: stack ? () => options.onOpenStack(stack.id) : null,

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useEffect, useId, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import {
   canonicalQuestionAnswer,
@@ -446,7 +447,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
   const heldPlaceholder = (src: string, alt: string) => {
     const title = pictureHeldTitle(src);
     return title === null ? null : (
-      <span className={UNAVAILABLE_IMAGE_CLASS} title={title} data-image-unavailable="">{alt || 'Image'}</span>
+      <span className={UNAVAILABLE_IMAGE_CLASS} title={title} data-image-unavailable="">{alt || '图片'}</span>
     );
   };
   // Pictures that failed to load (by the URL tried): a tile shows its alt
@@ -741,7 +742,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
   };
 
   const eyebrow = number > 0
-    ? `Question ${number} of ${total}${question.kind === 'multi' ? ' · pick any' : ''}`
+    ? `第 ${number} / ${total} 题${question.kind === 'multi' ? ' · 可多选' : ''}`
     : `Question${question.kind === 'multi' ? ' · pick any' : ''}`;
   const groupName = `question-${uid}`;
   const inputType = question.kind === 'multi' ? 'checkbox' : 'radio';
@@ -826,7 +827,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
   // fills it in. (A pick question's is a row of its own, below.)
   const suggestedLine = question.kind === 'text' && question.suggestedText && !answered && (
     <div id={suggestId} className="mt-2 text-[12.5px] text-muted-foreground" data-question-suggested="">
-      <Tag tone="rec">Recommended</Tag> {inline(question.suggestedText)}
+      <Tag tone="rec">推荐</Tag> {inline(question.suggestedText)}
     </div>
   );
 
@@ -861,7 +862,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
       <div className="annotation-exclude select-none mb-1.5 flex items-center gap-2" data-pinpoint-ignore="">
         <span className="text-[10.5px] font-semibold uppercase tracking-[0.08em] text-muted-foreground">{eyebrow}</span>
         <span className="ml-auto inline-flex items-center gap-1">
-          {question.decision && <><Tag tone="rec"><DiamondGlyph />Decision</Tag>{' '}</>}
+          {question.decision && <><Tag tone="rec"><DiamondGlyph />决策</Tag>{' '}</>}
           {decisionCapable && (decisionOpenable ? (
             // Two targets in one tag: the diamond switches recording, the
             // words open the host's decision card. Siblings, never nested.
@@ -878,10 +879,10 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
               data-pinpoint-ignore=""
               data-question-decision-tag=""
             >{decisionToggleable ? (
-              <HostTitle title="Record as a decision"><button
+              <HostTitle title="记录为决策"><button
                 type="button"
                 aria-pressed={recordingOn}
-                aria-label="Record as a decision"
+                aria-label="记录为决策"
                 onClick={() => onToggleDecisionRecording!(question.key, !recordingOn)}
                 className="relative inline-flex cursor-pointer items-center rounded pl-1.5 pr-0.5 before:absolute before:-inset-1.5 before:content-[''] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
                 data-question-decision-toggle=""
@@ -894,7 +895,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
               onClick={(event) => onOpenDecision!(question.key, event.currentTarget)}
               className="relative cursor-pointer rounded pl-0.5 pr-1.5 hover:underline underline-offset-2 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-primary"
               data-question-decision-open=""
-            >Records a decision</button></span>{' '}</>
+            >记录为决策</button></span>{' '}</>
           ) : decisionToggleable ? (
             // Focus shows as a ring, not an outline: the dotted outline is
             // what draws the off state.
@@ -906,16 +907,16 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
               style={recordingOn ? undefined : DECISION_OFF_STYLE}
               data-pinpoint-ignore=""
               data-question-decision-toggle=""
-            ><DiamondGlyph />Records a decision</button>{' '}</>
+            ><DiamondGlyph />记录为决策</button>{' '}</>
           ) : recordingOn ? (
-            <><Tag tone="rec"><DiamondGlyph />Records a decision</Tag>{' '}</>
+            <><Tag tone="rec"><DiamondGlyph />记录为决策</Tag>{' '}</>
           ) : (
-            <><Tag tone="rec" style={DECISION_OFF_STYLE}><DiamondGlyph />Records a decision</Tag>{' '}</>
+            <><Tag tone="rec" style={DECISION_OFF_STYLE}><DiamondGlyph />记录为决策</Tag>{' '}</>
           ))}
           {question.reversible && (
-            <><HostTitle title={question.reversible.why ? `Can't be undone: ${question.reversible.why}` : "Can't be undone"}>
+            <><HostTitle title={question.reversible.why ? `无法撤销：${question.reversible.why}` : "无法撤销"}>
               <span className="inline-flex" data-question-irreversible="">
-                <Tag tone="warn">Can&rsquo;t be undone</Tag>
+                <Tag tone="warn">无法撤销</Tag>
                 {question.reversible.why && <span className="sr-only">: {question.reversible.why}</span>}
               </span>
             </HostTitle>{' '}</>
@@ -923,10 +924,10 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
           {statusTag !== 'none' && hostStatus && <Tag tone={hostStatus.tone ?? 'open'}>{hostStatus.label}</Tag>}
           {statusTag !== 'none' && !hostStatus && (
             <>
-              {status === 'answered' && <Tag tone="ok"><CheckGlyph />Answered</Tag>}
-              {status === 'settled' && <Tag tone="ok"><CheckGlyph />Settled</Tag>}
-              {status === 'skipped' && <Tag tone="skip">Skipped</Tag>}
-              {status === 'open' && <Tag tone="open">Open</Tag>}
+              {status === 'answered' && <Tag tone="ok"><CheckGlyph />已回答</Tag>}
+              {status === 'settled' && <Tag tone="ok"><CheckGlyph />已确定</Tag>}
+              {status === 'skipped' && <Tag tone="skip">已跳过</Tag>}
+              {status === 'open' && <Tag tone="open">待回答</Tag>}
             </>
           )}
         </span>
@@ -942,12 +943,12 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
       )}
       {question.shows && (
         <div className="mt-1.5 flex flex-wrap items-center gap-1.5 text-[12.5px]" data-question-shows="">
-          <span className="annotation-exclude select-none text-muted-foreground" data-pinpoint-ignore="">Shows</span>
+          <span className="annotation-exclude select-none text-muted-foreground" data-pinpoint-ignore="">展示</span>
           {question.shows.kind === 'image' ? (
             showsSrc && onImageClick ? (
               <button
                 type="button"
-                onClick={() => onImageClick(showsSrc, question.shows!.label || 'Picture')}
+                onClick={() => onImageClick(showsSrc, question.shows!.label || '图片')}
                 className="inline-flex min-w-0 max-w-full items-center gap-1.5 rounded-md border border-border/80 bg-background/60 py-0.5 pl-0.5 pr-2 text-foreground hover:bg-muted/50 focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
                 data-question-shows-open=""
               >
@@ -961,7 +962,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                   data-image-src={question.shows.src}
                   onError={() => markPictureFailed(showsSrc)}
                 />
-                <span className="truncate">{question.shows.label || 'Picture'}</span>
+                <span className="truncate">{question.shows.label || '图片'}</span>
               </button>
             ) : (
               heldPlaceholder(question.shows.src, question.shows.label)
@@ -982,7 +983,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
           <DiamondGlyph />
           {question.decision ? (
             <span className="min-w-0">
-              <span className="select-none text-muted-foreground">Decision: </span>
+              <span className="select-none text-muted-foreground">决策：</span>
               <a
                 href={question.decision.url}
                 target="_blank"
@@ -994,7 +995,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
               </a>
             </span>
           ) : (
-            <span className="select-none">Answering this records a decision</span>
+            <span className="select-none">回答此问题会记录一条决策</span>
           )}
         </div>
       )}
@@ -1023,7 +1024,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
               skipped && 'opacity-55',
             )}
             aria-labelledby={promptId}
-            placeholder={readOnly ? '' : 'Type your answer…'}
+            placeholder={readOnly ? '' : '输入你的回答…'}
             value={answer?.text ?? ''}
             onChange={(e) => setText(e.target.value)}
             disabled={readOnly}
@@ -1092,7 +1093,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                       {choice.description && (
                         <span className="text-muted-foreground"> — {inline(choice.description)}</span>
                       )}
-                      {choice.recommended && <> <Tag tone="rec">Recommended</Tag></>}
+                      {choice.recommended && <> <Tag tone="rec">推荐</Tag></>}
                     </span>
                   </label>
                 );
@@ -1124,7 +1125,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                 />
                 <span className="min-w-0 flex-1 select-text text-[13.5px] leading-[1.45] text-foreground" data-question-part="choice">
                   <span className="font-[550]">{inline(question.suggestedText!)}</span>
-                  {' '}<Tag tone="rec">Recommended</Tag>
+                  {' '}<Tag tone="rec">推荐</Tag>
                 </span>
               </label>
             )}
@@ -1159,8 +1160,8 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                   }}
                   onBlur={() => setOtherFocused(false)}
                   disabled={readOnly}
-                  placeholder={readOnly ? '' : 'Other…'}
-                  aria-label={number > 0 ? `Other answer to question ${number}` : 'Other answer'}
+                  placeholder={readOnly ? '' : '其他…'}
+                  aria-label={number > 0 ? `第 ${number} 题的其他回答` : '其他回答'}
                   data-question-other=""
                   className={cx(
                     'annotation-exclude min-w-0 flex-1 resize-none overflow-hidden break-words border-0 border-b border-transparent bg-transparent py-[3px] text-[13.5px] text-foreground outline-none placeholder:text-muted-foreground/70 focus:border-ring',
@@ -1177,7 +1178,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
       {question.why && (
         <p className="m-0 mt-2 text-[12.5px] leading-[1.45] text-muted-foreground" data-question-part="why">
           <span className="font-semibold text-foreground/85">
-            {recommendedLabels.length > 0 ? <>Why {recommendedLabels.map((label, i) => <React.Fragment key={label}>{i > 0 ? ', ' : ''}{inline(label)}</React.Fragment>)}:</> : 'Why:'}
+            {recommendedLabels.length > 0 ? <>为什么推荐 {recommendedLabels.map((label, i) => <React.Fragment key={label}>{i > 0 ? '、' : ''}{inline(label)}</React.Fragment>)}：</> : '原因：'}
           </span>{' '}
           {inline(question.why)}
         </p>
@@ -1198,20 +1199,20 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
             data-question-tradeoffs-toggle=""
           >
             <ChevronRightGlyph />
-            Trade-offs
+            权衡
           </button>
           <div
             id={tradeoffsId}
             hidden={!tradeoffsOpen}
             role="table"
-            aria-label="Trade-offs"
+            aria-label="权衡"
             className="mb-0.5 mt-1 grid gap-2.5 text-[12.5px] leading-[1.45] @min-[600px]/qcard:gap-2"
             data-question-tradeoffs=""
           >
             <div role="row" className="hidden text-[12px] font-semibold text-foreground/85 @min-[600px]/qcard:grid @min-[600px]/qcard:grid-cols-[minmax(0,0.9fr)_minmax(0,1fr)_minmax(0,1fr)] @min-[600px]/qcard:gap-x-[18px]">
-              <span role="columnheader"><span className="sr-only">Option</span></span>
-              <span role="columnheader">Pros</span>
-              <span role="columnheader">Cons</span>
+              <span role="columnheader"><span className="sr-only">选项</span></span>
+              <span role="columnheader">优点</span>
+              <span role="columnheader">缺点</span>
             </div>
             {question.choices.map((c, i) => (
               <div
@@ -1227,9 +1228,9 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                     role="cell"
                     className="grid min-w-0 grid-cols-[38px_minmax(0,1fr)] gap-2 text-muted-foreground @min-[600px]/qcard:block"
                   >
-                    <b className="font-semibold text-foreground/85 @min-[600px]/qcard:sr-only">{side === 'pros' ? 'Pros' : 'Cons'}</b>
+                    <b className="font-semibold text-foreground/85 @min-[600px]/qcard:sr-only">{side === 'pros' ? '优点' : '缺点'}</b>
                     <span className="min-w-0 break-words">
-                      {c[side]?.length ? inline(c[side]!.join('; ')) : <span aria-label="none">-</span>}
+                      {c[side]?.length ? inline(c[side]!.join('; ')) : <span aria-label="无">-</span>}
                     </span>
                   </span>
                 ))}
@@ -1242,13 +1243,13 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
       {noteOpen && (!readOnly || !!answer?.note?.trim()) && (
         <div className="mt-2">
           <p id={noteLabelId} className="annotation-exclude select-none mb-1 ml-0.5 text-[10.5px] font-semibold uppercase tracking-[0.07em] text-muted-foreground">
-            Note
+            备注
           </p>
           <textarea
             ref={noteRef}
             className="annotation-exclude block min-h-[54px] w-full resize-y rounded-[7px] border border-border bg-background px-2.5 py-2 text-[13.5px] leading-normal text-foreground outline-none placeholder:text-muted-foreground/70 focus:border-ring focus:ring-1 focus:ring-ring"
             aria-labelledby={noteLabelId}
-            placeholder="Context for the agent…"
+            placeholder="给智能体的背景说明…"
             value={answer?.note ?? ''}
             onChange={(e) => setNote(e.target.value)}
             disabled={readOnly}
@@ -1272,7 +1273,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                 noteOpen ? 'text-foreground' : 'text-muted-foreground',
               )}
             >
-              {noteOpen ? 'Hide note' : 'Add note'}
+              {noteOpen ? '隐藏备注' : '添加备注'}
             </button>
           )}
           {/* Skip is a live-mode draft state; an explicit save never writes it. */}
@@ -1287,7 +1288,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                 skipped ? 'text-foreground' : 'text-muted-foreground',
               )}
             >
-              {skipped ? 'Unskip' : 'Skip'}
+              {skipped ? '取消跳过' : '跳过'}
             </button>
           )}
           {/* Plannotator's own footer (no host actions, no save bar) keeps the
@@ -1299,7 +1300,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                 onClick={acceptRecommended}
                 className={cx(FOOT_BUTTON, FOOT_FIT, FOOT_OWN_ROW, 'ml-auto rtl:ml-0 rtl:mr-auto rounded-md border border-primary/45 bg-primary/10 px-2.5 py-[3px] text-[12.5px] font-medium text-primary hover:bg-primary/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary')}
               >
-                Accept recommended
+                采纳推荐
               </button>
             )
           ) : (
@@ -1310,7 +1311,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                   onClick={acceptRecommended}
                   className={cx(FOOT_BUTTON, FOOT_FIT, 'rounded-md border border-primary/45 bg-primary/10 px-2.5 py-[3px] text-[12.5px] font-medium text-primary hover:bg-primary/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary')}
                 >
-                  Accept recommended
+                  采纳推荐
                 </button>
               )}
               {hasHostFooter && <span className="inline-flex items-center gap-1" data-question-host-footer="">{hostFooter}</span>}
@@ -1322,7 +1323,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                     disabled={saving}
                     className={cx(FOOT_BUTTON, FOOT_FIT, 'rounded-[5px] px-[7px] py-[3px] text-xs text-muted-foreground hover:bg-muted hover:text-foreground disabled:opacity-60')}
                   >
-                    Cancel
+                    取消
                   </button>
                   <button
                     type="button"
@@ -1331,7 +1332,7 @@ export const QuestionBlock: React.FC<QuestionBlockProps> = ({
                     aria-busy={saving || undefined}
                     className={cx(FOOT_BUTTON, FOOT_FIT, 'rounded-md bg-primary px-2.5 py-[3px] text-[12.5px] font-medium text-primary-foreground hover:bg-primary/90 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary disabled:opacity-60')}
                   >
-                    {(typeof saveLabel === 'function' ? saveLabel(question) : saveLabel) || 'Save answer'}
+                    {(typeof saveLabel === 'function' ? saveLabel(question) : saveLabel) || '保存回答'}
                   </button>
                 </>
               )}
@@ -1516,7 +1517,7 @@ export const QuestionPictureTiles: React.FC<QuestionPictureTilesProps> = ({
                   )}
                   {renderBadges
                     ? renderBadges(choice, index)
-                    : choice.recommended && <span className="mt-1 block"><Tag tone="rec">Recommended</Tag></span>}
+                    : choice.recommended && <span className="mt-1 block"><Tag tone="rec">推荐</Tag></span>}
                 </span>
               </span>
             </label>
@@ -1524,7 +1525,7 @@ export const QuestionPictureTiles: React.FC<QuestionPictureTilesProps> = ({
               <button
                 type="button"
                 onClick={() => onZoom(shown, alt, index)}
-                aria-label={`Zoom: ${alt}`}
+                aria-label={`缩放：${alt}`}
                 className="annotation-exclude absolute right-1.5 top-1.5 grid h-7 w-7 place-items-center rounded-md bg-background/85 text-foreground shadow-sm ring-1 ring-border/70 before:absolute before:-inset-2 before:content-[''] hover:bg-background focus-visible:outline-2 focus-visible:outline-offset-1 focus-visible:outline-primary"
                 data-pinpoint-ignore=""
                 data-question-zoom=""

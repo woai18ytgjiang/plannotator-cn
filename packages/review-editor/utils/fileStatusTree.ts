@@ -8,17 +8,17 @@ export type FileStatusGroup = 'committed' | 'staged' | 'unstaged' | 'untracked';
 export const FILE_STATUS_GROUPS: readonly FileStatusGroup[] = ['committed', 'staged', 'unstaged', 'untracked'];
 
 export const FILE_STATUS_LABELS: Record<FileStatusGroup, string> = {
-  committed: 'Committed',
-  staged: 'Staged',
-  unstaged: 'Unstaged',
-  untracked: 'Untracked',
+  committed: '已提交',
+  staged: '已暂存',
+  unstaged: '未暂存',
+  untracked: '未跟踪',
 };
 
 export const FILE_STATUS_COVERS: Record<FileStatusGroup, string> = {
-  committed: 'Committed on this branch since the base, with nothing left to commit',
-  staged: 'Changes added with git add, ready to commit',
-  unstaged: 'Changes in the working tree that are not staged',
-  untracked: 'New files git does not track yet',
+  committed: '自基础分支以来在此分支上已提交的内容，没有待提交的更改',
+  staged: '已用 git add 添加、等待提交的更改',
+  unstaged: '工作区中尚未暂存的更改',
+  untracked: 'Git 尚未跟踪的新文件',
 };
 
 export interface FileStatusBlock {

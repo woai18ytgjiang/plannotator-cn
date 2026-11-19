@@ -71,7 +71,7 @@ export function inboxSkillCatalog(codeReview: boolean, discovered: () => ReturnT
 /** The answer for a skills path, or null for any other path. `codeReview`, `shape`, `routines`: the person's switches. */
 export function inboxSkillsRoute(req: Request, url: URL, options: { codeReview?: boolean; shape?: boolean; routines?: boolean } = {}): Response | null {
   if (url.pathname !== INBOX_SKILLS_PATH && url.pathname !== INBOX_SKILL_CONTENT_PATH) return null;
-  if (req.method !== "GET") return noStore(Response.json({ error: "Use GET." }, { status: 405 }));
+  if (req.method !== "GET") return noStore(Response.json({ error: "请使用 GET。" }, { status: 405 }));
   if (isCrossSiteRequest(req)) return noStore(Response.json(INBOX_CROSS_SITE_BODY, { status: 403 }));
   return noStore(url.pathname === INBOX_SKILLS_PATH ? inboxSkillCatalog(options.codeReview === true, undefined, options.shape === true, options.routines === true) : handleReferenceSkillContent(req));
 }

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Plannotator Inbox: action items an agent needs the person to go do (approval
  * "inbox-next-actions", 2026-10-21, direction "In the thread").
@@ -46,7 +47,7 @@ import type { InboxActionFacts, InboxActionResult, InboxQuestionRecord } from ".
 export const INBOX_ACTION_DIRECTIVE = "action";
 
 /** What the window calls it ("Action item · something only you can do"). */
-export const INBOX_ACTION_LABEL = "Action item";
+export const INBOX_ACTION_LABEL = "行动项";
 
 /** `a-` + hash8 of the normalized first line: a reworded action item is a new action item. */
 export function inboxActionKey(prompt: string): string {

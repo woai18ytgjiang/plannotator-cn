@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * ArchiveBrowser — Browsable list of saved plan decisions
  *
@@ -23,10 +24,10 @@ function relativeTime(dateStr: string): string {
   const then = new Date(dateStr + "T12:00:00").getTime();
   const diff = now - then;
 
-  if (diff < 86_400_000) return "today";
-  if (diff < 172_800_000) return "yesterday";
-  if (diff < 604_800_000) return `${Math.floor(diff / 86_400_000)}d ago`;
-  if (diff < 2_592_000_000) return `${Math.floor(diff / 604_800_000)}w ago`;
+  if (diff < 86_400_000) return "今天";
+  if (diff < 172_800_000) return "昨天";
+  if (diff < 604_800_000) return `${Math.floor(diff / 86_400_000)} 天前`;
+  if (diff < 2_592_000_000) return `${Math.floor(diff / 604_800_000)} 周前`;
   return dateStr;
 }
 
@@ -39,7 +40,7 @@ export const ArchiveBrowser: React.FC<ArchiveBrowserProps> = ({
   if (isLoading) {
     return (
       <div className="p-4 text-xs text-muted-foreground text-center">
-        Loading archive...
+        正在加载归档…
       </div>
     );
   }
@@ -47,7 +48,7 @@ export const ArchiveBrowser: React.FC<ArchiveBrowserProps> = ({
   if (plans.length === 0) {
     return (
       <div className="p-4 text-xs text-muted-foreground text-center">
-        No archived plans found.
+        没有找到已归档的计划。
       </div>
     );
   }
@@ -84,7 +85,7 @@ export const ArchiveBrowser: React.FC<ArchiveBrowserProps> = ({
                           ? "bg-red-500"
                           : "bg-muted-foreground"
                     }`}
-                    title={plan.status}
+                    title={plan.status === "approved" ? "已批准" : plan.status === "denied" ? "已拒绝" : plan.status}
                   />
                   <span className="font-medium truncate">{plan.title}</span>
                 </div>

@@ -25,7 +25,7 @@ export const SemanticFileBadge: React.FC<{ filePath: string }> = ({ filePath }) 
     const pending = state.semanticChanges === undefined;
     return (
       <span
-        title={pending ? 'Semantic changes are still being worked out' : 'No semantic changes in this file'}
+        title={pending ? '语义更改仍在分析中' : '此文件中没有语义更改'}
         data-semantic-file-badge={pending ? 'pending' : 0}
         className={`${BADGE} opacity-50`}
       >

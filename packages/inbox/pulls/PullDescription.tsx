@@ -104,7 +104,7 @@ export function PullDescription({ markdown, layer, headSha }: { markdown: string
   return (
     <section
       className="ib-prr-desc"
-      aria-label="Description"
+      aria-label="描述"
       data-pull-description={folded ? 'folded' : open && long ? 'open' : 'whole'}
       onClick={folded ? () => setOpen(true) : undefined}
       onClickCapture={(event) => {

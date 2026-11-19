@@ -6,7 +6,7 @@
 import { useId, useState } from 'react';
 import { Icon } from '../icons';
 
-export const PULL_DETAILS_SENT_WITH = 'Sent with: this PR’s details';
+export const PULL_DETAILS_SENT_WITH = '随附：此 PR 的详情';
 
 export function PullDetailsLine({ details }: { details: string }) {
   const [open, setOpen] = useState(false);

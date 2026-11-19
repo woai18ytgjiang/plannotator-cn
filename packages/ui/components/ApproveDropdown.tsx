@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useRef, useCallback } from 'react';
 import type { Agent } from '../hooks/useAgents';
 import { useDismissablePopover } from '../hooks/useDismissablePopover';
@@ -78,7 +79,7 @@ export const ApproveDropdown: React.FC<ApproveDropdownProps> = ({
         disabled={disabled}
         className={`md:hidden px-2 py-1 rounded-md text-xs font-medium transition-all ${baseClasses}`}
       >
-        {isLoading ? '...' : 'OK'}
+        {isLoading ? '...' : '批准'}
       </button>
 
       {/* Desktop: split button */}
@@ -88,15 +89,15 @@ export const ApproveDropdown: React.FC<ApproveDropdownProps> = ({
           disabled={disabled}
           className={`px-2.5 py-1 rounded-l-md text-xs font-medium transition-all ${baseClasses}`}
         >
-          {isLoading ? 'Approving...' : (
+          {isLoading ? '批准中…' : (
             agentLabel ? (
               <span className="flex items-center gap-1">
-                Approve
+                批准
                 <span className="opacity-60">&rarr;</span>
                 <span className="max-w-[120px] truncate">{agentLabel}</span>
                 {notFound && <span className="opacity-60 text-[10px]">(?)</span>}
               </span>
-            ) : 'Approve'
+            ) : '批准'
           )}
         </button>
         <button
@@ -117,7 +118,7 @@ export const ApproveDropdown: React.FC<ApproveDropdownProps> = ({
           className="absolute right-0 top-full mt-1 w-52 rounded-lg border border-border bg-popover shadow-xl z-[70] overflow-hidden py-1"
         >
           <div className="px-3 py-1.5 text-[10px] uppercase tracking-wider text-muted-foreground/70 font-medium">
-            Switch to agent
+            切换到智能体
           </div>
           {agents.map((agent) => {
             const selected = isSelected(agent.id, setting);
@@ -143,7 +144,7 @@ export const ApproveDropdown: React.FC<ApproveDropdownProps> = ({
             >
               <span className="w-4 flex-shrink-0"><Checkmark /></span>
               <span className="truncate">{setting.customName}</span>
-              <span className="text-[10px] text-muted-foreground ml-auto">(custom)</span>
+              <span className="text-[10px] text-muted-foreground ml-auto">（自定义）</span>
             </button>
           )}
           <div className="border-t border-border my-1" />
@@ -156,7 +157,7 @@ export const ApproveDropdown: React.FC<ApproveDropdownProps> = ({
             }`}
           >
             <span className="w-4 flex-shrink-0">{isNoSwitch && <Checkmark />}</span>
-            No switch
+            不切换
           </button>
         </div>
       )}

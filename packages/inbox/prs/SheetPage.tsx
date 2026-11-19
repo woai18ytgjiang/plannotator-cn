@@ -308,7 +308,7 @@ export function SheetPage(props: SheetPageProps) {
   };
 
   const stackMark = (stack: InboxPullStack) => (
-    <button type="button" className="ib-prs-mark" aria-label={`Open the stack: ${stack.layers.length} layers`} title={`Open the stack: ${stack.layers.length} layers`} onClick={() => props.onOpenStack(stack)} data-pr-stack-mark="">
+    <button type="button" className="ib-prs-mark" aria-label={`打开堆叠：${stack.layers.length} 层`} title={`打开堆叠：${stack.layers.length} 层`} onClick={() => props.onOpenStack(stack)} data-pr-stack-mark="">
       <Icon name="layers" size={14} />
     </button>
   );
@@ -326,7 +326,7 @@ export function SheetPage(props: SheetPageProps) {
         data-dim={dim ? '' : undefined}
         data-pr-strip={stack.id}
         onClick={() => props.onOpenStack(stack)}
-        aria-label={`Stack of ${stack.layers.length}, ${counts.open} open${counts.needYou ? `, ${counts.needYou} need you` : ''}${counts.failing ? `, ${counts.failing} failing` : ''}: ${bottomOpen.title}. Open the stack.`}
+        aria-label={`堆叠 ${stack.layers.length} 层，${counts.open} 个打开${counts.needYou ? `，${counts.needYou} 个需要你` : ''}${counts.failing ? `，${counts.failing} 个失败` : ''}：${bottomOpen.title}。打开堆叠。`}
         title={bottomOpen.title}
       >
         <Icon name="layers" size={14} />
@@ -349,7 +349,7 @@ export function SheetPage(props: SheetPageProps) {
     if (!isStack(stack)) return tile(stack.layers[0]!, stack, false);
     if (foldsToStrip(stack)) return strip(stack);
     return (
-      <span key={stack.id} className="ib-prs-stack" role="group" aria-label={`Stack of ${stack.layers.length}`} data-pr-stack={stack.id}>
+      <span key={stack.id} className="ib-prs-stack" role="group" aria-label={`堆叠 ${stack.layers.length} 层`} data-pr-stack={stack.id}>
         {stackMark(stack)}
         {stack.layers.map((layer, i) => (
           <span key={layer.key} className="ib-prs-join">
@@ -453,7 +453,7 @@ export function SheetPage(props: SheetPageProps) {
         outcomes.push({ pull, ok: true });
         went(pull);
       } catch (cause) {
-        outcomes.push({ pull, ok: false, why: cause instanceof Error && cause.message ? cause.message : verb === 'merge' ? 'The merge didn’t go.' : 'It didn’t go.' });
+        outcomes.push({ pull, ok: false, why: cause instanceof Error && cause.message ? cause.message : verb === 'merge' ? '合并未成功。' : '未成功。' });
       }
     }
     return outcomes;
@@ -528,7 +528,7 @@ export function SheetPage(props: SheetPageProps) {
             const stopped = ends.filter((end) => end.status === 'fulfilled').length;
             if (stopped > 0) props.onToast?.({ icon: 'check', lead: stoppedToast(stopped) }, CLOSE_UNDO_MS);
           });
-        props.onToast?.({ icon: 'check', lead: startedToast(launched.length), action: { label: 'Stop', onPress: stop }, noKey: true }, CLOSE_UNDO_MS);
+        props.onToast?.({ icon: 'check', lead: startedToast(launched.length), action: { label: '停止', onPress: stop }, noKey: true }, CLOSE_UNDO_MS);
       }
     });
   const pressMerge = () => {
@@ -578,8 +578,8 @@ export function SheetPage(props: SheetPageProps) {
       <button
         type="button"
         className="ib-prs-rhide"
-        aria-label={`Hide ${section.label}`}
-        title={`Hide this repository from your lists, new pull requests too. They stay open on ${forgeName(section)}.`}
+        aria-label={`隐藏 ${section.label}`}
+        title={`从你的列表中隐藏此仓库，包括新的 PR。它们在 ${forgeName(section)} 上仍保持打开。`}
         onClick={(event) => {
           // The section leaves: focus goes to the next one's Hide, else the page's title.
           const root = event.currentTarget.closest('.pn-inbox');
@@ -626,7 +626,7 @@ export function SheetPage(props: SheetPageProps) {
   if (!model && props.error) {
     body = (
       <div className="ib-prs-empty" role="alert">
-        <h2>Couldn’t read your pull requests</h2>
+        <h2>无法读取你的 PR</h2>
         <p>{props.error}</p>
       </div>
     );
@@ -668,16 +668,16 @@ export function SheetPage(props: SheetPageProps) {
                 </section>
               );
             })}
-        {merged!.sections.length === 0 && <p className="ib-prs-note">Nothing merged in the last 14 days.</p>}
+        {merged!.sections.length === 0 && <p className="ib-prs-note">最近 14 天没有已合并的 PR。</p>}
         {merged!.quiet.length > 0 && merged!.sections.length > 0 && <p className="ib-prs-note">Nothing merged in {joinOr(merged!.quiet)}</p>}
       </>
     );
   } else if (empty) {
     body = (
       <div className="ib-prs-empty">
-        <h2>{empty.kind === 'nothing' ? (props.projectName ? `Nothing open in ${props.projectName}` : 'Nothing open') : empty.head}</h2>
+        <h2>{empty.kind === 'nothing' ? (props.projectName ? `${props.projectName} 中没有打开的 PR` : '没有打开的 PR') : empty.head}</h2>
         {(empty.kind === 'nothing'
-          ? [props.projectName ? 'Clear the project filter in Reviews to see every repository.' : 'Pull requests that ask for your review, that are yours or that are assigned to you show here, from any repository, with every open one in your projects.']
+          ? [props.projectName ? '在审查中清除项目筛选即可看到所有仓库。' : '请求你审查、属于你或分配给你的 PR 会显示在这里（来自任何仓库），你项目中打开的 PR 也都在。']
           : empty.lines
         ).map(
           (line) => (
@@ -694,7 +694,7 @@ export function SheetPage(props: SheetPageProps) {
         {layout === 'grid' && visible.map((section) => (
           <section key={section.key} className="ib-prs-sec" aria-label={section.label} data-pr-repo={section.key}>
             <div className="ib-prs-sech">
-              {selectOn && <SelectBox state={boxState(keysOf(section), chosen)} label={`Select all in ${section.label}`} tooltip onClick={() => pickAll(keysOf(section))} />}
+              {selectOn && <SelectBox state={boxState(keysOf(section), chosen)} label={`全选 ${section.label} 中的项`} tooltip onClick={() => pickAll(keysOf(section))} />}
               <h2 title={`${section.host}/${section.repo}`}>{section.label}</h2>
               {section.outside && <span className="ib-prs-outside">not a project</span>}
               <span className="ib-prs-secn">{count(section)}</span>
@@ -783,7 +783,7 @@ export function SheetPage(props: SheetPageProps) {
         onClick={pressMerge}
         data-pr-merge={live.at === 'confirm' ? 'confirm' : 'merge'}
       >
-        {live.at === 'confirm' ? 'Confirm merge' : `Merge ${plan.merge.length}`}
+        {live.at === 'confirm' ? '确认合并' : `合并 ${plan.merge.length}`}
       </button>
     ) : null;
   // Close: every pick is open; the host refuses one that isn't any more, in its words.
@@ -925,7 +925,7 @@ export function SheetPage(props: SheetPageProps) {
         <header className="ib-prs-head">
           <div className="ib-prs-title">
             {props.onBack ? (
-              <button type="button" className="ib-iconbtn" onClick={props.onBack} aria-label="Back to Reviews" data-prs-back="">
+              <button type="button" className="ib-iconbtn" onClick={props.onBack} aria-label="返回审查" data-prs-back="">
                 <Icon name="chevL" size={18} />
               </button>
             ) : mode === 'page' ? (
@@ -977,14 +977,14 @@ export function SheetPage(props: SheetPageProps) {
                   type="search"
                   value={query}
                   onChange={(event) => setQuery(event.target.value)}
-                  placeholder={phone ? 'Filter by title, author, repo or #' : 'Filter by title, author, repository or number'}
-                  aria-label="Filter pull requests"
+                  placeholder={phone ? '按标题、作者、仓库或编号筛选' : '按标题、作者、仓库或编号筛选'}
+                  aria-label="筛选 PR"
                   spellCheck={false}
                   autoComplete="off"
                   data-pr-filter=""
                 />
               </label>
-              <div className="ib-seg ib-prs-seg" role="group" aria-label="State">
+              <div className="ib-seg ib-prs-seg" role="group" aria-label="状态">
                 {(['open', 'merged'] as const).map((v) => (
                   <button
                     key={v}
@@ -998,7 +998,7 @@ export function SheetPage(props: SheetPageProps) {
                     }}
                     data-pr-view={v}
                   >
-                    {v === 'open' ? 'Open' : 'Merged'}
+                    {v === 'open' ? '打开' : '已合并'}
                   </button>
                 ))}
               </div>
@@ -1006,7 +1006,7 @@ export function SheetPage(props: SheetPageProps) {
                 <div className="ib-seg ib-prs-seg">
                   {(['grid', 'table'] as const).map((l) => (
                     <button key={l} type="button" className="ib-seg-o" data-on={layout === l ? '' : undefined} aria-pressed={layout === l} onClick={() => props.onLayout!(l)} data-pr-layout={l}>
-                      {l === 'grid' ? 'Grid' : 'Table'}
+                      {l === 'grid' ? '网格' : '表格'}
                     </button>
                   ))}
                 </div>
@@ -1019,7 +1019,7 @@ export function SheetPage(props: SheetPageProps) {
               ))}
               {view === 'open' && (selecting || visible.length > 0) && (
                 <button type="button" className="ib-prs-btn ib-prs-end" onClick={selecting ? leaveSelect : startSelect} data-pr-select={selecting ? 'done' : 'select'}>
-                  {selecting ? 'Done' : 'Select'}
+                  {selecting ? '完成' : '选择'}
                 </button>
               )}
             </>
@@ -1077,7 +1077,7 @@ function joinOr(names: readonly string[]): string {
   return names.length <= 1 ? (names[0] ?? '') : `${names.slice(0, -1).join(', ')} or ${names[names.length - 1]}`;
 }
 
-const MERGE_WORDS = ['Merge', 'Confirm merge', 'Merging…', 'Merged'] as const;
+const MERGE_WORDS = ['合并', '确认合并', '合并中…', '已合并'] as const;
 
 /** The bar's actions: idle, Merge's confirm (for the picks it was asked for), one PR after another, then the report. */
 type BulkPhase =
@@ -1195,7 +1195,7 @@ function TilePopover(props: {
       },
       (cause: unknown) => {
         props.onHold(false);
-        setMerge({ at: 'failed', message: cause instanceof Error ? cause.message : 'The merge didn’t go.' });
+        setMerge({ at: 'failed', message: cause instanceof Error ? cause.message : '合并未成功。' });
       },
     );
   };
@@ -1235,13 +1235,13 @@ function TilePopover(props: {
         <div className="ib-prpop-top">
           <span className="ib-prpop-n">{inboxPullLabel(pull)}</span>
           <span className="ib-prpop-state" data-state={pull.state}>
-            {pull.state === 'open' ? 'Open' : pull.state === 'draft' ? 'Draft' : pull.state === 'merged' ? 'Merged' : 'Closed'}
+            {pull.state === 'open' ? '打开' : pull.state === 'draft' ? '草稿' : pull.state === 'merged' ? '已合并' : '已关闭'}
           </span>
           <span className="ib-prpop-repo" title={`${pull.host}/${pull.repo}`}>
             {pull.repo}
           </span>
           {phone && (
-            <button type="button" className="ib-iconbtn ib-prpop-x" aria-label="Close" onClick={() => props.onClose(true)}>
+            <button type="button" className="ib-iconbtn ib-prpop-x" aria-label="关闭" onClick={() => props.onClose(true)}>
               <Icon name="x" size={16} />
             </button>
           )}
@@ -1250,7 +1250,7 @@ function TilePopover(props: {
           {pull.title || inboxPullLabel(pull)}
         </p>
         <p className="ib-prpop-meta">
-          {pull.author && <span>{pull.mine ? 'You' : <Person login={pull.author} host={pull.host} />}</span>}
+          {pull.author && <span>{pull.mine ? '你' : <Person login={pull.author} host={pull.host} />}</span>}
           <span>updated {agoWords(pull.updated_at, now)}</span>
           <span className="ib-prpop-diff">
             +{pull.additions.toLocaleString()} −{pull.deletions.toLocaleString()}
@@ -1294,7 +1294,7 @@ function TilePopover(props: {
             <span className="ib-prpop-mslot" data-pr-pop-mslot="">
               {MERGE_WORDS.map((words) => (
                 <span key={words} className="ib-prpop-btn ib-prpop-msize" aria-hidden="true">
-                  {words === 'Merged' && <Icon name="check" size={13} />}
+                  {words === '已合并' && <Icon name="check" size={13} />}
                   {words}
                 </span>
               ))}
@@ -1314,14 +1314,14 @@ function TilePopover(props: {
                   data-pr-pop-merge=""
                   aria-describedby={merge.at === 'confirm' ? `${labelId}-confirm` : undefined}
                 >
-                  {merge.at === 'confirm' ? 'Confirm merge' : merge.at === 'merging' ? 'Merging…' : 'Merge'}
+                  {merge.at === 'confirm' ? '确认合并' : merge.at === 'merging' ? '合并中…' : '合并'}
                 </button>
               )}
             </span>
           )}
           {/* Last, so Merge's second click stays where the first one was. An open PR only, and never mid-merge. */}
           {open && merge.at !== 'merging' && merge.at !== 'done' && (
-            <button type="button" className="ib-prpop-btn" onClick={props.onHide} tabIndex={tabIndex} title={`Hide from your lists. It stays open on ${forgeName(pull)}.`} data-pr-pop-hide="">
+            <button type="button" className="ib-prpop-btn" onClick={props.onHide} tabIndex={tabIndex} title={`从你的列表中隐藏。它在 ${forgeName(pull)} 上仍保持打开。`} data-pr-pop-hide="">
               <Icon name="eyeOff" size={13} />
               Hide
             </button>

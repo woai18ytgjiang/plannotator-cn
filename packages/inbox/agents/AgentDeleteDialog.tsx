@@ -24,32 +24,32 @@ export function AgentDeleteDialog({ host, scratch, threads, onCancel, onDelete }
   const id = useId();
   const [archive, setArchive] = useState(false);
   const kind = agentHostName(host);
-  const stays = threads === 0 || archive ? null : threads === 1 ? 'Its thread stays.' : 'Its threads stay.';
+  const stays = threads === 0 || archive ? null : threads === 1 ? '它的话题会保留。' : '它的话题会保留。';
   return (
     <Modal labelledBy={`${id}-t`} describedBy={`${id}-d`} onClose={onCancel} testId="agent-delete" ownKeys initialFocus="[data-agent-delete-cancel]" className="ib-agdel">
-      <h2 id={`${id}-t`}>Delete the {kind} session?</h2>
+      <h2 id={`${id}-t`}>删除 {kind} 会话？</h2>
       <p className="ib-sum" id={`${id}-d`}>
         {scratch ? (
           <>
-            It stops, and its session files and its scratch folder <bdi>{scratch}</bdi>, with everything in it, are removed.
+            它会停止，其会话文件和临时文件夹 <bdi>{scratch}</bdi>（包含其中的所有内容）都会被删除。
           </>
         ) : (
-          'It stops, and its session files are removed.'
+          '它会停止，其会话文件会被删除。'
         )}
         {stays && ` ${stays}`}
       </p>
       {threads > 0 && (
         <label className="ib-opt ib-agdel-archive" data-agent-delete-archive="">
           <input type="checkbox" checked={archive} onChange={(event) => setArchive(event.target.checked)} />
-          <span>{threads === 1 ? 'Also archive its thread' : `Also archive its ${threads} threads`}</span>
+          <span>{threads === 1 ? '同时归档它的话题' : `同时归档它的 ${threads} 个话题`}</span>
         </label>
       )}
       <div className="ib-acts-row">
         <button type="button" className="ib-btn ib-ghost" onClick={onCancel} data-agent-delete-cancel="">
-          Cancel
+          取消
         </button>
         <button type="button" className="ib-btn ib-danger" onClick={() => onDelete(archive)} data-agent-delete-go="">
-          Delete session
+          删除会话
         </button>
       </div>
     </Modal>

@@ -11,7 +11,7 @@ interface EditSessionHudProps {
 }
 
 function changeLabel(count: number): string {
-  if (count === 0) return 'No changes yet';
+  if (count === 0) return '暂无更改';
   return count === 1 ? '1 change' : `${count} changes`;
 }
 
@@ -43,13 +43,13 @@ export const EditSessionHud: React.FC<EditSessionHudProps> = ({
         <svg className="h-3 w-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M11 5H6a2 2 0 00-2 2v11a2 2 0 002 2h11a2 2 0 002-2v-5m-1.414-9.414a2 2 0 112.828 2.828L11.828 15H9v-2.828l8.586-8.586z" />
         </svg>
-        Editing
+        编辑中
       </span>
       <span
         className="rounded border border-border/60 px-1 py-px text-xs font-medium text-muted-foreground/70"
-        title="Edit Code to Suggest is experimental"
+        title="「编辑代码以提出建议」是实验性功能"
       >
-        Experimental
+        实验性
       </span>
       <span
         className={changeCount > 0 ? 'text-foreground/80' : 'text-muted-foreground/70'}
@@ -61,24 +61,24 @@ export const EditSessionHud: React.FC<EditSessionHudProps> = ({
         <button
           onClick={onComplete}
           className="flex items-center gap-1 rounded bg-primary/15 px-2 py-0.5 text-xs text-primary transition-colors hover:bg-primary/25"
-          title="Finish editing — net changes become a suggestion"
+          title="完成编辑——净更改会变成一条建议"
           data-testid="edit-session-complete"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
           </svg>
-          <span>Suggest</span>
+          <span>建议</span>
         </button>
         <button
           onClick={onCancel}
           className="flex items-center gap-1 rounded px-2 py-0.5 text-xs text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
-          title="Discard edits and restore the diff"
+          title="放弃编辑并恢复差异"
           data-testid="edit-session-cancel"
         >
           <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
           </svg>
-          <span>Discard</span>
+          <span>放弃</span>
         </button>
       </div>
     </div>

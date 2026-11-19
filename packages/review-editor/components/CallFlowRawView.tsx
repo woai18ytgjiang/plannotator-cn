@@ -192,7 +192,7 @@ export function CallFlowRawView({
   };
   const targetChips = useMemo<CommentTargetChip[]>(() => draftTargets.map((target) => ({
     key: `${rawInstanceId}:${target.treePath}`,
-    label: `Line ${target.rawLine}`,
+    label: `第 ${target.rawLine} 行`,
     excerpt: target.label,
   })), [draftTargets, rawInstanceId]);
   const moveLineFocus = (lineIndex: number) => {
@@ -236,7 +236,7 @@ export function CallFlowRawView({
           if (element) targetElements.current.set(target.treePath, element);
           else targetElements.current.delete(target.treePath);
         }}
-        aria-label={`Raw line ${target.rawLine}, ${line.kind}: ${target.label}`}
+        aria-label={`原始行 ${target.rawLine}，${line.kind}：${target.label}`}
         aria-pressed={selectedTargetKeys.has(target.treePath)}
         tabIndex={activeLineIndex === lineIndex ? 0 : -1}
         onFocus={() => setActiveLineIndex(lineIndex)}
@@ -262,14 +262,14 @@ export function CallFlowRawView({
   };
 
   return (
-    <section className={`call-flow-raw${compact ? ' call-flow-raw-compact' : ''}`} aria-label="Raw call diff">
+    <section className={`call-flow-raw${compact ? ' call-flow-raw-compact' : ''}`} aria-label="原始调用差异">
       <div className="call-flow-raw-toolbar">
-        {!compact && <span className="call-flow-raw-hint">Click a line to comment · Shift-click adds lines</span>}
+        {!compact && <span className="call-flow-raw-hint">点击一行评论 · Shift 点击可添加多行</span>}
         {searchOpen ? (
           <CallFlowSearchControls
             inputRef={searchInputRef}
-            label="Search raw call diff"
-            placeholder="Find in raw output"
+            label="搜索原始调用差异"
+            placeholder="在原始输出中查找"
             query={query}
             currentMatchIndex={currentMatchIndex}
             matchCount={matches.length}
@@ -283,15 +283,15 @@ export function CallFlowRawView({
             type="button"
             className="call-flow-icon-button"
             onClick={() => setSearchOpen(true)}
-            aria-label="Search raw call diff"
-            title="Search raw output"
+            aria-label="搜索原始调用差异"
+            title="搜索原始输出"
           >
             <Search aria-hidden="true" size={14} />
           </button>
         )}
-        <button type="button" onClick={() => void copyRaw()} aria-label="Copy raw call diff">
+        <button type="button" onClick={() => void copyRaw()} aria-label="复制原始调用差异">
           {copyState === 'copied' ? <Check aria-hidden="true" size={14} /> : <Copy aria-hidden="true" size={14} />}
-          {!compact && (copyState === 'copied' ? 'Copied' : copyState === 'error' ? 'Copy failed' : 'Copy')}
+          {!compact && (copyState === 'copied' ? '已复制' : copyState === 'error' ? '复制失败' : '复制')}
         </button>
       </div>
       <div ref={rawPreRef} className="call-flow-raw-sections">
@@ -305,7 +305,7 @@ export function CallFlowRawView({
       {anchorEl && draftTargets.length > 0 && (
         <CommentPopover
           anchorEl={anchorEl}
-          contextText={`Raw line ${draftTargets[0]?.rawLine}: ${draftTargets[0]?.label}`}
+          contextText={`原始行 ${draftTargets[0]?.rawLine}：${draftTargets[0]?.label}`}
           isGlobal={false}
           allowImages={false}
           targetChips={targetChips}

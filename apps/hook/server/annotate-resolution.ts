@@ -191,7 +191,7 @@ export async function resolveAnnotateTarget(options: {
     }
 
     const useJina = resolveUseJina(noJina, loadConfig());
-    log(`Fetching: ${filePath}${useJina ? " (via Jina Reader)" : " (via fetch+Turndown)"}`);
+    log(`正在获取：${filePath}${useJina ? "（通过 Jina Reader）" : "（通过 fetch+Turndown）"}`);
     let markdown: string;
     let sourceConverted: boolean;
     try {
@@ -205,7 +205,7 @@ export async function resolveAnnotateTarget(options: {
       return {
         ok: false,
         notFound: false,
-        message: `Failed to fetch URL: ${err instanceof Error ? err.message : String(err)}`,
+        message: `获取 URL 失败：${err instanceof Error ? err.message : String(err)}`,
       };
     }
     return {
@@ -235,10 +235,10 @@ export async function resolveAnnotateTarget(options: {
       return {
         ok: false,
         notFound: false,
-        message: `No annotatable files (markdown, plain-text, config, or HTML) found in ${resolvedArg}`,
+        message: `在 ${resolvedArg} 中未找到可批注的文件（Markdown、纯文本、配置或 HTML）`,
       };
     }
-    log(`Folder: ${resolvedArg}`);
+    log(`文件夹：${resolvedArg}`);
     return {
       ok: true,
       markdown: "",
@@ -271,7 +271,7 @@ export async function resolveAnnotateTarget(options: {
       markdown = htmlToMarkdown(html);
       sourceConverted = true;
     }
-    log(`${renderHtmlForFile ? "Raw HTML" : "Converted"}: ${resolvedArg}`);
+    log(`${renderHtmlForFile ? "原始 HTML" : "已转换"}：${resolvedArg}`);
     return {
       ok: true,
       markdown,
@@ -296,7 +296,7 @@ export async function resolveAnnotateTarget(options: {
       ok: false,
       notFound: false,
       message: [
-        `Ambiguous filename "${resolved.input}" — found ${resolved.matches.length} matches:`,
+        `文件名 "${resolved.input}" 有歧义——找到 ${resolved.matches.length} 个匹配：`,
         ...resolved.matches.map((match) => `  ${match}`),
       ].join("\n"),
     };
@@ -312,15 +312,15 @@ export async function resolveAnnotateTarget(options: {
         ok: false,
         notFound: false,
         message:
-          `File type not supported: ${ext}\n` +
-          `Supported types: ${buildAnnotatableExtensionsHint(extraMarkdownExtensions)}\n` +
-          `For code review, use: plannotator review [DIRECTORY]`,
+          `不支持的文件类型：${ext}\n` +
+          `支持的类型：${buildAnnotatableExtensionsHint(extraMarkdownExtensions)}\n` +
+          `如需代码审查，请使用：plannotator review [DIRECTORY]`,
       };
     }
     return {
       ok: false,
       notFound: true,
-      message: `File not found: ${resolved.input}`,
+      message: `未找到文件：${resolved.input}`,
     };
   }
 
@@ -329,11 +329,11 @@ export async function resolveAnnotateTarget(options: {
     return {
       ok: false,
       notFound: false,
-      message: `File too large to annotate (max 2MB): ${absolutePath}`,
+      message: `文件过大，无法批注（最大 2MB）：${absolutePath}`,
     };
   }
   const markdown = await Bun.file(absolutePath).text();
-  log(`Resolved: ${absolutePath}`);
+  log(`已解析：${absolutePath}`);
   return {
     ok: true,
     markdown,

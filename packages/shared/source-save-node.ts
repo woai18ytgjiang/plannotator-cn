@@ -323,7 +323,7 @@ export function saveSourceFileAtomic(
 		return {
 			ok: false,
 			code: "not-writable",
-			message: "This file type cannot be saved from Plannotator.",
+			message: "无法从 Plannotator 保存此文件类型。",
 		};
 	}
 
@@ -335,7 +335,7 @@ export function saveSourceFileAtomic(
 			return {
 				ok: false,
 				code: "not-writable",
-				message: "This file cannot be saved outside the allowed folder.",
+				message: "无法将此文件保存到允许的文件夹之外。",
 			};
 		}
 	}
@@ -350,14 +350,14 @@ export function saveSourceFileAtomic(
 			return {
 				ok: false,
 				code: "not-writable",
-				message: "This file cannot be saved outside the allowed folder.",
+				message: "无法将此文件保存到允许的文件夹之外。",
 			};
 		}
 		if (options.allowedFiles && !options.allowedFiles.has(real)) {
 			return {
 				ok: false,
 				code: "not-writable",
-				message: "Only the files in this review can be saved.",
+				message: "只能保存本次审查中的文件。",
 			};
 		}
 		const stat = statSync(real);
@@ -365,7 +365,7 @@ export function saveSourceFileAtomic(
 			return {
 				ok: false,
 				code: "not-writable",
-				message: "This path is not a writable file.",
+				message: "该路径不是可写文件。",
 			};
 		}
 		mode = stat.mode;
@@ -377,14 +377,14 @@ export function saveSourceFileAtomic(
 			return {
 				ok: false,
 				code: "not-writable",
-				message: "This file is missing or cannot be read.",
+				message: "文件缺失或无法读取。",
 			};
 		}
 		if (!options.allowMissingBase) {
 			return {
 				ok: false,
 				code: "not-writable",
-				message: "This file is missing or cannot be read.",
+				message: "文件缺失或无法读取。",
 			};
 		}
 		try {
@@ -394,14 +394,14 @@ export function saveSourceFileAtomic(
 				return {
 					ok: false,
 					code: "not-writable",
-					message: "This file cannot be saved outside the allowed folder.",
+					message: "无法将此文件保存到允许的文件夹之外。",
 				};
 			}
 			if (options.allowedFiles && !options.allowedFiles.has(filePath)) {
 				return {
 					ok: false,
 					code: "not-writable",
-					message: "Only the files in this review can be saved.",
+					message: "只能保存本次审查中的文件。",
 				};
 			}
 			before = {
@@ -417,7 +417,7 @@ export function saveSourceFileAtomic(
 			return {
 				ok: false,
 				code: "not-writable",
-				message: "This file is missing or cannot be recreated.",
+				message: "文件缺失或无法重新创建。",
 			};
 		}
 	}
@@ -426,7 +426,7 @@ export function saveSourceFileAtomic(
 		return {
 			ok: false,
 			code: "conflict",
-			message: "The file changed on disk since Plannotator opened it.",
+			message: "自 Plannotator 打开该文件以来，磁盘上的文件已发生变化。",
 			currentText: before.text,
 			currentHash: before.hash,
 			currentMtimeMs: before.mtimeMs,
@@ -459,7 +459,7 @@ export function saveSourceFileAtomic(
 					return {
 						ok: false,
 						code: "conflict",
-						message: "The file changed on disk since Plannotator opened it.",
+						message: "自 Plannotator 打开该文件以来，磁盘上的文件已发生变化。",
 						currentText: current.text,
 						currentHash: current.hash,
 						currentMtimeMs: current.mtimeMs,
@@ -494,7 +494,7 @@ export function saveSourceFileAtomic(
 		return {
 			ok: false,
 			code: "write-failed",
-			message: "Failed to save the file.",
+			message: "保存文件失败。",
 		};
 	}
 }

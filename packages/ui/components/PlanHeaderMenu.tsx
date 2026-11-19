@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import {
   ActionMenu,
@@ -103,13 +104,13 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
               ? 'bg-muted text-foreground'
               : 'text-muted-foreground hover:text-foreground hover:bg-muted'
           }`}
-          title="Options"
-          aria-label="Options"
+          title="选项"
+          aria-label="选项"
           aria-expanded={isOpen}
         >
           {isOpen ? <CloseIcon /> : <MenuIcon />}
           {/* The dot says an update is out; the label never moves (no shimmer). */}
-          <span className="hidden md:inline">Options</span>
+          <span className="hidden md:inline">选项</span>
           {showUpdateDot && (
             <span className="absolute top-0.5 right-0.5 md:-top-0.5 md:-right-0.5 w-2 h-2 rounded-full bg-primary ring-2 ring-background" />
           )}
@@ -121,7 +122,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
           {compactTouchLayout && compactSessionActions.length > 0 && (
             <>
               <CompactActionSection
-                label="Review"
+                label="审查"
                 actions={compactSessionActions}
                 closeMenu={closeMenu}
               />
@@ -132,7 +133,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
           {compactTouchLayout && compactDocumentActions.length > 0 && (
             <>
               <CompactActionSection
-                label="Document"
+                label="文档"
                 actions={compactDocumentActions}
                 closeMenu={closeMenu}
               />
@@ -141,7 +142,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
           )}
 
           <div className="px-3 py-2 space-y-1.5">
-            <ActionMenuSectionLabel>Theme</ActionMenuSectionLabel>
+            <ActionMenuSectionLabel>主题</ActionMenuSectionLabel>
             <div className="flex items-center gap-1 rounded-lg bg-muted/50 p-0.5">
               {THEME_MODES.map(({ id, label, Icon }) => (
                 <button
@@ -172,7 +173,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
               onOpenSettings();
             }}
             icon={<SettingsIcon />}
-            label="Settings"
+            label="设置"
           />
           <ActionMenuItem
             onClick={() => {
@@ -180,7 +181,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
               onOpenExport();
             }}
             icon={<ExportIcon />}
-            label="Export"
+            label="导出"
           />
           {agentInstructionsEnabled && (
             <ActionMenuItem
@@ -189,8 +190,8 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
                 onCopyAgentInstructions();
               }}
               icon={<ReviewAgentsIcon />}
-              label="Agent Instructions"
-              subtitle="Copy agent instructions for external annotations"
+              label="智能体指令"
+              subtitle="复制智能体指令，用于外部批注"
             />
           )}
 
@@ -202,7 +203,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
               onDownloadAnnotations();
             }}
             icon={<DownloadIcon />}
-            label="Download Annotations"
+            label="下载批注"
           />
           <ActionMenuItem
             onClick={() => {
@@ -210,8 +211,8 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
               onPrint();
             }}
             icon={<PrintIcon />}
-            label="Print / Save as PDF"
-            subtitle="Choose 'Save as PDF' in the print dialog"
+            label="打印 / 另存为 PDF"
+            subtitle="在打印对话框中选择「另存为 PDF」"
           />
           {sharingEnabled && (
             <ActionMenuItem
@@ -220,7 +221,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
                 onCopyShareLink();
               }}
               icon={<LinkIcon />}
-              label="Copy Share Link"
+              label="复制分享链接"
             />
           )}
           {sharingEnabled && (
@@ -230,7 +231,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
                 onOpenImport();
               }}
               icon={<ImportIcon />}
-              label="Import Review"
+              label="导入审查"
             />
           )}
 
@@ -244,7 +245,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
                     onSaveToObsidian();
                   }}
                   icon={<NoteIcon />}
-                  label="Save to Obsidian"
+                  label="保存到 Obsidian"
                 />
               )}
               {bearConfigured && (
@@ -254,7 +255,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
                     onSaveToBear();
                   }}
                   icon={<NoteIcon />}
-                  label="Save to Bear"
+                  label="保存到 Bear"
                 />
               )}
               {octarineConfigured && (
@@ -264,7 +265,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
                     onSaveToOctarine();
                   }}
                   icon={<NoteIcon />}
-                  label="Save to Octarine"
+                  label="保存到 Octarine"
                 />
               )}
               {notionConfigured && onSaveToNotion && (
@@ -274,7 +275,7 @@ export const PlanHeaderMenu: React.FC<PlanHeaderMenuProps> = ({
                     onSaveToNotion();
                   }}
                   icon={<NoteIcon />}
-                  label="Save to Notion"
+                  label="保存到 Notion"
                 />
               )}
             </>

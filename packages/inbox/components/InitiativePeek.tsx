@@ -349,8 +349,8 @@ function TagPeekView({ name, list, model, onGo }: { name: string; list: string; 
       </div>
       {model.threads.length > 0 && (
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-3" data-tag-peek-body="">
-          <section aria-label="Threads" data-tag-peek-threads="">
-            <h3 className={`${GROUP} text-muted-foreground`}>Threads</h3>
+          <section aria-label="话题" data-tag-peek-threads="">
+            <h3 className={`${GROUP} text-muted-foreground`}>话题</h3>
             <ul>
               {model.threads.map((thread) => (
                 <li key={thread.id}>
@@ -396,7 +396,7 @@ function PeekView({ name, board, model, onGo }: { name: string; board: string; m
           {meta.join(' · ')}
         </div>
         {model.byColumn.length > 0 ? (
-          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="Cards by column" data-tag-peek-columns="">
+          <ul className="mt-3 flex flex-wrap gap-1.5" aria-label="按列分组的卡片" data-tag-peek-columns="">
             {model.byColumn.map((c) => (
               <li key={c.col} className={BADGE}>
                 {c.column}
@@ -414,7 +414,7 @@ function PeekView({ name, board, model, onGo }: { name: string; board: string; m
       {model.items.length === 0 && model.mentions.length === 0 ? null : (
         <div className="min-h-0 flex-1 overflow-y-auto overscroll-contain px-4 pb-3" data-tag-peek-body="">
           {model.items.length > 0 ? (
-            <ul aria-label="Cards">
+            <ul aria-label="卡片">
               {model.items.map((item) => (
                 <li key={item.id}>
                   <a className={ROW} href={cardHref(item)} onClick={onGo}>
@@ -428,7 +428,7 @@ function PeekView({ name, board, model, onGo }: { name: string; board: string; m
           {model.moreItems > 0 ? <div className="pt-1 text-[12px] leading-4 text-muted-foreground">+{model.moreItems} more</div> : null}
           {model.mentions.length > 0 ? (
             <section aria-label="Threads" className={model.items.length > 0 ? 'mt-4' : undefined} data-tag-peek-threads="">
-              <h3 className={`${GROUP} text-muted-foreground`}>Threads</h3>
+              <h3 className={`${GROUP} text-muted-foreground`}>话题</h3>
               <ul>
                 {model.mentions.map((thread) => (
                   <li key={thread.id}>

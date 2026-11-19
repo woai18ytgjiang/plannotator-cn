@@ -33,12 +33,12 @@ export function ProjectFilter({ projects, names, value, phone, onChange }: Proje
   useEffect(() => setPortal(trigger.current?.closest<HTMLElement>('dialog, .pn-inbox') ?? null), []);
   const name = value ? (names.get(value) ?? null) : null;
   // The name is unknown only while the projects load (App drops a filter on a project it does not know).
-  const label = value ? (name ?? 'Project') : 'All projects';
+  const label = value ? (name ?? '项目') : '全部项目';
   const clear = value && (
     <button
       type="button"
       className="ib-bpf-x"
-      aria-label="Clear the project filter"
+      aria-label="清除项目筛选"
       data-board-project-clear=""
       onClick={() => {
         onChange(null);
@@ -56,7 +56,7 @@ export function ProjectFilter({ projects, names, value, phone, onChange }: Proje
           <Menu.Trigger ref={trigger} className="ib-bpf-btn" data-board-project-chip="">
             <Icon name="folder" size={14} />
             <span className="ib-bpf-l" dir="auto">
-              <span className="ib-sr">Project: </span>
+              <span className="ib-sr">项目：</span>
               {label}
             </span>
             <Icon name="chevD" size={13} />
@@ -65,13 +65,13 @@ export function ProjectFilter({ projects, names, value, phone, onChange }: Proje
         <Menu.Portal container={portal ?? undefined}>
           {phone && <Menu.Backdrop className="ib-pm-scrim" />}
           <Menu.Positioner className="ib-pm-pos" side="bottom" align="start" sideOffset={4} data-phone={phone ? '' : undefined}>
-            <Menu.Popup className="ib-pm ib-bpf-menu" aria-label="Project" data-board-project-menu="">
+            <Menu.Popup className="ib-pm ib-bpf-menu" aria-label="项目" data-board-project-menu="">
               <div className="ib-pm-title" aria-hidden="true">
-                Project
+                项目
               </div>
               <Menu.RadioGroup value={value ?? ''} onValueChange={(next: string) => next !== (value ?? '') && onChange(next || null)}>
-                <Menu.RadioItem value="" closeOnClick className="ib-pmi" label="All projects" data-board-project-option="">
-                  <span className="ib-pmi-l">All projects</span>
+                <Menu.RadioItem value="" closeOnClick className="ib-pmi" label="全部项目" data-board-project-option="">
+                  <span className="ib-pmi-l">全部项目</span>
                   {value === null && <Icon name="check" size={15} className="ib-pmi-check" />}
                 </Menu.RadioItem>
                 {projects.length > 0 && <Menu.Separator className="ib-pm-sep" />}

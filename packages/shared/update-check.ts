@@ -477,17 +477,17 @@ export function plainCheckError(raw: string): string {
       let error = tagged ? tagged[2] : part;
       const limited = /,\s*rate limited$/.test(error);
       error = error.replace(/,\s*rate limited$/, "");
-      const who = source === "api" ? "GitHub API" : source === "page" ? "release page" : "GitHub";
+      const who = source === "api" ? "GitHub API" : source === "page" ? "发布页面" : "GitHub";
       if (error === "no release page source") return "";
-      if (error === "the check failed") return error;
-      if (limited || error === "HTTP 429") return `${who} rate-limited`;
-      if (/^not a stable version|not a stable release/.test(error)) return `${who} named no stable release`;
-      if (/^HTTP \d+$|^redirect to|^no tag_name/.test(error)) return `${who} didn't answer as expected`;
-      if (/tim(?:ed|e)\s*out|timeout|aborted/i.test(error)) return `${who} took too long to answer`;
-      return `couldn't reach ${source ? `the ${who}` : who}`;
+      if (error === "the check failed") return "检查失败";
+      if (limited || error === "HTTP 429") return `${who} 请求被限流`;
+      if (/^not a stable version|not a stable release/.test(error)) return `${who} 未给出稳定版本`;
+      if (/^HTTP \d+$|^redirect to|^no tag_name/.test(error)) return `${who} 的回应不符合预期`;
+      if (/tim(?:ed|e)\s*out|timeout|aborted/i.test(error)) return `${who} 响应超时`;
+      return `无法连接到 ${who}`;
     })
     .filter(Boolean);
-  return [...new Set(words)].join("; ") || "the check failed";
+  return [...new Set(words)].join("；") || "检查失败";
 }
 
 /**
@@ -1588,12 +1588,12 @@ export function takeUpdateHint(input: {
     if (failing) {
       const since = `${new Date(failing.since).toISOString().slice(0, 16).replace("T", " ")} UTC`;
       if (input.managed === false) {
-        return `Plannotator can't check for updates since ${since} (${failing.error}). This copy was not installed by the install script: update it the way you installed it.`;
+        return `Plannotator 自 ${since} 起无法检查更新（${failing.error}）。此副本不是由安装脚本安装的：请按你当初安装它的方式更新。`;
       }
       const command = installCommandFor(input.platform ?? process.platform, readInstallFlags(input.dataDir).flags);
-      return `Plannotator can't check for updates since ${since} (${failing.error}). To update: ${command}`;
+      return `Plannotator 自 ${since} 起无法检查更新（${failing.error}）。更新方式：${command}`;
     }
-    return `Plannotator ${latest!.version} is available (you have ${current}). Update: plannotator update`;
+    return `Plannotator ${latest!.version} 已发布（当前版本 ${current}）。更新：plannotator update`;
   } catch {
     return null;
   }

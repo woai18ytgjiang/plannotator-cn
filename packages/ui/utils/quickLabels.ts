@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Quick Labels — preset annotation labels for one-click feedback
  *
@@ -40,21 +41,21 @@ export const LABEL_COLOR_MAP: Record<string, { bg: string; text: string; darkTex
 export const THUMBS_UP_LABEL: QuickLabel = {
   id: 'thumbs-up',
   emoji: '👍',
-  text: 'Looks good',
+  text: '看起来不错',
   color: 'green',
 };
 
 export const DEFAULT_QUICK_LABELS: QuickLabel[] = [
-  { id: 'clarify-this',            emoji: '❓', text: 'Clarify this',            color: 'yellow' },
-  { id: 'missing-overview',        emoji: '🗺️', text: 'Missing overview',        color: 'purple', tip: 'Provide a narrative overview of what is being built, why it is being built, and how it will be built. Add this before the implementation details.' },
-  { id: 'verify-this',             emoji: '🔍', text: 'Verify this',             color: 'orange', tip: 'This seems like an assumption. Verify by reading the actual code before proceeding.' },
-  { id: 'give-me-an-example',      emoji: '🔬', text: 'Give me an example',      color: 'cyan', tip: 'This is too abstract. Show a before/after, a sample input/output, or a specific scenario so I can see how this actually works.' },
-  { id: 'match-existing-patterns',  emoji: '🧬', text: 'Match existing patterns',  color: 'teal', tip: 'Search the codebase for existing patterns, components, or utilities that already solve this. Reuse what exists rather than introducing a new approach.' },
-  { id: 'consider-alternatives',    emoji: '🔄', text: 'Consider alternatives',    color: 'pink', tip: 'Propose 2-3 alternative approaches with trade-offs based on the actual codebase. Also check the Plannotator plans directory (PLANNOTATOR_DATA_DIR or ~/.plannotator/plans/) for prior plan versions that may have already explored or rejected similar approaches.' },
-  { id: 'ensure-no-regression',     emoji: '📉', text: 'Ensure no regression',     color: 'amber', tip: 'Verify that this change will not break existing behavior. Identify what could regress and how to protect against it.' },
-  { id: 'out-of-scope',            emoji: '🚫', text: 'Out of scope',            color: 'red', tip: 'This is not part of the current task. Remove it and stay focused on what was actually requested.' },
-  { id: 'needs-tests',             emoji: '🧪', text: 'Needs tests',             color: 'blue' },
-  { id: 'nice-approach',           emoji: '👍', text: 'Looks good',              color: 'green' },
+  { id: 'clarify-this',            emoji: '❓', text: '说明清楚这点',            color: 'yellow' },
+  { id: 'missing-overview',        emoji: '🗺️', text: '缺少整体概述',        color: 'purple', tip: '请提供一段叙述性概述，说明要构建什么、为什么构建、以及如何构建。把它放在实现细节之前。' },
+  { id: 'verify-this',             emoji: '🔍', text: '验证这一点',             color: 'orange', tip: '这看起来是个假设。请阅读实际代码验证后再继续。' },
+  { id: 'give-me-an-example',      emoji: '🔬', text: '举个例子',      color: 'cyan', tip: '这太抽象了。请给出前后对比、示例输入/输出或具体场景，让我看到它实际上如何运作。' },
+  { id: 'match-existing-patterns',  emoji: '🧬', text: '沿用现有模式',  color: 'teal', tip: '在代码库中搜索已有的模式、组件或工具，看是否已经解决过类似问题。复用现有实现，而不是引入新方案。' },
+  { id: 'consider-alternatives',    emoji: '🔄', text: '考虑替代方案',    color: 'pink', tip: '基于实际代码库提出 2-3 个备选方案并说明取舍。同时查看 Plannotator 的计划目录（PLANNOTATOR_DATA_DIR 或 ~/.plannotator/plans/）中是否已有探索过或否决过类似方案的历史计划版本。' },
+  { id: 'ensure-no-regression',     emoji: '📉', text: '确保不引入回归',     color: 'amber', tip: '确认此更改不会破坏现有行为。找出可能回归的部分以及如何防范。' },
+  { id: 'out-of-scope',            emoji: '🚫', text: '超出本次范围',            color: 'red', tip: '这不属于当前任务。请移除它，专注于实际被要求的内容。' },
+  { id: 'needs-tests',             emoji: '🧪', text: '需要测试',             color: 'blue' },
+  { id: 'nice-approach',           emoji: '👍', text: '看起来不错',              color: 'green' },
 ];
 
 export function getQuickLabels(): QuickLabel[] {

@@ -38,15 +38,15 @@ export function PlansGetStarted({ onBack, importing, note }: { onBack?: () => vo
         <h1 id={`${stepsId}-h`} tabIndex={-1}>
           What do you want to plan?
         </h1>
-        <p className="ib-plans-lede">Plan in your agent as usual. Every plan you review is kept here, on this computer, with each version, its files and your decision.</p>
+        <p className="ib-plans-lede">像往常一样在你的智能体中制定计划。你审查过的每个计划都会保存在这台电脑上，包含每个版本、其文件以及你的决策。</p>
         <button type="button" className="ib-plans-primary" aria-expanded={open} aria-controls={stepsId} onClick={() => setOpen((v) => !v)} data-plans-how="">
           <Icon name="arrowRight" />
           Start a plan
         </button>
         <ol id={stepsId} className="ib-plans-steps" hidden={!open} data-plans-steps="">
-          <li>Ask your agent to plan the change in plan mode.</li>
-          <li>Plannotator opens the plan for your review, as it does now.</li>
-          <li>Approve it or ask for changes. The plan, each new version and your decision show up here.</li>
+          <li>让智能体在计划模式下规划这项更改。</li>
+          <li>Plannotator 会像现在一样打开计划供你审查。</li>
+          <li>批准它或请求修改。计划、每个新版本以及你的决策都会显示在这里。</li>
         </ol>
         {importing && (
           <p className="ib-plans-note" role="status">

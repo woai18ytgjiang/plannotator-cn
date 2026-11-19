@@ -10,11 +10,11 @@ import { isSetFace, setFaceParts, setIconSrc, setLookOf } from './iconSets';
 import { ownFaceShows, ownIconSrc, useOwnIcons } from './ownIcons';
 
 export const ANIMATE_WORDS = {
-  button: 'Animate it',
-  line: 'Asks an agent, in a new thread, to animate this picture. What it sends back becomes this icon, and the original stays one click away.',
-  done: 'An agent animated this picture.',
-  undo: 'Use the original',
-  failed: 'Couldn’t reach the Inbox. Nothing was sent; try again.',
+  button: '让它动起来',
+  line: '在新话题中请智能体为这张图制作动画。它发回的结果会成为此图标，原图仍一键可回。',
+  done: '某个智能体为这张图制作了动画。',
+  undo: '使用原图',
+  failed: '无法连接收件箱。未发送任何内容，请重试。',
 } as const;
 
 /** A step on a poor link never spins for ever: past this it says so, and the button is back. */

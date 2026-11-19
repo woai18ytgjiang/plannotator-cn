@@ -95,9 +95,9 @@ export function SidebarMenu({ menu, layout, drawn }: { menu: SidebarMenuState; l
     <Menu.Root open={menu.open !== null} onOpenChange={(next) => !next && menu.close()} modal={false}>
       <Menu.Portal container={menu.portal ?? undefined}>
         <Menu.Positioner className="ib-pm-pos" anchor={menu.open?.anchor} side="bottom" align="start" sideOffset={2}>
-          <Menu.Popup className="ib-pm ib-side-menu" aria-label="Sidebar" data-sidebar-menu="" finalFocus={focusBack}>
+          <Menu.Popup className="ib-pm ib-side-menu" aria-label="侧边栏" data-sidebar-menu="" finalFocus={focusBack}>
             <Menu.Group>
-              <Menu.GroupLabel className="ib-pm-glabel">Show in sidebar</Menu.GroupLabel>
+              <Menu.GroupLabel className="ib-pm-glabel">在侧边栏中显示</Menu.GroupLabel>
               {items.map((item) => {
                 const on = inboxSidebarShown(layout, item);
                 return (
@@ -122,11 +122,11 @@ export function SidebarMenu({ menu, layout, drawn }: { menu: SidebarMenuState; l
                 toPanel.current = true;
                 openSidebarCustomizer(opener);
               }} data-sidebar-customize="">
-              <span className="ib-pmi-l">Customize sidebar…</span>
+              <span className="ib-pmi-l">自定义侧边栏…</span>
             </Menu.Item>
             {!inboxSidebarSame(layout, INBOX_SIDEBAR_DEFAULT) && (
               <Menu.Item className="ib-pmi" onClick={() => void writeSidebarLayout(INBOX_SIDEBAR_DEFAULT)} data-sidebar-reset="">
-                <span className="ib-pmi-l">Reset to default</span>
+                <span className="ib-pmi-l">重置为默认</span>
               </Menu.Item>
             )}
           </Menu.Popup>

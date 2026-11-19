@@ -47,7 +47,7 @@ export const ReviewDockRightActions: React.FC<ReviewDiffControlsProps> = (props)
           </>
         )}
       </svg>
-      {state.allFilesAllCollapsed ? 'Expand all files' : 'Collapse all files'}
+      {state.allFilesAllCollapsed ? '展开所有文件' : '折叠所有文件'}
     </button>
   ) : undefined;
 
@@ -61,8 +61,8 @@ export const ReviewDockRightActions: React.FC<ReviewDiffControlsProps> = (props)
           disabled={!showCollapseAll}
           aria-hidden={!showCollapseAll || undefined}
           tabIndex={showCollapseAll ? undefined : -1}
-          title={state.allFilesAllCollapsed ? 'Expand all files' : 'Collapse all files'}
-          aria-label={state.allFilesAllCollapsed ? 'Expand all files' : 'Collapse all files'}
+          title={state.allFilesAllCollapsed ? '展开所有文件' : '折叠所有文件'}
+          aria-label={state.allFilesAllCollapsed ? '展开所有文件' : '折叠所有文件'}
           data-header-collapse-all-files={state.allFilesAllCollapsed ? 'collapsed' : 'open'}
         >
           {state.allFilesAllCollapsed ? <FoldVertical className="w-3.5 h-3.5" aria-hidden="true" /> : <ChevronsUpDown className="w-3.5 h-3.5" aria-hidden="true" />}

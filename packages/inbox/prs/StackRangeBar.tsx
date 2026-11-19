@@ -12,21 +12,21 @@ export function StackRangeBar({ stack, picked, onOpen, onClear }: { stack: Inbox
   return (
     <div className="ib-prst-range" data-pr-stack-range={range ? 'ready' : 'picking'}>
       <span className="ib-prst-range-n" aria-live="polite">
-        {count} of {stack.layers.length} layers
+        {count} / {stack.layers.length} 层
       </span>
       {range && (
         <span className="ib-prst-range-name" data-pr-stack-range-name="">
-          {rangeName(stack, range)} as one diff
+          {rangeName(stack, range)}（单个差异）
         </span>
       )}
       <span className="ib-prst-range-end">
         {range && (
           <button type="button" className="ib-prs-btn" data-primary="" onClick={() => onOpen(range)} data-pr-stack-range-open="">
-            Open as one diff
+            作为单个差异打开
           </button>
         )}
         <button type="button" className="ib-prs-btn" onClick={onClear} data-pr-stack-range-clear="">
-          Clear
+          清除
         </button>
       </span>
     </div>

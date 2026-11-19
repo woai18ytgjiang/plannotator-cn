@@ -23,7 +23,7 @@ export const AgentNudgeBanner: React.FC<AgentNudgeBannerProps> = ({ message, onD
   >
     <span className="mt-0.5 inline-flex h-2 w-2 flex-shrink-0 rounded-full bg-primary" aria-hidden="true" />
     <div className="min-w-0 flex-1">
-      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">Agent</div>
+      <div className="text-[10px] font-semibold uppercase tracking-wider text-muted-foreground">智能体</div>
       <p className="whitespace-pre-wrap break-words leading-snug">{message}</p>
       {onShowComments && (
         <button
@@ -31,14 +31,14 @@ export const AgentNudgeBanner: React.FC<AgentNudgeBannerProps> = ({ message, onD
           onClick={onShowComments}
           className="mt-1 text-xs font-medium text-primary hover:underline"
         >
-          Show comments
+          显示评论
         </button>
       )}
     </div>
     <button
       type="button"
       onClick={onDismiss}
-      aria-label="Dismiss agent message"
+      aria-label="忽略智能体消息"
       className="rounded-md p-1 text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
     >
       <svg className="h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

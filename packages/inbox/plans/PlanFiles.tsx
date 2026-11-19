@@ -39,7 +39,7 @@ export function planFileRows(primary: string, documents: readonly PlanDocument[]
   const live = documents.filter((d) => !d.archived_at);
   const main = live.find((d) => d.id === primary);
   const others = live.filter((d) => d.id !== primary).sort((a, b) => byName(a.title, b.title));
-  const docRow = (d: PlanDocument, isMain: boolean): FileRowData => ({ key: `d:${d.id}`, ref: { kind: 'doc', id: d.id }, name: d.title || 'Untitled', tip: d.doc_path ?? d.title, icon: DOC_ICON[d.kind], main: isMain });
+  const docRow = (d: PlanDocument, isMain: boolean): FileRowData => ({ key: `d:${d.id}`, ref: { kind: 'doc', id: d.id }, name: d.title || '无标题', tip: d.doc_path ?? d.title, icon: DOC_ICON[d.kind], main: isMain });
   return {
     pages: [...(main ? [docRow(main, true)] : []), ...others.map((d) => docRow(d, false))],
     artifacts: [...artifacts]

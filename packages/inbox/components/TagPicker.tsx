@@ -144,9 +144,9 @@ export function TagPicker({
   const byId = new Map(options.map((o) => [o.id, o]));
   const spot = useMenuSpot(field, boundary);
   return (
-    <div ref={spot.ref} className="ib-tg-menu" data-tag-picker="" id={id} role="listbox" aria-label="Tag an agent" style={spot.style}>
+    <div ref={spot.ref} className="ib-tg-menu" data-tag-picker="" id={id} role="listbox" aria-label="标记智能体" style={spot.style}>
       {menu.items.length === 0 ? (
-        <p className="ib-tg-empty">{menu.emptyNotice ?? 'No agent matches.'}</p>
+        <p className="ib-tg-empty">{menu.emptyNotice ?? '没有匹配的智能体。'}</p>
       ) : (
         mentionGroups(menu.items).map((run) => {
           const headingId = `${id}-group-${run.start}`;
@@ -182,9 +182,9 @@ export function TagPicker({
                       </span>
                       <span className="ib-tg-od">{blocked ? TAG_UPDATE_WORDS : person.detail}</span>
                     </span>
-                    {option?.owner && <span className="ib-tg-badge">Owns this thread</span>}
-                    {reader && !option?.owner && <span className="ib-tg-badge ib-tg-quiet">Not woken</span>}
-                    {blocked && <span className="ib-tg-badge ib-tg-quiet">Update</span>}
+                    {option?.owner && <span className="ib-tg-badge">拥有此话题</span>}
+                    {reader && !option?.owner && <span className="ib-tg-badge ib-tg-quiet">未唤醒</span>}
+                    {blocked && <span className="ib-tg-badge ib-tg-quiet">更新</span>}
                   </div>
                 );
               })}
@@ -236,13 +236,13 @@ export function TagNotes({
   return (
     <div className="ib-tg-notes" id={id} data-tag-notes="">
       <div className="ib-tg-goes" data-tag-goes="">
-        <span className="ib-tg-goes-l">Goes to</span>
+        <span className="ib-tg-goes-l">发送给</span>
         {recipients.map((r) => (
           <span key={r.id} className="ib-tg-to" data-tag-recipient={r.id}>
             <HostMark host={r.host} agent={r.id} />
             <span>
               {r.label}
-              {r.owner && <i> owns this thread</i>}
+              {r.owner && <i> 拥有此话题</i>}
             </span>
           </span>
         ))}

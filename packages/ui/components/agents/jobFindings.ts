@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 export interface FindingLike {
   id?: string;
   source?: string;
@@ -8,14 +9,14 @@ export interface FindingLike {
 }
 
 const RANKS: Array<{ key: string; word: string }> = [
-  { key: 'important', word: 'important' },
+  { key: 'important', word: '重要' },
   { key: 'P0', word: 'P0' },
   { key: 'P1', word: 'P1' },
   { key: 'P2', word: 'P2' },
   { key: 'P3', word: 'P3' },
-  { key: 'nit', word: 'nit' },
-  { key: 'pre_existing', word: 'pre-existing' },
-  { key: 'other', word: 'other' },
+  { key: 'nit', word: '细节' },
+  { key: 'pre_existing', word: '原有问题' },
+  { key: 'other', word: '其他' },
 ];
 const RANK_INDEX = new Map(RANKS.map((r, i) => [r.key, i]));
 
@@ -38,11 +39,11 @@ export function findingsOf<T extends FindingLike>(source: string, annotations: r
 }
 
 export function findingCountsLine(findings: readonly FindingLike[]): string {
-  if (findings.length === 0) return 'No findings';
+  if (findings.length === 0) return '未发现问题';
   const counts = new Map<string, number>();
   for (const f of findings) counts.set(findingRank(f), (counts.get(findingRank(f)) ?? 0) + 1);
-  if (counts.size === 1 && counts.has('other')) return `${findings.length} finding${findings.length === 1 ? '' : 's'}`;
+  if (counts.size === 1 && counts.has('other')) return `${findings.length} 个发现`;
   return RANKS.filter((r) => counts.has(r.key))
-    .map((r) => `${counts.get(r.key)} ${r.word}`)
+    .map((r) => `${counts.get(r.key)} 个${r.word}`)
     .join(' · ');
 }

@@ -88,7 +88,7 @@ export function PreviewList({ groups, flat, projectNames, awayMachines, look, ph
     <section ref={section} className={`ib-listcol${phone ? '' : ' ib-narrow'} ib-lo-list${classes}`} aria-hidden="true" data-list-intro-preview="">
       {!phone && head && (
         <div className="ib-lhead">
-          <h1 dir="auto">Inbox</h1>
+          <h1 dir="auto">收件箱</h1>
           <span className="ib-tidytrig ib-lhead-more">
             <Icon name="dots" size={18} />
           </span>
@@ -242,8 +242,8 @@ export function ListLookIntro({ groups, initial, projectNames, awayMachines, pho
     <Modal labelledBy="ib-lo-title" describedBy="ib-lo-desc" testId="list-look-intro" onClose={onKeep} ownKeys initialFocus=".ib-rl-looks" className={`ib-lo ib-rl${phone ? ' ib-lo-phone' : ''}`}>
       <div className="ib-rl-art" data-preview={shown ?? undefined} data-moving={moving ? '' : undefined} style={{ '--rl-s': fit.s, '--rl-fh': `${fit.h}px` } as CSSProperties}>
         <p className="ib-rl-cap" aria-hidden="true">
-          <span data-on={shown ? undefined : ''}>Example projects</span>
-          <span data-on={shown ? '' : undefined}>Your list</span>
+          <span data-on={shown ? undefined : ''}>示例项目</span>
+          <span data-on={shown ? '' : undefined}>你的列表</span>
         </p>
         <div ref={frame} className="ib-rl-frame" inert aria-hidden="true" data-list-intro-picture="" data-scene={scene.held ? 'held' : scene.marks}>
           <RowsIntroWindow scene={scene} moving={moving} />
@@ -252,7 +252,7 @@ export function ListLookIntro({ groups, initial, projectNames, awayMachines, pho
         <div className="ib-rl-veil" aria-hidden="true" />
         {/* The picked look, on the person's own rows: one layer per look, so a change of look crossfades. */}
         <div className="ib-rl-card" inert aria-hidden="true" data-list-intro-card={shown ?? undefined} style={{ width: fit.w, height: fit.ch, top: fit.top + Math.round((fit.h - fit.ch) / 2) }}>
-          <div className="ib-rl-ch">Inbox</div>
+          <div className="ib-rl-ch">收件箱</div>
           <div className="ib-rl-cls">
             {ROWS_INTRO_PRESETS.map((preset) => (
               <div key={preset.id} className="ib-rl-cl" data-look={preset.id} data-on={shown === preset.id ? '' : undefined}>
@@ -263,7 +263,7 @@ export function ListLookIntro({ groups, initial, projectNames, awayMachines, pho
         </div>
       </div>
       <div className="ib-lo-text">
-        <h2 id="ib-lo-title">Choose how your list looks</h2>
+        <h2 id="ib-lo-title">选择列表外观</h2>
         <p id="ib-lo-desc">
           Pick a look. Fine-tune it any time in{' '}
           <button type="button" className="ib-rl-link" onClick={onCustomize} data-list-intro-customize="">
@@ -279,7 +279,7 @@ export function ListLookIntro({ groups, initial, projectNames, awayMachines, pho
             {/* The look's name alone (the owner: no icons), centred; "Current" under it never moves it, so the three line up. */}
             <span className="ib-rl-ln">
               <span className="ib-rl-name">{preset.label}</span>
-              {current === preset.id && <span className="ib-rl-cur">Current</span>}
+              {current === preset.id && <span className="ib-rl-cur">当前</span>}
             </span>
           </label>
         ))}

@@ -255,19 +255,19 @@ async function verifyGitButlerVersion(runtime: ReviewGitButlerRuntime, cwd: stri
       const detail = result.stderr.trim();
       throw new GitButlerContractError(
         detail === "but not found"
-          ? `GitButler workspace detected, but the \`but\` CLI is not on PATH (requires ${GITBUTLER_MIN_VERSION} or newer).`
-          : `Could not run the GitButler CLI${detail ? `: ${detail}` : "."}`,
+          ? `检测到 GitButler 工作区，但 PATH 中没有 \`but\` CLI（需要 ${GITBUTLER_MIN_VERSION} 或更高版本）。`
+          : `无法运行 GitButler CLI${detail ? `：${detail}` : "。"}`,
       );
     }
 
     const actual = parseVersion(result.stdout);
     const minimum = parseVersion(GITBUTLER_MIN_VERSION);
     if (!actual || !minimum) {
-      throw new GitButlerContractError(`Could not parse GitButler version from: ${result.stdout.trim() || "<empty>"}`);
+      throw new GitButlerContractError(`无法解析 GitButler 版本：${result.stdout.trim() || "<empty>"}`);
     }
     if (!versionAtLeast(actual, minimum)) {
       throw new GitButlerContractError(
-        `GitButler ${actual.display} is unsupported; Plannotator requires ${GITBUTLER_MIN_VERSION} or newer.`,
+        `不支持 GitButler ${actual.display}；Plannotator 需要 ${GITBUTLER_MIN_VERSION} 或更高版本。`,
       );
     }
   })();
@@ -313,8 +313,8 @@ async function loadStatus(runtime: ReviewGitButlerRuntime, cwd: string): Promise
       });
       if (isUnexpectedArgumentRejection(retried, fallback.flag)) {
         throw new GitButlerContractError(
-          `GitButler rejected both \`${syntax.label}\` and \`${fallback.label}\`; ` +
-          `Plannotator requires GitButler ${GITBUTLER_MIN_VERSION} or newer.`,
+          `GitButler 同时拒绝了 \`${syntax.label}\` 和 \`${fallback.label}\`；` +
+          `Plannotator 需要 GitButler ${GITBUTLER_MIN_VERSION} 或更高版本。`,
         );
       }
       syntax = fallback;
@@ -323,7 +323,7 @@ async function loadStatus(runtime: ReviewGitButlerRuntime, cwd: string): Promise
     if (result.exitCode !== 0) {
       const detail = result.stderr.trim();
       throw new GitButlerContractError(
-        `GitButler status (\`${syntax.label}\`) failed${detail ? `: ${detail}` : ` with exit code ${result.exitCode}`}`,
+        `GitButler 状态查询（\`${syntax.label}\`）失败${detail ? `：${detail}` : `，退出码 ${result.exitCode}`}`,
       );
     }
     const parsed = parseGitButlerStatus(result.stdout, syntax.label);
@@ -427,7 +427,7 @@ function stackHasConflicts(stack: GitButlerStack): boolean {
 
 function buildDiffOptions(status: GitButlerStatus): GitContext["diffOptions"] {
   const options: GitContext["diffOptions"] = [
-    { id: GITBUTLER_WORKSPACE_DIFF, label: "Workspace (all applied changes)" },
+    { id: GITBUTLER_WORKSPACE_DIFF, label: "工作区（所有已应用的更改）" },
   ];
 
   for (const stack of status.stacks) {
@@ -442,14 +442,14 @@ function buildDiffOptions(status: GitButlerStatus): GitContext["diffOptions"] {
     ) {
       options.push({
         id: encodeTarget(GITBUTLER_STACK_PREFIX, stackAnchor.name),
-        label: `Stack: ${stackLabel(stack)} (committed)`,
+        label: `堆栈：${stackLabel(stack)}（已提交）`,
       });
     }
     for (const [index, branch] of stack.branches.entries()) {
       if (!branch.name || !branchTip(branch) || branchRangeHasConflicts(stack, index)) continue;
       options.push({
         id: encodeTarget(GITBUTLER_BRANCH_PREFIX, branch.name),
-        label: `Branch: ${branch.name} (committed)`,
+        label: `分支：${branch.name}（已提交）`,
       });
     }
   }
@@ -556,12 +556,12 @@ async function branchRange(
   ], { cwd });
   if (history.exitCode !== 0) {
     throw new GitButlerContractError(
-      `Could not resolve GitButler branch commit ${tip}${history.stderr.trim() ? `: ${history.stderr.trim()}` : "."}`,
+      `无法解析 GitButler 分支提交 ${tip}${history.stderr.trim() ? `：${history.stderr.trim()}` : "。"}`,
     );
   }
   const objects = history.stdout.trim().split(/\s+/).filter(Boolean);
   if (objects.some((objectId) => !OBJECT_ID_RE.test(objectId))) {
-    throw new GitButlerContractError(`Git returned invalid ancestry data for GitButler branch commit ${tip}.`);
+    throw new GitButlerContractError(`Git 返回了 GitButler 分支提交 ${tip} 的无效祖先数据。`);
   }
   for (let index = 0; index < branch.commits.length; index += 1) {
     if (objects[index] !== branch.commits[index]?.commitId) {
@@ -666,7 +666,7 @@ async function diffObjects(
   } catch (error) {
     const message = error instanceof Error ? error.message : String(error);
     throw new GitButlerContractError(
-      `Git failed while building the GitButler diff: ${message}`,
+      `构建 GitButler 差异时 Git 执行失败：${message}`,
     );
   }
 }
@@ -675,7 +675,7 @@ function errorResult(diffType: DiffType, error: unknown): DiffResult {
   const message = error instanceof Error ? error.message : String(error);
   return {
     patch: "",
-    label: "GitButler error",
+    label: "GitButler 错误",
     error: message,
     fingerprint: `gitbutler:${diffType}:error:${hashFingerprintPart(message)}`,
   };
@@ -899,6 +899,6 @@ export async function getGitButlerDiffFingerprint(
 ): Promise<string> {
   const result = await runGitButlerDiff(runtime, diffType, cwd, options);
   if (result.fingerprint) return result.fingerprint;
-  const detail = result.error ?? `No fingerprint for ${result.label}`;
+  const detail = result.error ?? `${result.label} 没有指纹`;
   return `gitbutler:${diffType}:error:${hashFingerprintPart(detail)}`;
 }

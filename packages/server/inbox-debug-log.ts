@@ -367,7 +367,7 @@ export function createInboxDebugLog(inboxDir: string, maxBytes = INBOX_DEBUG_MAX
       };
     },
     async accept(req) {
-      const tooLarge = () => Response.json({ error: "Too many records at once.", code: "debug_log_too_large" }, { status: 413 });
+      const tooLarge = () => Response.json({ error: "一次写入的记录过多。", code: "debug_log_too_large" }, { status: 413 });
       const text = await readCapped(req, INBOX_DEBUG_BODY_BYTES);
       if (text === null) return tooLarge();
       let records: unknown;
@@ -376,7 +376,7 @@ export function createInboxDebugLog(inboxDir: string, maxBytes = INBOX_DEBUG_MAX
       } catch {
         records = null;
       }
-      if (!Array.isArray(records)) return Response.json({ error: "records: expected a list.", code: "validation_error" }, { status: 400 });
+      if (!Array.isArray(records)) return Response.json({ error: "records：应为列表。", code: "validation_error" }, { status: 400 });
       if (records.length > INBOX_DEBUG_BATCH_RECORDS) return tooLarge();
       const at = Date.now();
       const kept: string[] = [];

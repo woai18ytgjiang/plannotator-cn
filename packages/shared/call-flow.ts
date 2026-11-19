@@ -337,10 +337,10 @@ export async function resolveCallFlowRuntime(): Promise<CallFlowRuntimeResolutio
     const revisionPath = join(runtimeDir, ".calldiff-revision");
     const installedRevision = existsSync(revisionPath) ? readFileSync(revisionPath, "utf8").trim() : "";
     if (installedRevision !== CALLDIFF_COMMIT) {
-      return { ok: false, reason: "revision-mismatch", message: "The managed Call flow core is stale and needs reinstalling." };
+      return { ok: false, reason: "revision-mismatch", message: "托管的 Call flow 核心已过期，需要重新安装。" };
     }
     if (!hasCommittedRuntimeLock(runtimeDir)) {
-      return { ok: false, reason: "runtime-lock-mismatch", message: "The managed Call flow core dependency lock is stale and needs reinstalling." };
+      return { ok: false, reason: "runtime-lock-mismatch", message: "托管的 Call flow 核心依赖锁已过期，需要重新安装。" };
     }
   }
   const invalidCore = CORE_RUNTIME_DEPENDENCIES.filter(({ packageName, version: expected }) => (
@@ -1319,7 +1319,7 @@ async function executeCallFlowAnalysis(
         version: runtime.version,
         from: plan.from,
         to: plan.to,
-        message: "No installed language support matched the changed files.",
+        message: "没有已安装的语言支持与更改的文件匹配。",
         raw: "",
         trees: [],
         diagnostics: [],
@@ -1331,7 +1331,7 @@ async function executeCallFlowAnalysis(
         version: runtime.version,
         from: plan.from,
         to: plan.to,
-        message: "No supported source files were found in the review snapshots.",
+        message: "审查快照中没有找到受支持的源文件。",
         raw: "",
         trees: [],
         diagnostics: [],
@@ -1388,7 +1388,7 @@ export class CallFlowService {
         state: enabled ? "unsupported" : "disabled",
         provider: "calldiff",
         reason: "view-unsupported",
-        message: "Call flow is not available for this review view.",
+        message: "当前审查视图不支持 Call flow。",
       };
     }
     const usage = getCallFlowPatchLanguageUsage(input?.rawPatch ?? "");
@@ -1595,7 +1595,7 @@ export class CallFlowService {
         return { status: "stale", reason: "snapshot-superseded", message: "Call-flow analysis was superseded by a newer review snapshot." };
       }
       if (input.verifySnapshot && !(await input.verifySnapshot())) {
-        return { status: "stale", reason: "snapshot-changed", message: "The files changed during call-flow analysis. Refresh and run it again." };
+        return { status: "stale", reason: "snapshot-changed", message: "在 Call flow 分析期间文件发生了变化。请刷新后重新运行。" };
       }
       this.cache.set(this.analysisKey(input), response);
       while (this.cache.size > 4) {

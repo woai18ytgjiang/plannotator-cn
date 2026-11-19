@@ -28,7 +28,7 @@ export function T3AgentGroup({ t3 }: { t3: InboxT3Status }) {
       <div className="ib-aghead">
         <HostMark host={INBOX_T3_HOST} big />
         <b>{INBOX_T3_NAME}</b>
-        <span className="ib-agvia">Claude and Codex threads</span>
+        <span className="ib-agvia">Claude 和 Codex 话题</span>
         <span className={`ib-agstate${wakes ? '' : ' ib-agoff'}`}>
           <span className="ib-agdot" />
           {wakes ? agentWords.connected : agentWords.notConnected}
@@ -42,7 +42,7 @@ export function T3AgentGroup({ t3 }: { t3: InboxT3Status }) {
         sub={
           wakes ? (
             closed ? (
-              "T3 isn't open. They go in when you open it."
+              "T3 未打开。打开后这些回复就会送达。"
             ) : null
           ) : (
             <span data-t3-sign-in="">

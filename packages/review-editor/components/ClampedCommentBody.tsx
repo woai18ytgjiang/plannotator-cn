@@ -39,7 +39,7 @@ export const ClampedCommentBody: React.FC<{ children: React.ReactNode; className
           }}
           data-comment-show-more=""
         >
-          {expanded ? 'Show less' : 'Show more'}
+          {expanded ? '收起' : '显示更多'}
         </button>
       )}
     </>

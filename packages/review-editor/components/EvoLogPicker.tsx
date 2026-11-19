@@ -58,7 +58,7 @@ export const EvoLogPicker: React.FC<EvoLogPickerProps> = ({
         }
       >
           <span className="text-xs opacity-60 flex-shrink-0">
-            from
+            来自
           </span>
           <span className="truncate flex-1 text-left font-mono">
             {(selected?.commitId ?? selectedCommitId).slice(0, 8)}
@@ -83,7 +83,7 @@ export const EvoLogPicker: React.FC<EvoLogPickerProps> = ({
           <Popover.Popup className="w-80 bg-popover text-popover-foreground border border-border rounded shadow-lg overflow-hidden origin-[var(--transform-origin)] transition-opacity data-starting-style:opacity-0 data-ending-style:opacity-0">
           <div className="px-3 py-2 border-b border-border/50">
             <p className="text-xs text-muted-foreground">
-              Evolution history — pick a previous state to compare against
+              演进历史——选择一个之前的状态进行对比
             </p>
           </div>
           <div className="max-h-72 overflow-y-auto py-1">
@@ -128,12 +128,12 @@ export const EvoLogPicker: React.FC<EvoLogPickerProps> = ({
                     <span className="flex gap-1">
                       {isCurrent && (
                         <span className="text-xs text-muted-foreground px-1 py-0.5 rounded bg-muted">
-                          current
+                          当前
                         </span>
                       )}
                       {isDetected && !isCurrent && (
                         <span className="text-xs text-muted-foreground px-1 py-0.5 rounded bg-muted">
-                          default
+                          默认
                         </span>
                       )}
                     </span>

@@ -382,8 +382,8 @@ export function createDefaultUninstallEnvironment(): UninstallEnvironment {
  */
 export function formatPurgeWarning(dataDir: string): string {
   return [
-    `Purge will permanently delete Plannotator data in ${dataDir}.`,
-    "This data is local-only. It is not stored on a Plannotator server and cannot be recovered after purge.",
+    `清除操作将永久删除 ${dataDir} 中的 Plannotator 数据。`,
+    "这些数据仅存于本地。它不存储在 Plannotator 服务器上，清除后无法恢复。",
   ].join("\n");
 }
 
@@ -421,7 +421,7 @@ export async function runPlannotatorUninstall(
       ...result,
       ok: false,
       errors: [
-        `Refusing to purge ${state.dataDir}: ${dataDirSafetyIssue}.`,
+        `拒绝清除 ${state.dataDir}：${dataDirSafetyIssue}。`,
       ],
     };
   }
@@ -434,17 +434,17 @@ export async function runPlannotatorUninstall(
     if (request.dryRun) {
       const status = await inboxStatus(state.dataDir);
       if (status.state === "running") {
-        state.planned.push(`Stop the running Plannotator Inbox (pid ${status.entry.pid})`);
+        state.planned.push(`停止正在运行的 Plannotator 收件箱（pid ${status.entry.pid}）`);
       }
     } else {
       const stopped = await stopInbox(state.dataDir);
       if (stopped.state === "stopped") {
-        state.removed.push(`Stopped the running Plannotator Inbox (pid ${stopped.pid})`);
+        state.removed.push(`已停止正在运行的 Plannotator 收件箱（pid ${stopped.pid}）`);
       } else if (stopped.state === "not_running" && stopped.stale?.reason === "not_ours") {
         // A copied data dir: its record names another data dir's Inbox, which refused the stop and
         // runs on. Both tailnet mappings the record names are that Inbox's, so they stay up too.
         othersInbox = true;
-        state.warnings.push(`This data dir's record named the Plannotator Inbox of another data dir (pid ${stopped.stale.pid}); it was left running.`);
+        state.warnings.push(`此数据目录的记录指向另一个数据目录的 Plannotator 收件箱（pid ${stopped.stale.pid}）；已让它继续运行。`);
       } else if (stopped.state === "still_running") {
         inboxBlocksPurge = true;
         state.errors.push(
@@ -485,11 +485,11 @@ export async function runPlannotatorUninstall(
   // anyone who never connected T3.
   if (request.dryRun) {
     for (const worker of await runningT3Workers(state.dataDir)) {
-      state.planned.push(`Stop the T3 Code companion for thread ${worker.thread} (pid ${worker.pid})`);
+      state.planned.push(`停止话题 ${worker.thread} 的 T3 Code 伴随进程（pid ${worker.pid}）`);
     }
   } else {
     for (const worker of await stopT3Workers(state.dataDir)) {
-      if (worker.state === "stopped") state.removed.push(`Stopped the T3 Code companion for thread ${worker.entry.thread} (pid ${worker.entry.pid})`);
+      if (worker.state === "stopped") state.removed.push(`已停止话题 ${worker.entry.thread} 的 T3 Code 伴随进程（pid ${worker.entry.pid}）`);
       if (worker.state === "still_running") state.warnings.push(`The T3 Code companion for thread ${worker.entry.thread} (pid ${worker.entry.pid}) did not stop; quit it before deleting ${join(state.dataDir, "t3-code")}.`);
     }
   }
@@ -497,10 +497,10 @@ export async function runPlannotatorUninstall(
   // Routines' start at login (inbox-scheduled-login.ts): with the binary gone it would fail at every login.
   const login = inboxLoginItem({ platform: environment.platform, home: environment.homeDir, argv: [], dataDir: state.dataDir, run: async ([command, ...args]) => ({ code: (await environment.runCommand(command!, args)).exitCode }) });
   if (login.path && existsSync(login.path)) {
-    if (request.dryRun) state.planned.push(`Remove the Inbox's start at login (${login.path})`);
+    if (request.dryRun) state.planned.push(`移除收件箱的开机启动项（${login.path}）`);
     else {
       await login.remove();
-      state.removed.push(`Removed the Inbox's start at login (${login.path})`);
+      state.removed.push(`已移除收件箱的开机启动项（${login.path}）`);
     }
   }
 
@@ -565,7 +565,7 @@ export async function runPlannotatorUninstall(
     );
     if (!hasSpecificRetryWarning) {
       state.warnings.push(
-        "Preserved the Plannotator CLI and its Windows PATH entry so you can resolve the errors and retry uninstall.",
+        "已保留 Plannotator CLI 及其 Windows PATH 条目，以便你解决错误后重试卸载。",
       );
     }
   }
@@ -585,23 +585,23 @@ export function formatUninstallResult(result: UninstallResult): string {
   const lines: string[] = [];
 
   if (result.removed.length > 0) {
-    lines.push("Removed:");
+    lines.push("已移除：");
     for (const item of result.removed) lines.push(`  - ${item}`);
   }
   if (result.planned.length > 0) {
-    lines.push("Would remove:");
+    lines.push("将移除：");
     for (const item of result.planned) lines.push(`  - ${item}`);
   }
   if (result.preserved.length > 0) {
-    lines.push("Preserved:");
+    lines.push("已保留：");
     for (const item of result.preserved) lines.push(`  - ${item}`);
   }
   if (result.warnings.length > 0) {
-    lines.push("Warnings:");
+    lines.push("警告：");
     for (const item of result.warnings) lines.push(`  - ${item}`);
   }
   if (result.errors.length > 0) {
-    lines.push("Errors:");
+    lines.push("错误：");
     for (const item of result.errors) lines.push(`  - ${item}`);
   }
 
@@ -645,7 +645,7 @@ async function removeInboxAgentConnections(
   const notes = planInboxNoteRemoval(state.dataDir, agents, INBOX_AGENT_LABELS);
   // Plannotator's trusted-sender token in Qwen Code (inbox-qwen-trust.ts): revoked in Qwen, whoever added the MCP entry.
   const trust = agentHomeAllowed(agents) ? qwenTrustRemoval(state.dataDir, agents) : null;
-  for (const skipped of [...plan.skipped, ...notes.skipped]) state.warnings.push(`Skipped: ${skipped}.`);
+  for (const skipped of [...plan.skipped, ...notes.skipped]) state.warnings.push(`已跳过：${skipped}。`);
   if (agentHomeAllowed(agents) && hermesPluginInstalled(agents)) {
     state.warnings.push(`Skipped: Hermes Agent's Plannotator plugin and its permission to start turns, which Hermes keeps; run \`${HERMES_PLUGIN_REMOVE}\` to remove both.`);
   }

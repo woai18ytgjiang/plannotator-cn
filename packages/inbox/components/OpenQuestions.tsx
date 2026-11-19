@@ -29,7 +29,7 @@ import { drawOpenQuestionsForm, drawStepsFit, fitFootRow, footFitCandidates, foo
 const stateWordsOf = (state: OpenQuestionState): string => (state?.kind === 'stopped' ? 'Stopped' : state?.kind === 'holds' ? `Holds up ${state.count}` : '');
 
 /** What "Skip…" says on hover (and as its description): it is not sent now. */
-const SKIP_MODE_TIP = 'Choose questions to skip. Skips ride your next Send.';
+const SKIP_MODE_TIP = '选择要跳过的问题。跳过项将随你下一条发送一起提交。';
 
 /** The Re-ask item at the list's foot (owner, 2026-10-23): what the foot's Re-ask button did. */
 export interface OpenQuestionsReask {
@@ -442,7 +442,7 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
           <Menu.Popup
             ref={popupRef}
             className="ib-oq"
-            aria-label={selecting ? 'Select questions to skip' : heading}
+            aria-label={selecting ? '选择要跳过的问题' : heading}
             data-open-questions-list=""
             // Back on the button, wherever focus was when Q opened the list (a press leaves it on the button already).
             finalFocus={() => (picked.current ? false : (trigger.current ?? true))}
@@ -450,7 +450,7 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
             {/* No drawn heading or foot line (owner, 2026-10-23): the popup's name (aria-label) carries the count. */}
             {phone && (
               <div className="ib-oq-head">
-                <button type="button" className="ib-oq-x" aria-label="Close" data-open-questions-close="" onClick={() => close()}>
+                <button type="button" className="ib-oq-x" aria-label="关闭" data-open-questions-close="" onClick={() => close()}>
                   <Icon name="x" size={16} />
                 </button>
               </div>
@@ -458,7 +458,7 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
             {selecting && (
               <div className="ib-oq-selhead" role="none" data-open-questions-select-head="">
                 {/* Heard through the live region below, not here: the menu's name says the mode. */}
-                <span aria-hidden="true">{ticks.size > 0 ? `${formatCount(ticks.size)} selected` : 'Select questions to skip'}</span>
+                <span aria-hidden="true">{ticks.size > 0 ? `已选 ${formatCount(ticks.size)} 项` : '选择要跳过的问题'}</span>
                 {phone && skipAllButton}
               </div>
             )}
@@ -474,15 +474,15 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
                   <Menu.Item
                     className="ib-oq-skipbtn"
                     data-skip-toggle=""
-                    label={skipRow.keepOpen ? `Skip ${skipRow.count === 1 ? 'it' : 'them'}` : 'Keep open'}
-                    aria-label={`${skipRow.keepOpen ? `Skip ${skipRow.count === 1 ? 'it' : 'them'}` : 'Keep open'}: ${skipRowWords(skipRow)}`}
+                    label={skipRow.keepOpen ? `跳过这 ${skipRow.count} 项` : '保持待回答'}
+                    aria-label={`${skipRow.keepOpen ? `跳过这 ${skipRow.count} 项` : '保持待回答'}：${skipRowWords(skipRow)}`}
                     closeOnClick={false}
                     onClick={() => {
                       skipRow.onToggle();
                       setSaid(skipRowWords({ ...skipRow, keepOpen: !skipRow.keepOpen }));
                     }}
                   >
-                    {skipRow.keepOpen ? `Skip ${skipRow.count === 1 ? 'it' : 'them'}` : 'Keep open'}
+                    {skipRow.keepOpen ? `跳过这 ${skipRow.count} 项` : '保持待回答'}
                   </Menu.Item>
                 </div>
                 <Menu.Separator className="ib-oq-sep" />
@@ -535,13 +535,13 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
                       </span>
                       <span className="ib-oq-meta">
                         {/* Skipped: the row goes quiet ("Skipped · time · place"), never "Draft · Skipped". */}
-                        {skipped && <span className="ib-oq-skipped">Skipped</span>}
+                        {skipped && <span className="ib-oq-skipped">已跳过</span>}
                         {!skipped && state?.kind === 'draft' && (
                           <span className="ib-draft-l ib-oq-draft">
-                            <b>Draft</b> <span aria-hidden="true">·</span> <span dir="auto">{q.question.answer ? pickWords(q.question.answer) : ''}</span>
+                            <b>草稿</b> <span aria-hidden="true">·</span> <span dir="auto">{q.question.answer ? pickWords(q.question.answer) : ''}</span>
                           </span>
                         )}
-                        {!skipped && state?.kind === 'stopped' && <span className="ib-badge ib-b-stop ib-oq-badge">Stopped</span>}
+                        {!skipped && state?.kind === 'stopped' && <span className="ib-badge ib-b-stop ib-oq-badge">已停止</span>}
                         {!skipped && state?.kind === 'holds' && <span className="ib-badge ib-b-hold ib-oq-badge">Holds up {state.count}</span>}
                         <span className="ib-oq-when">
                           {when} · {place}
@@ -609,7 +609,7 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
                     const state = openActionState(item);
                     const place = openQuestionPlaceWords(places.get(item.id) ?? 'below');
                     const when = whenTime(item.at);
-                    const ariaLabel = [item.prompt, 'Action item', stateWordsOf(state), `${when}, ${place}`].filter(Boolean).join('. ');
+                    const ariaLabel = [item.prompt, '行动项', stateWordsOf(state), `${when}, ${place}`].filter(Boolean).join('. ');
                     return (
                       <Menu.Item
                         key={item.id}
@@ -634,8 +634,8 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
                             {item.prompt}
                           </span>
                           <span className="ib-oq-meta">
-                            {state?.kind === 'stopped' && <span className="ib-badge ib-b-stop ib-oq-badge">Stopped</span>}
-                            {state?.kind === 'holds' && <span className="ib-badge ib-b-hold ib-oq-badge">Holds up {state.count}</span>}
+                            {state?.kind === 'stopped' && <span className="ib-badge ib-b-stop ib-oq-badge">已停止</span>}
+                            {state?.kind === 'holds' && <span className="ib-badge ib-b-hold ib-oq-badge">阻塞 {state.count} 项</span>}
                             <span className="ib-oq-when">
                               {when} · {place}
                             </span>
@@ -654,8 +654,8 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
               <>
                 {questions.length > 0 && <Menu.Separator className="ib-oq-sep" />}
                 <div className="ib-oq-selbar" role="none" data-open-questions-select-bar="">
-                  <Menu.Item className="ib-oq-bbtn ib-oq-ghost" data-open-questions-cancel="" label="Cancel" closeOnClick={false} onClick={() => leaveSelect()}>
-                    Cancel
+                  <Menu.Item className="ib-oq-bbtn ib-oq-ghost" data-open-questions-cancel="" label="取消" closeOnClick={false} onClick={() => leaveSelect()}>
+                    取消
                   </Menu.Item>
                   <span className="ib-oq-sp" />
                   {!phone && skipAllButton}
@@ -702,12 +702,12 @@ export function OpenQuestionsButton({ questions, actions = [], reask = null, dec
                         <Menu.Item
                           className="ib-oq-skipmode"
                           data-open-questions-skip-mode=""
-                          label="Skip…"
+                          label="跳过…"
                           closeOnClick={false}
                           aria-describedby={skipTipId}
                           onClick={() => enterSelect()}
                         >
-                          Skip…
+                          跳过…
                         </Menu.Item>
                       </Tip>
                     )}

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import {
   buildDiffFileTree,
@@ -185,7 +186,7 @@ export const DiffFileTree: React.FC<DiffFileTreeProps> = ({
   selectedPath,
   onSelect,
   defaultExpanded = 'all',
-  label = 'Changed files',
+  label = '已更改的文件',
   className,
 }) => {
   const signature = filesSignature(files);

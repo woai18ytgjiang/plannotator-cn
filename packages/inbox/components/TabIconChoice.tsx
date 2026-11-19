@@ -5,9 +5,9 @@ import { Modal } from './Updates';
 
 /** The dialog's words, as the owner approved them (2026-11-09, "Ship it as shown"). Pinned on purpose: no body line. */
 export const TAB_ICON_CHOICE_WORDS = {
-  title: 'Which favicon do you prefer?',
-  note: 'You can change this in Settings.',
-  inUse: 'In use',
+  title: '你更喜欢哪个网站图标？',
+  note: '之后可在「设置」中修改。',
+  inUse: '使用中',
 } as const;
 
 export interface TabIconChoiceProps {
@@ -56,12 +56,12 @@ export function TabIconChoice({ phone, current, title, onUse, onDismiss }: TabIc
         </span>
         <span className="ib-tic-tab">
           <img alt="" width={16} height={16} src={faviconDataUrl(picked)} data-tab-icon-strip="plan" />
-          <span className="ib-tic-title">Plan review</span>
+          <span className="ib-tic-title">计划评审</span>
           <TabClose />
         </span>
         <span className="ib-tic-tab">
           <img alt="" width={16} height={16} src={faviconDataUrl(picked)} data-tab-icon-strip="review" />
-          <span className="ib-tic-title">Code Review</span>
+          <span className="ib-tic-title">代码审查</span>
           <TabClose />
         </span>
       </div>
@@ -89,7 +89,7 @@ export function TabIconChoice({ phone, current, title, onUse, onDismiss }: TabIc
           </p>
           <span className="ib-bsp" />
           <button type="button" className="ib-btn ib-pri" onClick={() => onUse(picked)} data-tab-icon-use={picked}>
-            {picked === current ? `Keep ${pickedLabel}` : `Use ${pickedLabel}`}
+            {picked === current ? `保留${pickedLabel}` : `使用${pickedLabel}`}
           </button>
         </div>
       </div>

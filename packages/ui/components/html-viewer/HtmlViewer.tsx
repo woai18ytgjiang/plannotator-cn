@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { SERVED_FRAME_GONE } from "@plannotator/core/html-embed";
 import {
   forwardRef,
@@ -201,10 +202,10 @@ export type BridgeUnavailableInfo =
 /** User-facing message for the in-surface error banner. */
 export function formatBridgeUnavailableMessage(info: BridgeUnavailableInfo): string {
   if (info.kind === "timeout") {
-    return `Annotation tools did not load: the bridge script at ${info.url} sent no ready signal within ${info.timeoutMs} ms. The page is shown without annotation. Check that the URL is reachable and that your Content Security Policy allows script-src for that origin.`;
+    return `批注工具未加载：位于 ${info.url} 的桥接脚本在 ${info.timeoutMs} 毫秒内未发出就绪信号。页面将在无法批注的情况下显示。请检查该 URL 是否可访问，以及你的内容安全策略（CSP）是否允许该来源的 script-src。`;
   }
-  const reported = info.reportedVersion === undefined ? "no version" : `version ${info.reportedVersion}`;
-  return `Annotation tools may not work: this viewer expects bridge protocol version ${info.expectedVersion}, but the script at ${info.url} reported ${reported}. Serve the bridge-script asset from the same @plannotator/ui version as the viewer.`;
+  const reported = info.reportedVersion === undefined ? "无版本" : `版本 ${info.reportedVersion}`;
+  return `批注工具可能无法正常工作：此查看器要求桥接协议版本为 ${info.expectedVersion}，但 ${info.url} 处的脚本报告为 ${reported}。请使用与查看器相同版本的 @plannotator/ui 提供 bridge-script 资源。`;
 }
 
 function parseVimBridgeCopy(value: unknown): string | null {
@@ -1647,12 +1648,12 @@ export const HtmlViewer = forwardRef<ViewerHandle, HtmlViewerProps>(
           <button
             onClick={onToggleDiff}
             className={`flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium rounded-md transition-colors cursor-pointer ${diffActive ? "bg-primary text-primary-foreground" : "text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted"}`}
-            title={diffActive ? "Hide changes vs previous version" : "Show changes vs previous version"}
+            title={diffActive ? "隐藏与上一版本相比的更改" : "显示与上一版本相比的更改"}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 21L3 16.5m0 0L7.5 12M3 16.5h13.5m0-9L21 3m0 0l-4.5 4.5M21 3H7.5" />
             </svg>
-            <span>{diffActive ? "Hide changes" : "Show changes"}</span>
+            <span>{diffActive ? "隐藏更改" : "显示更改"}</span>
           </button>
         )}
         {!readOnly && onAddGlobalAttachment && onRemoveGlobalAttachment && (
@@ -1676,12 +1677,12 @@ export const HtmlViewer = forwardRef<ViewerHandle, HtmlViewerProps>(
               setGlobalCommentPopover({ anchorEl, contextText: "", draftKey });
             }}
             className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted rounded-md transition-colors cursor-pointer"
-            title="Add global comment"
+            title="添加全局评论"
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7.5 8.25h9m-9 3H12m-9.75 1.51c0 1.6 1.123 2.994 2.707 3.227 1.087.16 2.185.283 3.293.369V21l4.076-4.076a1.526 1.526 0 011.037-.443 48.282 48.282 0 005.68-.494c1.584-.233 2.707-1.626 2.707-3.228V6.741c0-1.602-1.123-2.995-2.707-3.228A48.394 48.394 0 0012 3c-2.392 0-4.744.175-7.043.513C3.373 3.746 2.25 5.14 2.25 6.741v6.018z" />
             </svg>
-            <span>Comment</span>
+            <span>评论</span>
           </button>
         )}
       </>
@@ -1754,11 +1755,11 @@ export const HtmlViewer = forwardRef<ViewerHandle, HtmlViewerProps>(
                   <button
                     type="button"
                     data-bridge-error-dismiss
-                    aria-label="Dismiss"
+                    aria-label="忽略"
                     style={{ flexShrink: 0, borderRadius: 4, padding: "2px 6px", fontWeight: 500, cursor: "pointer", background: "transparent", border: "1px solid currentColor", color: "inherit" }}
                     onClick={() => setBridgeErrorDismissed(true)}
                   >
-                    Dismiss
+                    忽略
                   </button>
                 )}
               </div>
@@ -1879,7 +1880,7 @@ export const HtmlViewer = forwardRef<ViewerHandle, HtmlViewerProps>(
               onAskAI={onAskAI}
               askAIContext={{
                 kind: "selection",
-                label: "Selected HTML",
+                label: "所选 HTML",
                 text: hook.commentPopover.selectedText ?? hook.commentPopover.contextText,
                 ...(askAIElementDetail ? { detail: askAIElementDetail } : {}),
               }}
@@ -1909,7 +1910,7 @@ export const HtmlViewer = forwardRef<ViewerHandle, HtmlViewerProps>(
               mentionSource={mentionSource}
               skillReferences
               onAskAI={onAskAI}
-              askAIContext={{ kind: "general", label: "Document" }}
+              askAIContext={{ kind: "general", label: "文档" }}
             />,
             document.body,
           )}

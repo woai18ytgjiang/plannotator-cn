@@ -159,17 +159,17 @@ export function ThreadViewSwitch({ links, artifacts, linksOn, onLinks }: { links
     const count = links || artifacts;
     return (
       <span className="ib-artswitch-one" aria-hidden="true" data-artifacts-switch-one="">
-        {links > 0 ? 'Links' : 'Artifacts'}
+        {links > 0 ? '链接' : '产物'}
         {count > 0 && <span className="ib-artswitch-n">{count}</span>}
       </span>
     );
   }
   const sides = [
-    { on: false, name: 'Artifacts', count: artifacts },
-    { on: true, name: 'Links', count: links },
+    { on: false, name: '产物', count: artifacts },
+    { on: true, name: '链接', count: links },
   ];
   return (
-    <div className="ib-seg ib-viewseg ib-artswitch" role="group" aria-label="Show" data-artifacts-switch="">
+    <div className="ib-seg ib-viewseg ib-artswitch" role="group" aria-label="显示" data-artifacts-switch="">
       {sides.map((side) => (
         <button key={side.name} type="button" className="ib-seg-o" aria-pressed={side.on === linksOn} data-on={side.on === linksOn ? '' : undefined} onClick={() => onLinks(side.on)} data-artifacts-side={side.name}>
           {side.name}
@@ -184,8 +184,8 @@ export function ThreadViewSwitch({ links, artifacts, linksOn, onLinks }: { links
 export function ArtifactsBar({ onBack, children }: { onBack: () => void; children: React.ReactNode }) {
   return (
     <div className="ib-artbar" data-artifacts-bar="">
-      <Tip content="Back to the thread">
-        <button type="button" className="ib-iconbtn ib-artbar-back" aria-label="Back to the thread" onClick={onBack} data-artifacts-back="">
+      <Tip content="返回话题">
+        <button type="button" className="ib-iconbtn ib-artbar-back" aria-label="返回话题" onClick={onBack} data-artifacts-back="">
           <Icon name="chevL" size={15} />
         </button>
       </Tip>
@@ -201,7 +201,7 @@ export const ThreadLinksView = forwardRef<HTMLHeadingElement, { links: ThreadLin
   return (
     <section ref={region} className="ib-art" aria-labelledby="ib-tl-h" data-links-view="">
       <h2 id="ib-tl-h" ref={headingRef} className="ib-sr" tabIndex={-1}>
-        Links
+        链接
       </h2>
       {links.repos.map((group) => (
         <Repo key={`${group.host}/${group.path}`} group={group} />

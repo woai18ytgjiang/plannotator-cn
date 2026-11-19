@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useCallback } from 'react';
 import { Dialog } from '@base-ui/react/dialog';
 import { getPageMarks, holdPageMark } from '../utils/pageMarks';
@@ -101,7 +102,7 @@ export const PopoutDialog: React.FC<PopoutDialogProps> = ({
             render={
               <button
                 className="absolute top-3 right-3 z-20 p-1.5 rounded-md text-muted-foreground/70 hover:bg-muted hover:text-foreground transition-colors"
-                aria-label="Close"
+                aria-label="关闭"
               />
             }
           >

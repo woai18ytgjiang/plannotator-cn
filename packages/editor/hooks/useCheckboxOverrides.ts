@@ -129,15 +129,15 @@ export function useCheckboxOverrides({
           }
         }
 
-        const action = checked ? 'Mark as completed' : 'Mark as not completed';
-        const context = sectionHeading ? ` (under "${sectionHeading}")` : ` (line ${block.startLine})`;
+        const action = checked ? '标记为已完成' : '标记为未完成';
+        const context = sectionHeading ? `（在「${sectionHeading}」下）` : `（第 ${block.startLine} 行）`;
         const ann: Annotation = {
           id: `ann-checkbox-${blockId}-${Date.now()}`,
           blockId,
           startOffset: 0,
           endOffset: block.content.length,
           type: AnnotationType.COMMENT,
-          text: `${action}${context}: ${block.content}`,
+          text: `${action}${context}：${block.content}`,
           originalText: block.content,
           createdA: Date.now(),
         };

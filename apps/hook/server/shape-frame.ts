@@ -333,13 +333,13 @@ export async function runShapeFrame(argv: readonly string[], deps: ShapeFrameDep
     const root = await resolveInboxProjectRoot(folder).then((r) => r.root).catch(() => null);
     id = store.latestFor({ session: host ? { host: host.host, id: host.session } : null, root })?.id ?? null;
     if (!id) {
-      err("not_found: no shape here yet. Name one: plannotator shape frame <shp_id>.");
+      err("not_found：这里还没有形状。请指定一个：plannotator shape frame <shp_id>。");
       return 1;
     }
   }
   const version = store.read(id);
   if (!version) {
-    err(`not_found: no shape ${id}.`);
+    err(`not_found：没有形状 ${id}。`);
     return 1;
   }
   const planned = planFrame(version, id, c);
@@ -366,7 +366,7 @@ export async function runShapeFrame(argv: readonly string[], deps: ShapeFrameDep
     const timeoutMs = deps.timeoutMs ?? FRAME_TIMEOUT_MS;
     const result = await (deps.runChrome ?? defaultRunChrome)(chrome, { url, out: file, profile, phone: c.phone }, timeoutMs);
     if (result === "timeout") {
-      err(`Chrome took longer than ${Math.round(timeoutMs / 1000)} s, so no picture; the board is saved.`);
+      err(`Chrome 等待超过 ${Math.round(timeoutMs / 1000)} 秒，因此没有生成图片；画板已保存。`);
       return 1;
     }
     let made = false;
@@ -376,7 +376,7 @@ export async function runShapeFrame(argv: readonly string[], deps: ShapeFrameDep
       made = false;
     }
     if (result !== "saved" || !made) {
-      err(`Chrome did not save a picture${result !== "saved" ? ` (${result.failed})` : ""}; the board is saved.`);
+      err(`Chrome 未能保存图片${result !== "saved" ? `（${result.failed}）` : ""}；画板已保存。`);
       return 1;
     }
     saved = true;

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Cookie-based storage utility
  *
@@ -99,10 +100,10 @@ const AUTO_CLOSE_KEY = 'plannotator-auto-close';
 export type AutoCloseDelay = 'off' | '0' | '3' | '5';
 
 export const AUTO_CLOSE_OPTIONS: { value: AutoCloseDelay; label: string; description: string }[] = [
-  { value: 'off', label: 'Off', description: 'Tab stays open after submitting' },
-  { value: '0', label: 'Immediately', description: 'Tab closes immediately after submitting' },
-  { value: '3', label: 'After 3 seconds', description: 'Tab closes 3 seconds after submitting' },
-  { value: '5', label: 'After 5 seconds', description: 'Tab closes 5 seconds after submitting' },
+  { value: 'off', label: '关闭', description: '提交后标签页保持打开' },
+  { value: '0', label: '立即', description: '提交后立即关闭标签页' },
+  { value: '3', label: '3 秒后', description: '提交 3 秒后关闭标签页' },
+  { value: '5', label: '5 秒后', description: '提交 5 秒后关闭标签页' },
 ];
 
 export function getAutoCloseDelay(): AutoCloseDelay {

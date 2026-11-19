@@ -326,10 +326,10 @@ export async function keepOwnPicture(file: Blob): Promise<{ face: AgentFace } | 
     const answer = await inboxApi.uploadAgentIcon(read.picture);
     const id = (answer.icon as { id?: unknown } | undefined)?.id;
     hear(answer, false);
-    if (typeof id !== 'string') return { refused: 'The picture did not change.' };
+    if (typeof id !== 'string') return { refused: '图片未更改。' };
     return { face: `own:${id}` };
   } catch (cause) {
-    return { refused: errorText(cause, 'The picture did not change.') };
+    return { refused: errorText(cause, '图片未更改。') };
   }
 }
 
@@ -340,7 +340,7 @@ export async function removeOwnPicture(id: string): Promise<string | null> {
     hear(await inboxApi.removeAgentIcon(id), false);
     return null;
   } catch (cause) {
-    return errorText(cause, 'The picture did not change.');
+    return errorText(cause, '图片未更改。');
   }
 }
 

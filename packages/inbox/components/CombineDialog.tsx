@@ -113,7 +113,7 @@ export function CombineDialog({ rows, machines = NO_MACHINES, onClose, onStarted
         ) : (
           <>
             <fieldset className="ib-cmb-who">
-              <legend>Who writes it</legend>
+              <legend>由谁撰写</legend>
               {agents === null && <p className="ib-cmb-why">Finding the agents of these threads…</p>}
               {agents?.length === 0 && !error && <p className="ib-cmb-why">No agent that wrote in these threads is running. Combine needs one to read them and write the new thread.</p>}
               <div className="ib-cmb-list" data-all={shown === agents?.length && (agents?.length ?? 0) > FIRST ? '' : undefined} onKeyDown={onArrow}>
@@ -145,7 +145,7 @@ export function CombineDialog({ rows, machines = NO_MACHINES, onClose, onStarted
             <label className="ib-cmb-lbl" htmlFor={`${id}-words`}>
               What should it be about? (optional)
             </label>
-            <textarea id={`${id}-words`} className="ib-cmb-words" rows={3} maxLength={INBOX_COMBINE_WORDS_MAX} placeholder="For example: just the billing release work, drop the CSV details" value={words} onChange={(event) => setWords(event.target.value)} data-combine-words="" />
+            <textarea id={`${id}-words`} className="ib-cmb-words" rows={3} maxLength={INBOX_COMBINE_WORDS_MAX} placeholder="例如：只保留计费发布相关的工作，略去 CSV 细节" value={words} onChange={(event) => setWords(event.target.value)} data-combine-words="" />
             {chosen && (
               <p className="ib-cmb-what">
                 <b dir="auto">{nameOf(chosen)}</b> gets one prompt with the {plural(n, 'thread')}. Open questions are asked again in the new thread. Undo brings the {formatCount(n)} back.

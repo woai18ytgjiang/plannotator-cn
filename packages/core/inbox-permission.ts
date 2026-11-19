@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Claude Code permission prompts answered in the Inbox (launch, PR 2; PLAN
  * "Permission hook"). A session the Inbox launched runs
@@ -170,16 +171,16 @@ function oneLine(text: string, max = 80): string {
 }
 
 /** "a", "a and b", "a, b and c". */
-const listed = (items: string[]) => (items.length < 2 ? (items[0] ?? "") : `${items.slice(0, -1).join(", ")} and ${items.at(-1)}`);
+const listed = (items: string[]) => (items.length < 2 ? (items[0] ?? "") : `${items.slice(0, -1).join("、")}和${items.at(-1)}`);
 
 /** One rule as the person reads it, in full; null when it cannot be shown exactly (a line break, a control, an invisible character). */
 function ruleWords(rule: Record<string, unknown>, fallbackTool: string): string | null {
   const tool = typeof rule.toolName === "string" ? rule.toolName : fallbackTool;
   const content = typeof rule.ruleContent === "string" ? rule.ruleContent.trim() : "";
   if (!plain(tool) || !plain(content)) return null;
-  if (!content) return tool === "Bash" ? "every command" : `every ${toolNoun(tool)}`;
+  if (!content) return tool === "Bash" ? "每条命令" : `每个${toolNoun(tool)}`;
   if (tool === "Bash") return code(ruleCommand(content));
-  if (tool === "WebFetch" && content.startsWith("domain:")) return `pages on ${content.slice("domain:".length)}`;
+  if (tool === "WebFetch" && content.startsWith("domain:")) return `${content.slice("domain:".length)} 上的网页`;
   return `${toolNoun(tool)} ${code(content)}`;
 }
 
@@ -199,7 +200,7 @@ export function inboxPermissionSessionChoice(
   const session = (s: Record<string, unknown>) => ({ ...s, destination: "session" });
   const offer = (granted: (string | null)[], suggestion: Record<string, unknown>) => {
     if (granted.length === 0 || granted.some((g) => g === null)) return null;
-    const label = `Allow ${listed(granted as string[])} for this session`;
+    const label = `允许本次会话：${listed(granted as string[])}`;
     return label.length > INBOX_PERMISSION_LABEL_MAX ? null : { label, update: session(suggestion) };
   };
   const rules = event.permission_suggestions.find(
@@ -207,11 +208,11 @@ export function inboxPermissionSessionChoice(
   );
   if (rules) return offer((rules.rules as unknown[]).filter(isRecord).map((rule) => ruleWords(rule, event.tool_name)), rules);
   const edits = event.permission_suggestions.find((s) => s.type === "setMode" && s.mode === "acceptEdits");
-  if (edits) return { label: "Allow file edits for this session", update: session(edits) };
+  if (edits) return { label: "允许本次会话进行文件编辑", update: session(edits) };
   const folders = event.permission_suggestions.find((s) => s.type === "addDirectories" && Array.isArray(s.directories) && s.directories.some((d) => typeof d === "string"));
   if (folders) {
     const dirs = (folders.directories as unknown[]).filter((d): d is string => typeof d === "string");
-    return offer(dirs.map((dir) => (plain(dir) ? `work in ${code(shownPath(dir))}` : null)), folders);
+    return offer(dirs.map((dir) => (plain(dir) ? `在 ${code(shownPath(dir))} 中工作` : null)), folders);
   }
   return null;
 }
@@ -220,7 +221,7 @@ export function inboxPermissionSessionChoice(
 function toolNoun(tool: string): string {
   const mcp = /^mcp__(.+?)__(.+)$/.exec(tool);
   if (mcp) return oneLine(`${mcp[2]} (${mcp[1]})`);
-  return { Edit: "file edit", MultiEdit: "file edit", Write: "file write", Read: "file read", WebFetch: "web page", WebSearch: "web search", NotebookEdit: "notebook edit" }[tool] ?? oneLine(tool);
+  return { Edit: "文件编辑", MultiEdit: "文件编辑", Write: "文件写入", Read: "文件读取", WebFetch: "网页", WebSearch: "网页搜索", NotebookEdit: "笔记编辑" }[tool] ?? oneLine(tool);
 }
 
 /** What the card shows over the question: a command or the input in a fenced block, or a path, a link or a query on one line. */

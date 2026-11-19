@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Shape: the living board. One shape's views (Shape, How it works, Code) with
  * fades between them, the dock, live marking with
@@ -323,7 +324,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
   const [file, setFile] = useState<ShapeFileTarget | null>(null);
   const [codeNotes, setCodeNotes] = useState<CodeAnnotation[]>([]);
   const [copied, setCopied] = useState(false);
-  // The How it works drawing, for "Follow an example" (its examples light their path on it).
+  // The How it works drawing, for "跟着一个示例走" (its examples light their path on it).
   const [howBoard, setHowBoard] = useState<HTMLElement | null>(null);
 
   const stageRef = useRef<HTMLDivElement>(null);
@@ -841,11 +842,11 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
         setTarget(null);
         setGeneral({ el: e.currentTarget, view: forView });
       }}
-      title="Add global comment"
+      title="添加全局评论"
       aria-haspopup="dialog"
     >
       <GlobeIcon />
-      <span>Global comment</span>
+      <span>全局评论</span>
     </button>
   );
 
@@ -1116,7 +1117,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
   /** The pill's Show: the whole board's box, every question and its answer (from the head's Global comment, or the dock's on a phone). */
   const showAnswers = () => {
     setAnswerReady(false);
-    const at = rootRef.current?.querySelector<HTMLElement>('.shp-head .shp-general, .shp-dock [aria-label="Global comment"]');
+    const at = rootRef.current?.querySelector<HTMLElement>('.shp-head .shp-general, .shp-dock [aria-label="全局评论"]');
     if (!at) return;
     setTarget(null);
     setGeneral({ el: at, view: null });
@@ -1129,7 +1130,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
       <div ref={attachRoot} className={`shp-root${phone ? ' phone' : ''}${panel ? ' panel-open' : ''}${sheet ? ' panel-sheet' : ''}${follow.sheet ? ' follow-sheet' : ''}`}>
         <RefHoverCards rootRef={rootRef} />
 
-        <section ref={attachSurface} className="shp-surface" aria-label="Shape" onClickCapture={onShapeClickCapture}>
+        <section ref={attachSurface} className="shp-surface" aria-label="板面" onClickCapture={onShapeClickCapture}>
           {/*
             The title comes first (owner feedback 2026-11-04, shape-board-look): no eyebrow row above it. What the row
             said that the board still needs sits in the group at the title's right: the agent drawing, Finished, and
@@ -1146,14 +1147,14 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
                     <span className={phone ? 'shp-sr' : undefined}>{`${agent} is drawing v${version.n + 1}…`}</span>
                   </span>
                 )}
-                {finished && <span className="shp-finished">Finished</span>}
+                {finished && <span className="shp-finished">已完成</span>}
                 {headSide}
                 {!phone && generalButton(null)}
                 {host.refresh && !finished && (
                   <button type="button" className="shp-quiet-btn" onClick={() => void bringUpToDate()} disabled={busy}>{host.refreshLabel ?? 'Bring it up to date'}</button>
                 )}
                 {onClose && (
-                  <button type="button" className="shp-icon-btn shp-close" onClick={onClose} aria-label="Close Shape" title="Close Shape">×</button>
+                  <button type="button" className="shp-icon-btn shp-close" onClick={onClose} aria-label="关闭板面" title="关闭板面">×</button>
                 )}
               </div>
             </div>
@@ -1206,19 +1207,19 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
             </button>
           )}
 
-          <div ref={dockRef} className="shp-dock" role="toolbar" aria-label="Shape toolbar">
+          <div ref={dockRef} className="shp-dock" role="toolbar" aria-label="板面工具栏">
             {/* A board with no view to show (only `views.know`, say) has no empty group in the dock. */}
-            {views.length > 0 && <div className="shp-tgroup" role="group" aria-label="Views">
+            {views.length > 0 && <div className="shp-tgroup" role="group" aria-label="视图">
               {views.map((v) => (
                 <button key={v.id} type="button" className={`shp-tbtn${view === v.id ? ' on' : ''}`} onClick={() => go(v.id)} aria-pressed={view === v.id} title={v.label}>
                   <ViewIcon id={v.id} />
                   {(!phone || view === v.id) && <span className="tl">{phone ? v.short : v.label}</span>}
-                  {behind[v.id]?.length ? <span className="shp-tdot" aria-label="changed" /> : null}
+                  {behind[v.id]?.length ? <span className="shp-tdot" aria-label="已更改" /> : null}
                 </button>
               ))}
             </div>}
             {follow.button && (
-              <div className="shp-tgroup" role="group" aria-label="Examples">
+              <div className="shp-tgroup" role="group" aria-label="示例">
                 {follow.button}
               </div>
             )}
@@ -1243,7 +1244,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
                   type="button"
                   className={`shp-tbtn shp-cross-btn${annotating ? ' on' : ''}`}
                   aria-pressed={annotating}
-                  aria-label="Comment"
+                  aria-label="评论"
                   title={annotating ? 'Stop commenting' : 'Comment: click a part, or drag across what you mean'}
                   disabled={finished}
                   onClick={() => {
@@ -1272,7 +1273,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
                   }}
                 >
                   <PenIcon />
-                  {!phone && <span className="tl">Annotate</span>}
+                  {!phone && <span className="tl">批注</span>}
                 </button>
                 {annotating && !phone && (
                   <AnnotationToolstrip
@@ -1288,14 +1289,14 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
                 )}
               </div>
             )}
-            <div className="shp-tgroup side" role="group" aria-label="Panel">
-              <button type="button" className={`shp-tbtn${panel ? ' on' : ''}`} onClick={() => (panel ? closePanel() : openPanel())} aria-pressed={!!panel} title="References">
+            <div className="shp-tgroup side" role="group" aria-label="面板">
+              <button type="button" className={`shp-tbtn${panel ? ' on' : ''}`} onClick={() => (panel ? closePanel() : openPanel())} aria-pressed={!!panel} title="引用">
                 <RefsIcon />
-                {!phone && <span className="tl">References</span>}
+                {!phone && <span className="tl">引用</span>}
                 {refs.length > 0 && <span className="shp-tcount">{refs.length}</span>}
               </button>
               {phone && (
-                <button type="button" className="shp-tbtn" onClick={(e) => { setTarget(null); setGeneral({ el: e.currentTarget, view: null }); }} title="Add global comment" aria-label="Global comment" disabled={finished && talk.length === 0}>
+                <button type="button" className="shp-tbtn" onClick={(e) => { setTarget(null); setGeneral({ el: e.currentTarget, view: null }); }} title="添加全局评论" aria-label="全局评论" disabled={finished && talk.length === 0}>
                   <GlobeIcon />
                 </button>
               )}
@@ -1312,7 +1313,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
             </ShapeTalkBox>
           )}
           {general && finished && (
-            <ShapeTalkBox anchor={general.el} within={surfaceEl} label="The whole board" onClose={() => setGeneral(null)}>
+            <ShapeTalkBox anchor={general.el} within={surfaceEl} label="整个板面" onClose={() => setGeneral(null)}>
               {talkFor(null)}
             </ShapeTalkBox>
           )}
@@ -1340,7 +1341,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
               allowImages={false}
               // The words typed for this part survive a close (Escape, X) and come back when it is chosen again.
               draftKey={shapeCommentDraftKey(id, target)}
-              submitLabel="Change it"
+              submitLabel="修改它"
               askAILabel="Ask"
               extraAction={showMeAction(target.boxPart ?? shapeBoxPart(target))}
               // The board's own footer order (Ask, Change it, Show me), never a host's comment card.
@@ -1392,7 +1393,7 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
               headerText={general.view ? `${tabLabel(general.view)} · the whole guide` : 'The whole board'}
               allowImages={false}
               draftKey={shapeCommentDraftKey(id, { view: general.view, id: null, text: '' })}
-              submitLabel="Change it"
+              submitLabel="修改它"
               askAILabel="Ask"
               extraAction={showMeAction({ name: 'The whole board' })}
               allowCard={false}
@@ -1426,14 +1427,14 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
         {sheet && panel && <div className="shp-scrim" onClick={closePanel} aria-hidden="true" />}
         <aside
           className={`shp-sidep${sheet ? ' sheet' : ''}${panel ? ' open' : ''}`}
-          aria-label="References"
+          aria-label="引用"
           aria-hidden={!panel}
           inert={!panel}
         >
           {sheet && <div className="shp-grab" aria-hidden="true" />}
           <div className="shp-sidep-head">
-            <h2 className="shp-sidep-title"><RefsIcon />References</h2>
-            <button type="button" className="shp-icon-btn" onClick={closePanel} aria-label="Close panel" title="Close (Esc)">×</button>
+            <h2 className="shp-sidep-title"><RefsIcon />引用</h2>
+            <button type="button" className="shp-icon-btn" onClick={closePanel} aria-label="关闭面板" title="关闭（Esc）">×</button>
           </div>
           <div className="shp-sidep-body">
             {panel && <RefList onShow={flashRef} canOpen={canOpen} fileAction={refFileAction} />}
@@ -1491,4 +1492,3 @@ export function ShapeSurface({ host, id, onClose, onCode, CodeGuide, CodeHoverCa
     </RefsCtx.Provider>
   );
 }
-

@@ -18,7 +18,7 @@ import { cleanPastedPath, drivePathOf, homeRelative, looksLikePath, placeOf, unp
  * menu only. A project whose folder is gone is listed struck through, and
  * picking it gets compose's folder-missing note (screen 13).
  *
- * Last, under a line: "New scratch folder" and the folder a Send would make
+ * Last, under a line: "新建暂存文件夹" and the folder a Send would make
  * (`<root>/<thread-name slug>`). While the agent does not trust the root yet
  * and no press of Trust and start can (a root at home) it reads "New
  * scratch folder · trust it once", shows the root, and says under it that the
@@ -44,8 +44,8 @@ import { cleanPastedPath, drivePathOf, homeRelative, looksLikePath, placeOf, unp
  *
  * A git URL in the filter (approval "launch-create-clone", C1-C17, `onClone`): each machine offers "Clone <repo> and
  * start" into the folder where that machine would clone it (asked of it: its last clone folder, else where its
- * projects live, else home; the repo's name, or the next free one), or "Start in <name> · already cloned" where that
- * repo is there already, then "Clone into another folder…" (its folder browser in clone mode). Under them one line
+ * projects live, else home; the repo's name, or the next free one), or "Start in <name> · 已克隆" where that
+ * repo is there already, then "克隆到其他文件夹…" (its folder browser in clone mode). Under them one line
  * says how. A quiet check after the paste dims a machine whose git can't sign in to the host, still pickable (C11). An
  * unknown host is checked before it is offered ("Checking git.acme.dev…"); an account or a page that isn't a repo is
  * said in one line. An asleep machine's row is still offered, with no "another folder" row (its folders can't be read).
@@ -55,7 +55,7 @@ import { cleanPastedPath, drivePathOf, homeRelative, looksLikePath, placeOf, unp
  * drive isn't plugged in is struck through with "· Archive isn't connected"; one on a network drive that isn't
  * answering says "· Backup isn't responding".
  */
-/** "New scratch folder" in one place: the folder a Send would make, its root, and whether the agent trusts the root. */
+/** "新建暂存文件夹" in one place: the folder a Send would make, its root, and whether the agent trusts the root. */
 export interface ScratchRow {
   folder: string;
   root: string;
@@ -83,7 +83,7 @@ export interface FolderGroup {
   cloneInto?: string | null;
   /** The drives it has mounted (its launch block's): a row each, and the browser's places. Absent: an older Inbox. */
   drives?: readonly FolderDrive[] | null;
-  /** "Choose in Finder…" in its browser: this computer, its own window, macOS. */
+  /** "在 Finder 中选择…" in its browser: this computer, its own window, macOS. */
   finder?: boolean;
 }
 
@@ -98,7 +98,7 @@ export interface ClonePick {
 
 /** The folder browser's pick key in the keys' walk: never a project id (`prj_…`) or the scratch pick. */
 const OTHER_PICK = '~other';
-/** A machine's clone row, and its "Clone into another folder…", in the keys' walk. */
+/** A machine's clone row, and its "克隆到其他文件夹…", in the keys' walk. */
 const CLONE_PICK = '~clone';
 const CLONE_OTHER_PICK = '~clone-other';
 /** A drive's row in the keys' walk. */
@@ -222,7 +222,7 @@ export function FolderMenu({
   phone: boolean;
   onPick: (project: LaunchProject, machine: string | null) => void;
   /**
-   * "New scratch folder": the folder a Send would make and its root (`~/…`), whether the agent (`agentName`)
+   * "新建暂存文件夹": the folder a Send would make and its root (`~/…`), whether the agent (`agentName`)
    * trusts the root already, else the row names the root and says how the first start asks for it. Null: no row.
    */
   scratch?: ScratchRow | null;
@@ -251,7 +251,7 @@ export function FolderMenu({
   clonePicked?: { folder: string; machine: string | null } | null;
   /** Without linked machines: this computer's drives (its launch block's). */
   drives?: readonly FolderDrive[] | null;
-  /** Without linked machines: "Choose in Finder…" in the browser (this computer's own window, macOS). */
+  /** Without linked machines: "在 Finder 中选择…" in the browser (this computer's own window, macOS). */
   finder?: boolean;
 }) {
   const [query, setQuery] = useState(initialQuery);
@@ -279,15 +279,15 @@ export function FolderMenu({
   const gitLine = !git
     ? null
     : git.kind === 'account'
-      ? `${git.host}/${git.owner} is an account, not a repo. Paste the repo's URL.`
+      ? `${git.host}/${git.owner} 是一个账户而非仓库。请粘贴仓库的 URL。`
       : git.kind === 'notrepo'
-        ? `${git.text.replace(/^https?:\/\//, '')} isn't a git repo.`
+        ? `${git.text.replace(/^https?:\/\//, '')} 不是 git 仓库。`
         : repo!.unchecked && checkedReach === undefined
           ? null
           : repoShown
             ? null
-            : `${query.trim().replace(/^https?:\/\//, '')} isn't a git repo.`;
-  const checking = !!repo?.unchecked && checkedReach === undefined && askable.length > 0 ? `Checking ${repo.host}…` : null;
+            : `${query.trim().replace(/^https?:\/\//, '')} 不是 git 仓库。`;
+  const checking = !!repo?.unchecked && checkedReach === undefined && askable.length > 0 ? `正在检查 ${repo.host}…` : null;
   /** One machine's clone row: as it answered, else a guess from its clone folder (asleep, or not answered yet). */
   const cloneRowOf = (group: FolderGroup): CloneRow => {
     const id = group.machine ?? '';
@@ -363,7 +363,7 @@ export function FolderMenu({
   const [hlId, setHlId] = useState<string | null>(clonePicked && initialQuery ? rowKey(clonePicked.machine, CLONE_PICK) : selected ? rowKey(selectedMachine, selected) : null);
   // The row to highlight when the filter changes next, instead of its first (a URL back from the folder field: B5).
   const nextHl = useRef<string | null>(null);
-  // The folder browser in clone mode ("Clone into another folder…"), or as "Another folder…".
+  // The folder browser in clone mode ("克隆到其他文件夹…"), or as "Another folder…".
   const [browseClone, setBrowseClone] = useState<{ url: string; repo: InboxGitRepo; at: string } | null>(null);
   const found = ids.indexOf(hlId ?? '');
   const hl = ids.length === 0 ? -1 : found >= 0 ? found : 0;
@@ -380,7 +380,7 @@ export function FolderMenu({
     } else if (query !== '' && !(initialQuery && query === initialQuery)) setHlId(ids[0] ?? null);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [query]);
-  // Back from the folder browser too: the filter, with "Another folder…" still the highlighted row.
+  // 返回 from the folder browser too: the filter, with "Another folder…" still the highlighted row.
   useEffect(() => {
     if (!other) inputRef.current?.focus();
   }, [other]);
@@ -413,7 +413,7 @@ export function FolderMenu({
     setBackTo(rowKey(machine, drivePick(drive)));
     setOtherId(machine);
   };
-  /** "Clone into another folder…": that machine's folder browser in clone mode, at its clone folder (C14). */
+  /** "克隆到其他文件夹…": that machine's folder browser in clone mode, at its clone folder (C14). */
   const openCloneOther = (group: FolderGroup) => {
     if (!repo) return;
     const answer = cloneReads.targets.get(group.machine ?? '');
@@ -533,9 +533,9 @@ export function FolderMenu({
         <div className="ib-cp-pickhead">
           <button type="button" className="ib-cp-back" onClick={onClose}>
             <Icon name="chevL" size={16} />
-            Back
+            返回
           </button>
-          <span>Start in</span>
+          <span>起始位置</span>
         </div>
       )}
       <div className="ib-cp-filter">
@@ -548,8 +548,8 @@ export function FolderMenu({
           aria-autocomplete="list"
           aria-controls={`ib-cp-flist-${uid}`}
           aria-activedescendant={hl >= 0 ? optionId(hl) : undefined}
-          aria-label={onClone ? 'Find a project or paste a git URL' : 'Find a project'}
-          placeholder={onClone ? 'Find a project or paste a git URL' : 'Find a project'}
+          aria-label={onClone ? '查找项目或粘贴 Git URL' : '查找项目'}
+          placeholder={onClone ? '查找项目或粘贴 Git URL' : '查找项目'}
           autoComplete="off"
           spellCheck={false}
           value={query}
@@ -557,8 +557,8 @@ export function FolderMenu({
           onPaste={onPaste}
         />
       </div>
-      <div className="ib-cp-list" role="listbox" id={`ib-cp-flist-${uid}`} aria-label="Projects">
-        {rows.length === 0 && !shown.some((g) => g.notice) && !git && <div className="ib-cp-none">No project matches.</div>}
+      <div className="ib-cp-list" role="listbox" id={`ib-cp-flist-${uid}`} aria-label="项目">
+        {rows.length === 0 && !shown.some((g) => g.notice) && !git && <div className="ib-cp-none">没有匹配的项目。</div>}
         {shown.map((g, gi) => {
           const group = g.group;
           const gHome = grouped ? group.home : home;
@@ -595,12 +595,12 @@ export function FolderMenu({
                     <button
                       type="button"
                       className="ib-lnk ib-cp-fcopy"
-                      aria-label={`Copy the command to run on ${group.name}`}
+                      aria-label={`复制要在 ${group.name} 上运行的命令`}
                       onMouseDown={(event) => event.preventDefault()}
                       onClick={() => void copy(g.notice!.command!, group.machine ?? '')}
                       data-compose-folder-copy=""
                     >
-                      {copied === (group.machine ?? '') ? 'Copied' : 'Copy'}
+                      {copied === (group.machine ?? '') ? '已复制' : '复制'}
                     </button>
                   )}
                 </div>
@@ -621,7 +621,7 @@ export function FolderMenu({
                     role="option"
                     aria-selected={!unplugged && i === hl}
                     aria-disabled={unplugged ? 'true' : undefined}
-                    aria-label={`${project.name}${last ? ', you started it here last' : ''}, ${folder}${on ? `, on ${on}` : ''}${unplugged ? `, ${unplugged} isn't connected. Connect it to start here.` : project.exists ? (slowDrive ? `, ${slowDrive} isn't responding` : '') : ', not there any more'}`}
+                    aria-label={`${project.name}${last ? '，你上次在这里启动' : ''}，${folder}${on ? `，在 ${on} 上` : ''}${unplugged ? `，${unplugged} 未连接。连接后才能在此启动。` : project.exists ? (slowDrive ? `，${slowDrive} 无响应` : '') : '，已不存在'}`}
                     className={`ib-cp-opt ib-cp-fopt${unplugged ? ' ib-cp-unplugged' : ''}${!unplugged && i === hl ? ' ib-hl' : ''}`}
                     data-compose-folder-option={project.id}
                     data-compose-folder-machine={group.machine ?? undefined}
@@ -635,14 +635,14 @@ export function FolderMenu({
                       <span className="ib-cp-op" dir="auto">
                         {project.name}
                         {last && <span className="ib-cp-trust"> · you started it here last</span>}
-                        {slowDrive && <span className="ib-cp-trust"> · {slowDrive} isn't responding</span>}
+                        {slowDrive && <span className="ib-cp-trust"> · {slowDrive} 无响应</span>}
                       </span>
                     ) : unplugged ? (
                       <span className="ib-cp-op" dir="auto" data-compose-folder-unplugged={unplugged}>
                         <s>{project.name}</s>
                         <span className="ib-cp-trust">
                           {' '}
-                          · {unplugged} isn't connected<span className="ib-cp-unplug-why">. Connect it to start here.</span>
+                          · {unplugged} 未连接<span className="ib-cp-unplug-why">. 连接后才能在此启动.</span>
                         </span>
                       </span>
                     ) : (
@@ -650,7 +650,7 @@ export function FolderMenu({
                         {project.name}
                       </s>
                     )}
-                    {unplugged ? <span className="ib-cp-of">Connect it to start here</span> : <FolderPath path={folder} drive={onDrive} />}
+                    {unplugged ? <span className="ib-cp-of">连接后才能在此启动</span> : <FolderPath path={folder} drive={onDrive} />}
                     <span className="ib-cp-check" aria-hidden="true">
                       {project.id === selected && group.machine === selectedMachine && <Icon name="check" size={15} />}
                     </span>
@@ -668,7 +668,7 @@ export function FolderMenu({
                         id={optionId(i)}
                         role="option"
                         aria-selected={hl === i}
-                        aria-label={`${s.trusted ? `New scratch folder, ${s.folder}` : `New scratch folder in ${s.root}. ${untrustedHint(s)}`}${on ? `, on ${on}` : ''}`}
+                        aria-label={`${s.trusted ? `新建暂存文件夹，${s.folder}` : `在 ${s.root} 新建暂存文件夹。${untrustedHint(s)}`}${on ? `, on ${on}` : ''}`}
                         className={`ib-cp-opt ib-cp-fopt ib-cp-scratch${hl === i ? ' ib-hl' : ''}`}
                         data-compose-folder-option={SCRATCH_PICK}
                         data-compose-folder-machine={group.machine ?? undefined}
@@ -679,7 +679,7 @@ export function FolderMenu({
                       >
                         <Icon name="folderPlus" size={15} />
                         <span className="ib-cp-op">
-                          New scratch folder
+                          新建暂存文件夹
                           {!s.trusted && <span className="ib-cp-trust"> · trust it once</span>}
                         </span>
                         <FolderPath path={s.trusted ? s.folder : s.root} />
@@ -698,7 +698,7 @@ export function FolderMenu({
               {g.other &&
                 (() => {
                   const i = at++;
-                  const words = grouped ? `Another folder on ${group.name}…` : 'Another folder…';
+                  const words = grouped ? `在 ${group.name} 上的其他文件夹…` : '其他文件夹…';
                   return (
                     <>
                       {!grouped && !g.scratch && g.projects.length > 0 && <div className="ib-cp-cap-line" role="presentation" />}
@@ -731,7 +731,7 @@ export function FolderMenu({
                     id={optionId(i)}
                     role="option"
                     aria-selected={hl === i}
-                    aria-label={`${drive.name}${drive.network ? ', network drive' : ''}, ${drive.path}${on ? `, on ${on}` : ''}`}
+                    aria-label={`${drive.name}${drive.network ? '，网络驱动器' : ''}, ${drive.path}${on ? `, on ${on}` : ''}`}
                     className={`ib-cp-opt ib-cp-fopt ib-cp-other ib-cp-drive${hl === i ? ' ib-hl' : ''}`}
                     data-compose-folder-drive={drive.path}
                     onPointerMove={() => hl !== i && setHlId(rowKey(group.machine, drivePick(drive)))}
@@ -740,7 +740,7 @@ export function FolderMenu({
                   >
                     <Icon name={drive.network ? 'globe' : 'drive'} size={15} />
                     <span className="ib-cp-op" dir="auto">
-                      {drive.name}…{drive.network && <span className="ib-cp-trust"> · network drive</span>}
+                      {drive.name}…{drive.network && <span className="ib-cp-trust"> · 网络驱动器</span>}
                     </span>
                     <FolderPath path={drive.path} />
                     <span className="ib-cp-check" aria-hidden="true" />
@@ -755,12 +755,12 @@ export function FolderMenu({
                   const place = `${c.path}${r.branch ? ` · ${r.branch}` : ''}`;
                   const picked = !!clonePicked && clonePicked.machine === group.machine && clonePicked.folder === c.path;
                   const machineName = grouped ? group.name : null;
-                  const cant = `${machineName ?? 'This computer'} can't sign in to ${r.host}`;
+                  const cant = `${machineName ?? '本机'} 无法登录 ${r.host}`;
                   const aria = c.already
-                    ? `Start in ${c.name}, ${c.path}, already cloned${machineName ? `, on ${machineName}` : ''}`
+                    ? `起始位置 ${c.name}，${c.path}，已克隆${machineName ? `，在 ${machineName} 上` : ''}`
                     : c.cantSignIn
-                      ? `Clone ${r.slug}${machineName ? ` on ${machineName}` : ''}. ${cant}.`
-                      : `Clone ${r.slug} and start, into ${c.path}${r.branch ? `, branch ${r.branch}` : ''}${machineName ? `, on ${machineName}` : ''}${c.taken ? `. ${c.taken} is another folder` : ''}${picked ? ', chosen' : ''}`;
+                      ? `克隆 ${r.slug}${machineName ? `，在 ${machineName} 上` : ''}。${cant}。`
+                      : `克隆 ${r.slug} 并启动，目标为 ${c.path}${r.branch ? `，分支 ${r.branch}` : ''}${machineName ? `，在 ${machineName} 上` : ''}${c.taken ? `。${c.taken} 是另一个文件夹` : ''}${picked ? '，已选中' : ''}`;
                   return (
                     <div
                       id={optionId(i)}
@@ -780,14 +780,14 @@ export function FolderMenu({
                       <span className="ib-cp-op" dir="auto">
                         {c.already ? (
                           <>
-                            Start in <b>{c.name}</b>
-                            <span className="ib-cp-trust"> · already cloned</span>
+                            起始位置 <b>{c.name}</b>
+                            <span className="ib-cp-trust"> · 已克隆</span>
                           </>
                         ) : c.cantSignIn ? (
-                          <>Clone {r.repo}</>
+                          <>克隆 {r.repo}</>
                         ) : (
                           <>
-                            Clone <b>{r.repo}</b> and start
+                            克隆 <b>{r.repo}</b> 并启动
                           </>
                         )}
                         {/* A phone hides the path column: the clone's place goes on a second line (G5). */}
@@ -808,7 +808,7 @@ export function FolderMenu({
                       id={optionId(i)}
                       role="option"
                       aria-selected={hl === i}
-                      aria-label={grouped ? `Clone into another folder on ${group.name}` : 'Clone into another folder'}
+                      aria-label={grouped ? `克隆到 ${group.name} 上的其他文件夹` : '克隆到其他文件夹'}
                       className={`ib-cp-opt ib-cp-fopt ib-cp-other${hl === i ? ' ib-hl' : ''}`}
                       data-compose-folder-clone-other={group.machine ?? 'self'}
                       onPointerMove={() => hl !== i && setHlId(rowKey(group.machine, CLONE_OTHER_PICK))}
@@ -816,7 +816,7 @@ export function FolderMenu({
                       onClick={() => openCloneOther(group)}
                     >
                       <Icon name="folder" size={15} />
-                      <span className="ib-cp-op">Clone into another folder…</span>
+                      <span className="ib-cp-op">克隆到其他文件夹…</span>
                       <span />
                       <span className="ib-cp-check" aria-hidden="true" />
                     </div>
@@ -840,7 +840,7 @@ export function FolderMenu({
           <>
             <div className="ib-cp-cap-line" role="presentation" />
             <div className="ib-cp-explain" data-compose-clone-explain="">
-              Cloned with that machine's own git sign-in, into the folder where its other projects live.{agentName ? ` ${agentName} starts when the clone is done.` : ''}
+              使用该设备自己的 git 登录信息克隆到其其他项目所在的文件夹。{agentName ? ` 克隆完成后启动 ${agentName}。` : ''}
             </div>
           </>
         )}
@@ -849,7 +849,7 @@ export function FolderMenu({
   );
 }
 
-/** Under an untrusted "New scratch folder" row: what "trust it once" asks of the person. */
+/** Under an untrusted "新建暂存文件夹" row: what "trust it once" asks of the person. */
 function untrustedHint(scratch: { root: string; agentName: string }): string {
-  return `${scratch.agentName} doesn't trust ${scratch.root} yet. Your first Send asks you to trust it once; after that every scratch folder there starts.`;
+  return `${scratch.agentName} 尚未信任 ${scratch.root}。首次发送时会询问你是否信任一次；之后该处的暂存文件夹都能启动。`;
 }

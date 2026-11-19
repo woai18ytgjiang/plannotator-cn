@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Export Modal with tabs for Share, Annotations, and Notes
  *
@@ -38,7 +39,7 @@ async function defaultSaveToNotes(body: SaveToNotesPayload): Promise<SaveToNotes
     body: JSON.stringify(withServerSession(body)),
   });
   if (await noteServerSessionMismatch(res)) {
-    return { results: Object.fromEntries(Object.keys(body).map((k) => [k, { success: false, error: 'This review was replaced. Reload the page.' }])) };
+    return { results: Object.fromEntries(Object.keys(body).map((k) => [k, { success: false, error: '此审查已被替换。请重新加载页面。' }])) };
   }
   return res.json();
 }
@@ -204,11 +205,11 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         if (result.url) setSavedUrls(prev => ({ ...prev, [target]: result.url! }));
       } else {
         setSaveStatus(prev => ({ ...prev, [target]: 'error' }));
-        setSaveErrors(prev => ({ ...prev, [target]: result?.error || 'Save failed' }));
+        setSaveErrors(prev => ({ ...prev, [target]: result?.error || '保存失败' }));
       }
     } catch {
       setSaveStatus(prev => ({ ...prev, [target]: 'error' }));
-      setSaveErrors(prev => ({ ...prev, [target]: 'Save failed' }));
+      setSaveErrors(prev => ({ ...prev, [target]: '保存失败' }));
     }
   };
 
@@ -237,10 +238,10 @@ export const ExportModal: React.FC<ExportModalProps> = ({
         {/* Header */}
         <div className="p-4 border-b border-border">
           <div className="flex justify-between items-center">
-            <h3 className="font-semibold text-sm">Export</h3>
+            <h3 className="font-semibold text-sm">导出</h3>
             <div className="flex items-center gap-3">
               <span className="text-xs text-muted-foreground">
-                {annotationCount} annotation{annotationCount !== 1 ? 's' : ''}
+                {annotationCount} 条批注
               </span>
               <button
                 onClick={onClose}
@@ -269,7 +270,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  Share
+                  分享
                 </button>
               )}
               <button
@@ -280,7 +281,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                     : 'text-muted-foreground hover:text-foreground'
                 }`}
               >
-                Annotations
+                批注
               </button>
               {showNotesTab && (
                 <button
@@ -291,7 +292,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                       : 'text-muted-foreground hover:text-foreground'
                   }`}
                 >
-                  Notes
+                  备注
                 </button>
               )}
             </div>
@@ -304,7 +305,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
               {shortShareUrl ? (
                 <div>
                   <label className="block text-xs font-medium text-muted-foreground mb-2">
-                    Share Link
+                    分享链接
                   </label>
                   <div className="relative group">
                     <input
@@ -322,20 +323,20 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                           </svg>
-                          Copied
+                          已复制
                         </>
                       ) : (
                         <>
                           <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                             <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                           </svg>
-                          Copy
+                          复制
                         </>
                       )}
                     </button>
                   </div>
                   <p className="text-[10px] text-muted-foreground mt-1">
-                    Encrypted short link. The browser uploads AES-256-GCM ciphertext; the decryption key stays in the URL fragment.
+                    加密短链接。浏览器上传 AES-256-GCM 密文；解密密钥保留在 URL 片段中。
                   </p>
                 </div>
               ) : isGeneratingShortUrl ? (
@@ -343,7 +344,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                   <svg className="w-3 h-3 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={2}>
                     <path d="M12 2v4m0 12v4m-7.07-3.93l2.83-2.83m8.48-8.48l2.83-2.83M2 12h4m12 0h4m-3.93 7.07l-2.83-2.83M7.76 7.76L4.93 4.93" />
                   </svg>
-                  Generating short link...
+                  正在生成短链接…
                 </div>
               ) : onGenerateShortUrl ? (
                 <div className={`p-3 rounded-lg border ${
@@ -353,14 +354,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 }`}>
                   {urlIsLarge && (
                     <p className="text-xs text-amber-600 dark:text-amber-400 mb-2">
-                      This URL may be too long for some messaging apps.
+                      此 URL 对某些即时通讯应用来说可能过长。
                     </p>
                   )}
                   <button
                     onClick={onGenerateShortUrl}
                     className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
                   >
-                    Create short link
+                    创建短链接
                   </button>
                   {shortUrlError && (
                     <p className="text-[10px] text-amber-500 mt-1">({shortUrlError})</p>
@@ -371,7 +372,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
               {/* Full hash URL — hidden when hash-based sharing is unavailable (HTML mode) */}
               {!hashUnavailable && <div>
                 <label className="block text-xs font-medium text-muted-foreground mb-2">
-                  {shortShareUrl ? 'Full URL (backup)' : 'Shareable URL'}
+                  {shortShareUrl ? '完整 URL（备用）' : '可分享 URL'}
                 </label>
                 <div className="relative group">
                   <textarea
@@ -389,14 +390,14 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                         </svg>
-                        Copied
+                        已复制
                       </>
                     ) : (
                       <>
                         <svg className="w-3 h-3" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                         </svg>
-                        Copy
+                        复制
                       </>
                     )}
                   </button>
@@ -406,19 +407,19 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 </div>
                 {!shortShareUrl && !isGeneratingShortUrl && !urlIsLarge && (
                   <p className="text-[10px] text-muted-foreground mt-1">
-                    Shared content is compressed, not encrypted, in the URL fragment. The portal request does not include that fragment.
+                    分享内容在 URL 片段中是压缩而非加密的。门户请求不会包含该片段。
                   </p>
                 )}
               </div>}
 
               <p className="text-xs text-muted-foreground">
-                Anyone with the full link can view the shared content, including services used to send the link. Hosted short-link ciphertext expires after 7 days.
+                任何拿到完整链接的人都能查看分享内容，包括用于发送链接的服务。托管短链接密文 7 天后过期。
               </p>
             </div>
           ) : activeTab === 'notes' && showNotesTab ? (
             <div className="space-y-4">
               <p className="text-xs text-muted-foreground">
-                Save this plan to your notes app without approving or denying.
+                无需批准或拒绝，即可将此计划保存到你的笔记应用。
               </p>
 
               {/* Obsidian */}
@@ -442,13 +443,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                               : 'bg-primary text-primary-foreground hover:opacity-90'
                       }`}
                     >
-                      {saveStatus.obsidian === 'saving' ? 'Saving...'
-                        : saveStatus.obsidian === 'success' ? 'Saved'
-                        : saveStatus.obsidian === 'error' ? 'Failed'
-                        : 'Save'}
+                      {saveStatus.obsidian === 'saving' ? '保存中…'
+                        : saveStatus.obsidian === 'success' ? '已保存'
+                        : saveStatus.obsidian === 'error' ? '失败'
+                        : '保存'}
                     </button>
                   ) : (
-                    <span className="text-xs text-muted-foreground">Not configured</span>
+                    <span className="text-xs text-muted-foreground">未配置</span>
                   )}
                 </div>
                 {isObsidianReady && (
@@ -458,7 +459,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 )}
                 {!isObsidianReady && (
                   <div className="text-[10px] text-muted-foreground/70">
-                    Enable in Settings &gt; Saving &gt; Obsidian
+                    在「设置 &gt; 保存 &gt; Obsidian」中启用
                   </div>
                 )}
                 {saveErrors.obsidian && (
@@ -487,18 +488,18 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                               : 'bg-primary text-primary-foreground hover:opacity-90'
                       }`}
                     >
-                      {saveStatus.bear === 'saving' ? 'Saving...'
-                        : saveStatus.bear === 'success' ? 'Saved'
-                        : saveStatus.bear === 'error' ? 'Failed'
-                        : 'Save'}
+                      {saveStatus.bear === 'saving' ? '保存中…'
+                        : saveStatus.bear === 'success' ? '已保存'
+                        : saveStatus.bear === 'error' ? '失败'
+                        : '保存'}
                     </button>
                   ) : (
-                    <span className="text-xs text-muted-foreground">Not configured</span>
+                    <span className="text-xs text-muted-foreground">未配置</span>
                   )}
                 </div>
                 {!isBearReady && (
                   <div className="text-[10px] text-muted-foreground/70">
-                    Enable in Settings &gt; Saving &gt; Bear
+                    在「设置 &gt; 保存 &gt; Bear」中启用
                   </div>
                 )}
                 {saveErrors.bear && (
@@ -527,13 +528,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                               : 'bg-primary text-primary-foreground hover:opacity-90'
                       }`}
                     >
-                      {saveStatus.octarine === 'saving' ? 'Saving...'
-                        : saveStatus.octarine === 'success' ? 'Saved'
-                        : saveStatus.octarine === 'error' ? 'Failed'
-                        : 'Save'}
+                      {saveStatus.octarine === 'saving' ? '保存中…'
+                        : saveStatus.octarine === 'success' ? '已保存'
+                        : saveStatus.octarine === 'error' ? '失败'
+                        : '保存'}
                     </button>
                   ) : (
-                    <span className="text-xs text-muted-foreground">Not configured</span>
+                    <span className="text-xs text-muted-foreground">未配置</span>
                   )}
                 </div>
                 {isOctarineReady && (
@@ -543,7 +544,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                 )}
                 {!isOctarineReady && (
                   <div className="text-[10px] text-muted-foreground/70">
-                    Enable in Settings &gt; Saving &gt; Octarine
+                    在「设置 &gt; 保存 &gt; Octarine」中启用
                   </div>
                 )}
                 {saveErrors.octarine && (
@@ -573,18 +574,18 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                                 : 'bg-primary text-primary-foreground hover:opacity-90'
                         }`}
                       >
-                        {saveStatus.notion === 'saving' ? 'Saving...'
-                          : saveStatus.notion === 'success' ? 'Saved'
-                          : saveStatus.notion === 'error' ? 'Failed'
-                          : 'Save'}
+                        {saveStatus.notion === 'saving' ? '保存中…'
+                          : saveStatus.notion === 'success' ? '已保存'
+                          : saveStatus.notion === 'error' ? '失败'
+                          : '保存'}
                       </button>
                     ) : (
-                      <span className="text-xs text-muted-foreground">Not configured</span>
+                      <span className="text-xs text-muted-foreground">未配置</span>
                     )}
                   </div>
                   {isNotionReady && (
                     <div className="text-[10px] text-muted-foreground/70">
-                      Parent page: {notionParentPageId}
+                      父页面：{notionParentPageId}
                     </div>
                   )}
                   {savedUrls.notion?.startsWith('https://') && (
@@ -594,12 +595,12 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                       rel="noreferrer"
                       className="block text-[10px] text-primary hover:underline truncate"
                     >
-                      Open saved page
+                      打开已保存页面
                     </a>
                   )}
                   {!isNotionReady && (
                     <div className="text-[10px] text-muted-foreground/70">
-                      Enable in Settings &gt; Saving &gt; Notion
+                      在「设置 &gt; 保存 &gt; Notion」中启用
                     </div>
                   )}
                   {saveErrors.notion && (
@@ -616,7 +617,7 @@ export const ExportModal: React.FC<ExportModalProps> = ({
                     disabled={saveStatus.obsidian === 'saving' || saveStatus.bear === 'saving' || saveStatus.octarine === 'saving' || saveStatus.notion === 'saving'}
                     className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity disabled:opacity-50"
                   >
-                    Save All
+                    全部保存
                   </button>
                 </div>
               )}
@@ -636,13 +637,13 @@ export const ExportModal: React.FC<ExportModalProps> = ({
               onClick={handleCopyAnnotations}
               className="px-3 py-1.5 rounded-md text-xs font-medium bg-muted hover:bg-muted/80 transition-colors"
             >
-              {copied === 'annotations' ? 'Copied!' : 'Copy'}
+              {copied === 'annotations' ? '已复制！' : '复制'}
             </button>
             <button
               onClick={handleDownloadAnnotations}
               className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:opacity-90 transition-opacity"
             >
-              Download Annotations
+              下载批注
             </button>
           </div>
         )}

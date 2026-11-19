@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * PlanDiffModeSwitcher — Toggle between clean/rendered and raw diff views
  *
@@ -21,7 +22,7 @@ export const PlanDiffModeSwitcher: React.FC<PlanDiffModeSwitcherProps> = ({
     <div className="inline-flex items-center bg-muted/50 rounded-lg p-0.5 border border-border/30">
       <button
         onClick={() => onChange("clean")}
-        title="Word-level inline diff (experimental)"
+        title="词级行内差异（实验性）"
         className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
           mode === "clean"
             ? "bg-background text-foreground shadow-sm"
@@ -48,12 +49,12 @@ export const PlanDiffModeSwitcher: React.FC<PlanDiffModeSwitcherProps> = ({
         </svg>
         Rendered
         <span className="text-[9px] uppercase tracking-wider opacity-60 ml-0.5">
-          exp
+          实验
         </span>
       </button>
       <button
         onClick={() => onChange("classic")}
-        title="Block-level stacked diff (old above new)"
+        title="块级堆叠差异（旧版在上）"
         className={`flex items-center gap-1.5 px-2.5 py-1.5 rounded-md text-xs font-medium transition-all ${
           mode === "classic"
             ? "bg-background text-foreground shadow-sm"
@@ -73,7 +74,7 @@ export const PlanDiffModeSwitcher: React.FC<PlanDiffModeSwitcherProps> = ({
             d="M4 6h16M4 12h16M4 18h16"
           />
         </svg>
-        Classic
+        经典视图
       </button>
       <button
         onClick={() => onChange("raw")}
@@ -96,7 +97,7 @@ export const PlanDiffModeSwitcher: React.FC<PlanDiffModeSwitcherProps> = ({
             d="M17.25 6.75L22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3l-4.5 16.5"
           />
         </svg>
-        Raw
+        原始
       </button>
     </div>
   );

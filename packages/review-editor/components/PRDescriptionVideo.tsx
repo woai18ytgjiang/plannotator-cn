@@ -77,7 +77,7 @@ function PRDescriptionVideo({
       >
         <video
           src={proxy}
-          aria-label="PR attachment video"
+          aria-label="PR 附件视频"
           controls
           playsInline
           preload="metadata"

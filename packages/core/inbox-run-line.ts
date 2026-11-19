@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * The run line of a launched thread (PLAN "Run line state"): one quiet line
  * under the latest message saying what the agent is doing. Pure: the server
@@ -33,30 +34,30 @@ import type { InboxLaunchRecord, InboxRun } from "./inbox-types";
  * run line ("Claude Code couldn't answer. Your message is kept.") and in the notification for it
  * ("<project>: Codex couldn't answer").
  */
-export const INBOX_TURN_FAILED_WORDS = "couldn't answer";
+export const INBOX_TURN_FAILED_WORDS = "无法回答";
 
 /** A start in Rex whose session never connected: the failed line's cause (the agent's own tab says why; the line has its own frame). */
-export const INBOX_RUN_REX_NOT_CONNECTED = "Look at its tab there.";
+export const INBOX_RUN_REX_NOT_CONNECTED = "请查看它在 Rex 中的标签页。";
 /** Try again on a Rex session the Inbox may not have heard from yet since it started (its connection retries every minute at most). */
-export const INBOX_REX_MAY_RUN = "It may still be running in Rex. Try again in a minute.";
+export const INBOX_REX_MAY_RUN = "它可能仍在 Rex 中运行。请在一分钟后再试。";
 /** Try again, or a reply's restart, on a Rex session whose process still runs (its tab, or wherever it was resumed): nothing starts beside it. */
-export const INBOX_REX_STILL_RUNS = "It's still running, so it can't start again yet.";
+export const INBOX_REX_STILL_RUNS = "它仍在运行，因此暂时无法再次启动。";
 /** Stop of a session that runs in Rex when Rex said no to closing its pane. */
-export const INBOX_RUN_IN_REX_STOP = "Rex didn't close its tab. Stop it in its tab there.";
+export const INBOX_RUN_IN_REX_STOP = "Rex 没有关闭它的标签页。请在其标签页中停止它。";
 /** Stop of a session that runs in Rex when Rex did not answer in time (it may still close it). */
-export const INBOX_RUN_IN_REX_NO_ANSWER = "Rex didn't answer. Stop it in its tab there.";
+export const INBOX_RUN_IN_REX_NO_ANSWER = "Rex 没有响应。请在其标签页中停止它。";
 /** Stop of a session that runs in Rex when the Inbox never learned its pane (Rex was not asked). */
-export const INBOX_RUN_IN_REX_NO_TAB = "The Inbox doesn't know its tab in Rex. Stop it in its tab there.";
+export const INBOX_RUN_IN_REX_NO_TAB = "收件箱不知道它在 Rex 中的标签页。请在其标签页中停止它。";
 /** Stop of a session in a Rex pane the Inbox did not open, when its process could not be found: nothing was closed. */
-export const INBOX_RUN_IN_REX_ELSEWHERE = "It runs in a tab the Inbox didn't open. Stop it there.";
+export const INBOX_RUN_IN_REX_ELSEWHERE = "它运行在收件箱未打开的标签页中。请在那里停止它。";
 /** Stop of an agent in Rex whose process could not be found or ended (`ps` unread, a wrapper only, the signal refused). */
-export const INBOX_RUN_IN_REX_COULDNT = "Couldn't stop it. Stop it in its tab.";
+export const INBOX_RUN_IN_REX_COULDNT = "无法停止它。请在其标签页中停止它。";
 /** A reply to a session that ran in Rex, while Rex is not on this computer: the failed line's cause. */
-export const INBOX_REX_NOT_HERE_AGAIN = "Rex isn't open on this computer.";
+export const INBOX_REX_NOT_HERE_AGAIN = "这台电脑上没有打开 Rex。";
 /** A reply to a session that ran in Rex, when Rex said no to its new tab (an error answer): the failed line's cause. */
-export const INBOX_REX_REFUSED_AGAIN = "Rex didn't open a tab for it.";
+export const INBOX_REX_REFUSED_AGAIN = "Rex 没有为它打开标签页。";
 /** Open in Terminal for a session that runs in Rex (its line offers none; an older window's press). */
-export const INBOX_RUN_IN_REX_OPEN = "This agent runs in Rex. Open its tab there.";
+export const INBOX_RUN_IN_REX_OPEN = "该智能体在 Rex 中运行。请在那里打开它的标签页。";
 
 /** A start that has not connected within this long is not "starting" any more. */
 export const INBOX_RUN_START_GRACE_MS = 60_000;
@@ -176,7 +177,7 @@ export function inboxRunOf(e: InboxRunEvidence): InboxRun | null {
   });
   if (clone && clone.state === "cloning") {
     // A clone the Inbox no longer runs (it was restarted meanwhile): failed, with Try again.
-    if (e.cloneRunning === false) return line("clone_failed", { since: e.launch.started_at, clone: cloneOf({ error: "failed", error_text: "The clone stopped when the Inbox closed." }) });
+    if (e.cloneRunning === false) return line("clone_failed", { since: e.launch.started_at, clone: cloneOf({ error: "failed", error_text: "收件箱关闭时克隆停止。" }) });
     return line("cloning", { since: iso(e.startedAt), clone: cloneOf({ pct: e.clonePct ?? null }) });
   }
   if (clone && clone.state === "failed") return line("clone_failed", { clone: cloneOf({ error: clone.error ?? "failed", error_text: clone.error_text ?? null }) });
@@ -204,7 +205,7 @@ export function inboxRunOf(e: InboxRunEvidence): InboxRun | null {
   if (inGrace) return starting();
   const hostStopped = e.host === "absent" || host?.state === "stopped" || host?.state === "done";
   // The person's Stop says stopped, even before the agent took its first message (a Rex tab closed by Stop).
-  if (!e.seenLive && !hostStopped && e.stoppedByPersonAt === null) return line("failed", { cause: e.rex?.line !== undefined && !e.rex.unavailable && !e.rex.refused ? INBOX_RUN_REX_NOT_CONNECTED : `Started, but not connected to the Inbox. Is Plannotator's ${e.connector ?? "plugin"} on in that folder?` });
+  if (!e.seenLive && !hostStopped && e.stoppedByPersonAt === null) return line("failed", { cause: e.rex?.line !== undefined && !e.rex.unavailable && !e.rex.refused ? INBOX_RUN_REX_NOT_CONNECTED : `已启动，但未连接到收件箱。该文件夹中是否已启用 Plannotator 的 ${e.connector ?? "plugin"}？` });
   const byPerson = e.stoppedByPersonAt !== null;
   // Not the person's Stop: the host's own words, when it has some.
   return line("stopped", { stopped_by_person: byPerson, since: iso(e.stoppedByPersonAt), ...(!byPerson && e.stoppedNote ? { cause: e.stoppedNote } : {}) });

@@ -12,9 +12,9 @@ export function PRThreadCard({ thread, forge }: { thread: PRReviewThread; forge:
   return (
     <div className="live-thread mx-2 my-1 rounded border border-border bg-card" data-pr-thread={thread.id}>
       <div className="flex items-center gap-1.5 border-b border-border px-3 py-1.5 text-[12px] text-muted-foreground">
-        <span>On the {forge === 'GitLab' ? 'merge request' : 'pull request'}</span>
-        {thread.isResolved ? <span>· Resolved</span> : null}
-        {thread.isOutdated ? <span>· Outdated</span> : null}
+        <span>On the {forge === 'GitLab' ? '合并请求' : '拉取请求'}</span>
+        {thread.isResolved ? <span>· 已解决</span> : null}
+        {thread.isOutdated ? <span>· 已过时</span> : null}
         <span className="flex-1" />
         {first ? (
           <a href={first.url} target="_blank" rel="noreferrer" className="text-foreground hover:underline">

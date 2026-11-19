@@ -4,17 +4,17 @@
 /// The window's words. A key in words.json is a name here: section.stopped is sectionStopped.
 public enum Words {
   /// section.stopped: packages/core/inbox-types.ts INBOX_SECTIONS stopped
-  public static let sectionStopped = "Stopped on you"
+  public static let sectionStopped = "已停止"
   /// section.holding: packages/core/inbox-types.ts INBOX_SECTIONS holding
-  public static let sectionHolding = "Holding up work"
+  public static let sectionHolding = "阻碍工作"
   /// section.waiting: packages/core/inbox-types.ts INBOX_SECTIONS waiting
-  public static let sectionWaiting = "Waiting on you"
+  public static let sectionWaiting = "待你处理"
   /// section.new: packages/core/inbox-types.ts INBOX_SECTIONS new
-  public static let sectionNew = "New since you looked"
+  public static let sectionNew = "新消息"
   /// section.sent: packages/core/inbox-types.ts INBOX_SECTIONS sent
-  public static let sectionSent = "Sent"
+  public static let sectionSent = "已发送"
   /// section.quiet: packages/core/inbox-types.ts INBOX_SECTIONS quiet
-  public static let sectionQuiet = "Quiet"
+  public static let sectionQuiet = "静默"
   /// agent.claude-code: packages/core/inbox-types.ts INBOX_AGENT_LABELS claude-code
   public static let agentClaudeCode = "Claude Code"
   /// agent.codex: packages/core/inbox-types.ts INBOX_AGENT_LABELS codex
@@ -52,25 +52,25 @@ public enum Words {
   /// label.ack: packages/core/inbox-types.ts INBOX_ACK_LABEL
   public static let labelAck = "Looks good"
   /// label.action_item: packages/core/inbox-actions.ts INBOX_ACTION_LABEL
-  public static let labelActionItem = "Action item"
+  public static let labelActionItem = "行动项"
   /// delivery.stopped_reply: packages/core/inbox-delivery-line.ts INBOX_STOPPED_REPLY_TEXT
-  public static let deliveryStoppedReply = "Stopped: goes in when you type in that session"
+  public static let deliveryStoppedReply = "已停止：当你在这个会话中输入时才会发送"
   /// delivery.turn_ended: packages/core/inbox-delivery-line.ts TURN_ENDED_TEXT
-  public static let deliveryTurnEnded = "went in when its turn ended"
+  public static let deliveryTurnEnded = "在本轮结束时发送"
   /// delivery.auto_after: packages/core/inbox-delivery-line.ts autoAfterText(minutes)
-  public static func deliveryAutoAfter(minutes: Int) -> String { "went into its turn by itself after \(minutes) min" }
+  public static func deliveryAutoAfter(minutes: Int) -> String { "\(minutes) 分钟后自动进入其本轮对话" }
   /// delivery.sent_queued: packages/core/inbox-delivery-line.ts sentRowLine(name, true)
-  public static func deliverySentQueued(name: String) -> String { "Queued for \(name); it gets this as its next turn." }
+  public static func deliverySentQueued(name: String) -> String { "已为 \(name) 排队；它会作为下一轮收到。" }
   /// delivery.sent_saved: packages/core/inbox-delivery-line.ts sentRowLine(name, false)
-  public static func deliverySentSaved(name: String) -> String { "Saved for \(name). It sees it when it next reads this thread." }
+  public static func deliverySentSaved(name: String) -> String { "已为 \(name) 保存。它下次读取本话题时就能看到。" }
   /// delivery.reask_waiting: packages/core/inbox-delivery-line.ts reaskRowLine(name, checkedAt, _)
-  public static func deliveryReaskWaiting(name: String) -> String { "Asked \(name) to re-ask; waiting for its message." }
+  public static func deliveryReaskWaiting(name: String) -> String { "已请 \(name) 重新提问；正在等待它的消息。" }
   /// delivery.reask_queued: packages/core/inbox-delivery-line.ts reaskRowLine(name, null, true)
-  public static func deliveryReaskQueued(name: String) -> String { "Re-ask queued for \(name); it gets this as its next turn." }
+  public static func deliveryReaskQueued(name: String) -> String { "重新提问已为 \(name) 排队；它会作为下一轮收到。" }
   /// delivery.reask_saved: packages/core/inbox-delivery-line.ts reaskRowLine(name, null, false)
-  public static func deliveryReaskSaved(name: String) -> String { "Re-ask saved for \(name). It sees it when it next reads this thread." }
+  public static func deliveryReaskSaved(name: String) -> String { "重新提问已为 \(name) 保存。它下次读取本话题时就能看到。" }
   /// run.turn_failed: packages/core/inbox-run-line.ts INBOX_TURN_FAILED_WORDS
-  public static let runTurnFailed = "couldn't answer"
+  public static let runTurnFailed = "无法回答"
 
   /// A section's name by its id (InboxSectionId's raw value).
   public static let sections: [String: String] = [

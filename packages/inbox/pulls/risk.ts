@@ -28,8 +28,8 @@ export function saveRiskFilter(value: RiskFilterValue): void {
   }
 }
 
-export const riskFilterWords: Record<RiskFilterValue, string> = { all: 'All', high: 'High', medium: 'Medium and up' };
-export const riskLevelWord: Record<InboxPullRiskLevel, string> = { low: 'Low', medium: 'Medium', high: 'High' };
+export const riskFilterWords: Record<RiskFilterValue, string> = { all: '全部', high: '高', medium: '中及以上' };
+export const riskLevelWord: Record<InboxPullRiskLevel, string> = { low: '低', medium: '中', high: '高' };
 
 export type RiskJudgments = Readonly<Record<string, InboxPullRiskJudgment>>;
 /** By pull request key, why it could not be ranked. */

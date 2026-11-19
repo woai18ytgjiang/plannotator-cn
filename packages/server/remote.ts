@@ -45,13 +45,13 @@ export class PortInUseError extends Error {
 
   get cliMessage(): string {
     if (this.range) {
-      return `Plannotator: every port in PLANNOTATOR_PORT ${this.range[0]}-${this.range[1]} is already in use, most likely by other Plannotator sessions. Finish or close one, or widen the range.`;
+      return `Plannotator：PLANNOTATOR_PORT ${this.range[0]}-${this.range[1]} 范围内的所有端口都已被占用，很可能是其他 Plannotator 会话。请结束或关闭其中一个，或扩大端口范围。`;
     }
     const what = this.fromEnv
-      ? `port ${this.port} (PLANNOTATOR_PORT)`
-      : `port ${this.port}`;
-    const why = this.fromEnv ? "" : " (remote mode uses a fixed port so it can be forwarded)";
-    return `Plannotator: ${what} is already in use, most likely by another Plannotator session${why}. Finish or close that session, or set PLANNOTATOR_PORT to a different port.`;
+      ? `端口 ${this.port}（PLANNOTATOR_PORT）`
+      : `端口 ${this.port}`;
+    const why = this.fromEnv ? "" : "（远程模式使用固定端口，以便进行端口转发）";
+    return `Plannotator：${what} 已被占用，很可能是另一个 Plannotator 会话${why}。请结束或关闭该会话，或将 PLANNOTATOR_PORT 设为其他端口。`;
   }
 }
 
@@ -119,7 +119,7 @@ function getServerPortConfiguration(): {
       return { ports: parsed.ports, isRange: parsed.kind === "range" };
     }
     console.error(
-      `[Plannotator] Warning: Invalid PLANNOTATOR_PORT "${envPort}", using default`
+      `[Plannotator] 警告：PLANNOTATOR_PORT "${envPort}" 无效，改用默认值`
     );
   }
 

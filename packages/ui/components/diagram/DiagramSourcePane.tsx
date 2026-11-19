@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { defaultKeymap, history, historyKeymap } from '@codemirror/commands';
 import { Compartment, EditorState, type Extension } from '@codemirror/state';
 import { Decoration, EditorView, keymap, lineNumbers, type DecorationSet } from '@codemirror/view';
@@ -12,7 +13,7 @@ import type { DiagramSourceDraft } from './useDiagramSourceDraft';
  * opens on the LEFT of the canvas on the desktop row and stacks UNDER it on
  * the phone; the caller (DiagramViewer) owns that placement through this
  * component's `className`. A plain-text CodeMirror buffer, read-only
- * without edit access and never hidden. Save, Discard, "Draft · unsaved"
+ * without edit access and never hidden. Save, Discard, "草稿 · 未保存"
  * and the Reload strip live here; the canvas is the live preview. The
  * selected comment's source line shows as a line mark.
  *
@@ -180,7 +181,7 @@ export function DiagramSourcePane({
   return (
     <section
       data-diagram-source-pane=""
-      aria-label="Diagram source"
+      aria-label="图表源码"
       className={cn('flex min-h-0 flex-col bg-card', className)}
       // Escape LEAVES the buffer; it never reaches whatever is behind
       // the pane. In a popout that outer handler closes it, and one
@@ -194,13 +195,13 @@ export function DiagramSourcePane({
       }}
     >
       <div className="flex h-9 shrink-0 items-center gap-2 border-b border-border px-3">
-        <span className="text-xs font-medium text-foreground">Source</span>
+        <span className="text-xs font-medium text-foreground">源码</span>
         {editable && draft.dirty && (
           <span data-diagram-draft-state="" className="text-[10px] text-muted-foreground">
-            Draft · unsaved
+            草稿 · 未保存
           </span>
         )}
-        {!editable && <span className="text-[10px] text-muted-foreground">Read only</span>}
+        {!editable && <span className="text-[10px] text-muted-foreground">只读</span>}
         <span className="flex-1" />
         {editable && (
           <>
@@ -208,7 +209,7 @@ export function DiagramSourcePane({
               Discard
             </Button>
             <Button type="button" size="xs" disabled={!draft.dirty || draft.saving || draft.stale} onClick={() => void draft.save()}>
-              {draft.saving ? 'Saving…' : 'Save'}
+              {draft.saving ? '保存中…' : '保存'}
             </Button>
           </>
         )}
@@ -218,7 +219,7 @@ export function DiagramSourcePane({
           <Strip
             tone="accent"
             dataAttr="data-diagram-reload-strip"
-            title="Changed since you opened"
+            title="自你打开后已更改"
             action={
               <Button variant="outline" size="xs" onClick={draft.reload}>
                 Reload
@@ -226,14 +227,14 @@ export function DiagramSourcePane({
             }
           >
             {draft.dirty
-              ? 'Someone saved a newer version. Reload to see it; your draft stays in the pane and Save is held until you do.'
-              : 'Someone saved a newer version. Reload to see it.'}
+              ? '有人保存了更新的版本。重新加载即可查看；你的草稿会保留在面板中，在你重新加载前「保存」会被暂缓。'
+              : '有人保存了更新的版本。重新加载即可查看。'}
           </Strip>
         </div>
       )}
       {draft.saveError !== null && (
         <div className="shrink-0 border-b border-border p-2">
-          <Strip tone="destructive" dataAttr="data-diagram-save-error" title="The diagram was not saved">
+          <Strip tone="destructive" dataAttr="data-diagram-save-error" title="图表未保存">
             {draft.saveError}
           </Strip>
         </div>

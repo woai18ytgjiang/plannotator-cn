@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { cn } from '../lib/utils';
 
@@ -42,14 +43,14 @@ const Ring: React.FC<{ done: number; total: number }> = ({ done, total }) => {
 
 export const QuestionProgressChip: React.FC<QuestionProgressChipProps> = ({ done, total, hasOpen, onJump, className }) => {
   if (total <= 0) return null;
-  const label = `${done} of ${total} question${total === 1 ? '' : 's'} answered.${hasOpen ? ' Go to next unanswered.' : ''}`;
+  const label = `已回答 ${done}/${total} 题。${hasOpen ? '前往下一道未回答的问题。' : ''}`;
   return (
     <button
       type="button"
       data-question-progress="true"
       onClick={onJump}
       aria-label={label}
-      title={hasOpen ? 'Go to the next open question' : done >= total ? 'All questions answered' : 'No open questions'}
+      title={hasOpen ? '前往下一道待回答的问题' : done >= total ? '所有问题已回答' : '没有待回答的问题'}
       className={cn(
         'inline-flex h-7 shrink-0 items-center gap-[7px] whitespace-nowrap rounded-full border border-border bg-card pl-[7px] pr-2.5 text-xs text-muted-foreground transition-colors',
         'hover:border-primary/50 hover:text-foreground focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-ring',
@@ -59,7 +60,7 @@ export const QuestionProgressChip: React.FC<QuestionProgressChipProps> = ({ done
       <Ring done={done} total={total} />
       <span>
         <b className="font-semibold text-foreground">{done}/{total}</b>
-        <span className="hidden md:inline"> answered</span>
+        <span className="hidden md:inline"> 已回答</span>
       </span>
     </button>
   );

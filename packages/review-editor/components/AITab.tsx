@@ -187,7 +187,7 @@ export const AITab: React.FC<AITabProps> = ({
     return (
       <div ref={rootRef} className="flex flex-col h-full">
         <PanelEmptyState className="flex-1">
-          <p>No questions yet. Select lines and choose Ask AI, or ask about the whole change below.</p>
+          <p>还没有问题。选择行并选择「询问 AI」，或在下方询问整体更改。</p>
         </PanelEmptyState>
         <AIConfigBar
           providers={aiProviders}
@@ -262,7 +262,7 @@ export const AITab: React.FC<AITabProps> = ({
             {fileGroups.length > 0 && (
               <div className="flex items-center gap-2 px-2 mb-1.5">
                 <div className="flex-1 border-t border-border/40" />
-                <span className="text-xs font-medium text-muted-foreground/50">General</span>
+                <span className="text-xs font-medium text-muted-foreground/50">通用</span>
                 <div className="flex-1 border-t border-border/40" />
               </div>
             )}
@@ -343,7 +343,7 @@ const GeneralInput: React.FC<{
           ref={textareaRef}
           value={value}
           onChange={(e) => onChange(e.target.value)}
-          placeholder="Ask about the overall changes..."
+          placeholder="询问整体更改…"
           rows={1}
           className="flex-1 px-2.5 py-1.5 bg-background border border-border rounded-md text-xs text-foreground placeholder:text-muted-foreground resize-none focus:outline-none focus:ring-1 focus:ring-primary/50 leading-relaxed"
           style={{ maxHeight: 120 }}
@@ -359,10 +359,10 @@ const GeneralInput: React.FC<{
           <button
             onClick={onStop}
             className="p-1.5 mb-px rounded-md text-muted-foreground hover:text-foreground hover:bg-muted transition-colors flex-shrink-0"
-            title={observationOnly ? 'Stop listening; the question keeps running in the session' : 'Stop generating'}
-            aria-label={observationOnly ? 'Stop listening' : 'Stop generating'}
+            title={observationOnly ? '停止监听；问题仍在会话中继续运行' : '停止生成'}
+            aria-label={observationOnly ? '停止监听' : '停止生成'}
           >
-            {observationOnly && <span className="text-xs mr-1">Stop listening</span>}
+            {observationOnly && <span className="text-xs mr-1">停止监听</span>}
             <svg className="w-3.5 h-3.5" fill="currentColor" viewBox="0 0 24 24">
               <rect x="6" y="6" width="12" height="12" rx="2" />
             </svg>
@@ -372,7 +372,7 @@ const GeneralInput: React.FC<{
             onClick={onSubmit}
             disabled={disabled || !value.trim()}
             className="p-1.5 mb-px rounded-md text-muted-foreground hover:text-foreground hover:bg-muted disabled:opacity-30 disabled:cursor-not-allowed transition-colors flex-shrink-0"
-            title={`Send (${submitHint})`}
+            title={`发送（${submitHint}）`}
           >
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M6 12L3.269 3.126A59.768 59.768 0 0121.485 12 59.77 59.77 0 013.27 20.876L5.999 12zm0 0h7.5" />

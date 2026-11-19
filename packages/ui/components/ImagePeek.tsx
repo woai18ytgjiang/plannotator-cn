@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { forwardRef, useEffect, useId, useImperativeHandle, useLayoutEffect, useMemo, useRef, useState } from 'react';
 
 /**
@@ -212,9 +213,9 @@ export const ImagePeek = forwardRef<ImagePeekHandle, ImagePeekProps>(function Im
             {row.items.map((item, c) => {
               const open = item.key === current;
               const focused = focus.row === r && focus.col === c;
-              const words = [item.name, item.attached ? 'attached' : null, item.count ? `${item.count} comment${item.count === 1 ? '' : 's'}` : null, item.detail ?? null, open ? 'open now' : null]
+              const words = [item.name, item.attached ? '已附加' : null, item.count ? `${item.count} 条评论` : null, item.detail ?? null, open ? '当前打开' : null]
                 .filter(Boolean)
-                .join(', ');
+                .join('，');
               return (
                 <div
                   key={item.key}
@@ -235,7 +236,7 @@ export const ImagePeek = forwardRef<ImagePeekHandle, ImagePeekProps>(function Im
                     {item.thumb ? (
                       <img src={item.thumb} alt="" loading="lazy" decoding="async" draggable={false} className="h-full w-full object-cover object-top" />
                     ) : (
-                      <span className="flex h-full w-full items-center justify-center font-mono text-[12px] font-semibold tracking-wide text-muted-foreground">{item.tile ?? 'FILE'}</span>
+                      <span className="flex h-full w-full items-center justify-center font-mono text-[12px] font-semibold tracking-wide text-muted-foreground">{item.tile ?? '文件'}</span>
                     )}
                     {item.attached && (
                       <span className="absolute bottom-1 left-1 flex h-[18px] w-[18px] items-center justify-center rounded-full bg-card text-foreground shadow-sm" aria-hidden="true" data-peek-attached="">

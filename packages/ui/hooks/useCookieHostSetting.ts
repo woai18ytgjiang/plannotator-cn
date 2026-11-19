@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useCallback, useState } from 'react';
 
 /**
@@ -30,11 +31,11 @@ export function cookieHostDescription(
 ): string {
   if (setting.env !== undefined) {
     return setting.env.trim() === ''
-      ? 'Set by PLANNOTATOR_URL_HOST in your environment (empty).'
-      : `Set by PLANNOTATOR_URL_HOST=${setting.env.trim()} in your environment.`;
+      ? '由环境变量 PLANNOTATOR_URL_HOST 设定（空值）。'
+      : `由环境变量 PLANNOTATOR_URL_HOST=${setting.env.trim()} 设定。`;
   }
-  if (setting.urlHost !== undefined) return `config.json sets urlHost to ${setting.urlHost}; this switch never replaces it.`;
-  const notifications = options.inbox ? ' Notifications need allowing once there.' : '';
+  if (setting.urlHost !== undefined) return `config.json 将 urlHost 设为 ${setting.urlHost}；此开关绝不覆盖它。`;
+  const notifications = options.inbox ? ' 需要在新地址允许一次通知。' : '';
   return `Keeps Plannotator's cookies away from your other localhost apps. Starts from the next session; this browser's preferences start fresh once.${notifications}`;
 }
 
@@ -80,12 +81,12 @@ export function useCookieHostSetting(): {
         if (saved) setState(saved);
         if (!res.ok) {
           if (!saved) setState((current) => (current ? { ...current, on: !next } : current));
-          setError(typeof body.error === 'string' ? body.error : 'The setting could not be saved.');
+          setError(typeof body.error === 'string' ? body.error : '无法保存该设置。');
         }
       })
       .catch(() => {
         setState((current) => (current ? { ...current, on: !next } : current));
-        setError('The setting could not be saved.');
+        setError('无法保存该设置。');
       });
   }, []);
 

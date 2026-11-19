@@ -99,7 +99,7 @@ export function ThreadPullTitleRow({ state }: { state: ThreadPullDetails }) {
   if (!state.pull) return null;
   return (
     <div className="ib-prp-row2" data-review-pull-row="">
-      <button type="button" className={`ib-prp-this${state.open ? ' ib-on' : ''}`} aria-expanded={state.open} aria-label={`${state.pull.title}, opens details`} onClick={state.toggle} data-pull-details-button="">
+      <button type="button" className={`ib-prp-this${state.open ? ' ib-on' : ''}`} aria-expanded={state.open} aria-label={`${state.pull.title}，打开详情`} onClick={state.toggle} data-pull-details-button="">
         <bdi className="ib-prp-title">{state.pull.title}</bdi>
         <Icon name="chevD" size={13} />
       </button>

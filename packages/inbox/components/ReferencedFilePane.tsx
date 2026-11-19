@@ -52,7 +52,7 @@ function joinPath(folder: string, href: string): string {
 
 function linesLabel(ref: FileRef): string {
   if (!ref.line) return '';
-  return ref.lineEnd && ref.lineEnd !== ref.line ? ` · lines ${ref.line}–${ref.lineEnd}` : ` · line ${ref.line}`;
+  return ref.lineEnd && ref.lineEnd !== ref.line ? ` · 第 ${ref.line}–${ref.lineEnd} 行` : ` · 第 ${ref.line} 行`;
 }
 
 /** What the viewers take as the file, before it is one: no record yet, so no sent version and nothing changed. */
@@ -156,7 +156,7 @@ export function ReferencedFilePane({
           await attachedRef.current(id, first);
         },
         failed: (cause, left) => {
-          setError(cause instanceof InboxApiError ? cause.message : 'The annotation was not saved.');
+          setError(cause instanceof InboxApiError ? cause.message : '批注未保存。');
           setUnsaved(left);
         },
       }),
@@ -201,8 +201,8 @@ export function ReferencedFilePane({
     >
       <div className="ib-vhead">
         {full && (
-          <Tip content="Back to the thread">
-            <button type="button" className="ib-iconbtn" onClick={onClose} aria-label="Back to the thread" data-ref-back="">
+          <Tip content="返回话题">
+            <button type="button" className="ib-iconbtn" onClick={onClose} aria-label="返回话题" data-ref-back="">
               <Icon name="chevL" />
             </button>
           </Tip>
@@ -216,8 +216,8 @@ export function ReferencedFilePane({
         <span className="ib-sp" />
         {htmlComments && <HtmlSurfaceControls armed={armed} onToggleArmed={() => setArmed((v) => !v)} />}
         {!full && (
-          <Tip content="Close">
-            <button type="button" className="ib-iconbtn" onClick={onClose} aria-label={`Close ${name}`}>
+          <Tip content="关闭">
+            <button type="button" className="ib-iconbtn" onClick={onClose} aria-label={`关闭 ${name}`}>
               <Icon name="x" />
             </button>
           </Tip>
@@ -236,7 +236,7 @@ export function ReferencedFilePane({
               ))}
               {unsaved.length > 0 && (
                 <button type="button" className="ib-btn ib-ghost ib-sm ib-ref-retry" onClick={() => void comments.retry()} data-ref-retry="">
-                  Try again
+                  重试
                 </button>
               )}
             </div>
@@ -248,7 +248,7 @@ export function ReferencedFilePane({
                 <Icon name="doc" size={22} />
               </span>
               <span className="ib-refmissing-name">{fileRef.path}</span>
-              <span className="ib-refmissing-t">{reason === 'refused' ? 'does not show here.' : 'is not on this computer.'}</span>
+              <span className="ib-refmissing-t">{reason === 'refused' ? '无法在此显示。' : '不在本机。'}</span>
             </div>
           )}
           {found && found.contents !== undefined && (kind === 'markdown' || kind === 'text') && (
@@ -258,7 +258,7 @@ export function ReferencedFilePane({
             <div className="ib-codeview" data-code-view="">
               <div className="ib-codehint" data-code-row="">
                 <CopyFileButton text={found.contents} name={name} sent={false} announce={noop} />
-                {writes && <span className="ib-codehint-t">{phone ? 'Tap a line to comment.' : 'Click a line number, drag across lines, or select code to comment.'}</span>}
+                {writes && <span className="ib-codehint-t">{phone ? '点按一行即可评论。' : '点击行号、跨行拖动，或选中代码即可评论。'}</span>}
               </div>
               <CodeFileView
                 key={key}
@@ -328,7 +328,7 @@ export function ReferencedFilePane({
                 <Icon name="doc" size={22} />
               </span>
               <span className="ib-refmissing-name">{found.path}</span>
-              <span className="ib-refmissing-t">{found.tooLarge ? 'is too large to show here.' : 'does not show here.'}</span>
+              <span className="ib-refmissing-t">{found.tooLarge ? '过大，无法在此显示。' : '无法在此显示。'}</span>
             </div>
           )}
         </div>

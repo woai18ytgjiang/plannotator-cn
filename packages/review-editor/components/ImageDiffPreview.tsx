@@ -170,7 +170,7 @@ export const ImageDiffPreview: React.FC<ImageDiffPreviewProps> = ({
   if (shown === 'fallback') return <>{fallback}</>;
   if (shown === 'too-large') return <>{tooLargeFallback}</>;
 
-  const sideLabel = (side: ReviewImageSide) => (unchanged ? 'Image' : status === 'added' ? 'Added' : status === 'deleted' ? 'Deleted' : side === 'old' ? 'Before' : 'After');
+  const sideLabel = (side: ReviewImageSide) => (unchanged ? '图片' : status === 'added' ? '已新增' : status === 'deleted' ? '已删除' : side === 'old' ? '之前' : '之后');
   const reserve = layout ? undefined : { height: Math.min(maxHeight, 160) };
 
   const pane = (side: ReviewImageSide) => {
@@ -212,7 +212,7 @@ export const ImageDiffPreview: React.FC<ImageDiffPreviewProps> = ({
           <div
             className="animate-pulse rounded-sm bg-muted/50 motion-reduce:animate-none"
             style={{ width: ((side === 'old' ? layout.old : layout.new) ?? layout.stage).width, height: Math.min(layout.stage.height, maxHeight), marginLeft: layout.offsetX }}
-            aria-label="Loading image"
+            aria-label="正在加载图片"
             data-image-reserved=""
           />
           </>
@@ -221,14 +221,14 @@ export const ImageDiffPreview: React.FC<ImageDiffPreviewProps> = ({
             {label}: {describeImageError(state.error)}
           </p>
         ) : (
-          <div className="animate-pulse rounded-sm bg-muted/50 motion-reduce:animate-none" style={reserve ?? { height: Math.min(maxHeight, 160) }} aria-label="Loading image" />
+          <div className="animate-pulse rounded-sm bg-muted/50 motion-reduce:animate-none" style={reserve ?? { height: Math.min(maxHeight, 160) }} aria-label="正在加载图片" />
         )}
         <figcaption className="mt-1 text-xs leading-5 text-muted-foreground tabular-nums" data-image-unchanged={unchanged ? '' : undefined}>
           <span className="whitespace-nowrap">{bytesOf(side, image) !== undefined ? imageCaption(null, sizeOf(side, image), bytesOf(side, image)!) : label}</span>
           {side === 'new' && comparable && beforeBytes !== undefined && afterBytes !== undefined && (
             <span data-image-delta="" className="ml-1 whitespace-nowrap">{sizeChange(beforeSize, afterSize, beforeBytes, afterBytes)}</span>
           )}
-          {unchanged && <span className="ml-1 whitespace-nowrap">· contents unchanged</span>}
+          {unchanged && <span className="ml-1 whitespace-nowrap">· 内容未变</span>}
           {image && side === 'new' && differencesText && <span className="ml-1 whitespace-nowrap">· {differencesText}</span>}
         </figcaption>
       </figure>
@@ -251,7 +251,7 @@ export const ImageDiffPreview: React.FC<ImageDiffPreviewProps> = ({
             <div
               className="animate-pulse rounded-sm bg-muted/50 motion-reduce:animate-none"
               style={{ width: layout!.stage.width, height: Math.min(layout!.stage.height, maxHeight) }}
-              aria-label="Loading image"
+              aria-label="正在加载图片"
               data-image-reserved=""
             />
             <div className="mt-1 flex flex-wrap items-center gap-x-2 text-xs leading-5 text-muted-foreground tabular-nums">
@@ -262,8 +262,8 @@ export const ImageDiffPreview: React.FC<ImageDiffPreviewProps> = ({
           <>
             <StackedStage
               mode={mode as 'swipe' | 'onion'}
-              before={stageImage('old', before!, 'Before')}
-              after={stageImage('new', after!, 'After')}
+              before={stageImage('old', before!, '之前')}
+              after={stageImage('new', after!, '之后')}
               layout={layout!}
               maxHeight={maxHeight}
               position={position}
@@ -282,7 +282,7 @@ export const ImageDiffPreview: React.FC<ImageDiffPreviewProps> = ({
                   max={100}
                   value={Math.round(opacity * 100)}
                   onChange={(event) => setOpacity(Number(event.target.value) / 100)}
-                  aria-label="After opacity"
+                  aria-label="之后的不透明度"
                   data-onion-opacity=""
                   className="h-1 w-28 accent-[var(--primary)]"
                 />
@@ -292,8 +292,8 @@ export const ImageDiffPreview: React.FC<ImageDiffPreviewProps> = ({
               <span className="whitespace-nowrap">After {imageCaption(null, afterSize, after!.bytes)}</span>
               <span data-image-delta="" className="whitespace-nowrap">{sizeChange(beforeSize, afterSize, before!.bytes, after!.bytes)}</span>
               {dimensionsDiffer && (
-                <span data-image-sizes-differ="" title="Both images are aligned top left at one scale; neither is stretched" className="rounded border border-border px-1 leading-4">
-                  sizes differ
+                <span data-image-sizes-differ="" title="两张图片以相同比例左上对齐，均未拉伸" className="rounded border border-border px-1 leading-4">
+                  尺寸不同
                 </span>
               )}
               {differencesText && <span className="whitespace-nowrap">· {differencesText}</span>}

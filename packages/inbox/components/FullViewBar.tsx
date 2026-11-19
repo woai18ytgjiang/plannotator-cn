@@ -260,7 +260,7 @@ export const FullViewBar = forwardRef<FullViewBarHandle, FullViewBarProps>(funct
         data-full-view-exit={props.leave.kind}
       >
         <Icon name={exit ? 'sideBySide' : 'chevL'} size={exit ? iconSize : phone ? 20 : 16} />
-        {exit && <span>Side by side</span>}
+        {exit && <span>并排</span>}
       </button>
     </Tip>
   );
@@ -271,7 +271,7 @@ export const FullViewBar = forwardRef<FullViewBarHandle, FullViewBarProps>(funct
       data-full-view-dock=""
       data-bar={state}
     >
-      <HoverTip content="Show tools">
+      <HoverTip content="显示工具">
         <button
           type="button"
           ref={handleRef}
@@ -286,7 +286,7 @@ export const FullViewBar = forwardRef<FullViewBarHandle, FullViewBarProps>(funct
             <Icon name="chevsU" size={phone ? 18 : 14} />
             {props.commentDraft && <span className="ib-fvhandle-cdot" aria-hidden="true" data-full-view-comment-dot="" />}
           </span>
-          {props.draft && <span className="ib-fvhandle-w">Draft</span>}
+          {props.draft && <span className="ib-fvhandle-w">草稿</span>}
           {count > 0 && (
             <span key={bump} className={`ib-fvhandle-n${bump ? ' ib-bump' : ''}`}>
               <Icon name="comment" size={phone ? 14 : 12} />
@@ -301,7 +301,7 @@ export const FullViewBar = forwardRef<FullViewBarHandle, FullViewBarProps>(funct
         id={barId}
         className={`ib-fvbar${phone ? ' ib-fvbar-phone' : ''}`}
         role="toolbar"
-        aria-label="Full screen"
+        aria-label="全屏"
         data-full-view-bar=""
       >
         {props.leave.kind === 'back' && leaveButton}
@@ -407,7 +407,7 @@ export const FullViewBar = forwardRef<FullViewBarHandle, FullViewBarProps>(funct
             ref={hideRef}
             className="ib-fvb ib-fvhide"
             onClick={() => set('tucked', 'handle', HIDDEN_SAYING)}
-            aria-label="Hide tools"
+            aria-label="隐藏工具"
             aria-description={props.chord ? `Shortcut: ${formatShortcutBindingText(props.chord)}` : undefined}
             data-full-view-hide="hide"
           >

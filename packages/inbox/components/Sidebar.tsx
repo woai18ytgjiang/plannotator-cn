@@ -475,7 +475,7 @@ export function Sidebar(props: SidebarProps) {
       }}
     >
       <Icon name="search" />
-      Search
+      搜索
       {/* ⌘K / Ctrl K (search/searchShortcut.ts); the button's aria-keyshortcuts names it, and `/`, for a screen reader. */}
       <ShortcutHint scope={inboxSearchShortcuts} action="openSearch" className="ib-kbd ib-sp-hint" />
     </button>
@@ -486,8 +486,8 @@ export function Sidebar(props: SidebarProps) {
     props.onCompose?.(opener);
   };
   const composeButton = (
-    <Tip content={withShortcut('New message', { scope: inboxAppShortcuts, action: 'compose' })}>
-      <button type="button" className="ib-compose-btn" data-open-compose="" aria-label="New message" aria-keyshortcuts={composeKeys} aria-haspopup="dialog" onClick={compose}>
+    <Tip content={withShortcut('新消息', { scope: inboxAppShortcuts, action: 'compose' })}>
+      <button type="button" className="ib-compose-btn" data-open-compose="" aria-label="新消息" aria-keyshortcuts={composeKeys} aria-haspopup="dialog" onClick={compose}>
         <Icon name="compose" />
       </button>
     </Tip>
@@ -497,7 +497,7 @@ export function Sidebar(props: SidebarProps) {
   const feedbackButton = (
     <button type="button" className="ib-nav" aria-haspopup="dialog" data-feedback-nav="" onClick={pick(() => props.onFeedback?.())}>
       <Icon name="comment" />
-      Feedback
+      反馈
     </button>
   );
   // A phone's sheet (approval "inbox-phone-sidebar-sheet"): Settings, Feedback and light/dark share one foot row.
@@ -518,14 +518,14 @@ export function Sidebar(props: SidebarProps) {
         return (
           <button type="button" className="ib-nav" data-open-compose="" aria-haspopup="dialog" aria-keyshortcuts={composeKeys} onClick={compose}>
             <Icon name="compose" />
-            New message
+            新消息
           </button>
         );
       case 'inbox':
         return (
           <>
       {/* On the list it shows, Inbox refreshes it: ↻ on hover with "Refresh", one turn on a click. */}
-      <Tip content="Refresh" when={() => inboxRefreshes}>
+      <Tip content="刷新" when={() => inboxRefreshes}>
         <button
           ref={inboxRef}
           type="button"
@@ -541,12 +541,12 @@ export function Sidebar(props: SidebarProps) {
             <Icon name="inbox" className="ib-ic-inbox" />
             <Icon key={spinOf(null) ?? 'rest'} name="refresh" className="ib-ic-refresh" />
           </span>
-          Inbox
+          收件箱
           {!firstRun && props.inboxCount > 0 && <span className="ib-n">{formatCount(props.inboxCount)}</span>}
         </button>
       </Tip>
       <span id={refreshHintId} hidden>
-        Refresh the list
+        刷新列表
       </span>
           </>
         );
@@ -560,7 +560,7 @@ export function Sidebar(props: SidebarProps) {
           data-board-nav=""
         >
           <Icon name="board" />
-          Board
+          看板
         </button>
         );
       case 'plans':
@@ -581,7 +581,7 @@ export function Sidebar(props: SidebarProps) {
           </span>
           Shape
           {(props.shapeChanged ?? 0) > 0 && (
-            <span className="ib-n" aria-label={`${props.shapeChanged} changed since you looked`}>
+            <span className="ib-n" aria-label={`自你上次查看后 ${props.shapeChanged} 项有变化`}>
               {formatCount(props.shapeChanged ?? 0)}
             </span>
           )}
@@ -597,9 +597,9 @@ export function Sidebar(props: SidebarProps) {
           data-pulls-nav=""
         >
           <Icon name="pullRequest" />
-          Reviews
+          审查
           {(props.pullsCount ?? 0) > 0 && (
-            <span className="ib-n" aria-label={`${props.pullsCount} on you`}>
+            <span className="ib-n" aria-label={`待你处理 ${props.pullsCount} 项`}>
               {formatCount(props.pullsCount ?? 0)}
             </span>
           )}
@@ -616,7 +616,7 @@ export function Sidebar(props: SidebarProps) {
           data-artifacts-nav=""
         >
           <Icon name="artifacts" />
-          Artifacts
+          产物
         </button>
         );
       case 'drafts':
@@ -631,7 +631,7 @@ export function Sidebar(props: SidebarProps) {
           data-drafts-nav=""
         >
           <Icon name="doc" />
-          Drafts
+          草稿
           <span className="ib-n">{formatCount(props.draftsCount ?? 0)}</span>
         </button>
         );
@@ -653,7 +653,7 @@ export function Sidebar(props: SidebarProps) {
               aria-current={props.page === 'settings' ? 'page' : undefined}
             >
               <Icon name="settings" />
-              Settings
+              设置
             </button>
             {footJoined && feedbackButton}
             {keysShown && props.onShortcuts && <KeysButton onPress={props.onShortcuts} />}
@@ -681,7 +681,7 @@ export function Sidebar(props: SidebarProps) {
     <div className="ib-brand" data-sidebar-item="logo">
       <TaterMark />
       <b>Plannotator</b>
-      <span>Inbox</span>
+      <span>收件箱</span>
     </div>
   );
   /** A phone's sheet: Starred's heading in a row of its own, as Agents' and Projects' are, so all three stick alike. */
@@ -690,12 +690,12 @@ export function Sidebar(props: SidebarProps) {
   // Copy prompt pill when it leads it, as before.
   const noticesAfter = bottom[0] === 'copy-prompt' ? 1 : 0;
   return (
-    <aside ref={asideRef} className="ib-side" aria-label="Inbox navigation" onContextMenu={menu.onContextMenu} onTouchStart={menu.onTouchStart}>
+    <aside ref={asideRef} className="ib-side" aria-label="收件箱导航" onContextMenu={menu.onContextMenu} onTouchStart={menu.onTouchStart}>
       {phone ? (
         // A phone's sheet: the mark, and a close button (the only way out at a width the sheet fills).
         <div className="ib-sheet-head">
           {brand}
-          <button type="button" className="ib-sheet-close" aria-label="Close" data-sheet-close="" onClick={() => setOpenMobile(false)}>
+          <button type="button" className="ib-sheet-close" aria-label="关闭" data-sheet-close="" onClick={() => setOpenMobile(false)}>
             <Icon name="x" />
           </button>
         </div>
@@ -705,14 +705,14 @@ export function Sidebar(props: SidebarProps) {
       {showingOnly && (
         <div className="ib-sheet-now" data-sheet-showing={showingOnly.kind}>
           <div className="ib-sheet-now-t">
-            <span className="ib-sheet-now-l">Showing only</span>
+            <span className="ib-sheet-now-l">仅显示</span>
             <span className="ib-sheet-now-n">
               {showingOnly.kind === 'agent' ? <GogglesMark /> : showingOnly.kind === 'tag' ? <TagIcon className="ib-ic" /> : <Icon name={showingOnly.kind === 'project' ? 'folder' : 'laptop'} />}
               <bdi dir="auto">{showingOnly.name}</bdi>
             </span>
           </div>
-          <button type="button" className="ib-sheet-now-c" aria-label="Clear: show everything" data-sheet-clear="" onClick={pick(props.onInbox)}>
-            Clear
+          <button type="button" className="ib-sheet-now-c" aria-label="清除：显示全部" data-sheet-clear="" onClick={pick(props.onInbox)}>
+            清除
           </button>
         </div>
       )}
@@ -727,7 +727,7 @@ export function Sidebar(props: SidebarProps) {
               section="pinned"
               id={pinnedLabelId}
               controls={pinnedBodyId}
-              label="Starred"
+              label="已星标"
               icon="star"
               iconClass="ib-star-on"
               pop={starPopping()}
@@ -776,7 +776,7 @@ export function Sidebar(props: SidebarProps) {
                 section="tags"
                 id={tagsLabelId}
                 controls={tagsBodyId}
-                label="Tags"
+                label="标签"
                 iconNode={<TagIcon className="ib-ic" />}
                 open={!tagsClosed}
                 count={0}
@@ -809,7 +809,7 @@ export function Sidebar(props: SidebarProps) {
                 section="agents"
                 id={agentsLabelId}
                 controls={agentsBodyId}
-                label="Agents"
+                label="智能体"
                 iconNode={icon}
                 open={!agentsClosed}
                 count={0}
@@ -840,7 +840,7 @@ export function Sidebar(props: SidebarProps) {
             section="projects"
             id={projectsLabelId}
             controls={projectsBodyId}
-            label="Projects"
+            label="项目"
             icon={projectsClosed ? 'folder' : 'folderOpen'}
             open={!projectsClosed}
             count={0}
@@ -852,12 +852,12 @@ export function Sidebar(props: SidebarProps) {
         <div className="ib-projs" id={projectsBodyId} role="group" aria-labelledby={projectsLabelId} data-closed={projectsClosed ? '' : undefined} data-recent={projectSort === 'recent' ? '' : undefined}>
           {/* Closed: only the project the list shows, if any; never the empty notes. */}
           {firstRun ? (
-            !projectsClosed && <div className="ib-side-empty">Projects appear here when an agent writes from one.</div>
+            !projectsClosed && <div className="ib-side-empty">智能体从某个项目写入后，项目会显示在这里。</div>
           ) : shown.length === 0 ? (
             !projectsClosed && (
               <div className="ib-side-empty" data-projects-hidden="">
                 {/* Projects whose threads were deleted rather than archived are not in Settings → Archived. */}
-                {props.projects.some((project) => (project.archived ?? 0) > 0) ? 'Nothing open. Archived projects are in Settings → Archived.' : 'Nothing open.'}
+                {props.projects.some((project) => (project.archived ?? 0) > 0) ? '没有打开的项。已归档项目位于「设置」→「已归档」。' : '没有打开的项。'}
               </div>
             )
           ) : (
@@ -1017,11 +1017,11 @@ function SectionHeader(props: {
             {formatCount(props.count)}
             {props.total !== undefined ? (
               <>
-                {' waiting'}
-                <span className="ib-sr"> on you</span>
+                {' 项待你处理'}
+                <span className="ib-sr"></span>
               </>
             ) : (
-              <span className="ib-sr"> waiting on you</span>
+              <span className="ib-sr"> 项待你处理</span>
             )}
           </span>
         )}
@@ -1092,8 +1092,8 @@ function RestartSessionsRow({ agents, onOpen }: { agents: InboxRestartAgents; on
 export const CONNECT_COPIED_MS = 2000;
 /** A failed copy stays on screen a little longer, so it is read. */
 export const CONNECT_COPY_FAILED_MS = 4000;
-export const CONNECT_COPIED_ANNOUNCEMENT = 'Connect prompt copied.';
-export const CONNECT_COPY_FAILED_ANNOUNCEMENT = "Couldn't copy the connect prompt.";
+export const CONNECT_COPIED_ANNOUNCEMENT = '连接提示词已复制。';
+export const CONNECT_COPY_FAILED_ANNOUNCEMENT = '无法复制连接提示词。';
 
 /**
  * "Copy connect prompt" (owner approval 2026-10-13, design record
@@ -1144,12 +1144,12 @@ function CopyConnectPrompt({ mcpCommand }: { mcpCommand: readonly string[] | nul
         </span>
         {state === 'idle' ? (
           <span className="ib-cpill-l">
-            Copy prompt<span className="ib-sr"> to connect an agent</span>
+            复制提示词<span className="ib-sr">，用于连接智能体</span>
           </span>
         ) : (
           <>
             <Icon name={state === 'copied' ? 'check' : 'warn'} />
-            <span className="ib-cpill-l">{state === 'copied' ? 'Copied' : "Couldn't copy"}</span>
+            <span className="ib-cpill-l">{state === 'copied' ? '已复制' : "无法复制"}</span>
           </>
         )}
       </button>
@@ -1170,8 +1170,8 @@ function CopyConnectPrompt({ mcpCommand }: { mcpCommand: readonly string[] | nul
 function KeysButton({ onPress }: { onPress: () => void }) {
   const keys = useShortcutAria({ scope: inboxAppShortcuts, action: 'openMap' });
   return (
-    <Tip content={withShortcut('Keyboard shortcuts', { scope: inboxAppShortcuts, action: 'openMap' })}>
-      <button type="button" className="ib-keys-tg" aria-label="Keyboard shortcuts" aria-haspopup="dialog" aria-keyshortcuts={keys} onClick={onPress} data-shortcut-map-button="">
+    <Tip content={withShortcut('键盘快捷键', { scope: inboxAppShortcuts, action: 'openMap' })}>
+      <button type="button" className="ib-keys-tg" aria-label="键盘快捷键" aria-haspopup="dialog" aria-keyshortcuts={keys} onClick={onPress} data-shortcut-map-button="">
         <Icon name="keyboard" />
       </button>
     </Tip>
@@ -1181,7 +1181,7 @@ function KeysButton({ onPress }: { onPress: () => void }) {
 function ThemeToggle() {
   const { shown, flip } = useInboxTheme();
   const next = shown === 'dark' ? 'light' : 'dark';
-  const label = `Switch to ${next} mode`;
+  const label = next === 'light' ? '切换到浅色模式' : '切换到深色模式';
   return (
     <Tip content={label}>
       <button type="button" className="ib-theme-tg" aria-label={label} data-theme-toggle={shown} onClick={flip}>

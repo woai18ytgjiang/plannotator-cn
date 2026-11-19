@@ -173,5 +173,5 @@ export function peekText(body: string): string {
 
 /** What a draft is called: the thread's name when it has one, else its subject. */
 export function floaterName(row: { thread_name?: string | null; subject?: string | null }): string {
-  return row.thread_name || row.subject || 'Thread';
+  return row.thread_name || row.subject || '话题';
 }

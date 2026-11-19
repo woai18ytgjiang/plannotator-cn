@@ -104,7 +104,7 @@ export function takeHostResultPath(env: NodeJS.ProcessEnv = process.env): string
     delete env[HOST_RESULT_FILE_ENV];
     const path = value && value.trim() ? value : undefined;
     if (path && !isAllowedHostResultPath(path)) {
-      console.error(`Plannotator: ignoring ${HOST_RESULT_FILE_ENV}: not a result.json under the data dir's host launch folders.`);
+      console.error(`Plannotator：忽略 ${HOST_RESULT_FILE_ENV}：它不是 data dir 下各 host 启动文件夹内的 result.json。`);
       takenPath = undefined;
     } else {
       takenPath = path;
@@ -121,7 +121,7 @@ export function writeHostResult(path: string, record: HostResultRecord): void {
     writeFileSync(temp, `${JSON.stringify(record)}\n`, { encoding: "utf8", mode: 0o600 });
     renameSync(temp, path);
   } catch (error) {
-    console.error(`Plannotator: could not write the host result file: ${error instanceof Error ? error.message : String(error)}`);
+    console.error(`Plannotator：无法写入 host 结果文件：${error instanceof Error ? error.message : String(error)}`);
   }
 }
 

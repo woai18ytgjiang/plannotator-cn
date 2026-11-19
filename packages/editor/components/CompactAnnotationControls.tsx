@@ -29,10 +29,10 @@ export const CompactAnnotationControls: React.FC<CompactAnnotationControlsProps>
         className="inline-flex min-w-0 items-center gap-2 rounded-lg border border-border/50 bg-muted/45 px-3 text-sm font-medium text-foreground outline-none transition-colors hover:bg-muted focus-visible:ring-2 focus-visible:ring-ring/60"
       >
         <MarkupIcon />
-        <span>Annotate</span>
+        <span>批注</span>
         <span className="text-muted-foreground">·</span>
         <span className="truncate text-muted-foreground">
-          {inputMethod === 'pinpoint' ? 'Pinpoint' : 'Select text'}
+          {inputMethod === 'pinpoint' ? '精确定位' : '选择文本'}
         </span>
         <ChevronIcon />
       </button>
@@ -49,19 +49,19 @@ export const CompactAnnotationControls: React.FC<CompactAnnotationControlsProps>
       data-pn-compact-annotate-choices="true"
       className="grid w-full grid-cols-2 gap-1 rounded-xl border border-border/50 bg-muted/45 p-1"
       role="group"
-      aria-label="Choose how to annotate"
+      aria-label="选择批注方式"
     >
       <MethodButton
         selected={inputMethod === 'drag'}
-        label="Select text"
-        description="Drag over text"
+        label="选择文本"
+        description="拖选文本"
         icon={<SelectIcon />}
         onClick={() => choose('drag')}
       />
       <MethodButton
         selected={inputMethod === 'pinpoint'}
-        label="Pinpoint"
-        description="Tap one block"
+        label="精确定位"
+        description="轻点一个块"
         icon={<PinpointIcon />}
         onClick={() => choose('pinpoint')}
       />

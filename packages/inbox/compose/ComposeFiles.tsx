@@ -32,7 +32,7 @@ export interface ComposeFile {
   error: string | null;
   /** A local preview of an image picked in this tab (never for a reopened draft). */
   preview: string | null;
-  /** A long paste attached as a file (pastedText.ts): the words it holds, so Put back can return them. */
+  /** A long paste attached as a file (pastedText.ts): the words it holds, so 放回 can return them. */
   pasted?: PastedText | null;
   /** A file already in the Inbox, added by reference: its bytes' hash from the first moment. */
   reuse?: { sha256: string } | null;
@@ -42,11 +42,11 @@ export interface ComposeFile {
 
 /** A long paste the person can put back in the box. */
 export interface PastedText {
-  /** The exact text pasted; null for a tile a draft brought back (read from its upload on Put back). */
+  /** The exact text pasted; null for a tile a draft brought back (read from its upload on 放回). */
   text: string | null;
   /** The tile's name line: the first words (pastedPreview). */
   preview: string;
-  /** When it was pasted (ms): the tile reads "Undo" for PASTED_UNDO_MS. */
+  /** When it was pasted (ms): the tile reads "撤销" for PASTED_UNDO_MS. */
   at: number;
 }
 
@@ -68,7 +68,7 @@ interface PasteAnchor {
   lead: string;
 }
 
-/** A draft's file as a tile; a long paste comes back as a pasted text tile, its words read on Put back. */
+/** A draft's file as a tile; a long paste comes back as a pasted text tile, its words read on 放回. */
 const fromUpload = (file: InboxDraftFile): ComposeFile => {
   const { pasted, ...upload } = file;
   return {
@@ -80,7 +80,7 @@ const fromUpload = (file: InboxDraftFile): ComposeFile => {
     upload,
     error: null,
     preview: null,
-    // `at` 0: long past its Undo, so the tile offers Put back in box.
+    // `at` 0: long past its 撤销, so the tile offers 放回输入框.
     ...(pasted ? { pasted: { text: null, preview: pasted.preview, at: 0 } } : {}),
   };
 };
@@ -109,7 +109,7 @@ export function attachedAnnouncement(names: readonly string[]): string {
  * The files of one compose session (or reply box), and its uploads.
  * `onPasted`: the names a paste attached, for the host's polite live region.
  * `text`: the box's words. With it, a paste of 32 KB or more becomes a pasted
- * text tile (pastedText.ts) that `putBack` (the tile's Undo and Put back) and
+ * text tile (pastedText.ts) that `putBack` (the tile's 撤销 and 放回) and
  * the browser's own undo, as the very next edit, return to the box.
  */
 export function useComposeFiles(
@@ -175,7 +175,7 @@ export function useComposeFiles(
   }, []);
   /** The browser's undo puts this tile back while it is the field's very next edit (the paste's own undo). */
   const undoArm = useRef<{ key: string; field: HTMLTextAreaElement } | null>(null);
-  /** Restored tiles whose words are being read for a Put back (a second press waits for the first). */
+  /** Restored tiles whose words are being read for a 放回 (a second press waits for the first). */
   const reading = useRef(new Set<string>());
   /** After a put back: the caret goes after the words once the box shows them. */
   const caretAfter = useRef<{ field: HTMLTextAreaElement; caret: number } | null>(null);
@@ -205,7 +205,7 @@ export function useComposeFiles(
       })
       .catch((cause) => {
         if (!(cause instanceof DOMException && cause.name === 'AbortError')) {
-          patch(key, { state: 'refused', error: cause instanceof InboxApiError ? cause.message : 'Not attached: the upload failed.' });
+          patch(key, { state: 'refused', error: cause instanceof InboxApiError ? cause.message : '未附加：上传失败。' });
         }
         return null;
       })
@@ -217,7 +217,7 @@ export function useComposeFiles(
     return key;
   };
 
-  /** Each file to its upload; their keys, in order (for a host that may take them out again: an Undo). */
+  /** Each file to its upload; their keys, in order (for a host that may take them out again: an 撤销). */
   const add = useCallback((list: Iterable<File>): string[] => {
     const keys: string[] = [];
     for (const file of list) keys.push(addOne(file));
@@ -275,7 +275,7 @@ export function useComposeFiles(
       })
       .catch((cause) => {
         if (!(cause instanceof DOMException && cause.name === 'AbortError')) {
-          patch(key, { state: 'refused', error: cause instanceof InboxApiError ? cause.message : 'Not attached: that file could not be added.' });
+          patch(key, { state: 'refused', error: cause instanceof InboxApiError ? cause.message : '未附加：无法添加该文件。' });
         }
         return null;
       })
@@ -294,7 +294,7 @@ export function useComposeFiles(
    */
   const addPasted = (own: OwnAttachmentPaste, pictures: readonly File[]) => {
     const key = `local-${newUuid()}`;
-    const fresh: ComposeFile = { key, name: 'Adding…', size: 0, state: 'uploading', progress: 0, upload: null, error: null, preview: own.src, reuse: { sha256: '' } };
+    const fresh: ComposeFile = { key, name: '正在添加…', size: 0, state: 'uploading', progress: 0, upload: null, error: null, preview: own.src, reuse: { sha256: '' } };
     filesRef.current = [...filesRef.current, fresh];
     setFiles((current) => [...current, fresh]);
     const drop = () => {
@@ -324,7 +324,7 @@ export function useComposeFiles(
           add(pictures);
           onPasted.current?.(pictures.map((file) => file.name));
         } else {
-          patch(key, { state: 'refused', name: 'Picture', error: cause instanceof InboxApiError ? cause.message : 'Not attached: that file could not be added.' });
+          patch(key, { state: 'refused', name: '图片', error: cause instanceof InboxApiError ? cause.message : '未附加：无法添加该文件。' });
         }
         return null;
       })
@@ -395,7 +395,7 @@ export function useComposeFiles(
    * A long text attached as a pasted text tile, to go back at `at` in the box's
    * words (`lead` before it). `field`: the box it was pasted into, whose next
    * edit may be the browser's undo of it. The file keeps the pasted bytes; the
-   * words Put back returns have `\n` line ends (`boxText`), as the box holds
+   * words 放回 returns have `\n` line ends (`boxText`), as the box holds
    * them and a plain paste would give them.
    */
   const takeText = useCallback((words: string, at: number, options: { field?: HTMLTextAreaElement | null; lead?: string } = {}) => {
@@ -470,7 +470,7 @@ export function useComposeFiles(
   };
 
   /**
-   * Put a pasted text tile's words back in the box (its Undo, Put back in box,
+   * Put a pasted text tile's words back in the box (its 撤销, 放回输入框,
    * or the browser's undo): exactly where they were pasted, the words around
    * them untouched, the caret after them in `field`. The tile goes. False when
    * `key` is not a pasted text tile.
@@ -494,7 +494,7 @@ export function useComposeFiles(
         // The upload holds the pasted bytes; the box takes them with `\n` line ends, as a fresh tile's.
         insertBack(key, boxText(words), field);
       })
-      .catch(() => patch(key, { error: 'That pasted text could not be read back. It is still attached.' }))
+      .catch(() => patch(key, { error: '那段粘贴的文本无法读回，但它仍处于附加状态。' }))
       .finally(() => reading.current.delete(key));
     return true;
   }, []);
@@ -634,7 +634,7 @@ export function useComposeFiles(
   }, [putBack]);
 
   /**
-   * Files chosen with the attach button (a phone's: iOS offers no Paste for a
+   * 文件 chosen with the attach button (a phone's: iOS offers no Paste for a
    * picture in a plain text field), named and announced as a paste is.
    */
   const attach = useCallback(
@@ -674,7 +674,7 @@ export function useComposeFiles(
   return { files, add, canReuse, addExisting, holding, removeHolding, attach, remove, forget, reset, detach, current, paste, takeText, putBack, pastedDraft, draftFiles, restoreDraft, follow, uploaded, uploading };
 }
 
-/** A phone's picker offers the photo library and Files (iOS gives no Paste for a picture in a text field). */
+/** A phone's picker offers the photo library and 文件 (iOS gives no Paste for a picture in a text field). */
 const PHONE_ACCEPT = 'image/*,*/*';
 
 /**
@@ -700,7 +700,7 @@ export function AttachFilesButton({
 }) {
   return (
     <Tip content="Attach files">
-      <label className={className} aria-label="Attach files">
+      <label className={className} aria-label="附加文件">
         <Icon name="clip" size={iconSize} />
         <input
           type="file"
@@ -726,7 +726,7 @@ export function dragHasFiles(event: ReactDragEvent): boolean {
 /**
  * A drag that started on the page itself (an image in a message dragged a
  * little): `dragstart` fires only for those, never for files from the system,
- * and `dragend` ends it. Some browsers give such a drag a `Files` type, so the
+ * and `dragend` ends it. Some browsers give such a drag a `文件` type, so the
  * drop targets below ignore it. One pair of document listeners for every
  * target on the page.
  */
@@ -817,7 +817,7 @@ function iconFor(upload: Pick<InboxUpload, 'kind'> | null): IconName {
 /** The line under a tile's name: words, then its separator and size. A narrow tile cuts only the words. */
 function detailOf(file: ComposeFile): { words: string; size: string } {
   const size = formatBytes(file.state === 'uploading' ? file.size : file.upload!.size);
-  if (file.state === 'uploading') return file.reuse ? { words: 'Adding…', size: ` ${size}` } : { words: `Uploading… ${Math.round(file.progress * 100)}%`, size: ` of ${size}` };
+  if (file.state === 'uploading') return file.reuse ? { words: '正在添加…', size: ` ${size}` } : { words: `Uploading… ${Math.round(file.progress * 100)}%`, size: ` of ${size}` };
   const upload = file.upload!;
   return { words: inboxAttachmentKindLabel(upload.kind, upload.name, upload.media_type), size: `, ${size}` };
 }
@@ -843,15 +843,15 @@ function useFresh(at: number): boolean {
  * A long paste as a file (approval "inbox-paste-attachment", Option A): the
  * ordinary tile, its name the paste's first words, its second line "Pasted
  * text · 46.9 KB". For its first 10 seconds that line reads "Pasted text ·
- * Undo"; after them, hover or keyboard focus swaps it in place for "Put back
+ * 撤销"; after them, hover or keyboard focus swaps it in place for "放回
  * in box" (inbox.css: the two share one grid cell, so nothing moves). On a
- * phone, or a screen with no hover, the line keeps the size and "Undo", then
- * "Put back", stands beside the × with a 44 px target. Each puts the words
+ * phone, or a screen with no hover, the line keeps the size and "撤销", then
+ * "放回", stands beside the × with a 44 px target. Each puts the words
  * back in the box (`onPutBack`).
  */
 function PastedTextTile({ file, pasted, onRemove, onPutBack }: { file: ComposeFile; pasted: PastedText; onRemove: (key: string) => void; onPutBack: (key: string) => void }) {
   const fresh = useFresh(pasted.at);
-  const size = `Pasted text · ${formatBytes(file.size)}`;
+  const size = `粘贴的文本 · ${formatBytes(file.size)}`;
   return (
     <div
       className={`ib-cp-file ib-pt${file.state === 'refused' ? ' ib-refused' : ''}`}
@@ -869,24 +869,24 @@ function PastedTextTile({ file, pasted, onRemove, onPutBack }: { file: ComposeFi
         </span>
         {file.state === 'refused' || file.error ? (
           <span className="ib-cp-ferr" role="alert">
-            {file.error ?? 'Not attached.'}
+            {file.error ?? '未附加。'}
           </span>
         ) : (
           <span className="ib-kd ib-pt-line" data-pasted-line="">
             <span className="ib-pt-size">{size}</span>
-            {/* One button in both states, only its words change: focus on Undo stays on it at the 10 s swap.
+            {/* One button in both states, only its words change: focus on 撤销 stays on it at the 10 s swap.
                 Its name says which paste, so two tiles never give two identical buttons. */}
             <span className={fresh ? 'ib-pt-undo' : 'ib-pt-back'}>
-              {fresh ? 'Pasted text · ' : null}
+              {fresh ? '粘贴的文本 · ' : null}
               <button
                 type="button"
                 className="ib-pt-act"
                 data-pasted-undo={fresh ? '' : undefined}
                 data-pasted-put-back={fresh ? undefined : ''}
-                aria-label={fresh ? `Undo paste of ${file.name}` : `Put back in box: ${file.name}`}
+                aria-label={fresh ? `撤销 paste of ${file.name}` : `放回输入框: ${file.name}`}
                 onClick={() => onPutBack(file.key)}
               >
-                {fresh ? 'Undo' : 'Put back in box'}
+                {fresh ? '撤销' : '放回输入框'}
               </button>
             </span>
           </span>
@@ -901,12 +901,12 @@ function PastedTextTile({ file, pasted, onRemove, onPutBack }: { file: ComposeFi
         type="button"
         className="ib-pt-side"
         data-pasted-side=""
-        aria-label={fresh ? `Undo paste of ${file.name}` : `Put back: ${file.name}`}
+        aria-label={fresh ? `撤销 paste of ${file.name}` : `放回: ${file.name}`}
         onClick={() => onPutBack(file.key)}
       >
-        {fresh ? 'Undo' : 'Put back'}
+        {fresh ? '撤销' : '放回'}
       </button>
-      <button type="button" className="ib-cp-fx" aria-label={file.state === 'uploading' ? `Stop uploading ${file.name}` : `Remove ${file.name}`} onClick={() => onRemove(file.key)}>
+      <button type="button" className="ib-cp-fx" aria-label={file.state === 'uploading' ? `停止上传 ${file.name}` : `Remove ${file.name}`} onClick={() => onRemove(file.key)}>
         <Icon name="x" size={14} />
       </button>
     </div>
@@ -941,7 +941,7 @@ export function ComposeFileTiles({ files, onRemove, onPutBack }: { files: readon
             <FileName name={file.name} className="ib-nm" />
             {file.state === 'refused' ? (
               <span className="ib-cp-ferr" role="alert">
-                {file.error ?? 'Not attached.'}
+                {file.error ?? '未附加。'}
               </span>
             ) : (
               <span className="ib-kd ib-kd-split">
@@ -955,7 +955,7 @@ export function ComposeFileTiles({ files, onRemove, onPutBack }: { files: readon
               </span>
             )}
           </span>
-          <button type="button" className="ib-cp-fx" aria-label={file.state === 'uploading' ? `Stop uploading ${file.name}` : `Remove ${file.name}`} onClick={() => onRemove(file.key)}>
+          <button type="button" className="ib-cp-fx" aria-label={file.state === 'uploading' ? `停止上传 ${file.name}` : `Remove ${file.name}`} onClick={() => onRemove(file.key)}>
             <Icon name="x" size={14} />
           </button>
         </div>

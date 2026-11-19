@@ -238,7 +238,7 @@ export function AgentMark({
         ref={button}
         type="button"
         className="am-btn"
-        aria-label={`${name}: icon`}
+        aria-label={`${name}：图标`}
         aria-haspopup="dialog"
         aria-expanded={fan?.open ?? false}
         data-agent-icon={id}

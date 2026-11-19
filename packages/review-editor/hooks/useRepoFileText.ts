@@ -36,7 +36,7 @@ function readRepoFile(key: string, path: string, snapshotId: string, fetchImpl: 
         return {
           status: 'error',
           message: response.status === 409
-            ? 'The diff changed since this tab opened. Refresh to read the file again.'
+            ? '自打开此标签页以来差异已变更，请刷新以重新读取文件。'
             : body.error ?? `HTTP ${response.status}`,
         };
       }
@@ -46,7 +46,7 @@ function readRepoFile(key: string, path: string, snapshotId: string, fetchImpl: 
       remember(key, next);
       return next;
     })
-    .catch((error): RepoFileText => ({ status: 'error', message: error instanceof Error ? error.message : 'The file could not be read.' }))
+    .catch((error): RepoFileText => ({ status: 'error', message: error instanceof Error ? error.message : '无法读取该文件。' }))
     .finally(() => inflight.delete(key));
   inflight.set(key, read);
   return read;
@@ -92,13 +92,13 @@ export function useRepoFileText(
 export function repoFileEmptyMessage(reason: RepoFileNoContentReason, size?: number): string {
   switch (reason) {
     case 'too-large':
-      return size ? `Too large to show (${(size / 1024 / 1024).toFixed(1)} MB; the limit is 5 MB).` : 'Too large to show (the limit is 5 MB).';
+      return size ? `Too large to show (${(size / 1024 / 1024).toFixed(1)} MB; the limit is 5 MB).` : '文件过大，无法显示（上限为 5 MB）。';
     case 'binary':
-      return 'A binary file: nothing to show as text.';
+      return '二进制文件：没有可显示为文本的内容。';
     case 'missing':
-      return 'This file is not there any more (or is a link).';
+      return '此文件已不存在（或是一个链接）。';
     default:
-      return 'The platform did not return this file (files over 1 MB are not served without the local checkout).';
+      return '平台未返回此文件（超过 1 MB 的文件在没有本地检出时不会提供）。';
   }
 }
 

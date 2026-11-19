@@ -27,7 +27,7 @@ import type { InboxAuthor, InboxListRow, InboxMessage, InboxNotifyReach, InboxSe
 import { inboxQuestionWaitsForList } from '@plannotator/core/inbox-questions';
 import { INBOX_TURN_FAILED_WORDS } from '@plannotator/core/inbox-run-line';
 import { inboxApi, type InboxEvent, type ListModel, type NotificationSettings } from './api';
-import { agentName, plural } from './format';
+import { agentName } from './format';
 import { pageInFront } from './sound';
 import { inboxEventsServedBy } from './sharedEvents';
 import { signalNotificationClick } from './history';
@@ -77,12 +77,12 @@ export function threadNotificationText(input: {
   const asks = input.asks ?? true;
   const what =
     input.section === 'stopped'
-      ? 'stopped on you'
+      ? '停在你这里'
       : asks || input.section === 'holding' || input.section === 'waiting'
-        ? 'is waiting on you'
+        ? '正在等你'
         : input.failed
           ? INBOX_TURN_FAILED_WORDS
-          : 'started a thread';
+          : '开始了新话题';
   return { title: `${input.project}: ${input.agent} ${what}`, body: input.subject };
 }
 
@@ -93,9 +93,9 @@ export function threadNotificationText(input: {
  */
 export function burstNotificationText(projects: readonly string[], options: { waiting?: boolean } = {}): { title: string; body: string } {
   const distinct = [...new Set(projects)];
-  const where = distinct.length === 1 ? distinct[0]! : plural(distinct.length, 'project');
-  const what = options.waiting === false ? 'new' : 'waiting';
-  return { title: `${projects.length} ${what} in ${where}`, body: distinct.join(', ') };
+  const where = distinct.length === 1 ? distinct[0]! : `${distinct.length} 个项目`;
+  const what = options.waiting === false ? '条新消息' : '条等待中';
+  return { title: `${projects.length} ${what} · ${where}`, body: distinct.join('、') };
 }
 
 /** In front, notices this close together are one burst; away, a burst lasts until the tab is back. */

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Why a decision POST (send feedback, approve, deny) did not land (#1392).
  *
@@ -74,12 +75,12 @@ export function canRetrySend(failure: SendFailure): boolean {
 export function describeSendFailure(failure: SendFailure): string {
   switch (failure.kind) {
     case 'unreachable':
-      return "Plannotator isn't running or can't be reached.";
+      return 'Plannotator 未运行或无法连接。';
     case 'rejected':
-      return `Plannotator answered with an error (${failure.status}).`;
+      return `Plannotator 返回了错误（${failure.status}）。`;
     case 'decided':
-      return 'This review was already decided, in another window or because its session ended.';
+      return '此审查已被处理：可能是在另一个窗口中完成的，或其会话已结束。';
     default:
-      return 'Something went wrong before it was sent.';
+      return '发送前出了点问题。';
   }
 }

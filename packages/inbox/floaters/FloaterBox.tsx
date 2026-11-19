@@ -348,8 +348,8 @@ export function FloaterBox({ row, phone, frame, takeFocus, onMinimize, onPutAway
     </span>
   );
   const openThread = (
-    <Tip content="Open the thread">
-      <button type="button" className="ib-rf-ic" aria-label="Open the thread" onClick={onOpenThread} data-rf-open-thread="">
+    <Tip content="打开话题">
+      <button type="button" className="ib-rf-ic" aria-label="打开话题" onClick={onOpenThread} data-rf-open-thread="">
         <Icon name="arrowUpRight" size={phone ? 18 : 15} />
       </button>
     </Tip>
@@ -447,7 +447,7 @@ export function FloaterBox({ row, phone, frame, takeFocus, onMinimize, onPutAway
             voiceNoteGlide
             value={text}
             onChange={change}
-            placeholder="Write a reply. Type / for a skill"
+            placeholder="写回复。输入 / 可调用技能"
             ariaLabel={`Reply to ${agentLabel}`}
             ariaDescribedBy={draft.conflict !== null ? conflictId : undefined}
             destination="your reply"
@@ -485,7 +485,7 @@ export function FloaterBox({ row, phone, frame, takeFocus, onMinimize, onPutAway
           clip={<AttachFilesButton className="ib-rclip" iconSize={phone ? 20 : 16} phone={phone} inputData="data-rf-attach" onFiles={(list) => files.add(list)} />}
           skills={
             <Tip content="Skills (or type / in the reply)">
-              <button type="button" className="ib-ricon" aria-label="Skills" data-rf-skills="" onClick={openSkills}>
+              <button type="button" className="ib-ricon" aria-label="技能" data-rf-skills="" onClick={openSkills}>
                 <Icon name="cube" size={phone ? 20 : 16} />
               </button>
             </Tip>
@@ -500,7 +500,7 @@ export function FloaterBox({ row, phone, frame, takeFocus, onMinimize, onPutAway
           discard={
             phone ? null : (
               <Tip content="Discard this draft">
-                <button type="button" className="ib-ricon ib-rdiscard" aria-label="Discard draft" onClick={discard} disabled={sending} data-rf-discard="">
+                <button type="button" className="ib-ricon ib-rdiscard" aria-label="丢弃草稿" onClick={discard} disabled={sending} data-rf-discard="">
                   <Icon name="trash" size={16} />
                 </button>
               </Tip>
@@ -568,7 +568,7 @@ export function FloaterBox({ row, phone, frame, takeFocus, onMinimize, onPutAway
       onKeyDown={onKey}
     >
       <div className="ib-rf-head">
-        <button type="button" className="ib-rf-ic" aria-label="Minimize" onClick={onMinimize} data-rf-minimize="">
+        <button type="button" className="ib-rf-ic" aria-label="最小化" onClick={onMinimize} data-rf-minimize="">
           <Icon name="chevD" size={18} />
         </button>
         {title}

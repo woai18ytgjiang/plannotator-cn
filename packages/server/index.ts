@@ -439,7 +439,7 @@ export async function startPlannotatorServer(
     (body as { planRevision: number }).planRevision !== planRevision;
   const staleRevisionResponse = () =>
     Response.json({
-      error: "The plan was revised while you were reviewing it. Review the new version, then decide again.",
+      error: "你审查期间计划已被修订。请审查新版本后再做决定。",
       code: "plan_revised",
       planRevision,
     }, { status: 409 });
@@ -480,11 +480,11 @@ export async function startPlannotatorServer(
             }
             const v = parseInt(vParam, 10);
             if (isNaN(v) || v < 1) {
-              return new Response("Invalid version number", { status: 400 });
+              return new Response("版本号无效", { status: 400 });
             }
             const content = getPlanVersion(project, historySlug, v);
             if (content === null) {
-              return Response.json({ error: "Version not found" }, { status: 404 });
+              return Response.json({ error: "未找到版本" }, { status: 404 });
             }
             return Response.json({ plan: content, version: v });
           }
@@ -510,12 +510,12 @@ export async function startPlannotatorServer(
           if (url.pathname === "/api/archive/plan" && req.method === "GET") {
             const filename = url.searchParams.get("filename");
             if (!filename) {
-              return Response.json({ error: "Missing filename parameter" }, { status: 400 });
+              return Response.json({ error: "缺少 filename 参数" }, { status: 400 });
             }
             const customPath = url.searchParams.get("customPath") || undefined;
             const content = readArchivedPlan(filename, customPath);
             if (content === null) {
-              return Response.json({ error: "Plan not found" }, { status: 404 });
+              return Response.json({ error: "未找到计划" }, { status: 404 });
             }
             return Response.json({ markdown: content, filepath: filename });
           }
@@ -527,7 +527,7 @@ export async function startPlannotatorServer(
           }
 
           if (mode === "archive" && isArchiveDocumentMutation(req.method, url.pathname)) {
-            return Response.json({ error: "Archive is read-only" }, { status: 403 });
+            return Response.json({ error: "归档为只读" }, { status: 403 });
           }
 
           // API: Get plan content
@@ -603,14 +603,14 @@ export async function startPlannotatorServer(
           // API: Update user config (write-back to ~/.plannotator/config.json)
           if (url.pathname === "/api/config" && req.method === "POST") {
             if (!isSameOriginOrNoOrigin(req.headers.get("origin"), url.host, req.headers.get("sec-fetch-site"))) {
-              return Response.json({ error: "Cross-origin config writes are not allowed" }, { status: 403 });
+              return Response.json({ error: "不允许跨源写入配置" }, { status: 403 });
             }
             try {
               const body = (await req.json()) as { agentSwitch?: unknown; displayName?: string; diffOptions?: Record<string, unknown>; theme?: Record<string, unknown>; favicon?: FaviconStyle; autoUpdate?: unknown; updateCheck?: unknown; agentTool?: unknown; conventionalComments?: boolean; conventionalLabels?: unknown[] | null; pfmReminder?: boolean };
               const toSave: Record<string, unknown> = {};
               // OpenCode's agent switch (#1390): a known shape or nothing is saved.
               const agentSwitch = agentSwitchConfigToSave(body);
-              if (agentSwitch === null) return Response.json({ error: "Invalid agentSwitch" }, { status: 400 });
+              if (agentSwitch === null) return Response.json({ error: "agentSwitch 无效" }, { status: 400 });
               if (agentSwitch !== undefined) toSave.agentSwitch = agentSwitch;
               if (body.displayName !== undefined) toSave.displayName = body.displayName;
               if (body.diffOptions !== undefined) toSave.diffOptions = body.diffOptions;
@@ -627,11 +627,11 @@ export async function startPlannotatorServer(
               // refused in remote mode and --tailscale sessions.
               const cookieHostWrite = cookieHostConfigWrite((body as { cookieHost?: unknown }).cookieHost, isRemote);
               if (cookieHostWrite && cookieHostWrite.status !== 200) return Response.json(cookieHostWrite.body, { status: cookieHostWrite.status });
-              if (Object.keys(toSave).length > 0 && !saveConfig(toSave as Parameters<typeof saveConfig>[0])) return Response.json({ error: "config.json could not be saved; nothing changed. A config.json that is not valid JSON is never written over: fix or remove it." }, { status: 500 });
-              if (agentToolSaveFailed(toSave)) return Response.json({ error: "Could not save the setting to config.json." }, { status: 500 });
+              if (Object.keys(toSave).length > 0 && !saveConfig(toSave as Parameters<typeof saveConfig>[0])) return Response.json({ error: "config.json 无法保存；未做任何更改。内容不是有效 JSON 的 config.json 绝不会被覆盖：请修复或删除它。" }, { status: 500 });
+              if (agentToolSaveFailed(toSave)) return Response.json({ error: "无法将设置保存到 config.json。" }, { status: 500 });
               return Response.json(cookieHostWrite ? cookieHostWrite.body : { ok: true });
             } catch {
-              return Response.json({ error: "Invalid request" }, { status: 400 });
+              return Response.json({ error: "请求无效" }, { status: 400 });
             }
           }
 
@@ -663,12 +663,12 @@ export async function startPlannotatorServer(
               }
 
               if (!body.baseVersion) {
-                return Response.json({ error: "Missing baseVersion" }, { status: 400 });
+                return Response.json({ error: "缺少 baseVersion" }, { status: 400 });
               }
 
               const basePath = getPlanVersionPath(project, historySlug, body.baseVersion);
               if (!basePath) {
-                return Response.json({ error: `Version ${body.baseVersion} not found` }, { status: 404 });
+                return Response.json({ error: `未找到版本 ${body.baseVersion}` }, { status: 404 });
               }
 
               const result = await openEditorDiff(basePath, currentPlanPath);
@@ -748,7 +748,7 @@ export async function startPlannotatorServer(
           // (annotate-draft.ts). GET one document's saved comments; POST the
           // session's documents.
           if (url.pathname === "/api/draft/document") {
-            if (!planDocumentDrafts) return Response.json({ error: "Not available" }, { status: 404 });
+            if (!planDocumentDrafts) return Response.json({ error: "不可用" }, { status: 404 });
             if (req.method === "GET") {
               // A read lists the copy in the plan's index (a decision then
               // clears it), so it gets the writes' cross-site guard.
@@ -763,12 +763,12 @@ export async function startPlannotatorServer(
               try {
                 body = await req.json();
               } catch {
-                return Response.json({ ok: false, error: "Invalid JSON" }, { status: 400 });
+                return Response.json({ ok: false, error: "JSON 无效" }, { status: 400 });
               }
               const result = planDocumentDrafts.saveDocuments(body, url.searchParams.get("client"), isThisMachineRequest(req));
               return Response.json(result.body, { status: result.status });
             }
-            return Response.json({ error: "Method not allowed" }, { status: 405 });
+            return Response.json({ error: "不允许使用该方法" }, { status: 405 });
           }
 
           // API: Editor annotations (VS Code extension)
@@ -789,7 +789,7 @@ export async function startPlannotatorServer(
               if (url.pathname.slice("/api/ai/".length) === "capabilities" && req.method === "GET") {
                 return Response.json({ available: false, providers: [] });
               }
-              return Response.json({ error: "AI backend not available" }, { status: 503 });
+              return Response.json({ error: "AI 后端不可用" }, { status: 503 });
             }
             const handler = aiRuntime.endpoints[url.pathname as keyof AIEndpoints];
             if (handler) {

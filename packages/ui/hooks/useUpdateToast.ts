@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { useEffect, useRef } from 'react';
 import { toast } from 'sonner';
 import { copyTextToClipboard } from '../utils/clipboard';
@@ -63,32 +64,32 @@ export function useUpdateToast(input: {
         ...(position && { position }),
         closeButton: true,
         cancel: {
-          label: "What's new",
+          label: '更新内容',
           onClick: () => window.open(advert.releaseUrl, '_blank', 'noopener,noreferrer'),
         },
         action:
           primary === 'update'
             ? {
-                label: 'Update',
+                label: '更新',
                 onClick: () => {
                   void requestUpdateNow().then((result) => {
                     if (!("error" in result)) {
-                      toast(`Updating to ${result.version}…`, {
-                        description: 'The install script runs in the background. This review keeps working.',
+                      toast(`正在更新到 ${result.version}…`, {
+                        description: '安装脚本在后台运行。本次审查不受影响。',
                         duration: 8_000,
                         ...(position && { position }),
                       });
                     } else {
-                      toast("The update didn't start", { description: result.error, duration: 10_000, ...(position && { position }) });
+                      toast('更新未能启动', { description: result.error, duration: 10_000, ...(position && { position }) });
                     }
                   });
                 },
               }
             : {
-                label: 'Copy command',
+                label: '复制命令',
                 onClick: () => {
                   void copyTextToClipboard(advert.command).then((copied) => {
-                    if (copied) toast('Command copied', { description: advert.command, duration: 4_000, ...(position && { position }) });
+                    if (copied) toast('命令已复制', { description: advert.command, duration: 4_000, ...(position && { position }) });
                   });
                 },
               },

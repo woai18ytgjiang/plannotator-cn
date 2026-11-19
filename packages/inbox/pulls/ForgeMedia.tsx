@@ -7,7 +7,7 @@ import { mayBeVideoLink, probeVideo, pullMediaSizes, reservedBox, servesPullMedi
 import { PullMediaViewer } from './PullMediaViewer';
 import { pullMediaUrl } from './pullUrls';
 
-const CHIP_TITLE = 'Images in a description open on the forge';
+const CHIP_TITLE = '描述中的图片会在目标平台打开';
 
 export function forgeImageResolver(layer: InboxPull): ImageResolver {
   const serves = servesPullMedia(layer);
@@ -60,7 +60,7 @@ export function ForgeMedia({ layer, children }: { layer: InboxPull; children: Re
         void probeVideo(key, href).then((video) => {
           if (!live || !video || !link.isConnected) return;
           link.setAttribute(MEDIA, 'video');
-          link.setAttribute('title', 'Play in the viewer');
+          link.setAttribute('title', '在查看器中播放');
         });
       }
     };
@@ -87,10 +87,10 @@ export function ForgeMedia({ layer, children }: { layer: InboxPull; children: Re
     if (element.getAttribute(MEDIA) === 'video') {
       const url = element.getAttribute('href') ?? '';
       const words = (element.textContent ?? '').trim();
-      return { url, kind: 'video', name: words && words !== url ? words : 'Video' };
+      return { url, kind: 'video', name: words && words !== url ? words : '视频' };
     }
     const url = writtenMediaUrl(element.getAttribute('src') ?? '');
-    return url ? { url, kind: 'image', name: (element as HTMLImageElement).alt || 'Picture' } : null;
+    return url ? { url, kind: 'image', name: (element as HTMLImageElement).alt || '图片' } : null;
   };
 
   const target = (event: React.SyntheticEvent): HTMLElement | null => {

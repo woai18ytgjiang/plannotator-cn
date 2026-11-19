@@ -335,9 +335,9 @@ export function buildAmbiguousAnnotateArgsMessage(
   options: { bundleHint?: boolean } = {},
 ): string {
   return [
-    `Ambiguous annotate arguments: ${candidates.length} of them each resolve to an existing target.`,
+    `批注参数有歧义：其中 ${candidates.length} 个各自都能解析到已有的目标。`,
     ...candidates.map((candidate) => `  ${candidate.token} -> ${candidate.value}`),
-    `Re-run with exactly one target: plannotator annotate ${ANNOTATE_USAGE_TARGET}`,
+    `请只指定一个目标重新运行：plannotator annotate ${ANNOTATE_USAGE_TARGET}`,
     ...(options.bundleHint ? [ANNOTATE_BUNDLE_HINT] : []),
   ].join("\n");
 }
@@ -357,8 +357,8 @@ export const ANNOTATE_BUNDLE_HINT =
  */
 export function buildMissingAnnotateFilesMessage(missing: readonly string[]): string {
   return [
-    `${missing.length === 1 ? "File" : "Files"} not found: ${missing.join(", ")}`,
-    "Every file of a review of several files must exist; nothing was opened. Fix the path and run the command again.",
+    `找不到文件：${missing.join(", ")}`,
+    "多文件审查中的每个文件都必须存在；本次未打开任何文件。请修正路径后重新运行命令。",
   ].join("\n");
 }
 
@@ -387,28 +387,28 @@ export function resolveAnnotateBundleFiles(
     let size: number;
     try {
       const stat = statSync(path);
-      if (!stat.isFile()) return { ok: false, message: `Not a file: ${path}` };
+      if (!stat.isFile()) return { ok: false, message: `不是文件：${path}` };
       size = stat.size;
     } catch {
-      return { ok: false, message: `File not found: ${path}` };
+      return { ok: false, message: `找不到文件：${path}` };
     }
     if (!isAnnotatableDocPath(path)) {
       const name = path.replace(/^.*[\\/]/, "");
       const dot = name.lastIndexOf(".");
       // ".env" is all extension; "Makefile" has none.
-      const ext = dot >= 0 ? name.slice(dot).toLowerCase() : "(no extension)";
+      const ext = dot >= 0 ? name.slice(dot).toLowerCase() : "（无扩展名）";
       const refusedEnv = /^\.env(?:\.|$)/i.test(name) || /\.env$/i.test(name);
       return {
         ok: false,
         message:
           (refusedEnv
-            ? `File refused: ${path} (a .env file opens only on its own, by its path: it may hold secrets)\n`
-            : `File type not supported: ${ext} (${path})\n`) +
-          `Every file in a review of several files must be one annotate opens. Supported types: ${getAnnotatableExtensionsHint()}`,
+            ? `文件被拒绝：${path}（.env 文件只能通过其路径单独打开，因为它可能含有密钥）\n`
+            : `不支持的文件类型：${ext}（${path}）\n`) +
+          `多文件审查中的每个文件都必须是批注能够打开的类型。支持的类型：${getAnnotatableExtensionsHint()}`,
       };
     }
     if (size > MAX_ANNOTATABLE_FILE_BYTES) {
-      return { ok: false, message: `File too large to annotate (max 2MB): ${path}` };
+      return { ok: false, message: `文件过大，无法批注（上限 2MB）：${path}` };
     }
     const isHtml = /\.html?$/i.test(path);
     files.push({
@@ -433,11 +433,11 @@ export function buildUnresolvedAnnotateArgsMessage(options: {
   const { words, flags = [], agentHandoff = false } = options;
   const flagSuffix = flags.length > 0 ? ` ${flags.join(" ")}` : "";
   const lines = [
-    "Could not resolve the arguments below to a file, URL, or folder; nothing in them matches an existing path:",
+    "无法将下面的参数解析为文件、URL 或文件夹；其中没有任何内容匹配已有路径：",
     "",
     `  ${words.join(" ")}`,
     "",
-    `The annotate command needs a concrete target: plannotator annotate ${ANNOTATE_USAGE_TARGET}${flagSuffix}`,
+    `annotate 命令需要一个具体目标：plannotator annotate ${ANNOTATE_USAGE_TARGET}${flagSuffix}`,
   ];
   if (agentHandoff) {
     lines.push(

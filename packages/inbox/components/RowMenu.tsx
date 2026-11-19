@@ -67,21 +67,21 @@ export interface ThreadRowMenuProps {
 }
 
 const LABELS: Record<RowMenuAction, { label: string; icon: IconName; iconClass?: string }> = {
-  pin: { label: 'Star thread', icon: 'star' },
-  unpin: { label: 'Unstar thread', icon: 'star', iconClass: 'ib-star-on' },
-  'priority-add': { label: 'Add to Priority', icon: 'toTop' },
-  'priority-remove': { label: 'Remove from Priority', icon: 'toBottom' },
-  'copy-thread': { label: 'Copy thread', icon: 'stack' },
-  'copy-link': { label: 'Copy link', icon: 'link' },
-  'copy-id': { label: 'Copy thread ID', icon: 'hash' },
-  snooze: { label: 'Snooze', icon: 'clock' },
-  unsnooze: { label: 'Unsnooze', icon: 'inbox' },
-  read: { label: 'Mark read', icon: 'checkCircle' },
-  'mark-unread': { label: 'Mark unread', icon: 'envelope' },
-  unread: { label: 'Move back', icon: 'inbox' },
-  'hide-pulls': { label: 'Hide pull request', icon: 'eyeOff' },
-  archive: { label: 'Archive', icon: 'archive' },
-  unarchive: { label: 'Unarchive', icon: 'archive' },
+  pin: { label: '星标话题', icon: 'star' },
+  unpin: { label: '取消星标话题', icon: 'star', iconClass: 'ib-star-on' },
+  'priority-add': { label: '加入优先级', icon: 'toTop' },
+  'priority-remove': { label: '从优先级移除', icon: 'toBottom' },
+  'copy-thread': { label: '复制话题', icon: 'stack' },
+  'copy-link': { label: '复制链接', icon: 'link' },
+  'copy-id': { label: '复制话题 ID', icon: 'hash' },
+  snooze: { label: '稍后提醒', icon: 'clock' },
+  unsnooze: { label: '取消稍后提醒', icon: 'inbox' },
+  read: { label: '标记已读', icon: 'checkCircle' },
+  'mark-unread': { label: '标记未读', icon: 'envelope' },
+  unread: { label: '移回', icon: 'inbox' },
+  'hide-pulls': { label: '隐藏 PR', icon: 'eyeOff' },
+  archive: { label: '归档', icon: 'archive' },
+  unarchive: { label: '取消归档', icon: 'archive' },
 };
 
 /** The row a `contextmenu` event names: a wide or three-line row (its wrapper, `data-row`), or a phone's row. */
@@ -186,10 +186,10 @@ export const ThreadRowMenu = forwardRef<HTMLDivElement, ThreadRowMenuProps>(func
   const labelOf = (action: RowMenuAction) => (action === 'hide-pulls' && target ? hideKeysWords(target.hide_pulls ?? []) : LABELS[action].label);
   const item = (action: RowMenuAction) =>
     action === 'snooze' && snoozeBlocked ? (
-      <Menu.Item key={action} className="ib-pmi" label={`Snooze: update ${snoozeBlocked.name} first`} data-row-action="snooze" data-snooze-blocked="" onClick={() => target && props.onSnoozeBlocked?.(target)}>
+      <Menu.Item key={action} className="ib-pmi" label={`稍后提醒：请先更新 ${snoozeBlocked.name}`} data-row-action="snooze" data-snooze-blocked="" onClick={() => target && props.onSnoozeBlocked?.(target)}>
         <Icon name="clock" size={15} />
         {LABELS.snooze.label}
-        <span className="ib-zsub ib-zneeds">Update {snoozeBlocked.name}</span>
+        <span className="ib-zsub ib-zneeds">更新 {snoozeBlocked.name}</span>
       </Menu.Item>
     ) : action === 'snooze' ? (
       <Menu.Item key={action} className="ib-pmi" label={LABELS.snooze.label} closeOnClick={false} data-row-action="snooze" onClick={() => setSnoozeView('times')}>
@@ -231,11 +231,11 @@ export const ThreadRowMenu = forwardRef<HTMLDivElement, ThreadRowMenuProps>(func
       <ContextMenu.Portal container={portal ?? undefined}>
         {props.phone && <ContextMenu.Backdrop className="ib-pm-scrim" />}
         <ContextMenu.Positioner className="ib-pm-pos" data-phone={props.phone ? '' : undefined}>
-          <ContextMenu.Popup className="ib-pm" aria-label={picked ? pickedTitle(picked.act.rows.length) : (target?.subject ?? 'Thread')} data-row-menu={target?.thread_id} data-picked-menu={picked ? '' : undefined} {...menu.popup}>
+          <ContextMenu.Popup className="ib-pm" aria-label={picked ? pickedTitle(picked.act.rows.length) : (target?.subject ?? '话题')} data-row-menu={target?.thread_id} data-picked-menu={picked ? '' : undefined} {...menu.popup}>
             {/* The popup is named already (aria-label): the title is for the eye only, on a phone's sheet (the thread's ⋯ sheet's). */}
             {target && (
               <div className="ib-pm-title" dir="auto" aria-hidden="true">
-                {picked ? pickedTitle(picked.act.rows.length) : (target.subject ?? '(no subject)')}
+                {picked ? pickedTitle(picked.act.rows.length) : (target.subject ?? '（无主题）')}
               </div>
             )}
             {picked ? (
@@ -247,15 +247,15 @@ export const ThreadRowMenu = forwardRef<HTMLDivElement, ThreadRowMenuProps>(func
                 <>
                   <WorkItems act={picked.act} anchor={() => (target ? body.current?.querySelector<HTMLElement>(`[data-thread-id="${CSS.escape(target.thread_id)}"]`) ?? null : null)} />
                   {bulkTargets(picked.act.rows, 'archive', picked.act.rules).length > 0 && (
-                    <Menu.Item className="ib-pmi" label="Archive" data-bulk-action="archive" onClick={() => runBulk(picked.act, 'archive')}>
+                    <Menu.Item className="ib-pmi" label="归档" data-bulk-action="archive" onClick={() => runBulk(picked.act, 'archive')}>
                       <Icon name="archive" size={15} />
-                      Archive
+                      归档
                     </Menu.Item>
                   )}
                   {picked.act.snoozes && bulkTargets(picked.act.rows, 'snooze', picked.act.rules).length > 0 && (
-                    <Menu.Item className="ib-pmi" label="Snooze" closeOnClick={false} data-bulk-action="snooze" onClick={() => setSnoozeView('times')}>
+                    <Menu.Item className="ib-pmi" label="稍后提醒" closeOnClick={false} data-bulk-action="snooze" onClick={() => setSnoozeView('times')}>
                       <Icon name="clock" size={15} />
-                      Snooze
+                      稍后提醒
                       <span className="ib-zsub">
                         <Icon name="chevR" size={13} />
                       </span>
@@ -294,18 +294,18 @@ export const ThreadRowMenu = forwardRef<HTMLDivElement, ThreadRowMenuProps>(func
                 {/* Select first, alone (approval "inbox-multi-select", 1B): picking starts with this row picked. */}
                 {target && props.picks?.takes(target.thread_id) && (
                   <>
-                    <Menu.Item className="ib-pmi" label="Select" data-row-action="select" onClick={() => props.picks!.start(target.thread_id)}>
+                    <Menu.Item className="ib-pmi" label="选择" data-row-action="select" onClick={() => props.picks!.start(target.thread_id)}>
                       <Icon name="todoOpen" size={15} />
-                      Select
+                      选择
                     </Menu.Item>
                     <Menu.Separator className="ib-pm-sep" />
                   </>
                 )}
                 {target?.combining && props.picks?.stopCombine && (
                   <>
-                    <Menu.Item className="ib-pmi" label="Stop combining" data-row-action="stop-combine" onClick={() => props.picks!.stopCombine!(target.thread_id)}>
+                    <Menu.Item className="ib-pmi" label="停止合并" data-row-action="stop-combine" onClick={() => props.picks!.stopCombine!(target.thread_id)}>
                       <Icon name="xCircle" size={15} />
-                      Stop combining
+                      停止合并
                     </Menu.Item>
                     <Menu.Separator className="ib-pm-sep" />
                   </>
@@ -314,14 +314,14 @@ export const ThreadRowMenu = forwardRef<HTMLDivElement, ThreadRowMenuProps>(func
                 {pinning.map(item)}
                 {target && <AddTagItem threadId={target.thread_id} onOpen={() => setTagView(true)} />}
                 {removable && target && (
-                  <Menu.Item className="ib-pmi" label={`Remove from ${removable.name}`} onClick={() => {
+                  <Menu.Item className="ib-pmi" label={`从 ${removable.name} 移除`} onClick={() => {
                       // Out of the tag's list: focus goes to the row now in its slot.
                       menu.follow(target.thread_id);
                       tags?.set(target.thread_id, removable, false);
                     }} data-tag-remove={removable.id}>
                     <Icon name="minus" size={15} />
                     <span className="ib-tagm-l" dir="auto">
-                      Remove from {removable.name}
+                      从 {removable.name} 移除
                     </span>
                   </Menu.Item>
                 )}
@@ -342,4 +342,4 @@ export const ThreadRowMenu = forwardRef<HTMLDivElement, ThreadRowMenuProps>(func
 });
 
 /** A picked row's menu title: "3 selected threads". */
-const pickedTitle = (n: number) => `${formatCount(n)} selected ${n === 1 ? 'thread' : 'threads'}`;
+const pickedTitle = (n: number) => `${formatCount(n)} 个已选话题`;

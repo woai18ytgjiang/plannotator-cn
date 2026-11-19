@@ -114,11 +114,11 @@ export async function assertResultPathAvailable(
     }
   }
   if (destinationExists) {
-    throw new Error(`Result file already exists: ${resultFile}`);
+    throw new Error(`结果文件已存在：${resultFile}`);
   }
   const parent = dirname(resultFile);
   if (!existsSync(parent) || !statSync(parent).isDirectory()) {
-    throw new Error(`Result file parent does not exist: ${parent}`);
+    throw new Error(`结果文件的父目录不存在：${parent}`);
   }
 }
 

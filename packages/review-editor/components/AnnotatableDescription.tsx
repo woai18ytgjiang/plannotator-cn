@@ -92,7 +92,7 @@ export const AnnotatableDescription = React.memo(function AnnotatableDescription
             onAskAI={onAskAIForDescription}
             askAIContext={{
               kind: 'selection',
-              label: 'PR description',
+              label: 'PR 描述',
               text: hook.commentPopover.selectedText ?? hook.commentPopover.contextText,
             }}
           />,

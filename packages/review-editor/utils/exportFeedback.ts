@@ -71,7 +71,7 @@ function describeDiff(ctx: FeedbackDiffContext): string {
     return `Commit \`${shown}\`${subject} (diff vs its parent)${worktreePath ? ` _(worktree: ${worktreePath})_` : ''}`;
   }
   if (mode === 'gitbutler:workspace') {
-    label = 'GitButler workspace (all applied changes)';
+    label = 'GitButler 工作区（所有已应用的更改）';
     return worktreePath ? `${label} _(worktree: ${worktreePath})_` : label;
   }
   for (const [prefix, kind] of [
@@ -140,7 +140,7 @@ function commitMismatchNote(ann: CodeAnnotation, currentCommitSha?: string): str
  * PR, so the agent must not read them against the diff above. The label text
  * is deliberately fixed (maintainer-specified wording).
  */
-export const OUTDATED_ANNOTATION_LABEL = '[Outdated — the code changed after this comment]';
+export const OUTDATED_ANNOTATION_LABEL = '[已过时 — 此评论之后代码已变更]';
 
 function outdatedNote(ann: CodeAnnotation): string {
   return ann.outdated ? `${OUTDATED_ANNOTATION_LABEL}\n` : '';
@@ -148,7 +148,7 @@ function outdatedNote(ann: CodeAnnotation): string {
 
 /** The heading suffix of a comment on lines outside the diff (a file the
  *  review does not change, or a changed file's lines outside its hunks). */
-export const OUTSIDE_DIFF_ANNOTATION_LABEL = '(not in the diff)';
+export const OUTSIDE_DIFF_ANNOTATION_LABEL = '（不在差异中）';
 
 /** A comment outside the diff carries the code it was written on, fenced, so
  *  the agent reads it without the diff around it. */
@@ -181,7 +181,7 @@ function callFlowInlineCode(value: string): string {
 export function formatCallFlowAnnotationTargets(annotation: CodeAnnotation): string {
   if (!annotation.callFlowTargets?.length) return '';
   const rows = annotation.callFlowTargets.map((target) => {
-    let source = 'inferred step';
+    let source = '推断的步骤';
     if (target.filePath && target.lineStart && target.lineEnd) {
       const line = target.lineStart === target.lineEnd
         ? `L${target.lineStart}`
@@ -334,7 +334,7 @@ function formatSuggestionBlocks(ann: CodeAnnotation): string {
  * Inbox's guided-review export writes the same (GUIDE_GLOBAL_COMMENTS_HEADING,
  * kept equal by packages/inbox/guideFeedback.test.ts).
  */
-export const GLOBAL_COMMENTS_HEADING = 'Global comments';
+export const GLOBAL_COMMENTS_HEADING = '全局评论';
 
 function renderGeneralComments(annotations: CodeAnnotation[]): string {
   let output = `## ${GLOBAL_COMMENTS_HEADING}\n\n`;
@@ -375,8 +375,8 @@ function renderFileGroups(grouped: Map<string, CodeAnnotation[]>, headingLevel: 
 }
 
 function scopeDisplayLabel(scope: string): string {
-  if (scope === 'layer') return 'Layer';
-  if (scope === 'full-stack') return 'Full-stack';
+  if (scope === 'layer') return '层';
+  if (scope === 'full-stack') return '全栈';
   return scope;
 }
 
@@ -495,8 +495,8 @@ export function buildProseFeedback(
       parseMarkdownToBlocks(descriptionBody),
       regularDescription,
       [],
-      'PR Description Feedback',
-      'PR description',
+      'PR 描述反馈',
+      'PR 描述',
     ));
   }
   if (regularComments.length > 0) {
@@ -532,7 +532,7 @@ function quoteMarkdown(markdown: string): string {
 }
 
 function safeHeading(value: string): string {
-  return value.replace(/[\r\n]+/g, ' ').trim() || 'Artifact';
+  return value.replace(/[\r\n]+/g, ' ').trim() || '附件';
 }
 
 function artifactFeedbackEntry(

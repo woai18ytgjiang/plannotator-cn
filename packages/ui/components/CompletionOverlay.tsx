@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { ReactNode } from 'react';
 import { useAutoClose } from '../hooks/useAutoClose';
 
@@ -100,37 +101,36 @@ export function CompletionOverlay({ submitted, title, subtitle, agentLabel, link
           {state.phase === 'counting' ? (
             <>
               <p className="text-sm text-muted-foreground">
-                This tab will close in <span className="text-foreground font-medium">{state.remaining}</span> second
-                {state.remaining !== 1 ? 's' : ''}...
+                此标签页将在 <span className="text-foreground font-medium">{state.remaining}</span> 秒后关闭…
               </p>
-              <p className="text-xs text-muted-foreground/60">You can change this in Settings.</p>
+              <p className="text-xs text-muted-foreground/60">你可以在「设置」中修改此项。</p>
             </>
           ) : state.phase === 'closeFailed' ? (
             <>
               <p className="text-sm text-muted-foreground">
-                Could not close this tab automatically. Please close it manually.
+                无法自动关闭此标签页，请手动关闭。
               </p>
               <p className="text-xs text-muted-foreground/60">
-                Auto-close works when the tab is opened by {agentLabel}.
+                仅当标签页由 {agentLabel} 打开时，自动关闭才有效。
               </p>
             </>
           ) : (
             <>
               <p className="text-sm text-muted-foreground">
-                You can close this tab and return to <span className="text-foreground font-medium">{agentLabel}</span>.
+                你可以关闭此标签页并返回 <span className="text-foreground font-medium">{agentLabel}</span>。
               </p>
               {state.phase === 'prompt' ? (
                 <>
                   <label className="flex items-center justify-center gap-2 cursor-pointer group">
                     <input type="checkbox" checked={false} onChange={enableAndStart} className="accent-primary" />
                     <span className="text-xs text-muted-foreground group-hover:text-foreground transition-colors">
-                      Auto-close this tab after 3 seconds
+                      3 秒后自动关闭此标签页
                     </span>
                   </label>
-                  <p className="text-xs text-muted-foreground/60">You can change the delay in Settings.</p>
+                  <p className="text-xs text-muted-foreground/60">你可以在「设置」中修改延时。</p>
                 </>
               ) : sentNothing ? null : (
-                <p className="text-xs text-muted-foreground/60">Your response has been sent.</p>
+                <p className="text-xs text-muted-foreground/60">你的回复已发送。</p>
               )}
             </>
           )}

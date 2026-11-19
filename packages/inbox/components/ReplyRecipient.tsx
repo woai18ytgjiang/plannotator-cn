@@ -39,7 +39,7 @@ const NO_FOLDER = () => '';
 function Face({ tile, full, short, ended }: { tile: ReactNode; full: string; short: string; ended: boolean }) {
   return (
     <>
-      <span className="ib-rto-l">to</span>
+      <span className="ib-rto-l">发给</span>
       {tile}
       <span className="ib-rto-n">
         <span className="ib-rto-full" dir="auto">
@@ -49,7 +49,7 @@ function Face({ tile, full, short, ended }: { tile: ReactNode; full: string; sho
           {short}
         </span>
       </span>
-      {ended && <span className="ib-rto-q">ended</span>}
+      {ended && <span className="ib-rto-q">已结束</span>}
       <svg className="ib-rto-c" width="10" height="10" viewBox="0 0 10 10" aria-hidden="true">
         <path d="M2 3.5 5 6.5 8 3.5" fill="none" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" strokeLinejoin="round" />
       </svg>
@@ -57,7 +57,7 @@ function Face({ tile, full, short, ended }: { tile: ReactNode; full: string; sho
   );
 }
 
-const QUIET: Record<RecipientRow['state'], string | null> = { live: null, ended: 'ended', reader: 'Not woken', old: 'Update' };
+const QUIET: Record<RecipientRow['state'], string | null> = { live: null, ended: '已结束', reader: '未唤醒', old: '更新' };
 
 /** A start row's lead: New message's "+" and the agent's mark. */
 const StartTile = ({ host }: { host: string | null }) => (
@@ -210,7 +210,7 @@ export function ReplyRecipient({
   ) : (
     <TagStack participants={chosen} />
   );
-  const words = one ? pillOf(one) : `${chosen.length} agents`;
+  const words = one ? pillOf(one) : `${chosen.length} 个智能体`;
   const button = (
     <button
       ref={pillRef}
@@ -218,7 +218,7 @@ export function ReplyRecipient({
       className="ib-rto"
       data-recipient=""
       data-ended={ended ? '' : undefined}
-      aria-label={`To ${names}${ended ? ', ended' : ''}. Change who gets this ${noun}`}
+      aria-label={`发给 ${names}${ended ? '（已结束）' : ''}。更改这条${noun === 'message' ? '消息' : '回复'}的接收者`}
       aria-expanded={open}
       aria-controls={open ? listId : undefined}
       // The press must not take focus from the reply field.
@@ -230,7 +230,7 @@ export function ReplyRecipient({
   );
 
   const list = open ? (
-    <div ref={markRecipientList} className="ib-tg-menu ib-rpick" id={listId} data-recipient-list="" role="group" aria-label={`Who gets this ${noun}`} onMouseDown={(event) => event.preventDefault()} style={spot}>
+    <div ref={markRecipientList} className="ib-tg-menu ib-rpick" id={listId} data-recipient-list="" role="group" aria-label={`谁接收这条${noun === 'message' ? '消息' : '回复'}`} onMouseDown={(event) => event.preventDefault()} style={spot}>
       {rows.map((row) => {
         const on = chosenIds.includes(row.session);
         const { title, agent } = named.get(row.session)!;
@@ -246,9 +246,9 @@ export function ReplyRecipient({
                     {row.label}
                   </span>
                   <span className="ib-cp-stin" dir="auto">
-                    in {row.start.project}
+                    位于 {row.start.project}
                   </span>
-                  {row.start.asleep && <span className="ib-rpick-q">starts when it's back</span>}
+                  {row.start.asleep && <span className="ib-rpick-q">恢复后启动</span>}
                 </button>
               ) : (
                 <button type="button" className="ib-rpick-name" disabled={row.alone === false} onClick={() => onOnly(row)}>
@@ -294,7 +294,7 @@ export function ReplyRecipient({
               type="button"
               role="checkbox"
               aria-checked={on}
-              aria-label={`Also send to ${nameOf(row)}`}
+              aria-label={`同时发送给 ${nameOf(row)}`}
               className="ib-rpick-tick"
               data-recipient-tick={row.session}
               disabled={!canAddRecipient(row, chosenIds, rows)}
@@ -309,7 +309,7 @@ export function ReplyRecipient({
       })}
       {onTagAnother && (
         <button type="button" className="ib-rpick-more" data-recipient-tag="" onClick={onTagAnother}>
-          Tag another agent
+          标记另一个智能体
         </button>
       )}
     </div>

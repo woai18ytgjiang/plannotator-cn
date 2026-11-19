@@ -16,7 +16,7 @@ function ageText(startedAt: string, now: number): string {
 
 /** The human table, one line per session, newest first (the registry's order). */
 export function formatSessionsTable(sessions: readonly SessionInfo[], now: number = Date.now()): string {
-  const lines = ["Active Plannotator sessions:", ""];
+  const lines = ["活跃的 Plannotator 会话：", ""];
   sessions.forEach((session, index) => {
     const cells = [
       `#${index + 1}`.padEnd(4),
@@ -24,13 +24,13 @@ export function formatSessionsTable(sessions: readonly SessionInfo[], now: numbe
       (session.reviewId ?? "-").padEnd(10),
       session.project.padEnd(20),
       session.url.padEnd(28),
-      `${ageText(session.startedAt, now)} ago`.padEnd(10),
+      `${ageText(session.startedAt, now)} 前`.padEnd(10),
       session.target ?? "-",
-      session.host === "opencode" ? "(in OpenCode)" : "",
+      session.host === "opencode" ? "(在 OpenCode 中)" : "",
     ];
     lines.push(`  ${cells.join(" ")}`.trimEnd());
   });
-  lines.push("", "Reopen with: plannotator sessions --open [N]");
+  lines.push("", "重新打开：plannotator sessions --open [N]");
   return lines.join("\n");
 }
 

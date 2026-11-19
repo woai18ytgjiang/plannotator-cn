@@ -79,7 +79,7 @@ export function useLiveReview(input: {
   }, [state?.thread?.to, state?.launched_by, agents]);
 
   const failed = useCallback((e: unknown) => {
-    setError(e instanceof LiveError ? e.message : 'The Inbox did not answer. Try again in a moment.');
+    setError(e instanceof LiveError ? e.message : '收件箱没有响应，请稍后重试。');
     throw e;
   }, []);
 

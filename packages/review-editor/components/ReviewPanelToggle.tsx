@@ -18,7 +18,7 @@ export const ReviewPanelToggle: React.FC<{
     dot && agentRunning ? 'an agent is running' : null,
     dot && aiUnread ? 'an AI reply is unread' : null,
   ].filter(Boolean).join(', ');
-  const label = `${isOpen ? 'Close comments, AI and agents' : 'Open comments, AI and agents'}${status ? `: ${status}` : ''}`;
+  const label = `${isOpen ? '关闭评论、AI 与智能体' : '打开评论、AI 与智能体'}${status ? `：${status}` : ''}`;
   return (
     <button
       type="button"

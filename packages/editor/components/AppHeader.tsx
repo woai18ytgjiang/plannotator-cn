@@ -23,8 +23,8 @@ import { BundleSwitcher, type BundleSwitcherProps } from './BundleSwitcher';
 /** Plannotator's refresh strings for the published control: the document
  * is a file on disk, so the refresh says so. */
 export const PLANNOTATOR_HTML_REFRESH_LABELS = {
-  refreshTitle: 'Refresh HTML from disk',
-  refreshingTitle: 'Refreshing HTML from disk',
+  refreshTitle: '从磁盘刷新 HTML',
+  refreshingTitle: '正在从磁盘刷新 HTML',
 } as const;
 
 interface AppHeaderProps {
@@ -304,7 +304,7 @@ export const AppHeader = React.memo<AppHeaderProps>(({
           className="min-w-0 px-2 text-center text-sm font-medium tracking-tight text-foreground"
           title={compactDocumentTitle}
         >
-          <span className="block truncate">{compactDocumentTitle || 'Plan'}</span>
+          <span className="block truncate">{compactDocumentTitle || '计划'}</span>
         </div>
       )}
 
@@ -317,13 +317,13 @@ export const AppHeader = React.memo<AppHeaderProps>(({
               onClick={onCallbackFeedback}
               disabled={isSubmitting || !callbackShareUrlReady}
               isLoading={isSubmitting}
-              title="Send feedback to bot"
+              title="发送反馈给机器人"
             />
             <ApproveButton
               onClick={onCallbackApprove}
               disabled={isSubmitting || !callbackShareUrlReady}
               isLoading={isSubmitting}
-              title="Approve design and notify bot"
+              title="批准设计并通知机器人"
             />
           </>
         )}
@@ -333,9 +333,9 @@ export const AppHeader = React.memo<AppHeaderProps>(({
             <button
               onClick={onArchiveCopy}
               className="px-2.5 py-1 rounded-md text-xs font-medium transition-all bg-muted text-foreground hover:bg-muted/80 border border-border"
-              title="Copy plan content"
+              title="复制计划内容"
             >
-              <span className="hidden md:inline">Copy</span>
+              <span className="hidden md:inline">复制</span>
               <svg className="w-4 h-4 md:hidden" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                 <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
               </svg>
@@ -343,9 +343,9 @@ export const AppHeader = React.memo<AppHeaderProps>(({
             <button
               onClick={onArchiveDone}
               className="px-2.5 py-1 rounded-md text-xs font-medium transition-all bg-success text-success-foreground hover:opacity-90"
-              title="Close archive"
+              title="关闭归档"
             >
-              Done
+              完成
             </button>
           </>
         )}
@@ -356,15 +356,15 @@ export const AppHeader = React.memo<AppHeaderProps>(({
               onClick={onGoalSetupExit}
               disabled={isExiting || goalSetupIsSubmitting}
               isLoading={isExiting}
-              title="Close goal setup without submitting"
+              title="关闭目标设置且不提交"
             />
             <ApproveButton
               onClick={onGoalSetupSubmit}
               disabled={!goalSetupCanSubmit || goalSetupIsSubmitting || isExiting}
               isLoading={goalSetupIsSubmitting}
               label={goalSetupSubmitLabel}
-              loadingLabel="Submitting..."
-              mobileLabel="Submit"
+              loadingLabel="提交中…"
+              mobileLabel="提交"
               title={goalSetupSubmitLabel}
             />
             <div className="w-px h-5 bg-border/50 mx-1 hidden md:block" />
@@ -447,10 +447,10 @@ export const AppHeader = React.memo<AppHeaderProps>(({
           <span
             data-webmcp-indicator="true"
             className="hidden md:inline-flex items-center gap-1.5 rounded-md px-1.5 py-0.5 text-[10px] font-medium text-muted-foreground"
-            title="A browser agent has used Plannotator's tools in this session. Its comments are marked browser-agent. Turn the tools off in Settings."
+            title="浏览器智能体在本会话中使用了 Plannotator 的工具。它的评论已标记为 browser-agent。可在「设置」中关闭这些工具。"
           >
             <span className="inline-block h-1.5 w-1.5 rounded-full bg-primary" aria-hidden="true" />
-            Agent
+            智能体
           </span>
         )}
 
@@ -463,7 +463,7 @@ export const AppHeader = React.memo<AppHeaderProps>(({
                 ? 'bg-primary/15 text-primary'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
-            title={isPanelOpen ? 'Hide annotations' : 'Show annotations'}
+            title={isPanelOpen ? '隐藏批注' : '显示批注'}
           >
             <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M7 8h10M7 12h4m1 8l-4-4H5a2 2 0 01-2-2V6a2 2 0 012-2h14a2 2 0 012 2v8a2 2 0 01-2 2h-3l-4 4z" />
@@ -483,8 +483,8 @@ export const AppHeader = React.memo<AppHeaderProps>(({
                 ? 'bg-primary/15 text-primary'
                 : 'text-muted-foreground hover:text-foreground hover:bg-muted'
             }`}
-            title={isAIChatOpen ? 'Hide AI chat' : 'Show AI chat'}
-            aria-label={isAIChatOpen ? 'Hide AI chat' : 'Show AI chat'}
+            title={isAIChatOpen ? '隐藏 AI 对话' : '显示 AI 对话'}
+            aria-label={isAIChatOpen ? '隐藏 AI 对话' : '显示 AI 对话'}
           >
             <SparklesIcon className="w-4 h-4" />
             {aiHasMessages && !isAIChatOpen && (
@@ -570,15 +570,15 @@ export const CompactPlanNavigatorTrigger = ({
         ? 'bg-primary/15 text-primary'
         : 'text-foreground hover:bg-muted'
     }`}
-    aria-label={open ? 'Close plan navigator' : 'Open plan navigator'}
+    aria-label={open ? '关闭计划导航' : '打开计划导航'}
     aria-expanded={open}
     aria-controls="pn-compact-plan-navigator"
-    title={open ? 'Close navigator' : 'Navigate plan'}
+    title={open ? '关闭导航' : '浏览计划'}
   >
     <svg className="h-[18px] w-[18px] flex-shrink-0" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2} aria-hidden="true">
       <path strokeLinecap="round" strokeLinejoin="round" d="M5 6h14M5 12h14M5 18h9" />
     </svg>
-    <span className="sr-only">Plan navigation</span>
+    <span className="sr-only">计划导航</span>
   </button>
 );
 

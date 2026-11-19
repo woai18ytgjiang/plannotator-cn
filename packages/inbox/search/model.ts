@@ -19,10 +19,10 @@ import { INBOX_SECTIONS, inboxProjectDisplayName, type InboxSectionId } from '@p
 import { threadChipName } from '../threadChip';
 
 export const GROUP_LABELS: Readonly<Record<InboxSearchGroupId, { heading: string; noun: string; one: string }>> = {
-  threads: { heading: 'Threads', noun: 'threads', one: 'thread' },
-  messages: { heading: 'Messages', noun: 'messages', one: 'message' },
-  files: { heading: 'Files', noun: 'files', one: 'file' },
-  projects: { heading: 'Projects', noun: 'projects', one: 'project' },
+  threads: { heading: '话题', noun: '话题', one: '话题' },
+  messages: { heading: '消息', noun: '消息', one: '消息' },
+  files: { heading: '文件', noun: '文件', one: '文件' },
+  projects: { heading: '项目', noun: '项目', one: '项目' },
 };
 
 /** One option of the listbox. */
@@ -88,8 +88,8 @@ export function searchGroups(
   if (answer.recent) {
     const out: SearchGroupView[] = [];
     const searches = answer.recent_searches ?? [];
-    if (searches.length > 0) out.push({ id: 'recent-searches', heading: 'Recent searches', total: null, options: searches.map((q) => ({ kind: 'recent-q', q })) });
-    if (answer.recent.length > 0) out.push({ id: 'recent', heading: 'Recent', total: null, options: answer.recent.map((row) => ({ kind: 'row', group: 'recent', row })) });
+    if (searches.length > 0) out.push({ id: 'recent-searches', heading: '最近搜索', total: null, options: searches.map((q) => ({ kind: 'recent-q', q })) });
+    if (answer.recent.length > 0) out.push({ id: 'recent', heading: '最近', total: null, options: answer.recent.map((row) => ({ kind: 'row', group: 'recent', row })) });
     return out;
   }
   const out: SearchGroupView[] = [];
@@ -104,13 +104,16 @@ export function searchGroups(
   return out;
 }
 
-const numbers = new Intl.NumberFormat('en-US');
+const numbers = new Intl.NumberFormat('zh-CN');
+
+/** The measure word each group's count takes ("23 个话题", "23 条消息"). */
+const MEASURE: Record<InboxSearchGroupId, string> = { threads: '个', messages: '条', files: '个', projects: '个' };
 export const formatCount = (n: number): string => numbers.format(n);
 
 /** "Show all 23 messages", or, once a group is open, "Show 50 more". */
 export function moreLabel(option: Extract<SearchOption, { kind: 'more' }>): string {
-  if (option.shown >= SEARCH_PAGE) return `Show ${formatCount(Math.min(SEARCH_PAGE, option.total - option.shown))} more`;
-  return `Show all ${formatCount(option.total)} ${GROUP_LABELS[option.group].noun}`;
+  if (option.shown >= SEARCH_PAGE) return `再显示 ${formatCount(Math.min(SEARCH_PAGE, option.total - option.shown))} ${MEASURE[option.group]}${GROUP_LABELS[option.group].noun}`;
+  return `显示全部 ${formatCount(option.total)} ${MEASURE[option.group]}${GROUP_LABELS[option.group].noun}`;
 }
 
 /** Where a result opens: the window's hash, and for a message the landing (the query's terms, a question's key). */
@@ -131,25 +134,25 @@ export function resultTarget(row: InboxSearchRow, terms: readonly string[]): { h
 }
 
 export const STATUS_OPTIONS: readonly { value: InboxSearchStatus | null; label: string }[] = [
-  { value: null, label: 'Any status' },
-  { value: 'waiting', label: 'Waiting on you' },
-  { value: 'new', label: 'New since you looked' },
-  { value: 'sent', label: 'Sent' },
-  { value: 'quiet', label: 'Quiet' },
-  { value: 'archived', label: 'Archived' },
+  { value: null, label: '任何状态' },
+  { value: 'waiting', label: '待你处理' },
+  { value: 'new', label: '自上次查看后新增' },
+  { value: 'sent', label: '已发送' },
+  { value: 'quiet', label: '静默' },
+  { value: 'archived', label: '已归档' },
 ];
 
 export const FROM_OPTIONS: readonly { value: InboxSearchFrom | null; label: string }[] = [
-  { value: null, label: 'Anyone' },
-  { value: 'agent', label: 'Agents' },
-  { value: 'me', label: 'Me' },
+  { value: null, label: '任何人' },
+  { value: 'agent', label: '智能体' },
+  { value: 'me', label: '我' },
 ];
 
 /** What a set chip reads: "Only in plannotator" (a picked project says so), "Archived", "From me". The Tag chip's: searchTags.ts. */
 export function chipText(kind: 'project' | 'status' | 'from', filters: SearchFilters, projectName: (id: string) => string): string {
-  if (kind === 'project') return filters.project ? `Only in ${projectName(filters.project)}` : 'All projects';
-  if (kind === 'status') return STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? 'Any status';
-  return filters.from === 'me' ? 'From me' : filters.from === 'agent' ? 'From agents' : 'From anyone';
+  if (kind === 'project') return filters.project ? `仅在 ${projectName(filters.project)}` : '全部项目';
+  if (kind === 'status') return STATUS_OPTIONS.find((o) => o.value === filters.status)?.label ?? '任何状态';
+  return filters.from === 'me' ? '来自我' : filters.from === 'agent' ? '来自智能体' : '来自任何人';
 }
 
 /**
@@ -176,10 +179,10 @@ export function projectNames(projects: readonly { id: string; name: string; root
 /** "Searched only plannotator, Archived", or with a picked type "Searched only files in plannotator": the scope a "No matches" names. */
 export function scopeWords(filters: SearchFilters, projectName: (id: string) => string, type: InboxSearchGroupId | null = null, tagWords: string | null = null): string[] {
   const out: string[] = [];
-  if (type) out.push(filters.project ? `${GROUP_LABELS[type].noun} in ${projectName(filters.project)}` : GROUP_LABELS[type].noun);
+  if (type) out.push(filters.project ? `${projectName(filters.project)} 中的${GROUP_LABELS[type].noun}` : GROUP_LABELS[type].noun);
   else if (filters.project) out.push(projectName(filters.project));
   if (filters.status) out.push(STATUS_OPTIONS.find((o) => o.value === filters.status)!.label);
-  if (filters.from) out.push(filters.from === 'me' ? 'From me' : 'From agents');
+  if (filters.from) out.push(filters.from === 'me' ? '来自我' : '来自智能体');
   if (tagWords) out.push(tagWords);
   return out;
 }
@@ -195,8 +198,8 @@ export function countWords(answer: { totals: Record<InboxSearchGroupId, number> 
   if (!totals) return '';
   const groups = INBOX_SEARCH_GROUPS.filter((id) => totals[id] > 0);
   const n = groups.reduce((sum, id) => sum + totals[id], 0);
-  if (n === 0) return q.trim() ? `No matches for ${q.trim()}` : filtered ? 'No threads match these filters' : '';
-  return `${formatCount(n)} ${n === 1 ? 'result' : 'results'} in ${groups.length} ${groups.length === 1 ? 'group' : 'groups'}`;
+  if (n === 0) return q.trim() ? `没有匹配「${q.trim()}」的结果` : filtered ? '没有话题匹配这些筛选条件' : '';
+  return `共 ${formatCount(n)} 个结果，分布在 ${groups.length} 个分组中`;
 }
 
 /**
@@ -207,13 +210,13 @@ export function countWords(answer: { totals: Record<InboxSearchGroupId, number> 
 export function typeCountWords(answer: { totals: Record<InboxSearchGroupId, number> | null; indexing?: boolean } | null, q: string, type: InboxSearchGroupId): string {
   if (!answer || answer.indexing || !answer.totals || !q.trim()) return '';
   const n = answer.totals[type];
-  if (n === 0) return `No ${GROUP_LABELS[type].noun} match ${q.trim()}`;
-  return `${formatCount(n)} ${n === 1 ? GROUP_LABELS[type].one : GROUP_LABELS[type].noun}`;
+  if (n === 0) return `没有匹配「${q.trim()}」的${GROUP_LABELS[type].noun}`;
+  return `${formatCount(n)} ${MEASURE[type]}${GROUP_LABELS[type].noun}`;
 }
 
-const TIME = new Intl.DateTimeFormat('en-US', { hour: 'numeric', minute: '2-digit' });
-const DAY = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric' });
-const DAY_YEAR = new Intl.DateTimeFormat('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+const TIME = new Intl.DateTimeFormat('zh-CN', { hour: 'numeric', minute: '2-digit' });
+const DAY = new Intl.DateTimeFormat('zh-CN', { month: 'short', day: 'numeric' });
+const DAY_YEAR = new Intl.DateTimeFormat('zh-CN', { month: 'short', day: 'numeric', year: 'numeric' });
 
 /** A result's time as the mock draws it: "11:42 AM" today, "Oct 9" this year, "Sep 2, 2025" before. */
 export function searchTime(iso: string, now: Date = new Date()): string {

@@ -62,7 +62,7 @@ export const BUILTIN_DEFAULT_ID = "builtin:default";
  */
 export const BUILTIN_DEFAULT_PROFILE: ResolvedReviewProfile = {
   id: BUILTIN_DEFAULT_ID,
-  label: "Default",
+  label: "默认",
   instructions: "",
   source: "builtin",
   default: true,

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
@@ -54,14 +55,14 @@ export const PermissionModeSetup: React.FC<PermissionModeSetupProps> = ({
                 <path strokeLinecap="round" strokeLinejoin="round" d="M14.857 17.082a23.848 23.848 0 005.454-1.31A8.967 8.967 0 0118 9.75v-.7V9A6 6 0 006 9v.75a8.967 8.967 0 01-2.312 6.022c1.733.64 3.56 1.085 5.455 1.31m5.714 0a24.255 24.255 0 01-5.714 0m5.714 0a3 3 0 11-5.714 0" />
               </svg>
             </div>
-            <h3 className="font-semibold text-base">New: Permission Mode Preservation</h3>
+            <h3 className="font-semibold text-base">新增：权限模式保留</h3>
           </div>
           <p className="text-sm text-muted-foreground">
-            Claude Code 2.1.7+ supports preserving your permission mode after plan approval.
-            Choose your preferred automation level.
+            Claude Code 2.1.7+ 支持在计划批准后保留你的权限模式。
+            请选择偏好的自动化级别。
           </p>
           <p className="text-xs text-muted-foreground/70 mt-1">
-            Requires Claude Code 2.1.7 or later. Run <code className="bg-muted px-1 rounded">claude update</code> to update.
+            需要 Claude Code 2.1.7 或更高版本。运行 <code className="bg-muted px-1 rounded">claude update</code> 进行更新。
           </p>
         </div>
 
@@ -95,13 +96,13 @@ export const PermissionModeSetup: React.FC<PermissionModeSetupProps> = ({
         {/* Footer */}
         <div className="p-4 border-t border-border flex flex-shrink-0 flex-wrap gap-2 justify-between items-center">
           <p className="text-xs text-muted-foreground">
-            You can change this later in Settings.
+            之后可在「设置」中修改。
           </p>
           <button
             onClick={handleConfirm}
             className="px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-medium hover:opacity-90 transition-opacity"
           >
-            Continue
+            继续
           </button>
         </div>
       </div>

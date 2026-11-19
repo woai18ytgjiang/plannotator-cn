@@ -41,13 +41,13 @@ export function MarkReadWarning({ count, bulk, onAnswer }: MarkReadWarningProps)
         <label className="ib-opt ib-readwarn-never" data-mark-read-warning-never="">
           <input type="checkbox" checked={never} onChange={(event) => setNever(event.target.checked)} />
           <span>
-            Don&apos;t show this again
-            <small>You can turn it back on in Settings.</small>
+            不再显示此提示
+            <small>你可以稍后在「设置」中重新开启。</small>
           </span>
         </label>
         <div className="ib-acts-row">
           <button type="button" className="ib-btn" onClick={() => onAnswer({ go: false })} data-mark-read-warning-cancel="">
-            Cancel
+            取消
           </button>
           <button type="button" className="ib-btn ib-pri" onClick={go} data-mark-read-warning-go="">
             {words.go}

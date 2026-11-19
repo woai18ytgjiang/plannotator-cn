@@ -8,6 +8,7 @@ import { initialRepoExpansion } from '../utils/repoTree';
 import { prefetchRepoFile } from '../hooks/useRepoFileText';
 import { TreeRowMenu, ancestorsOf, countParts, fileRowParts, folderLineCounts, gitStatusFor, notePart, type FileRowState } from './treeRows';
 import { treeLook } from './treeLook';
+import { TREE_LABELS } from './treeLabels';
 import { useTreeSearchKeys } from './treeSearchKeys';
 
 type ReadyRepoFiles = Extract<RepoFilesState, { status: 'ready' }>;
@@ -32,9 +33,9 @@ interface RepoTreeViewProps extends FileRowState {
 }
 
 const ON_DISK_TITLES: Record<RepoOnDiskChange, string> = {
-  A: 'Added on disk since this diff was taken. Refresh the diff to review it.',
-  M: 'Changed on disk since this diff was taken. Refresh the diff to see it.',
-  D: 'Deleted on disk since this diff was taken. Refresh the diff to see it.',
+  A: '自捕获此差异以来磁盘上新增了该文件，请刷新差异后审查。',
+  M: '自捕获此差异以来磁盘上该文件已变更，请刷新差异后查看。',
+  D: '自捕获此差异以来磁盘上该文件已删除，请刷新差异后查看。',
 };
 
 const dirPath = (dir: string) => `${dir.replace(/\/$/, '')}/`;
@@ -114,6 +115,7 @@ export const RepoTreeView: React.FC<RepoTreeViewProps> = (props) => {
 
   const { model } = useFileTree({
     paths,
+    labels: TREE_LABELS,
     initialExpansion: 'closed',
     flattenEmptyDirectories: false,
     initialExpandedPaths: initialExpanded,
@@ -267,7 +269,7 @@ export const RepoTreeView: React.FC<RepoTreeViewProps> = (props) => {
       model={model}
       className="review-file-tree"
       data-repo-file-tree=""
-      aria-label="All files"
+      aria-label="全部文件"
       style={{ height: '100%' }}
       renderContextMenu={(item, context) =>
         item.kind === 'file' ? <TreeRowMenu path={item.path} repoRoot={live.current.props.repoRoot} close={context.close} anchor={context.anchorRect} /> : null

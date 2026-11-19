@@ -45,8 +45,8 @@ function AuthorLead({ stack }: { stack: InboxPullStack }) {
   const { shown, failed, state, onLoad, onError } = usePicture(src);
   if (!author || !src) {
     return (
-      <Tip content="A deleted account">
-        <span className="ib-pr-av ib-pr-av-ghost" role="img" aria-label="A deleted account" data-pulls-ghost="">
+      <Tip content="已删除的账号">
+        <span className="ib-pr-av ib-pr-av-ghost" role="img" aria-label="已删除的账号" data-pulls-ghost="">
           <Icon name="user" size={13} />
         </span>
       </Tip>
@@ -278,7 +278,7 @@ function HiddenFold({
     onShow(h);
   };
   return (
-    <div ref={fold} className="ib-group ib-pr-fold" role="group" aria-label="Hidden" data-pulls-hidden={count}>
+    <div ref={fold} className="ib-group ib-pr-fold" role="group" aria-label="已隐藏" data-pulls-hidden={count}>
       <button type="button" className="ib-pr-foldbtn" onClick={() => setOpen((was) => !was)} aria-expanded={open} data-pulls-hidden-toggle="">
         <Icon name={open ? 'chevD' : 'chevR'} size={14} />
         Hidden <span className="ib-n">{formatCount(count)}</span>
@@ -290,7 +290,7 @@ function HiddenFold({
               <span className="ib-pr-hid-title" dir="auto">
                 {repo.label}
               </span>
-              <span className="ib-pr-hid-repo">Every pull request</span>
+              <span className="ib-pr-hid-repo">所有 PR</span>
             </span>
             <button
               type="button"
@@ -299,7 +299,7 @@ function HiddenFold({
                 leave(repoChangeKey(repo.key));
                 onShowRepo!(repo);
               }}
-              aria-label={`Show again, ${repo.label}`}
+              aria-label={`再次显示，${repo.label}`}
               data-pulls-show-again={repoChangeKey(repo.key)}
             >
               Show again
@@ -330,7 +330,7 @@ function HiddenFold({
                   {words}
                 </a>
               )}
-              <button type="button" className="ib-pr-hid-show" onClick={() => show(h)} aria-label={`Show again, ${hiddenLabel(h)}`} data-pulls-show-again={h.key}>
+              <button type="button" className="ib-pr-hid-show" onClick={() => show(h)} aria-label={`再次显示，${hiddenLabel(h)}`} data-pulls-show-again={h.key}>
                 Show again
               </button>
             </div>
@@ -547,7 +547,7 @@ export function ReviewsList({
   // High: what it can't place, behind one quiet line in the fold's own shape.
   const notRankedLine =
     notRanked.length > 0 ? (
-      <div className="ib-group ib-pr-fold" role="group" aria-label="Not ranked" data-pulls-risk-not-ranked={notRanked.length}>
+      <div className="ib-group ib-pr-fold" role="group" aria-label="未评估" data-pulls-risk-not-ranked={notRanked.length}>
         <button type="button" className="ib-pr-foldbtn" onClick={() => setNotRankedOpen((v) => !v)} aria-expanded={notRankedOpen} data-pulls-risk-not-ranked-toggle="">
           <Icon name={notRankedOpen ? 'chevD' : 'chevR'} size={14} />
           {notRankedOpen ? (
@@ -578,7 +578,7 @@ export function ReviewsList({
   if (rows.length === 0) {
     // Never "nothing" before Others answers, and the wait never hides a host's own failure.
     const othersOnItsWay = (filter === 'all' || filter === 'others') && model.hosts.some((h) => h.others_pending) && !model.hosts.some((h) => h.error);
-    if (othersOnItsWay) return <p className="ib-pr-empty" data-pulls-empty="reading">Reading your pull requests…</p>;
+    if (othersOnItsWay) return <p className="ib-pr-empty" data-pulls-empty="reading">正在读取你的 PR…</p>;
     // A view with nothing in it, while the read was whole: what the view holds. Never while a host failed or was cut.
     if (filter !== 'all' && notices.every((n) => n.key.startsWith('unsigned:'))) {
       const empty = pullFilterEmptyWords(filter);
@@ -598,7 +598,7 @@ export function ReviewsList({
       <div className="ib-pr-off" data-pulls-empty={empty.kind}>
         <div className="ib-pr-empty">
           <p className="ib-pr-empty-h">{nothing ? 'No reviews yet' : empty.head}</p>
-          {nothing ? <p>Reviews your agents send, and your open pull requests, show here.</p> : empty.lines.map((line) => <p key={line}>{line}</p>)}
+          {nothing ? <p>智能体发来的审查，以及你打开的 PR，都会显示在这里。</p> : empty.lines.map((line) => <p key={line}>{line}</p>)}
           <button type="button" className="ib-btn ib-pri" onClick={onNew} data-reviews-new="empty">
             <Icon name="plus" size={15} />
             New review

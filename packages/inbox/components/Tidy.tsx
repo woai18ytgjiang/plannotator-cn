@@ -297,7 +297,7 @@ export function TidyMenu({
         <Menu.Trigger
           ref={trigger}
           className={`ib-tidytrig ${className}`}
-          aria-label="More"
+          aria-label="更多"
           data-tidy-menu=""
           data-open={popOpen ? '' : undefined}
           onPointerEnter={warm}
@@ -309,13 +309,13 @@ export function TidyMenu({
         <Menu.Portal container={portal ?? undefined}>
           {phone && <Menu.Backdrop className="ib-pm-scrim" />}
           <Menu.Positioner className="ib-pm-pos" side="bottom" align="end" sideOffset={4} data-phone={phone ? '' : undefined}>
-            <Menu.Popup className="ib-pm" aria-label={tidy.surface === 'board' ? 'Board' : 'Inbox'} data-tidy-menu-popup="">
+            <Menu.Popup className="ib-pm" aria-label={tidy.surface === 'board' ? '看板' : '收件箱'} data-tidy-menu-popup="">
               <div className="ib-pm-title" aria-hidden="true">
-                {tidy.surface === 'board' ? 'Board' : 'Inbox'}
+                {tidy.surface === 'board' ? '看板' : '收件箱'}
               </div>
               <Menu.Item
                 className="ib-pmi"
-                label="Tidy"
+                label="整理"
                 disabled={!canOpen}
                 data-tidy-item=""
                 onClick={() => {
@@ -326,16 +326,16 @@ export function TidyMenu({
               >
                 <Icon name="todo" size={15} />
                 {/* New work first: its count; else the last run's progress. */}
-                {count > 0 || !run ? 'Tidy' : runLabel(run)}
+                {count > 0 || !run ? '整理' : runLabel(run)}
                 {count > 0 && <span className="ib-pmi-n">{formatCount(count)}</span>}
               </Menu.Item>
               {onSelect && (
-                <Menu.Item className="ib-pmi" label="Select threads" data-select-threads="" onClick={onSelect}>
+                <Menu.Item className="ib-pmi" label="选择话题" data-select-threads="" onClick={onSelect}>
                   <Icon name="todoOpen" size={15} />
                   Select threads
                 </Menu.Item>
               )}
-              <Menu.Item className="ib-pmi" label="Refresh" data-tidy-refresh="" onClick={onRefresh} aria-keyshortcuts={refreshKeys}>
+              <Menu.Item className="ib-pmi" label="刷新" data-tidy-refresh="" onClick={onRefresh} aria-keyshortcuts={refreshKeys}>
                 <Icon name="refresh" size={15} />
                 Refresh
                 <ShortcutHint scope={inboxAppShortcuts} action="refresh" className="ib-kbd ib-pmi-kbd" />
@@ -345,7 +345,7 @@ export function TidyMenu({
                   <Menu.Separator className="ib-pm-sep" />
                   <MenuViewChoice view={view.value} onChange={view.onChange} />
                   {starredAbove && <MenuCheckbox label={STARRED_ABOVE_LABEL} checked={starredAbove.on} onChange={starredAbove.onChange} data-starred-above-option="" />}
-                  {showArchived && <MenuCheckbox label="Show archived" checked={showArchived.on} onChange={showArchived.onChange} data-show-archived-option="" />}
+                  {showArchived && <MenuCheckbox label="显示已归档" checked={showArchived.on} onChange={showArchived.onChange} data-show-archived-option="" />}
                 </>
               )}
               {/* About the sidebar's agents, not the list's rows: its own item after the View group (owner, 2026-11-18). */}
@@ -359,7 +359,7 @@ export function TidyMenu({
                 <>
                   <Menu.Separator className="ib-pm-sep" />
                   <Menu.Group>
-                    <Menu.GroupLabel className="ib-pm-glabel">Rows</Menu.GroupLabel>
+                    <Menu.GroupLabel className="ib-pm-glabel">行</Menu.GroupLabel>
                     {/* A tick changes the list at once and leaves the menu open, so the next can be tried. */}
                     {LIST_LOOK_OPTIONS.map((option) => (
                       <MenuCheckbox key={option.key} label={option.label} checked={look[option.key]} onChange={(on) => onLook(option.key, on)} data-list-look={option.key} />
@@ -367,7 +367,7 @@ export function TidyMenu({
                     {tagColours && <MenuCheckbox label={SHOW_TAG_COLOURS_LABEL} checked={tagColours.on} onChange={tagColours.onChange} data-tag-colours-option="" />}
                     {onCustomize && (
                       // No icon (the owner, 2026-11-02): its words line up with the checkboxes' labels above it.
-                      <Menu.Item className="ib-pmi ib-pmi-noicon" label="Customize rows…" onClick={onCustomize} data-customize-rows="">
+                      <Menu.Item className="ib-pmi ib-pmi-noicon" label="自定义行…" onClick={onCustomize} data-customize-rows="">
                         <span className="ib-pmi-l">Customize rows…</span>
                       </Menu.Item>
                     )}
@@ -376,7 +376,7 @@ export function TidyMenu({
                     <>
                       <Menu.Separator className="ib-pm-sep" />
                       <Menu.Group>
-                        <Menu.GroupLabel className="ib-pm-glabel">Thread panel</Menu.GroupLabel>
+                        <Menu.GroupLabel className="ib-pm-glabel">话题面板</Menu.GroupLabel>
                         <MenuCheckbox label={THREAD_PANEL_LABEL} checked={threadPanel.on} onChange={threadPanel.onChange} data-thread-panel-option="" />
                       </Menu.Group>
                     </>
@@ -387,8 +387,8 @@ export function TidyMenu({
                 <>
                   <Menu.Separator className="ib-pm-sep" />
                   <Menu.Group>
-                    <Menu.GroupLabel className="ib-pm-glabel">Machines</Menu.GroupLabel>
-                    <MenuCheckbox label="Hide offline machines" checked={hideAway.on} onChange={hideAway.onChange} closeOnClick data-hide-offline-machines="" />
+                    <Menu.GroupLabel className="ib-pm-glabel">设备</Menu.GroupLabel>
+                    <MenuCheckbox label="隐藏离线设备" checked={hideAway.on} onChange={hideAway.onChange} closeOnClick data-hide-offline-machines="" />
                   </Menu.Group>
                 </>
               )}
@@ -400,7 +400,7 @@ export function TidyMenu({
         <Popover.Portal container={portal ?? undefined}>
           {phone && <Popover.Backdrop className="ib-pm-scrim" />}
           <Popover.Positioner className="ib-tidy-pos" anchor={trigger} side="bottom" align="end" sideOffset={6} data-phone={phone ? '' : undefined}>
-            <Popover.Popup className="ib-tidy" aria-label="Tidy" finalFocus={trigger} data-tidy-popover="">
+            <Popover.Popup className="ib-tidy" aria-label="整理" finalFocus={trigger} data-tidy-popover="">
               {popOpen && <TidyPanel tidy={tidy} onDone={() => setPopOpen(false)} />}
             </Popover.Popup>
           </Popover.Positioner>

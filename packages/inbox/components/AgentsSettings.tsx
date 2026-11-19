@@ -81,8 +81,8 @@ function OpenSessions({ id, sessions }: { id: InboxToolHostId; sessions: InboxHo
     const first = legacy[0]!;
     sub = (
       <>
-        Run <code>pi update --extensions</code>, then <code>/reload</code> in {legacy.length === 1 ? 'that session' : `each of those ${legacy.length}`}
-        {legacy.length === 1 ? ` (${first.project ?? 'Pi'}, since ${sinceText(first.started_at)})` : ''}.
+        Run <code>pi update --extensions</code>, then <code>/reload</code> in {legacy.length === 1 ? '该会话' : `这 ${legacy.length} 个会话中的每一个`}
+        {legacy.length === 1 ? `（${first.project ?? 'Pi'}，自 ${sinceText(first.started_at)} 起）` : ''}。
       </>
     );
   }
@@ -90,9 +90,9 @@ function OpenSessions({ id, sessions }: { id: InboxToolHostId; sessions: InboxHo
   const updating = stale.some((s) => s.outdated?.fix === 'update_plugin');
   return (
     <div className="ib-agrow" data-agent-sessions={id}>
-      <span className="ib-agk">Open sessions</span>
+      <span className="ib-agk">打开的会话</span>
       <span className="ib-agv">
-        {formatCount(sessions.running)} running
+        {formatCount(sessions.running)} 个运行中
         {older}
         {runningOnly}
       </span>
@@ -107,21 +107,21 @@ function OpenSessions({ id, sessions }: { id: InboxToolHostId; sessions: InboxHo
       {reload && (
         <div className="ib-rl" data-reload-sessions="">
           <ReloadLead
-            where={stale.length === 1 ? 'in this Claude Code session' : `in each of these ${stale.length} Claude Code sessions`}
+            where={stale.length === 1 ? '在此 Claude Code 会话中' : `在这 ${stale.length} 个 Claude Code 会话中的每一个`}
             updateCommand={updating ? (sessions.update_command ?? null) : null}
           />
-          <ul className="ib-rw-sess" aria-label="Claude Code sessions on the older plugin">
+          <ul className="ib-rw-sess" aria-label="使用旧版插件的 Claude Code 会话">
             {stale.map((s) => (
               <li key={s.session}>
                 <SessionRow session={s} />
               </li>
             ))}
           </ul>
-          <Fold question="Still listed after reloading?">
+          <Fold question="重新加载后仍列出？">
             <p className="ib-rl-manual" data-restart-fallback="">
-              Type <code>/exit</code> in any session still listed, then run its restart command. <span className="ib-rw-warn">/exit stops a turn it is working on.</span>
+              Type <code>/exit</code> in any session still listed, then run its restart command. <span className="ib-rw-warn">/exit 会中止它正在进行的轮次。</span>
             </p>
-            <ul className="ib-rw-sess" aria-label="Restart commands">
+            <ul className="ib-rw-sess" aria-label="重启命令">
               {stale.map((s) => (
                 <li key={s.session}>
                   <SessionRow session={s} restart />
@@ -162,8 +162,8 @@ function HostReload({ sessions }: { sessions: InboxOpenSession[] }) {
         const name = RUNTIME_LABEL[runtime];
         const reload: ReloadSpec = { command: o.reload_command ?? '/reload', where: o.reload_where ?? 'session' };
         const n = group.length;
-        const where = n === 1 ? `in this ${name} session` : `in each of these ${n} ${name} sessions`;
-        const what = "Plannotator's extension";
+        const where = n === 1 ? `在此 ${name} 会话中` : `在这 ${n} 个 ${name} 会话中的每一个`;
+        const what = 'Plannotator 的扩展';
         // OpenCode 2: one short line with its command and Copy (an update reloads by itself), the pin first when there is one.
         const command =
           runtime === 'opencode'
@@ -184,7 +184,7 @@ function HostReload({ sessions }: { sessions: InboxOpenSession[] }) {
             ) : (
               <ReloadLead where={where} updateCommand={o.fix === 'update_extension' ? (o.update_command ?? null) : null} reload={reload} what={what} />
             )}
-            <ul className="ib-rw-sess" aria-label={`${name} sessions on older code`}>
+            <ul className="ib-rw-sess" aria-label={`使用旧版代码的 ${name} 会话`}>
               {group.map((s) => (
                 <li key={s.session}>
                   <SessionRow session={s} />
@@ -192,11 +192,11 @@ function HostReload({ sessions }: { sessions: InboxOpenSession[] }) {
               ))}
             </ul>
             {command === 'opencode2 reload' && o.fallback_command && (
-              <Fold question="Still listed after reloading?">
+              <Fold question="重新加载后仍列出？">
                 <div className="ib-rl-manual" data-restart-fallback="">
-                  Restart OpenCode's background server:
-                  <CommandLine text={o.fallback_command} label="Copy the command that restarts OpenCode's background server" />
-                  <span className="ib-rw-warn">It stops any turn an OpenCode session is working on.</span>
+                  重启 OpenCode 的后台服务：
+                  <CommandLine text={o.fallback_command} label="复制重启 OpenCode 后台服务的命令" />
+                  <span className="ib-rw-warn">这会中止 OpenCode 会话正在进行的任何轮次。</span>
                 </div>
               </Fold>
             )}
@@ -210,21 +210,21 @@ function HostReload({ sessions }: { sessions: InboxOpenSession[] }) {
 /** One session: its project, since when, idle or working. With `restart`, its Copy restart. */
 function SessionRow({ session, restart }: { session: InboxOpenSession; restart?: boolean }) {
   const state = session.busy === true ? 'working' : session.busy === false ? 'idle' : null;
-  const meta = [`since ${sinceText(session.started_at)}`, state].filter(Boolean).join(' · ');
+  const meta = [`自 ${sinceText(session.started_at)} 起`, state].filter(Boolean).join(' · ');
   return (
     <div className="ib-rw-srow" {...(restart ? { 'data-session-restart': session.session } : { 'data-session-row': session.session })}>
       <span className="ib-rw-sw">
         <span className="ib-rw-sp" title={session.folder ?? undefined}>
-          {session.project ?? 'A session'}
+          {session.project ?? '一个会话'}
         </span>
         <span className="ib-rw-sm">{meta}</span>
       </span>
       {restart &&
         (session.restart_command ? (
-          <CopyCommand text={session.restart_command} short="Copy restart" label={`Copy restart: the command that restarts the ${session.project ?? 'Claude Code'} session started ${sinceText(session.started_at)}`} />
+          <CopyCommand text={session.restart_command} short="复制重启命令" label={`复制重启命令：用于重启 ${session.project ?? 'Claude Code'} 会话（启动于 ${sinceText(session.started_at)}）的命令`} />
         ) : (
           <span className="ib-rw-sm">
-            run <code>claude --resume</code> in its folder
+            在其文件夹中运行 <code>claude --resume</code>
           </span>
         ))}
     </div>
@@ -251,18 +251,18 @@ function Switch({ on, label, disabled, busy, onClick }: { on: boolean; label: st
 
 /** How an agent reaches the Inbox, beside its name. */
 function viaOf(row: InboxAgentRow): string {
-  if (row.reach.kind === 'tool') return row.id === 'pi' ? "Plannotator's extension" : "Plannotator's plugin";
-  if (row.reach.kind === 'mcp') return 'MCP server';
-  return 'connected yourself';
+  if (row.reach.kind === 'tool') return row.id === 'pi' ? 'Plannotator 的扩展' : 'Plannotator 的插件';
+  if (row.reach.kind === 'mcp') return 'MCP 服务器';
+  return '由你自行连接';
 }
 
 /** Words a group's head and its "Your replies" row share with the T3 Code group (T3AgentGroup.tsx). */
 export const agentWords = {
-  connected: 'Connected',
-  notConnected: 'Not connected',
-  replies: 'Your replies',
-  repliesWake: 'arrive as a new turn',
-  repliesCheck: "seen when it checks the Inbox; it can't be woken",
+  connected: '已连接',
+  notConnected: '未连接',
+  replies: '你的回复',
+  repliesWake: '作为新轮次送达',
+  repliesCheck: '在它检查收件箱时看到；无法唤醒',
 } as const;
 
 function stateOf(row: InboxAgentRow): { text: string; tone: 'on' | 'off' | 'bad' } {
@@ -270,19 +270,19 @@ function stateOf(row: InboxAgentRow): { text: string; tone: 'on' | 'off' | 'bad'
     case 'connected':
       return { text: agentWords.connected, tone: 'on' };
     case 'removed':
-      return { text: 'Removed outside Plannotator', tone: 'bad' };
+      return { text: '在 Plannotator 之外被移除', tone: 'bad' };
     case 'elsewhere':
-      return { text: 'Connected in another folder', tone: 'off' };
+      return { text: '已在另一个文件夹中连接', tone: 'off' };
     case 'foreign':
-      return { text: 'Has its own entry', tone: 'bad' };
+      return { text: '已有自己的条目', tone: 'bad' };
     case 'unreadable':
-      return { text: "Can't read its config", tone: 'bad' };
+      return { text: '无法读取其配置', tone: 'bad' };
     case 'manual':
-      return { text: 'Connect yourself', tone: 'off' };
+      return { text: '请自行连接', tone: 'off' };
     case 'not_connected':
       return { text: agentWords.notConnected, tone: 'off' };
     default:
-      return { text: 'Off', tone: 'off' };
+      return { text: '关闭', tone: 'off' };
   }
 }
 
@@ -297,7 +297,7 @@ export function repliesOf(row: InboxAgentRow): { text: string; wakes: boolean } 
   if (!row.reach.on) return null;
   if (row.reach.kind === 'tool') {
     if (row.tool?.mod_off) return null;
-    if (row.id === 'opencode' && row.plugin?.generation === '1') return { text: "seen when it checks the Inbox; OpenCode 1 can't be woken", wakes: false };
+    if (row.id === 'opencode' && row.plugin?.generation === '1') return { text: '在它检查收件箱时看到；OpenCode 1 无法被唤醒', wakes: false };
     return { text: agentWords.repliesWake, wakes: true };
   }
   // Codex: the Inbox wakes it itself (`codex queue`) when it found a Codex that can (the server's `wakes`).
@@ -308,8 +308,8 @@ export function repliesOf(row: InboxAgentRow): { text: string; wakes: boolean } 
 
 /** Agents whose instructions live in their own settings, not a file. */
 const NO_NOTE_FILE: Partial<Record<InboxAgentId, string>> = {
-  kiro: 'Kiro CLI has no global instructions file, so there is no file to add a note to.',
-  muse: "Muse Code's user rules file has no documented place, so there is no file to add a note to.",
+  kiro: 'Kiro CLI 没有全局指令文件，因此没有可添加备注的文件。',
+  muse: 'Muse Code 的用户规则文件没有公开的位置，因此没有可添加备注的文件。',
 };
 
 /**
@@ -320,11 +320,11 @@ const NO_NOTE_FILE: Partial<Record<InboxAgentId, string>> = {
  * page marks "Not found on this computer" gets none.
  */
 export const offWords = {
-  reach: (label: string) => `Off: ${label} can't send you messages or read your replies here.`,
+  reach: (label: string) => `关闭：${label} 无法在此向你发送消息或读取你的回复。`,
   /** The Inbox tool off while its MCP server still reaches the Inbox (Claude Code or Pi connected through MCP). */
-  toolBesideMcp: (label: string) => `Off: ${label} reaches you only through its MCP server above.`,
-  reminder: (label: string) => `Off: ${label} isn't told the Inbox exists when a session starts, so it rarely uses it.`,
-  note: (label: string) => `Off: ${label} isn't told when to send you decisions and finished work.`,
+  toolBesideMcp: (label: string) => `关闭：${label} 仅通过上方的 MCP 服务器联系你。`,
+  reminder: (label: string) => `关闭：会话启动时不会告知 ${label} 收件箱的存在，因此它很少使用。`,
+  note: (label: string) => `关闭：不会告知 ${label} 何时向你发送决策和已完成的工作。`,
 };
 
 type OffKind = 'reach' | 'tool' | 'reminder' | 'note';
@@ -391,12 +391,12 @@ function CodexAccountRow() {
   if (!line) return null;
   return (
     <Row
-      k="Account"
+      k="账户"
       v={line.value}
       sub={
         line.signIn ? (
           <>
-            Run <code>codex login</code> in Terminal to sign in.
+            在终端中运行 <code>codex login</code> 以登录。
           </>
         ) : (
           line.limits
@@ -431,14 +431,14 @@ function AgentGroup({
 }) {
   const [show, setShow] = useState(false);
   const id = useId();
-  const base = row.detected ? stateOf(row) : { text: 'Not found on this computer', tone: 'off' as const };
+  const base = row.detected ? stateOf(row) : { text: '此电脑上未找到', tone: 'off' as const };
   const needs = row.id === 'claude-code' || row.id === 'pi' || row.id === 'opencode' ? sessionsState(row.id, sessions) : null;
   const state = needs ? { text: `${base.text} · ${needs}`, tone: 'bad' as const } : base;
   // An off line shows only under an agent found on this computer (the header's status is not "Not found on this
   // computer"), and only once that is known and settled: never in, then out.
   const offLine = (kind: OffKind, text: string) => (row.detected === true && !settling ? { kind, text } : null);
   // DeepSeek Harness decides once, when it starts (its plugin), never per session.
-  const next = row.id === 'dsh' ? 'when DeepSeek Harness next starts' : row.id === 'openclaw' ? "OpenClaw's next message" : `${row.label}'s next session`;
+  const next = row.id === 'dsh' ? '在 DeepSeek Harness 下次启动时' : row.id === 'openclaw' ? 'OpenClaw 的下一条消息' : `${row.label} 的下次会话`;
   const reach = row.reach;
   const reachValue =
     reach.kind === 'tool' ? (
@@ -448,19 +448,19 @@ function AgentGroup({
     ) : reach.kind === 'mcp' ? (
       reach.state === 'elsewhere' ? (
         <span data-reach-elsewhere="">
-          Connected in <code>{reach.path}</code>. Turn on to move it here.
+          已在 <code>{reach.path}</code> 中连接。开启即可将其移到这里。
         </span>
       ) : reach.state === 'removed' ? (
         <>
-          <code>plannotator-inbox</code> is no longer in <code>{reach.path}</code>. Plannotator won't add it back on its own; turn this on to add it.
+          <code>plannotator-inbox</code> 已不在 <code>{reach.path}</code> 中。Plannotator 不会自行将其加回；开启此项即可添加。
         </>
       ) : reach.state === 'foreign' ? (
         <>
-          <code>{reach.path}</code> has its own <code>plannotator-inbox</code> entry, so Plannotator leaves it alone.
+          <code>{reach.path}</code> 已有自己的 <code>plannotator-inbox</code> 条目，因此 Plannotator 不会改动它。
         </>
       ) : reach.state === 'unreadable' ? (
         <>
-          <code>{reach.path}</code> can't be read ({reach.reason}), so Plannotator leaves it alone.
+          <code>{reach.path}</code> 无法读取（{reach.reason}），因此 Plannotator 不会改动它。
         </>
       ) : (
         <>
@@ -474,10 +474,10 @@ function AgentGroup({
         </>
       )
     ) : (
-      'Add it yourself: "Not found on this computer" below has its command.'
+      '请自行添加：下方「此电脑上未找到」处有其命令。'
     );
   // Pi and OpenCode send the tool whole with every request (Claude Code defers it behind tool search): the measured cost.
-  const cost = row.id === 'pi' || row.id === 'opencode' ? `Adds the tool to every ${row.label} request: ${inboxToolCostText(row.id)}.` : null;
+  const cost = row.id === 'pi' || row.id === 'opencode' ? `会把该工具添加到每次 ${row.label} 请求中：${inboxToolCostText(row.id)}。` : null;
   // Claude Code's mod off: its plugin gives no tool, so there is nothing to switch (the reason shows instead).
   const modOff = row.tool?.mod_off === true;
   // Claude Code's MCP entry is one the person added by hand (`claude mcp add`): Plannotator never writes or removes it.
@@ -489,29 +489,29 @@ function AgentGroup({
   const noteState = note
     ? note.state === 'added' || note.state === 'edited'
       ? note.created
-        ? 'created by Plannotator'
-        : 'marked section'
+        ? '由 Plannotator 创建'
+        : '已标记的段落'
       : note.state === 'absent'
         ? note.create
-          ? 'would create'
-          : 'no note yet'
+          ? '将会创建'
+          : '尚无备注'
         : note.state === 'manual'
-          ? 'copy yourself'
+          ? '请自行复制'
           : note.state === 'unavailable'
-          ? 'no file yet'
+          ? '尚无文件'
           : ''
     : '';
   const noteSub =
     noteOn && note?.reason
       ? note.reason
       : note?.state === 'edited'
-      ? "You edited this note, so Plannotator won't update it. Turning it off removes it as you left it."
+      ? "你编辑过此备注，因此 Plannotator 不会更新它。关闭后，它会按你留下的样子被移除。"
       : note?.state === 'manual' || note?.state === 'unavailable' || note?.state === 'damaged' || note?.state === 'refused'
         ? note.reason
         : note?.shared_with && note.shared_with.length > 0
-          ? `This file is shared with ${note.shared_with.map((id) => INBOX_AGENT_LABELS[id]).join(' and ')}: one section, kept while either has it on.`
+          ? `此文件与 ${note.shared_with.map((id) => INBOX_AGENT_LABELS[id]).join('、')} 共享：只有一个段落，任一方开启期间都会保留。`
           : note?.target
-            ? `This file is a link to ${note.target}; the note goes there.`
+            ? `此文件是指向 ${note.target} 的链接；备注会写入那里。`
             : null;
 
   return (
@@ -526,7 +526,7 @@ function AgentGroup({
         </span>
       </div>
       <Row
-        k="Reaches the Inbox"
+        k="联系收件箱"
         v={reachValue}
         // Connected under another QWEN_HOME still reaches the Inbox from there: its value says where, so no off line.
         off={reachSwitchable && !reach.on && reach.state !== 'elsewhere' ? offLine('reach', offWords.reach(row.label)) : null}
@@ -536,7 +536,7 @@ function AgentGroup({
           reachSwitchable ? (
             <>
               {pending.has(`${row.id}:reach`) && <span className="ib-agpending">{next}</span>}
-              <Switch on={reach.on} label={`Reaches the Inbox: ${row.label}`} disabled={reach.locked} busy={busy} onClick={() => onChange({ reach: !reach.on })} />
+              <Switch on={reach.on} label={`联系收件箱：${row.label}`} disabled={reach.locked} busy={busy} onClick={() => onChange({ reach: !reach.on })} />
             </>
           ) : null
         }
@@ -583,13 +583,13 @@ function AgentGroup({
       {note ? (
         <>
           <Row
-            k="Note in its instructions"
+            k="指令中的备注"
             v={
               <>
                 {note.path ? <code>{note.path}</code> : noteCopiedByHand(row) ? `${CURSOR_RULES_PLACE} in ${row.label}` : null}
                 {noteState && <> · {noteState}</>}
                 <button type="button" className="ib-lnk" aria-expanded={show} aria-controls={`${id}-note`} onClick={() => setShow((open) => !open)}>
-                  {show ? 'Hide' : noteCopiedByHand(row) ? 'Show note' : 'Show'}
+                  {show ? '隐藏' : noteCopiedByHand(row) ? '显示备注' : '显示'}
                 </button>
               </>
             }
@@ -597,7 +597,7 @@ function AgentGroup({
               note.state === 'absent' || note.state === 'added' || note.state === 'edited' ? (
                 <>
                   {pending.has(`${row.id}:note`) && <span className="ib-agpending">{next}</span>}
-                  <Switch on={noteOn} label={`Note in its instructions: ${row.label}`} busy={busy} onClick={() => onChange({ note: !noteOn })} />
+                  <Switch on={noteOn} label={`指令中的备注：${row.label}`} busy={busy} onClick={() => onChange({ note: !noteOn })} />
                 </>
               ) : null
             }
@@ -611,7 +611,7 @@ function AgentGroup({
               <div className="ib-cbox">
                 {noteCopiedByHand(row) && (
                   <p>
-                    Copy this text into {CURSOR_RULES_PLACE} in {row.label}. Plannotator can't see, update or remove that copy.
+                    将此文本复制到 {row.label} 的 {CURSOR_RULES_PLACE} 中。Plannotator 无法查看、更新或删除该副本。
                   </p>
                 )}
                 <pre>{noteCopiedByHand(row) ? noteWithoutMarkers(noteText) : noteText}</pre>
@@ -620,7 +620,7 @@ function AgentGroup({
           )}
         </>
       ) : NO_NOTE_FILE[row.id] ? (
-        <Row k="Note in its instructions" v={NO_NOTE_FILE[row.id]} na />
+        <Row k="指令中的备注" v={NO_NOTE_FILE[row.id]} na />
       ) : null}
       {extra}
       {sessions && sessions.running > 0 && (row.id === 'claude-code' || row.id === 'pi' || row.id === 'opencode') && (
@@ -708,23 +708,23 @@ export function AgentsSettings({
   const startInRow =
     launchState?.enabled && rexNames.length > 0 && (launchState.rex_here || inRex) ? (
       <Row
-        k="Start new agents in"
+        k="在何处启动新智能体"
         v={
-          <span className="ib-seg" role="group" aria-label="Start new agents in">
+          <span className="ib-seg" role="group" aria-label="在何处启动新智能体">
             {(['inbox', 'rex'] as const).map((where) => (
               <button key={where} type="button" className="ib-seg-o" aria-pressed={(launchState.start_in ?? 'inbox') === where} data-on={(launchState.start_in ?? 'inbox') === where ? '' : undefined} disabled={launchBusy} onClick={() => void pickStartIn(where)} data-launch-start-in={where}>
-                {where === 'inbox' ? 'In the background' : 'Rex'}
+                {where === 'inbox' ? '后台运行' : 'Rex'}
               </button>
             ))}
           </span>
         }
         sub={
           <>
-            In Rex, each new agent runs in its own tab of a Rex session for its project, and keeps running there after the Inbox closes. {listWords(rexNames)} can start in Rex
-            {notRexNames.length > 0 ? `; ${listWords(notRexNames)} always ${notRexNames.length === 1 ? 'starts' : 'start'} in the background.` : '.'}
+            在 Rex 中，每个新智能体都在其项目的 Rex 会话的独立标签页中运行，收件箱关闭后仍在其中继续运行。{listWords(rexNames)} 可以在 Rex 中启动
+            {notRexNames.length > 0 ? `；${listWords(notRexNames)}始终在后台启动。` : '。'}
             {inRex && launchState.rex_here === false && (
               <span className="block" data-launch-rex-away="">
-                Rex isn't open on this computer now, so new agents start in the background until it is.
+                此电脑上尚未打开 Rex，因此新智能体会先在后台启动，直到 Rex 打开。
               </span>
             )}
           </>
@@ -736,11 +736,11 @@ export function AgentsSettings({
   const enabledRow = launchState && !launchState.unsupported ? (
     <div className="ib-agent ib-aglaunch" data-launch-enabled-group="">
       <Row
-        k="Start agents from New message"
-        v="Claude Code, Codex, OpenCode and Pi"
-        sub="New message can start Claude Code, Codex, OpenCode or Pi in a folder you pick. Turn off to only message sessions that are already running."
+        k="从新消息启动智能体"
+        v="Claude Code、Codex、OpenCode 和 Pi"
+        sub="新消息可以在你选择的文件夹中启动 Claude Code、Codex、OpenCode 或 Pi。关闭后只能向已在运行的会话发送消息。"
         data={{ 'data-launch-enabled-row': launchState.enabled ? 'on' : 'off' }}
-        r={<Switch on={launchState.enabled} label="Start agents from New message" busy={launchBusy} onClick={() => void toggleEnabled()} />}
+        r={<Switch on={launchState.enabled} label="从新消息启动智能体" busy={launchBusy} onClick={() => void toggleEnabled()} />}
       />
       {startInRow}
     </div>
@@ -759,30 +759,30 @@ export function AgentsSettings({
   };
   const launchRow = launchState?.enabled ? (
     <Row
-      k="Sessions you start"
-      v={launchState.full_permissions && !launchState.needs_consent && !launchState.bypass_off ? 'Full permissions' : launchState.own_mode ? 'Your default mode' : 'Auto mode'}
+      k="你启动的会话"
+      v={launchState.full_permissions && !launchState.needs_consent && !launchState.bypass_off ? '完全权限' : launchState.own_mode ? '你的默认模式' : '自动模式'}
       sub={
         <>
-          Start new sessions with full permissions: Claude Code you start from New message runs without asking (bypass mode); only a safety check, such as deleting files, still comes to you here. Otherwise it starts in your default mode, or auto mode. Applies to the next session you start.
+          以完全权限启动新会话：你从新消息启动的 Claude Code 会直接运行，不再询问（绕过模式）；只有安全检查，例如删除文件，仍会在这里询问你。否则会以你的默认模式或自动模式启动。应用于你下次启动的会话。
           {launchState.follows && (
             <span className="block" data-launch-follows={launchState.follows}>
-              {launchState.follows === 'shell' ? "Uses your shell's setting until you change it." : 'Uses your Claude Code settings until you change it.'}
+              {launchState.follows === 'shell' ? '在你更改之前，使用你的 shell 设置。' : '在你更改之前，使用你的 Claude Code 设置。'}
             </span>
           )}
           {launchState.full_permissions && launchState.bypass_off && (
             <span className="block" data-launch-bypass-off="">
-              Bypass mode is turned off in your Claude Code settings, so sessions start without it.
+              你的 Claude Code 设置中已关闭绕过模式，因此会话会在不启用它的情况下启动。
             </span>
           )}
           {launchState.full_permissions && launchState.needs_consent && (
             <span className="block" data-launch-needs-consent="">
-              Accept Claude Code's bypass notice once in Terminal to use this. Until then sessions start without it.
+              请在终端中接受一次 Claude Code 的绕过提示后才能使用此功能。在此之前，会话会在不启用它的情况下启动。
             </span>
           )}
         </>
       }
       data={{ 'data-launch-full-row': '' }}
-      r={<Switch on={launchState.full_permissions} label="Start new sessions with full permissions" busy={launchBusy} onClick={() => void toggleFull()} />}
+      r={<Switch on={launchState.full_permissions} label="以完全权限启动新会话" busy={launchBusy} onClick={() => void toggleFull()} />}
     />
   ) : null;
   // "Scratch folders": where New message's "New scratch folder" makes each one (`inboxLaunch.scratchDir`).
@@ -803,7 +803,7 @@ export function AgentsSettings({
   const scratchRow =
     launchState?.enabled && launchState.scratch_dir_shown !== undefined ? (
       <Row
-        k="Scratch folders"
+        k="临时文件夹"
         v={
           scratchEdit === null ? (
             <code data-launch-scratch-dir="">{launchState.scratch_dir_shown}</code>
@@ -811,8 +811,8 @@ export function AgentsSettings({
             <input
               className="ib-agpath"
               type="text"
-              aria-label="Scratch folders"
-              placeholder="Empty: the default"
+              aria-label="临时文件夹"
+              placeholder="留空：使用默认位置"
               autoComplete="off"
               spellCheck={false}
               autoFocus
@@ -829,23 +829,23 @@ export function AgentsSettings({
         }
         sub={
           <>
-            New scratch folders are made here, named after their thread. A change applies to new folders only. Pick a folder outside any git
-            repository.
+            新的临时文件夹会创建在这里，名称取自其话题。更改仅应用于新文件夹。请选择任意 git
+            仓库之外的文件夹。
           </>
         }
         data={{ 'data-launch-scratch-row': '' }}
         r={
           scratchEdit === null ? (
             <button type="button" className="ib-btn ib-sm" data-launch-scratch-change="" onClick={() => setScratchEdit(launchState.scratch_dir_shown ?? '')}>
-              Change
+              更改
             </button>
           ) : (
             <>
               <button type="button" className="ib-btn ib-sm ib-ghost" onClick={() => setScratchEdit(null)}>
-                Cancel
+                取消
               </button>
               <button type="button" className="ib-btn ib-sm ib-pri" disabled={launchBusy} data-launch-scratch-save="" onClick={() => void saveScratch()}>
-                Save
+                保存
               </button>
             </>
           )
@@ -889,8 +889,8 @@ export function AgentsSettings({
         <div className="ib-callout" role="note" data-tool-locked="">
           <Icon name="lock" />
           <span>
-            <code>PLANNOTATOR_INBOX_TOOL={model.tool_env ? '1' : '0'}</code> is set in this Inbox's environment, so the Inbox tool stays{' '}
-            {model.tool_env ? 'on' : 'off'} in Claude Code, Pi and OpenCode, and so does their reminder. Notes and MCP servers are not affected.
+            <code>PLANNOTATOR_INBOX_TOOL={model.tool_env ? '1' : '0'}</code> 已在此收件箱的环境中设置，因此在 Claude Code、Pi 和 OpenCode 中，收件箱工具保持
+            {model.tool_env ? '开启' : '关闭'}，其提醒也是如此。备注和 MCP 服务器不受影响。
           </span>
         </div>
       )}
@@ -898,7 +898,7 @@ export function AgentsSettings({
         <div className="ib-callout" role="note">
           <Icon name="info" />
           <span>
-            <code>PLANNOTATOR_INBOX_CONNECT=0</code> is set, so <code>plannotator inbox</code> doesn't connect agents by itself. The switches below still work.
+            <code>PLANNOTATOR_INBOX_CONNECT=0</code> 已设置，因此 <code>plannotator inbox</code> 不会自行连接智能体。下方开关仍然有效。
           </span>
         </div>
       )}
@@ -906,7 +906,7 @@ export function AgentsSettings({
         <div className="ib-callout" role="note">
           <Icon name="info" />
           <span>
-            <code>PLANNOTATOR_INBOX_NOTES=0</code> is set, so Plannotator offers no notes and adds none. A note already written is listed below, where you can turn it off.
+            <code>PLANNOTATOR_INBOX_NOTES=0</code> 已设置，因此 Plannotator 不提供备注，也不会添加任何备注。已写入的备注会列在下方，你可以在那里关闭它。
           </span>
         </div>
       )}
@@ -935,14 +935,14 @@ export function AgentsSettings({
         ))}
         {detected.length === 0 && (
           <div className="ib-agrow ib-agna">
-            <span className="ib-agk">No agent found on this computer</span>
+            <span className="ib-agk">此电脑上未找到智能体</span>
           </div>
         )}
         <button type="button" className="ib-amore" aria-expanded={more} aria-controls="ib-aundet" onClick={() => setMore((open) => !open)}>
           <Icon name="chevR" />
-          Not found on this computer
+          此电脑上未找到
           <span className="ib-mut">
-            {undetected.length} agent{undetected.length === 1 ? '' : 's'} · connect one yourself
+            {undetected.length} 个智能体 · 请自行连接一个
           </span>
         </button>
         {more && context && (
@@ -954,7 +954,7 @@ export function AgentsSettings({
       <p className="ib-note">
         <Icon name="info" />
         <span>
-          Plannotator never overwrites a note you edited, and <code>plannotator uninstall</code> removes everything it added here.
+          Plannotator 绝不会覆盖你编辑过的备注，<code>plannotator uninstall</code> 会移除它在此处添加的所有内容。
         </span>
       </p>
     </div>

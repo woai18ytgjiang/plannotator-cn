@@ -21,8 +21,8 @@ export function pickLaunchModel(choice: InboxLaunchChoice, choices: InboxLaunchC
 export const shortLaunchModel = (model: string) => model.slice(model.lastIndexOf('/') + 1);
 
 export function launchChoiceButton(choice: InboxLaunchChoice, choices: InboxLaunchChoices): string {
-  const fallback = choices.models.length > 0 ? 'Default model' : `Default ${choices.effort_word.toLowerCase()}`;
-  if (!choice.model && choices.models.length > 0) return choice.effort || choice.primary_agent ? ['Default model', choice.effort, choice.primary_agent].filter(Boolean).join(' · ') : fallback;
+  const fallback = choices.models.length > 0 ? '默认模型' : `Default ${choices.effort_word.toLowerCase()}`;
+  if (!choice.model && choices.models.length > 0) return choice.effort || choice.primary_agent ? ['默认模型', choice.effort, choice.primary_agent].filter(Boolean).join(' · ') : fallback;
   return launchChoiceLine(choice, shortLaunchModel) ?? fallback;
 }
 

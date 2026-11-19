@@ -112,7 +112,7 @@ export function OpenedCard({
   const startKey = useRef(newUuid());
   const askKey = useRef(newUuid());
   const tellAgent = async (body: string, key: string, link: boolean): Promise<string> => {
-    if (!askTarget) throw new Error('No agent is running in this project.');
+    if (!askTarget) throw new Error('此项目中没有正在运行的智能体。');
     const idempotency = messageKey(key, askTarget.session, body);
     const thread = card.threads.find((id) => rowOf(id)?.project.id === card.project_id) ?? card.threads[0];
     if (thread && askTarget.session === agentSession) {
@@ -139,7 +139,7 @@ export function OpenedCard({
       canAsk={askTarget !== null}
       askNote={
         askTarget && agentSession && askTarget.session !== agentSession
-          ? `Its agent's session ended; this asks another ${hostLabel(askTarget.host)} session in ${askTarget.project.name}.`
+          ? `其智能体的会话已结束；这会询问 ${askTarget.project.name} 中另一个 ${hostLabel(askTarget.host)} 会话。`
           : null
       }
       rowOf={rowOf}
@@ -155,24 +155,24 @@ export function OpenedCard({
       onStart={async () => {
         // Start: the card's agent (else a live session in its project) is told to begin, in the card's
         // thread when that agent is the card's own; the card shows "Sent to <agent>" until it moves.
-        if (!askTarget) return 'No agent is running in this project.';
+        if (!askTarget) return '此项目中没有正在运行的智能体。';
         try {
           const messageId = await tellAgent(startBody(card), startKey.current, false);
           onChanged((await inboxApi.editCard(card.id, { op: 'send', thread_id: messageId })).card);
           startKey.current = newUuid();
           return null;
         } catch (cause) {
-          return cause instanceof Error ? cause.message : 'Nothing was sent.';
+          return cause instanceof Error ? cause.message : '未发送任何内容。';
         }
       }}
       onAsk={async () => {
-        if (!askTarget) return 'No agent is running in this project.';
+        if (!askTarget) return '此项目中没有正在运行的智能体。';
         try {
           await tellAgent(askWhereBody(card), askKey.current, true);
           askKey.current = newUuid();
           return null;
         } catch (cause) {
-          return cause instanceof Error ? cause.message : 'Nothing was sent.';
+          return cause instanceof Error ? cause.message : '未发送任何内容。';
         }
       }}
       onNotes={async (notes) => {
@@ -191,7 +191,7 @@ export function OpenedCard({
           onChanged((await inboxApi.editCard(card.id, { op: 'link', ref })).card);
           return null;
         } catch (cause) {
-          return cause instanceof Error ? cause.message : 'Not linked.';
+          return cause instanceof Error ? cause.message : '未添加链接。';
         }
       }}
       onUnlink={async (url) => {
@@ -199,7 +199,7 @@ export function OpenedCard({
           onChanged((await inboxApi.editCard(card.id, { op: 'unlink', url })).card);
           return null;
         } catch (cause) {
-          return cause instanceof Error ? cause.message : 'Not removed.';
+          return cause instanceof Error ? cause.message : '未移除。';
         }
       }}
       onOpenThread={onOpenThread}

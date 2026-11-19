@@ -127,18 +127,18 @@ export async function probeLiveAppTarget(
 
 /** --app given with a file/folder target. */
 export const LIVE_APP_REQUIRES_URL_MESSAGE =
-  "--app requires a URL target (a running local app, e.g. http://localhost:5173)";
+  "--app 需要一个 URL 目标（正在运行的本地应用，例如 http://localhost:5173）";
 
 /** --app given with a non-loopback URL. */
-export const LIVE_APP_REQUIRES_LOOPBACK_MESSAGE = "--app requires a localhost/loopback URL";
+export const LIVE_APP_REQUIRES_LOOPBACK_MESSAGE = "--app 需要 localhost/回环地址的 URL";
 
 /** --app given with an https URL (the live proxy is http-only). */
 export const LIVE_APP_REQUIRES_HTTP_MESSAGE =
-  "--app requires an http:// URL (the live app proxy does not support https upstreams)";
+  "--app 需要 http:// URL（实时应用代理不支持 https 上游）";
 
 /** Live sessions are hard-off in remote mode; no override env var exists. */
 export const LIVE_APP_REMOTE_MESSAGE =
-  "Live app annotation is unavailable in remote mode (PLANNOTATOR_REMOTE). Run locally, or use --static to annotate a converted snapshot of the page.";
+  "远程模式（PLANNOTATOR_REMOTE）下无法使用实时应用批注。请在本地运行，或使用 --static 批注页面的转换快照。";
 
 /** The --app forced-live failure, keyed on what the probe found. */
 export function buildForceAppFailureMessage(
@@ -146,15 +146,15 @@ export function buildForceAppFailureMessage(
   probe: LiveAppProbeResult,
 ): string {
   if (probe.plannotator) {
-    return `--app: ${targetUrl} is a Plannotator server; live annotation never proxies a Plannotator server, because the proxied page would get same-origin access to it`;
+    return `--app：${targetUrl} 是 Plannotator 服务器；实时批注从不会代理 Plannotator 服务器，因为被代理的页面会获得对它的同源访问权限`;
   }
   if (probe.probeError !== null) {
-    return `--app: could not reach ${targetUrl}: ${probe.probeError}`;
+    return `--app：无法访问 ${targetUrl}：${probe.probeError}`;
   }
   if (probe.probeRedirectedTo !== null) {
-    return `--app: ${targetUrl} redirected off its loopback origin (${probe.probeRedirectedTo}); live mode requires the app to serve HTML from the probed origin`;
+    return `--app：${targetUrl} 重定向离开了它的回环源（${probe.probeRedirectedTo}）；实时模式要求应用从被探测的源提供 HTML`;
   }
-  return `--app: ${targetUrl} did not return an HTML page`;
+  return `--app：${targetUrl} 没有返回 HTML 页面`;
 }
 
 /**
@@ -162,7 +162,7 @@ export function buildForceAppFailureMessage(
  * proxies one, so the session degrades to static conversion and says why.
  */
 export function buildLivePlannotatorFallbackNotice(targetUrl: string): string {
-  return `${targetUrl} is a Plannotator server, which live annotation never proxies; using static conversion.`;
+  return `${targetUrl} 是 Plannotator 服务器，实时批注从不会代理它；改用静态转换。`;
 }
 
 /**
@@ -174,7 +174,7 @@ export function buildLivePlannotatorFallbackNotice(targetUrl: string): string {
  */
 export function buildLiveProbeFallbackNotice(targetUrl: string, probeError: string): string {
   return (
-    `Live probe failed for ${targetUrl} (${probeError}); using static conversion. `
-    + `If a dev server is still starting up, retry with --app to force live mode.`
+    `对 ${targetUrl} 的实时探测失败（${probeError}）；改用静态转换。`
+    + `如果开发服务器仍在启动中，请用 --app 重试以强制使用实时模式。`
   );
 }

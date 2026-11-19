@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useEffect, useMemo, useRef, useCallback, useId, useContext } from 'react';
 import { createPortal } from 'react-dom';
 import type { ImageAttachment } from '../types';
@@ -733,14 +734,14 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               : 'border-border bg-muted/50 text-muted-foreground'
           }`}
         >
-          <span className="font-semibold text-primary">{chip.label || 'Element'}</span>
+          <span className="font-semibold text-primary">{chip.label || '元素'}</span>
           <span className="truncate">{chip.excerpt}</span>
           {onRemoveTargetChip && (
             <button
               type="button"
               data-target-chip-remove={chip.key}
               onClick={() => onRemoveTargetChip(chip.key)}
-              title="Remove this target"
+              title="移除此目标"
               className="shrink-0 rounded-full p-0.5 hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
             >
               <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
@@ -907,10 +908,10 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
   };
 
   const headerLabel = headerText ?? (isGlobal
-    ? 'Global Comment'
+    ? '全局评论'
     : contextText
       ? `"${contextText.length > 50 ? contextText.slice(0, 50) + '...' : contextText}"`
-      : 'Comment');
+      : '评论');
 
   // Inline colour: no new utility class reaches the guides.show viewer CSS this file is scanned into.
   const errorRow = errorText ? (
@@ -921,9 +922,9 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
 
   const draftConflictRow = hostDraft.conflict !== undefined ? (
     <p role="status" data-comment-draft-conflict="" className="pn-cbox-conflict px-3 pt-2 text-xs text-muted-foreground">
-      <span>This comment changed in another window.</span>
-      <button type="button" className="font-medium text-foreground underline" onClick={hostDraft.takeTheirs}>Use that one</button>
-      <button type="button" className="font-medium text-foreground underline" onClick={hostDraft.keepMine}>Keep mine</button>
+      <span>此评论已在另一个窗口中更改。</span>
+      <button type="button" className="font-medium text-foreground underline" onClick={hostDraft.takeTheirs}>使用那一份</button>
+      <button type="button" className="font-medium text-foreground underline" onClick={hostDraft.keepMine}>保留我的</button>
     </p>
   ) : null;
 
@@ -953,8 +954,8 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
       type="button"
       onClick={handleQuickLookGood}
       disabled={hasUnsavedContent}
-      aria-label="Looks good"
-      title={hasUnsavedContent ? 'Looks good (clear the comment to use it)' : 'Looks good'}
+      aria-label="看起来不错"
+      title={hasUnsavedContent ? '看起来不错（清空评论后可用）' : '看起来不错'}
       data-quick-look-good="true"
       data-pn-touch-target="true"
       data-pn-touch-target-icon="true"
@@ -997,10 +998,10 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
             className="pn-cbox-back"
             data-at={offscreen}
             onClick={scrollToPopover}
-            title="Scroll back to your open comment"
+            title="滚动回你正在编辑的评论"
           >
             <Icon name={offscreen === 'above' ? 'chevU' : 'chevD'} size={14} />
-            <span>Open comment</span>
+            <span>打开评论</span>
           </button>
         )}
         <div
@@ -1012,7 +1013,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
           data-expanded={cardExpanded ? '' : undefined}
           data-phone={cardPhone ? '' : undefined}
           role="dialog"
-          aria-label={isGlobal ? 'Global comment' : on ? `Comment on ${on}` : 'Comment'}
+          aria-label={isGlobal ? '全局评论' : on ? `对 ${on} 的评论` : '评论'}
           tabIndex={-1}
           className={`pn-cbox${yieldClass}`}
           data-dragged={cardDragged ? '' : undefined}
@@ -1031,8 +1032,8 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
             type="button"
             className="pn-cbox-close"
             onClick={() => handleClose()}
-            aria-label="Close (your words are kept)"
-            title="Close (your words are kept)"
+            aria-label="关闭（会保留你的文字）"
+            title="关闭（会保留你的文字）"
             data-comment-card-close=""
           >
             <Icon name="chevD" size={16} />
@@ -1055,7 +1056,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
             title={quote ?? undefined}
             {...(cardDraggable ? { ...dragHandleProps, 'data-comment-card-handle': '', onMouseDown: (e: React.MouseEvent) => e.preventDefault() } : {})}
           >
-            {isGlobal ? 'Global comment' : on ?? 'Comment'}
+            {isGlobal ? '全局评论' : on ?? '评论'}
           </div>
           {errorRow}
           {before}
@@ -1068,7 +1069,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               onChange={(e) => { setText(e.target.value); readComposerCaret(); }}
               onKeyDown={handleKeyDown}
               onSelectCaret={readComposerCaret}
-              placeholder={isGlobal ? 'Add a global comment…' : 'Comment…'}
+              placeholder={isGlobal ? '添加全局评论…' : '评论…'}
               sizeClassName={cardExpanded ? 'pn-cbox-ta pn-cbox-ta-full' : 'pn-cbox-ta'}
               skillReferences={skillReferences}
               tokens={skillAc.referenceTokens}
@@ -1082,12 +1083,12 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
             <MentionAutocompleteMenu id={mentionListboxId} menu={mentionAc.menu} onSelect={mentionAc.select} />
           </div>
           {images.some((image) => image.kind === 'file') && (
-            <ul className="pn-cbox-files" aria-label="Attached files">
+            <ul className="pn-cbox-files" aria-label="附件">
               {images.filter((image) => image.kind === 'file').map((file) => (
                 <li key={file.path} className="pn-cbox-file" title={file.name}>
                   <Icon name="doc" size={13} />
                   <span className="pn-cbox-file-name">{file.name}</span>
-                  <button type="button" aria-label={`Remove ${file.name}`} onClick={() => setImages((prev) => prev.filter((i) => i.path !== file.path))}>
+                  <button type="button" aria-label={`移除 ${file.name}`} onClick={() => setImages((prev) => prev.filter((i) => i.path !== file.path))}>
                     <Icon name="x" size={12} />
                   </button>
                 </li>
@@ -1108,9 +1109,9 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
             )}
             {CardTools && <CardTools textareaRef={textareaRef} phone={cardPhone} onBusyChange={setToolsBusy} />}
             {onAskAI && (
-              <button type="button" className="pn-cbox-tool pn-cbox-word" onClick={handleAskAI} disabled={!canAskAI} title={canAskAI ? 'Ask AI this question' : 'Type a question to ask AI'}>
+              <button type="button" className="pn-cbox-tool pn-cbox-word" onClick={handleAskAI} disabled={!canAskAI} title={canAskAI ? '询问 AI 此问题' : '输入问题以询问 AI'}>
                 <SparklesIcon className="w-3.5 h-3.5" />
-                {askAILabel ?? 'Ask AI'}
+                {askAILabel ?? '询问 AI'}
               </button>
             )}
             {extraActions?.map((action) => (
@@ -1127,8 +1128,8 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
                 type="button"
                 className="pn-cbox-tool"
                 onClick={() => setCardExpanded((v) => !v)}
-                aria-label={cardExpanded ? 'Make it small again' : 'Open it to full'}
-                title={cardExpanded ? 'Make it small again' : 'Open it to full'}
+                aria-label={cardExpanded ? '恢复小窗' : '展开至全屏'}
+                title={cardExpanded ? '恢复小窗' : '展开至全屏'}
                 aria-pressed={cardExpanded}
               >
                 <Icon name={cardExpanded ? 'collapse' : 'expand'} size={15} />
@@ -1136,12 +1137,12 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
             )}
             <span className="pn-cbox-mid" />
             {hasUnsavedContent && (
-              <button type="button" className="pn-cbox-tool pn-cbox-bin" onClick={discard} aria-label="Discard this comment" title="Discard this comment" data-comment-card-discard="">
+              <button type="button" className="pn-cbox-tool pn-cbox-bin" onClick={discard} aria-label="丢弃此评论" title="丢弃此评论" data-comment-card-discard="">
                 <Icon name="trash" size={15} />
               </button>
             )}
             <button type="button" className="pn-cbox-save" onClick={handleSubmit} disabled={!canSubmit} data-comment-card-submit="">
-              {submitLabel ?? 'Comment'}
+              {submitLabel ?? '评论'}
             </button>
           </div>
         </div>
@@ -1161,7 +1162,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
         {/* Backdrop */}
         <button
           type="button"
-          aria-label="Dismiss comment"
+          aria-label="关闭评论"
           className="absolute inset-0 bg-background/80 backdrop-blur-sm"
           onClick={() => handleClose()}
         />
@@ -1175,7 +1176,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
           ref={popoverRef}
           role="dialog"
           aria-modal="true"
-          aria-label={isGlobal ? 'Global comment' : 'Comment'}
+          aria-label={isGlobal ? '全局评论' : '评论'}
           tabIndex={-1}
           className={`relative w-full max-w-xl max-h-full min-h-0 bg-popover border border-border rounded-xl shadow-2xl flex flex-col ${
             showsSkillMenu ? 'overflow-visible' : 'overflow-hidden'
@@ -1208,7 +1209,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
                 <button
                   onClick={() => { setDialogIsForced(false); setMode('popover'); }}
                   className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                  title="Collapse"
+                  title="收起"
                 >
                   <CollapseIcon />
                 </button>
@@ -1216,7 +1217,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               <button
                 onClick={() => handleClose()}
                 className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-                title="Close"
+                title="关闭"
               >
                 <CloseIcon />
               </button>
@@ -1246,7 +1247,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               onChange={(e) => { setText(e.target.value); readComposerCaret(); }}
               onKeyDown={handleKeyDown}
               onSelectCaret={readComposerCaret}
-              placeholder={isGlobal ? 'Add a global comment...' : 'Add a comment...'}
+              placeholder={isGlobal ? '添加全局评论...' : '添加评论...'}
               sizeClassName="min-h-32 max-h-full"
               skillReferences={skillReferences}
               tokens={skillAc.referenceTokens}
@@ -1272,7 +1273,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
                 disabled={!canSubmit}
                 className="px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
               >
-                {submitLabel ?? (isGlobal ? 'Add' : 'Save')}
+                {submitLabel ?? (isGlobal ? '添加' : '保存')}
               </button>
               {extraButton}
               {quickLookGoodButton}
@@ -1281,10 +1282,10 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
                   onClick={handleAskAI}
                   disabled={!canAskAI}
                   className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium rounded-md text-muted-foreground hover:text-primary hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-                  title={canAskAI ? 'Ask AI this question' : 'Type a question to ask AI'}
+                  title={canAskAI ? '询问 AI 此问题' : '输入问题以询问 AI'}
                 >
                   <SparklesIcon className="w-3 h-3" />
-                  {askAILabel ?? 'Ask AI'}
+                  {askAILabel ?? '询问 AI'}
                 </button>
               )}
               {extraActions?.map((action, i) => (
@@ -1326,11 +1327,11 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
           type="button"
           data-popover-layer="true"
           onClick={scrollToPopover}
-          title="Scroll back to your open comment"
+          title="滚动回你正在编辑的评论"
           className={`fixed left-1/2 -translate-x-1/2 z-[101] flex items-center gap-1.5 px-3 py-1.5 rounded-full bg-popover border border-border shadow-lg text-xs text-muted-foreground hover:text-foreground transition-colors ${offscreen === 'above' ? 'top-3' : 'bottom-3'}`}
         >
           {offscreen === 'above' ? <ChevronUpIcon /> : <ChevronDownIcon />}
-          <span>Open comment</span>
+          <span>打开评论</span>
         </button>
       )}
       <div
@@ -1382,14 +1383,14 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
           <button
             onClick={() => { setDialogIsForced(false); setMode('dialog'); }}
             className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            title="Expand"
+            title="展开"
           >
             <ExpandIcon />
           </button>
           <button
             onClick={() => handleClose()}
             className="p-1 rounded hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
-            title="Close"
+            title="关闭"
           >
             <CloseIcon />
           </button>
@@ -1417,7 +1418,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
           onChange={(e) => { setText(e.target.value); readComposerCaret(); }}
           onKeyDown={handleKeyDown}
           onSelectCaret={readComposerCaret}
-          placeholder={isGlobal ? 'Add a global comment...' : 'Add a comment...'}
+          placeholder={isGlobal ? '添加全局评论...' : '添加评论...'}
           sizeClassName="max-h-64 min-h-[4.5rem]"
           skillReferences={skillReferences}
           tokens={skillAc.referenceTokens}
@@ -1444,7 +1445,7 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
             disabled={!canSubmit}
             className="px-3 py-1.5 text-xs font-medium rounded-md bg-primary text-primary-foreground hover:opacity-90 disabled:opacity-50 disabled:cursor-not-allowed transition-opacity"
           >
-            {submitLabel ?? (isGlobal ? 'Add' : 'Save')}
+            {submitLabel ?? (isGlobal ? '添加' : '保存')}
           </button>
           {extraButton}
           {quickLookGoodButton}
@@ -1453,10 +1454,10 @@ export const CommentPopover: React.FC<CommentPopoverProps> = ({
               onClick={handleAskAI}
               disabled={!canAskAI}
               className="inline-flex items-center gap-1 px-2 py-1.5 text-xs font-medium rounded-md text-muted-foreground hover:text-primary hover:bg-muted disabled:opacity-50 disabled:cursor-not-allowed transition-colors"
-              title={canAskAI ? 'Ask AI this question' : 'Type a question to ask AI'}
+              title={canAskAI ? '询问 AI 此问题' : '输入问题以询问 AI'}
             >
               <SparklesIcon className="w-3 h-3" />
-              {askAILabel ?? 'Ask AI'}
+              {askAILabel ?? '询问 AI'}
             </button>
           )}
           {extraActions?.map((action, i) => (

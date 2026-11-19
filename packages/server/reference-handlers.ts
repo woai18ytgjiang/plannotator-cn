@@ -248,7 +248,7 @@ async function readDocument(path: string, convert: boolean, options: HandleDocOp
 			snapshot,
 		);
 	} catch {
-		return Response.json({ error: "Failed to read file" }, { status: 500 });
+		return Response.json({ error: "读取文件失败" }, { status: 500 });
 	}
 }
 
@@ -272,7 +272,7 @@ async function readCodeFile(path: string, input: string, parsed: ParsedCodePath)
 		}
 		return Response.json({ codeFile: true, contents, filepath: path, prerenderedHTML, line: parsed.line, lineEnd: parsed.lineEnd });
 	} catch {
-		return Response.json({ error: `File not found: ${input}` }, { status: 404 });
+		return Response.json({ error: `未找到文件：${input}` }, { status: 404 });
 	}
 }
 
@@ -281,7 +281,7 @@ export async function handleDoc(req: Request, options: HandleDocOptions = {}): P
 	const url = new URL(req.url);
 	const requestedPath = url.searchParams.get("path");
 	if (!requestedPath) {
-		return Response.json({ error: "Missing path parameter" }, { status: 400 });
+		return Response.json({ error: "缺少 path 参数" }, { status: 400 });
 	}
 
 	const allowedRoots = getAllowedRootPaths(options);
@@ -343,14 +343,14 @@ export async function handleDocExists(req: Request, options?: HandleDocExistsOpt
 	try {
 		body = await req.json();
 	} catch {
-		return Response.json({ error: "Invalid JSON" }, { status: 400 });
+		return Response.json({ error: "JSON 无效" }, { status: 400 });
 	}
 	const paths = (body as { paths?: unknown })?.paths;
 	if (!Array.isArray(paths) || !paths.every((p) => typeof p === "string")) {
-		return Response.json({ error: "Expected { paths: string[] }" }, { status: 400 });
+		return Response.json({ error: "期望 { paths: string[] }" }, { status: 400 });
 	}
 	if (paths.length > 500) {
-		return Response.json({ error: "Too many paths (max 500)" }, { status: 400 });
+		return Response.json({ error: "路径过多（最多 500 个）" }, { status: 400 });
 	}
 	const allowedRoots = getAllowedRootPaths(options);
 	const baseRaw = (body as { base?: unknown })?.base;
@@ -407,7 +407,7 @@ export async function handleObsidianFiles(req: Request): Promise<Response> {
 
 	const resolvedVault = resolveUserPath(vaultPath);
 	if (!existsSync(resolvedVault) || !statSync(resolvedVault).isDirectory()) {
-		return Response.json({ error: "Invalid vault path" }, { status: 400 });
+		return Response.json({ error: "vault 路径无效" }, { status: 400 });
 	}
 
 	try {
@@ -498,7 +498,7 @@ export async function handleObsidianDoc(req: Request, thisMachine = false): Prom
 		const markdown = await file.text();
 		return Response.json({ markdown, filepath: resolvedFile });
 	} catch {
-		return Response.json({ error: "Failed to read file" }, { status: 500 });
+		return Response.json({ error: "读取文件失败" }, { status: 500 });
 	}
 }
 
@@ -524,7 +524,7 @@ export async function handleFileBrowserFiles(req: Request): Promise<Response> {
 
 	const resolvedDir = resolveUserPath(dirPath);
 	if (!existsSync(resolvedDir) || !statSync(resolvedDir).isDirectory()) {
-		return Response.json({ error: "Invalid directory path" }, { status: 400 });
+		return Response.json({ error: "目录路径无效" }, { status: 400 });
 	}
 
 	try {

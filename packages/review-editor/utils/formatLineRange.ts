@@ -2,7 +2,7 @@
 export function formatLineRange(start: number, end: number): string {
   const lo = Math.min(start, end);
   const hi = Math.max(start, end);
-  return lo === hi ? `Line ${lo}` : `Lines ${lo}-${hi}`;
+  return lo === hi ? `第 ${lo} 行` : `第 ${lo}-${hi} 行`;
 }
 
 /** Formats a token selection as "Line 5: `token`" */
@@ -13,5 +13,5 @@ export function formatTokenContext(tokenSelection: {
   const display = tokenSelection.fullText.length > 30
     ? tokenSelection.fullText.slice(0, 27) + '...'
     : tokenSelection.fullText;
-  return `Line ${tokenSelection.anchor.lineNumber}: \`${display}\``;
+  return `第 ${tokenSelection.anchor.lineNumber} 行：\`${display}\``;
 }

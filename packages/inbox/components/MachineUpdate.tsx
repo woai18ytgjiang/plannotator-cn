@@ -85,11 +85,11 @@ export function MachineUpdateButton({ machine, onPress }: { machine: MachineView
   if (notice.kind === 'updated') {
     return (
       <span className="ib-paired ib-mdone" data-machine-update-done="">
-        <Icon name="check" size={13} /> Updated
+        <Icon name="check" size={13} /> 已更新
       </span>
     );
   }
-  const word = notice.kind === 'failed' ? 'See why' : notice.kind === 'not_back' ? 'What now' : notice.kind === 'too_old' && machine.update?.asked ? 'Asked' : notice.kind === 'too_old' || notice.kind === 'by_hand' ? 'How to update' : notice.word;
+  const word = notice.kind === 'failed' ? '查看原因' : notice.kind === 'not_back' ? '接下来怎么办' : notice.kind === 'too_old' && machine.update?.asked ? '已询问' : notice.kind === 'too_old' || notice.kind === 'by_hand' ? '如何更新' : notice.word;
   return (
     <button type="button" className={`ib-btn${notice.kind === 'update' || notice.kind === 'ready' ? ' ib-pri' : ''}`} onClick={onPress} data-machine-update={notice.kind}>
       {notice.busy && <span className="ib-spin" aria-hidden="true" />}
@@ -109,7 +109,7 @@ function Command({ text }: { text: string }) {
 }
 
 /** What Snooze says when it opened this dialog. */
-const SnoozeLine = ({ name }: { name: string }) => <p className="ib-sum">Snooze needs a newer Plannotator on {name}.</p>;
+const SnoozeLine = ({ name }: { name: string }) => <p className="ib-sum">稍后提醒需要在 {name} 上有更新的 Plannotator。</p>;
 
 /** A live agent on that machine, as its own Inbox lists it (`GET sessions` through the forward). */
 interface ThereAgent {
@@ -126,7 +126,7 @@ export function agentToAsk(model: Partial<ComposeSessionsModel> | null): ThereAg
   );
   const rank = (busy: boolean | null | undefined) => (busy === false ? 0 : busy === true ? 2 : 1);
   const best = [...all].sort((a, b) => rank(a.session.busy) - rank(b.session.busy) || String(b.session.last_seen_at ?? '').localeCompare(String(a.session.last_seen_at ?? '')))[0];
-  return best ? { host: best.session.host, session: best.session.session, name: INBOX_HOST_NAMES[best.session.host] ?? 'An agent', project: best.project } : null;
+  return best ? { host: best.session.host, session: best.session.session, name: INBOX_HOST_NAMES[best.session.host] ?? '一个智能体', project: best.project } : null;
 }
 
 /**
@@ -191,7 +191,7 @@ function useAskThere(machine: MachineView, active: boolean) {
         key.current = newUuid();
         setReadAgain((n) => n + 1);
         setError(`${agent.name} stopped on ${machine.name} before it got the message. Nothing was sent.`);
-      } else setError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : 'The message was not sent. Try again.');
+      } else setError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : '消息未发送。请重试。');
     } finally {
       setBusy(false);
     }
@@ -234,7 +234,7 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
     try {
       await inboxApi.startMachineUpdate(machine.id);
     } catch (cause) {
-      setError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : 'The update could not start.');
+      setError(cause instanceof InboxApiError || cause instanceof Error ? cause.message : '无法开始更新。');
       setUpToDate(cause instanceof InboxApiError && cause.code === 'update_up_to_date');
     } finally {
       setBusy(false);
@@ -273,11 +273,11 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
   if (notice?.kind === 'updating' || notice?.kind === 'restarting') {
     const restarting = notice.kind === 'restarting';
     return (
-      <Modal label={restarting ? `${name} is restarting` : `Updating ${name}`} onClose={onClose} testId="machine-update-progress">
+      <Modal label={restarting ? `${name} 正在重启` : `正在更新 ${name}`} onClose={onClose} testId="machine-update-progress">
         <h2 className="ib-mh2">
-          <span className="ib-spin" aria-hidden="true" /> {restarting ? `${name} is restarting on ${to}` : `Updating ${name} to ${to}`}
+          <span className="ib-spin" aria-hidden="true" /> {restarting ? `${name} 正在 ${to} 上重启` : `正在将 ${name} 更新到 ${to}`}
         </h2>
-        <p className="ib-sub">{restarting ? 'Its threads come back in a moment.' : tooOld ? `It runs ${from} until the install is in.` : `It runs ${from} until the install is in, then its Inbox restarts.`} You can close this; it carries on.</p>
+        <p className="ib-sub">{restarting ? '其话题稍后会恢复。' : tooOld ? `它在安装完成前会继续运行 ${from}。` : `它在安装完成前会继续运行 ${from}，然后其收件箱会重启。`} 你可以关闭此窗口，更新会继续进行。</p>
         <div className="ib-acts-row">{close}</div>
       </Modal>
     );
@@ -287,16 +287,16 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
     const before = machine.update?.from;
     const putBack = before && /^\d+\.\d+\.\d+$/.test(before) ? { version: before, ...putBackCommands(before) } : null;
     return (
-      <Modal label={`${name} has not come back`} onClose={onClose} testId="machine-update-not-back">
-        <h2>{name} has not come back</h2>
-        <p className="ib-sub">It was restarting on {to}. Its threads come back as soon as it does.</p>
-        <p className="ib-sum">If it stays away, on {name}, in a terminal:</p>
+      <Modal label={`${name} 尚未恢复`} onClose={onClose} testId="machine-update-not-back">
+        <h2>{name} 尚未恢复</h2>
+        <p className="ib-sub">它正在 {to} 上重启。恢复后其话题会立即回来。</p>
+        <p className="ib-sum">如果它一直未恢复，请在 {name} 的终端中运行：</p>
         <Command text="plannotator inbox --background" />
         {putBack && (
           <>
-            <p className="ib-sum ib-quietline">If that does not start it, put {putBack.version} back:</p>
+            <p className="ib-sum ib-quietline">如果这样仍无法启动，请回退到 {putBack.version}：</p>
             <Command text={putBack.sh} />
-            <p className="ib-sum ib-quietline">In PowerShell on Windows:</p>
+            <p className="ib-sum ib-quietline">在 Windows PowerShell 中：</p>
             <Command text={putBack.ps} />
           </>
         )}
@@ -317,73 +317,73 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
           <p className="ib-sum ib-mask-line">
             <Icon name="check" size={15} />
             <span>
-              Asked {asked.agent} on {name}
+              已询问 {name} 上的 {asked.agent}
             </span>
             {asked.thread ? (
               <a href={`#thread=${encodeURIComponent(asked.thread)}`} onClick={onClose} data-machine-ask-thread="">
-                Open the thread
+                打开话题
               </a>
             ) : (
-              <span className="ib-mask-held">Sending to {name}…</span>
+              <span className="ib-mask-held">正在发送到 {name}…</span>
             )}
           </p>
-          <p className="ib-sum ib-quietline">It updates Plannotator there and restarts its Inbox. This says Updated when {name} is back on the new version.</p>
+          <p className="ib-sum ib-quietline">它会在那里更新 Plannotator 并重启其收件箱。当 {name} 回到新版本时，这里会显示「已更新」。</p>
         </div>
       );
     } else if (!there.online) {
       status = (
         <p className="ib-sum" data-machine-ask="asleep">
-          {name} is asleep. Wake it to ask an agent there to update it.
+          {name} 处于休眠状态。唤醒它后即可让那里的智能体更新。
         </p>
       );
     } else if (there.readFailed && agent === undefined) {
       status = (
         <p className="ib-sum" data-machine-ask="unread">
-          {name} didn&apos;t say which agents run there.
+          {name} 未说明那里运行哪些智能体。
         </p>
       );
     } else if (agent === null) {
       status = (
         <p className="ib-sum" data-machine-ask="none">
-          No agent is running on {name} to ask. {canStart ? 'Start one there with the request in its first message.' : 'Start one there, then ask it here.'}
+          {name} 上没有可询问的智能体。{canStart ? '请在那里启动一个，并在首条消息中带上该请求。' : '请先在那里启动一个，然后在这里询问它。'}
         </p>
       );
       if (canStart) {
         primary = (
           <button type="button" className="ib-btn ib-pri" onClick={() => onStartAgent!(machine.id)} data-machine-ask-start="">
-            Start an agent on {name}
+            在 {name} 上启动智能体
           </button>
         );
       }
     } else {
       status = agent ? (
         <p className="ib-sum" data-machine-ask="ready">
-          {agent.name} is running there{agent.project ? ` in ${agent.project}` : ''}. It gets a message asking it to update Plannotator and restart the Inbox, and replies when it is done.
+          {agent.name} 正在那里运行{agent.project ? `（${agent.project}）` : ''}。它会收到一条消息，要求更新 Plannotator 并重启收件箱，完成后会回复。
         </p>
       ) : null;
       primary = (
         <button type="button" className="ib-btn ib-pri" onClick={() => void there.ask()} disabled={!agent || there.busy} data-machine-ask-go="">
           {there.busy && <span className="ib-spin" aria-hidden="true" />}
-          Ask an agent on {name} to update it
+          让 {name} 上的智能体更新它
         </button>
       );
     }
     return (
-      <Modal label={`Update ${name}`} onClose={onClose} testId="machine-update-too-old">
-        <h2>Update {name}</h2>
-        <p className="ib-sub">It runs {from}, from before machines could update each other.</p>
+      <Modal label={`更新 ${name}`} onClose={onClose} testId="machine-update-too-old">
+        <h2>更新 {name}</h2>
+        <p className="ib-sub">它运行的是 {from}，早于设备之间可以互相更新的版本。</p>
         {snooze && <SnoozeLine name={name} />}
         {status}
         {there.error && <div className="ib-error">{there.error}</div>}
         <details className="ib-mhand" open={byHandOpen || undefined}>
-          <summary>{byHandOpen ? 'Update it yourself' : 'Or update it yourself'}</summary>
-          <p className="ib-sum">On {name}, in a terminal:</p>
+          <summary>{byHandOpen ? '自行更新' : '或自行更新'}</summary>
+          <p className="ib-sum">在 {name} 的终端中：</p>
           <Command text={UPDATE_BY_HAND} />
-          <p className="ib-sum ib-quietline">If that says command not found (SSH can skip your PATH), use the full path:</p>
+          <p className="ib-sum ib-quietline">如果提示找不到命令（SSH 可能不会加载你的 PATH），请使用完整路径：</p>
           <Command text={UPDATE_BY_HAND_FULL_PATH} />
-          <p className="ib-sum ib-quietline">In PowerShell on Windows:</p>
+          <p className="ib-sum ib-quietline">在 Windows PowerShell 中：</p>
           <Command text={UPDATE_BY_HAND_POWERSHELL} />
-          <p className="ib-sum ib-quietline">After this once, you can update it from here.</p>
+          <p className="ib-sum ib-quietline">完成这一次后，你就可以从这里更新它。</p>
         </details>
         <div className="ib-acts-row">
           {close}
@@ -394,18 +394,18 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
   }
   if (notice?.kind === 'failed' && details?.failure?.unchanged) {
     return (
-      <Modal label={`The update didn't install on ${name}`} onClose={onClose} testId="machine-update-unchanged">
-        <h2>The update didn&apos;t install on {name}</h2>
-        <p className="ib-sub">The install script reported no error, but {name} is still on {from}.</p>
+      <Modal label={`${name} 上的更新未能安装`} onClose={onClose} testId="machine-update-unchanged">
+        <h2>{name} 上的更新未能安装</h2>
+        <p className="ib-sub">安装脚本未报错，但 {name} 仍运行 {from}。</p>
         {details.log && (
           <>
-            <p className="ib-sum">On {name}, the log says what it did:</p>
+            <p className="ib-sum">在 {name} 上，日志说明了它做了什么：</p>
             <Command text={details.log} />
           </>
         )}
         {details.command && (
           <>
-            <p className="ib-sum">Or run the install script yourself there:</p>
+            <p className="ib-sum">或在那里自行运行安装脚本：</p>
             <Command text={details.command} />
           </>
         )}
@@ -413,7 +413,7 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
         <div className="ib-acts-row">
           {close}
           <button type="button" className="ib-btn ib-pri" onClick={() => void start()} disabled={busy} data-machine-update-now="">
-            Try Again
+            重试
           </button>
         </div>
       </Modal>
@@ -434,13 +434,13 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
   }
   if (notice?.kind === 'by_hand') {
     return (
-      <Modal label={`Update ${name} yourself`} onClose={onClose} testId="machine-update-by-hand">
-        <h2>Update {name} yourself</h2>
-        <p className="ib-sub">Its copy of Plannotator was not installed by the install script, so it can&apos;t update itself. It runs {from}.</p>
+      <Modal label={`自行更新 ${name}`} onClose={onClose} testId="machine-update-by-hand">
+        <h2>自行更新 {name}</h2>
+        <p className="ib-sub">它的 Plannotator 副本不是由安装脚本安装的，因此无法自行更新。它运行的是 {from}。</p>
         {snooze && <SnoozeLine name={name} />}
         {details?.command && (
           <>
-            <p className="ib-sum">On {name}, in a terminal:</p>
+            <p className="ib-sum">在 {name} 的终端中：</p>
             <Command text={details.command} />
           </>
         )}
@@ -450,9 +450,9 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
   }
   if (machine.state === 'offline') {
     return (
-      <Modal label={`${name} is asleep`} onClose={onClose} testId="machine-update-asleep">
-        <h2>{name} is asleep</h2>
-        <p className="ib-sub">It runs {from}. Wake it, then update it from here.</p>
+      <Modal label={`${name} 处于休眠状态`} onClose={onClose} testId="machine-update-asleep">
+        <h2>{name} 处于休眠状态</h2>
+        <p className="ib-sub">它运行的是 {from}。唤醒它后即可从这里更新。</p>
         {snooze && <SnoozeLine name={name} />}
         <div className="ib-acts-row">{close}</div>
       </Modal>
@@ -460,17 +460,17 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
   }
   if (notice?.kind === 'ready') {
     return (
-      <Modal label={`Restart the Inbox on ${name}`} onClose={onClose} testId="machine-update-ready">
-        <h2>Restart the Inbox on {name}</h2>
-        <p className="ib-sub">{to} is installed there. Its Inbox still runs {from}.</p>
+      <Modal label={`重启 ${name} 上的收件箱`} onClose={onClose} testId="machine-update-ready">
+        <h2>重启 {name} 上的收件箱</h2>
+        <p className="ib-sub">{to} 已在那里安装。其收件箱仍在运行 {from}。</p>
         {snooze && <SnoozeLine name={name} />}
         {errorLine}
         <div className="ib-acts-row">
           <button type="button" className="ib-btn" onClick={onClose}>
-            Cancel
+            取消
           </button>
           <button type="button" className="ib-btn ib-pri" onClick={() => void start()} disabled={busy} data-machine-update-now="">
-            Restart
+            重启
           </button>
         </div>
       </Modal>
@@ -479,30 +479,30 @@ export function MachineUpdateDialog({ machine, snooze, onClose, onStartAgent }: 
   // It asked GitHub and said so (this Inbox runs ahead of the release), and the word has gone from its row.
   if (upToDate && !notice) {
     return (
-      <Modal label={`${name} is up to date`} onClose={onClose} testId="machine-update-level">
-        <h2>{name} is up to date</h2>
-        <p className="ib-sub">It runs {from}.</p>
+      <Modal label={`${name} 已是最新`} onClose={onClose} testId="machine-update-level">
+        <h2>{name} 已是最新</h2>
+        <p className="ib-sub">它运行的是 {from}。</p>
         <div className="ib-acts-row">{close}</div>
       </Modal>
     );
   }
   const reviews = details?.open_reviews ?? 0;
   return (
-    <Modal label={`Update ${name} to ${to}`} onClose={onClose} testId="machine-update">
-      <h2>Update {name} to {to}</h2>
-      <p className="ib-sub">It runs {from}.</p>
+    <Modal label={`将 ${name} 更新到 ${to}`} onClose={onClose} testId="machine-update">
+      <h2>将 {name} 更新到 {to}</h2>
+      <p className="ib-sub">它运行的是 {from}。</p>
       {snooze && <SnoozeLine name={name} />}
       <p className="ib-sum">
-        The new version installs there and its Inbox restarts. Its agents keep working.
-        {reviews > 0 && ` ${reviews === 1 ? 'One open review there keeps' : `${reviews} open reviews there keep`} running on ${from} until you finish ${reviews === 1 ? 'it' : 'them'}.`}
+        新版本会在那里安装，其收件箱会重启。其智能体会继续工作。
+        {reviews > 0 && ` 那里有 ${reviews} 个未完成的审查会在 ${from} 上继续运行，直到你完成它们。`}
       </p>
       {errorLine}
       <div className="ib-acts-row">
         <button type="button" className="ib-btn" onClick={onClose}>
-          Cancel
+          取消
         </button>
         <button type="button" className="ib-btn ib-pri" onClick={() => void start()} disabled={busy} data-machine-update-now="">
-          Update now
+          立即更新
         </button>
       </div>
     </Modal>

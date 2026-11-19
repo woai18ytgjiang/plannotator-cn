@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useState, useRef, useEffect, useCallback } from 'react';
 import type { Block } from '../../types';
 import { copyTextToClipboard } from '../../utils/clipboard';
@@ -60,7 +61,7 @@ export const CodeBlock: React.FC<CodeBlockProps> = ({ block, onHover, onLeave })
       <button
         onClick={handleCopy}
         className="absolute top-2 right-2 p-1.5 rounded-md bg-muted/80 hover:bg-muted text-muted-foreground hover:text-foreground opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity z-10"
-        title={copied ? 'Copied!' : 'Copy code'}
+        title={copied ? '已复制' : '复制代码'}
       >
         {copied ? (
           <svg className="w-4 h-4 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>

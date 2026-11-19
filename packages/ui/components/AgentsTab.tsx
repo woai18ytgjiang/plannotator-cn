@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useMemo, useState } from 'react';
 import { Square } from 'lucide-react';
 import type { AgentJobInfo, AgentCapabilities } from '../types';
@@ -25,10 +26,10 @@ const RERUNNABLE = new Set(['claude', 'codex', 'cursor', 'opencode', 'pi', 'copi
 
 export function jobModelName(job: AgentJobInfo, catalogs: Pick<ModelCatalogs, 'claude' | 'codex'>): string | null {
   const engine = job.provider === 'guide' ? job.engine : job.provider;
-  if (!job.model) return engine === 'claude' || engine === 'codex' ? null : 'Default';
+  if (!job.model) return engine === 'claude' || engine === 'codex' ? null : '默认';
   if (engine === 'claude') return modelLabel([...catalogs.claude.models, ...CLAUDE_FALLBACK_MODELS], job.model);
   if (engine === 'codex') return modelLabel([...catalogs.codex.models, ...CODEX_FALLBACK_MODELS], job.model);
-  if (engine === 'cursor' && job.model.toLowerCase() === 'auto') return 'Auto';
+  if (engine === 'cursor' && job.model.toLowerCase() === 'auto') return '自动';
   return job.model;
 }
 
@@ -103,7 +104,7 @@ export const AgentsTab: React.FC<AgentsTabProps> = ({
       <LaunchPad config={config} scope={scope} onLaunch={launch} onAddReview={() => setAddReviewOpen(true)} />
 
       {sortedJobs.length > 0 && (
-        <section aria-label="Runs" className="border-t border-border/60 mt-2">
+        <section aria-label="运行记录" className="border-t border-border/60 mt-2">
           <SectionTitle
             trailing={
               runningCount >= 2 ? (
@@ -113,12 +114,12 @@ export const AgentsTab: React.FC<AgentsTabProps> = ({
                   className="inline-flex h-6 items-center gap-1 rounded-md px-1.5 text-[12px] text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 >
                   <Square size={10} aria-hidden />
-                  Cancel all ({runningCount})
+                  全部取消（{runningCount}）
                 </button>
               ) : null
             }
           >
-            Runs
+            运行记录
           </SectionTitle>
           <div className="px-4">
             {sortedJobs.map((job) => {

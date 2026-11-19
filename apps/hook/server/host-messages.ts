@@ -58,7 +58,7 @@ export function takeHostMessagesPath(env: NodeJS.ProcessEnv = process.env): stri
     delete env[HOST_MESSAGES_FILE_ENV];
     const path = value && value.trim() ? value : undefined;
     if (path && !isAllowedHostMessagesPath(path)) {
-      console.error(`Plannotator: ignoring ${HOST_MESSAGES_FILE_ENV}: not a messages.json under the data dir's claude-code-mod/ folder.`);
+      console.error(`Plannotator：忽略 ${HOST_MESSAGES_FILE_ENV}：它不是 data dir 下 claude-code-mod/ 文件夹内的 messages.json。`);
       takenPath = undefined;
     } else {
       takenPath = path;

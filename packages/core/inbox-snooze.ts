@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Plannotator Inbox: snoozing a thread (approval "inbox-snooze",
  * .product/approved/inbox-snooze/). Pure, and shared with Workspaces: the
@@ -32,7 +33,7 @@ export const INBOX_SNOOZE_DAYS = 60;
 /** The longest delay `setTimeout` takes: past it the timer fires at once. */
 export const INBOX_SNOOZE_TIMER_MAX_MS = 2 ** 31 - 1;
 /** The Snoozed band under Quiet, in the list the window draws. Not a section a row is placed in. */
-export const INBOX_SNOOZED_BAND = { id: "snoozed", label: "Snoozed" } as const;
+export const INBOX_SNOOZED_BAND = { id: "snoozed", label: "已延后" } as const;
 
 const LATER_TODAY_HOURS = 3;
 /** From this hour (6 PM) Later today is gone: three hours on is the night. */
@@ -41,8 +42,8 @@ const MORNING_HOUR = 8;
 const PICK_DAYS_OUT = 2;
 const PICK_HOUR = 15;
 
-const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-const MONTHS = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+const WEEKDAYS = ["周日", "周一", "周二", "周三", "周四", "周五", "周六"];
+const MONTHS = ["1 月", "2 月", "3 月", "4 月", "5 月", "6 月", "7 月", "8 月", "9 月", "10 月", "11 月", "12 月"];
 
 const pad = (n: number) => String(n).padStart(2, "0");
 const sameDay = (a: Date, b: Date) => a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -83,11 +84,11 @@ export interface InboxSnoozeChoice {
 export function inboxSnoozeChoices(now: Date = new Date()): InboxSnoozeChoice[] {
   const choices: { id: InboxSnoozeChoiceId; label: string; when: Date }[] = [];
   if (now.getHours() < LATER_TODAY_LAST_HOUR) {
-    choices.push({ id: "later", label: "Later today", when: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + LATER_TODAY_HOURS) });
+    choices.push({ id: "later", label: "今天稍后", when: new Date(now.getFullYear(), now.getMonth(), now.getDate(), now.getHours() + LATER_TODAY_HOURS) });
   }
-  choices.push({ id: "tomorrow", label: "Tomorrow", when: morningOf(now, 1) });
-  choices.push({ id: "days", label: "In 3 days", when: morningOf(now, 3) });
-  choices.push({ id: "week", label: "Next week", when: morningOf(now, (8 - now.getDay()) % 7 || 7) });
+  choices.push({ id: "tomorrow", label: "明天", when: morningOf(now, 1) });
+  choices.push({ id: "days", label: "3 天后", when: morningOf(now, 3) });
+  choices.push({ id: "week", label: "下周", when: morningOf(now, (8 - now.getDay()) % 7 || 7) });
   const seen = new Set<number>();
   return choices.flatMap(({ id, label, when }) => {
     if (seen.has(when.getTime())) return [];

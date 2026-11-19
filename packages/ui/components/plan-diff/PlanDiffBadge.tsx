@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * PlanDiffBadge — The +/- change badge
  *
@@ -50,8 +51,8 @@ export const PlanDiffBadge: React.FC<PlanDiffBadgeProps> = ({
       }`}
       title={
         isActive
-          ? "Exit plan diff view"
-          : baselineTooltip ?? "Show what changed from previous version"
+          ? "退出计划差异视图"
+          : baselineTooltip ?? "显示与上一版本相比的更改"
       }
     >
       <span className={isActive ? "text-success" : "text-success/70"}>

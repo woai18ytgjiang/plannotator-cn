@@ -133,7 +133,7 @@ export async function handleAgents(opencodeClient?: OpencodeClient): Promise<Res
 
     return Response.json({ agents });
   } catch {
-    return Response.json({ agents: [], error: "Failed to fetch agents" });
+    return Response.json({ agents: [], error: "获取智能体失败" });
   }
 }
 
@@ -194,20 +194,20 @@ export function handleReferenceSkillContent(req: Request): Response {
     const name = new URL(req.url).searchParams.get("name") ?? "";
     const skill = readReferenceSkillContent(name);
     if (!skill) {
-      return Response.json({ error: "Skill not found" }, { status: 404 });
+      return Response.json({ error: "未找到技能" }, { status: 404 });
     }
     return Response.json({ skill });
   } catch (err) {
     console.error(
       `[plannotator] Skill content failed: ${err instanceof Error ? err.message : String(err)}`,
     );
-    return Response.json({ error: "Skill content failed" }, { status: 500 });
+    return Response.json({ error: "技能内容加载失败" }, { status: 500 });
   }
 }
 
 /** Return the shared JSON response for an unmatched API route. */
 export function handleApiNotFound(path: string): Response {
-  return Response.json({ error: "Not found", path }, { status: 404 });
+  return Response.json({ error: "未找到", path }, { status: 404 });
 }
 
 /**
@@ -433,7 +433,7 @@ export async function handleSaveNotes(req: Request, options: HandleSaveNotesOpti
     }
   } catch (err) {
     console.error(`[Save Notes] Error:`, err);
-    return Response.json({ error: "Save failed" }, { status: 500 });
+    return Response.json({ error: "保存失败" }, { status: 500 });
   }
 
   return Response.json({ ok: true, results });

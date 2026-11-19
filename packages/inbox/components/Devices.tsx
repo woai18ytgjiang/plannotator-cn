@@ -27,7 +27,7 @@ function RemoveLink({ name, onRemove }: { name: string; onRemove: () => Promise<
       text="Remove"
       label={`Remove ${name}`}
       confirmText="Remove? Click again"
-      confirmLabel={`Remove ${name}: click again to remove`}
+      confirmLabel={`移除 ${name}：再点一次即可移除`}
     />
   );
 }
@@ -37,14 +37,14 @@ function RemoveLink({ name, onRemove }: { name: string; onRemove: () => Promise<
  * second click costs, said in the confirm itself (answers that will not be sent).
  */
 export function UnlinkLink({ name, onRemove, warning }: { name: string; onRemove: () => Promise<void>; warning?: string }) {
-  const confirmText = warning ? `Unlink? ${warning} Click again` : 'Unlink? Click again';
+  const confirmText = warning ? `解除关联？${warning} 请再点一次` : '解除关联？请再点一次';
   return (
     <AskTwiceButton
       onRemove={onRemove}
       text="Unlink"
       label={`Unlink ${name}`}
       confirmText={confirmText}
-      confirmLabel={warning ? `Unlink ${name}: ${warning} Click again to unlink` : `Unlink ${name}: click again to unlink`}
+      confirmLabel={warning ? `解除关联 ${name}：${warning} 再点一次即可解除` : `解除关联 ${name}：再点一次即可解除`}
     />
   );
 }
@@ -146,7 +146,7 @@ export function usePhones(enabled: boolean): PhonesState {
     } catch (cause) {
       // A refused turn on leaves the switch off; a refused turn off leaves it on (the Inbox kept it).
       if (on) setTailnet((current) => (current ? { ...current, on: false, address: null } : current));
-      setError(cause instanceof Error ? cause.message : 'The switch was not saved.');
+      setError(cause instanceof Error ? cause.message : '开关未能保存。');
       return false;
     } finally {
       setBusy(false);
@@ -162,7 +162,7 @@ export function usePhones(enabled: boolean): PhonesState {
       return true;
     } catch (cause) {
       if (on) setLan((current) => (current ? { ...current, on: false, address: null, fingerprint: null, bonjour: false } : current));
-      setError(cause instanceof Error ? cause.message : 'The switch was not saved.');
+      setError(cause instanceof Error ? cause.message : '开关未能保存。');
       return false;
     } finally {
       setBusy(false);
@@ -174,7 +174,7 @@ export function usePhones(enabled: boolean): PhonesState {
     try {
       await inboxApi.removeDevice(id);
     } catch (cause) {
-      setError(cause instanceof Error ? cause.message : 'The phone was not removed.');
+      setError(cause instanceof Error ? cause.message : '未能移除该手机。');
     }
     await readDevices().catch(() => {});
   };
@@ -216,7 +216,7 @@ function OverYourTailnet({
   const exposed = (state.exposed?.length ?? 0) > 0;
   return (
     <section className="ib-sgroup" data-settings-tailscale={state.on ? 'on' : 'off'} aria-labelledby="ib-g-tailscale">
-      <h2 id="ib-g-tailscale">Over your tailnet</h2>
+      <h2 id="ib-g-tailscale">通过你的 tailnet</h2>
       <p>
         Open the Inbox window in a browser on your laptop or tablet, through{' '}
         <a href="https://tailscale.com/" target="_blank" rel="noreferrer">
@@ -231,9 +231,9 @@ function OverYourTailnet({
           </span>
           <span className="ib-txt">
             <span className="ib-l">
-              <span id="ib-ts-label">Reach the Inbox over Tailscale</span>
+              <span id="ib-ts-label">通过 Tailscale 访问收件箱</span>
               {exposed && <span className="ib-chip ib-chip-warn">Exposed</span>}
-              {state.on && state.error && !exposed && <span className="ib-chip ib-chip-err">Not working</span>}
+              {state.on && state.error && !exposed && <span className="ib-chip ib-chip-err">无法工作</span>}
             </span>
             <span className="ib-desc" data-tailscale-url={state.url ?? ''}>
               {state.url ? (
@@ -245,7 +245,7 @@ function OverYourTailnet({
                   · only {logins ? 'these logins' : who} can open it{logins ? ':' : ''}
                 </>
               ) : state.on ? (
-                'On · not published'
+                '开启 · 未发布'
               ) : (
                 `Off · only ${logins ? 'these logins' : who} could open it${logins ? ':' : ''}`
               )}
@@ -287,9 +287,9 @@ function OverYourTailnet({
       <div className="ib-note">
         <Icon name="info" />
         {locked ? (
-          `PLANNOTATOR_INBOX_TAILSCALE is set in this Inbox's environment, so it stays ${state.env ? 'on' : 'off'}.`
+          `此收件箱的环境变量中设置了 PLANNOTATOR_INBOX_TAILSCALE，因此它保持${state.env ? '开启' : '关闭'}。`
         ) : remote && state.source !== 'flag' ? (
-          'You opened this page over your tailnet. Turning this off ends that connection; turn it on again from this computer.'
+          '你是通过 tailnet 打开此页面的。关闭它会中断该连接；请再在这台电脑上重新开启。'
         ) : state.source === 'flag' ? (
           <span>
             On for this run (plannotator inbox --tailscale).{' '}
@@ -298,7 +298,7 @@ function OverYourTailnet({
             </button>
           </span>
         ) : (
-          'Applies now and at every start. What you send from there becomes a turn in an agent session on this computer.'
+          '立即生效，且每次启动都生效。从那里发送的内容会成为这台电脑上智能体会话中的一轮。'
         )}
       </div>
     </section>
@@ -318,8 +318,8 @@ function WayRow({ kind, state, busy, onSwitch }: { kind: 'wifi' | 'tailscale'; s
         <span className="ib-tile">{isWifi ? <Icon name="wifi" /> : <TailscaleMark />}</span>
         <span className="ib-txt">
           <span className="ib-l">
-            <span id={id}>{isWifi ? 'This Wi-Fi' : 'Tailscale'}</span>
-            {on && !working && <span className="ib-chip ib-chip-err">Not working</span>}
+            <span id={id}>{isWifi ? '同一 Wi-Fi' : 'Tailscale'}</span>
+            {on && !working && <span className="ib-chip ib-chip-err">无法工作</span>}
           </span>
           <span className="ib-desc" data-lan-address={isWifi ? (state?.address ?? '') : undefined} data-tailnet-address={isWifi ? undefined : (state?.address ?? '')}>
             {working ? (
@@ -333,11 +333,11 @@ function WayRow({ kind, state, busy, onSwitch }: { kind: 'wifi' | 'tailscale'; s
                 )}
               </>
             ) : on ? (
-              (state?.error ?? 'Not reachable yet')
+              (state?.error ?? '尚不可访问')
             ) : isWifi ? (
-              'Off · phones on the same Wi-Fi, over an encrypted connection they check'
+              '关闭 · 同一 Wi-Fi 下的手机，经由它们校验的加密连接'
             ) : (
-              'Off · phones with Tailscale, at home or away, without opening this computer to the internet'
+              '关闭 · 使用 Tailscale 的手机，无论在家还是在外，都无需将这台电脑暴露到互联网'
             )}
           </span>
         </span>
@@ -354,7 +354,7 @@ function WayRow({ kind, state, busy, onSwitch }: { kind: 'wifi' | 'tailscale'; s
       {on && !working && state?.error && (
         <div className="ib-callout ib-err ib-in-card">
           <Icon name="xCircle" />
-          <span>The switch stays on so one click turns it off. Turn it off and on again to try once more.</span>
+          <span>该开关会保持开启，这样一次点击即可关闭。将其关闭再打开可再试一次。</span>
         </div>
       )}
     </>
@@ -395,8 +395,8 @@ export function DevicesSection({ phones, tailscale, via, tailscaleBusy, onToggle
       {phones && (
         <>
           <section className="ib-sgroup" data-settings-phones="" aria-labelledby="ib-g-phones">
-            <h2 id="ib-g-phones">Phones</h2>
-            <p>Read and answer the Inbox from Plannotator on your phone. Each phone gets its own key, and Remove takes it back.</p>
+            <h2 id="ib-g-phones">手机</h2>
+            <p>在手机上用 Plannotator 阅读并回复收件箱。每台手机各有自己的密钥，移除即收回。</p>
             {pairing ? (
               <PairFlow
                 lan={phones.lan}
@@ -414,7 +414,7 @@ export function DevicesSection({ phones, tailscale, via, tailscaleBusy, onToggle
                 }}
               />
             ) : (
-              <div className="ib-card" aria-label="Paired phones">
+              <div className="ib-card" aria-label="已配对的手机">
                 {devices.map((device) => (
                   <div className="ib-prow" key={device.id} data-device={device.id}>
                     <span className="ib-tile">
@@ -433,11 +433,11 @@ export function DevicesSection({ phones, tailscale, via, tailscaleBusy, onToggle
                 ))}
                 <div className="ib-prow">
                   <span className="ib-txt">
-                    <span className="ib-l">{devices.length > 0 ? 'Pair another phone' : 'No phone paired yet'}</span>
-                    {devices.length === 0 && <span className="ib-desc">Pair one to read and answer from your phone.</span>}
+                    <span className="ib-l">{devices.length > 0 ? '再配对一台手机' : '尚未配对手机'}</span>
+                    {devices.length === 0 && <span className="ib-desc">配对一台手机，即可在手机上阅读和回复。</span>}
                     {justPaired && (
                       <span className="ib-desc ib-paired" data-paired="" role="status">
-                        <Icon name="check" size={13} /> Paired with {devices[0]?.name ?? 'your phone'}.
+                        <Icon name="check" size={13} /> Paired with {devices[0]?.name ?? '你的手机'}.
                       </span>
                     )}
                   </span>
@@ -468,8 +468,8 @@ export function DevicesSection({ phones, tailscale, via, tailscaleBusy, onToggle
           {/* While pairing, step 1 holds the two ways and their switches: one thing in one place. */}
           {!pairing && (
           <section className="ib-sgroup" data-settings-ways="" aria-labelledby="ib-g-ways">
-            <h2 id="ib-g-ways">How your phone reaches this computer</h2>
-            <p>Turn on one or both. The phone uses whichever works where it is.</p>
+            <h2 id="ib-g-ways">手机如何连接到这台电脑</h2>
+            <p>开启其中一个或两个。手机会使用在其所在位置可用的那个。</p>
             <div className="ib-card">
               <WayRow kind="wifi" state={phones.lan} busy={phones.busy} onSwitch={(on) => void phones.switchLan(on)} />
               <WayRow kind="tailscale" state={phones.tailnet} busy={phones.busy} onSwitch={(on) => void phones.switchTailnet(on)} />

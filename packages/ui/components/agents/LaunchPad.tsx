@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useRef, useState } from 'react';
 import { BookOpenText, ChevronRight, Loader2, ScanSearch } from 'lucide-react';
 import { cn } from '../../lib/utils';
@@ -9,8 +10,8 @@ import { useGuideInstructions } from '../../hooks/useGuideInstructions';
 import { LaunchDetails } from './LaunchDetails';
 
 const ROW: Record<LaunchKind, { title: string; action: string; Icon: React.FC<{ className?: string; size?: number }> }> = {
-  guide: { title: 'Guided Review', action: 'Start', Icon: BookOpenText },
-  review: { title: 'Review agent', action: 'Start', Icon: ScanSearch },
+  guide: { title: '引导式审查', action: '开始', Icon: BookOpenText },
+  review: { title: '审查智能体', action: '开始', Icon: ScanSearch },
 };
 
 function LaunchRow({
@@ -45,9 +46,9 @@ function LaunchRow({
     setError(null);
     try {
       const result = await onLaunch(side.buildParams(side.kind === 'guide' ? { instructions } : undefined));
-      if (result === null) setError('Could not start. Check the agent CLI and try again.');
+      if (result === null) setError('无法启动。请检查智能体 CLI 后重试。');
     } catch (e) {
-      setError(e instanceof Error ? e.message : 'Could not start. Check the agent CLI and try again.');
+      setError(e instanceof Error ? e.message : '无法启动。请检查智能体 CLI 后重试。');
     } finally {
       busy.current = false;
       setPending(false);
@@ -62,14 +63,14 @@ function LaunchRow({
           onClick={onToggle}
           aria-expanded={open}
           aria-controls={detailsId}
-          title={open ? 'Hide options' : 'Engine, model and options'}
+          title={open ? '隐藏选项' : '引擎、模型与选项'}
           className="group -ml-1 flex min-w-0 flex-1 items-center gap-2 rounded-md px-1 py-1 text-left hover:bg-muted/50 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
         >
           <Icon className="shrink-0 text-muted-foreground" size={16} />
           <span className="min-w-0 flex-1">
             <span className="block truncate text-[13px] font-medium text-foreground">{title}</span>
             {side.models === null && !side.experimental ? (
-              <span className="block truncate text-[12px] text-muted-foreground" data-launch-summary="">Loading models…</span>
+              <span className="block truncate text-[12px] text-muted-foreground" data-launch-summary="">正在加载模型…</span>
             ) : (
               <LaunchSummaryLine summary={side.summary} engine={side.engine} />
             )}
@@ -88,7 +89,7 @@ function LaunchRow({
           className="inline-flex h-7 w-16 shrink-0 items-center justify-center gap-1.5 rounded-md border border-border bg-background px-2.5 text-[12px] font-medium text-foreground transition-colors hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring disabled:cursor-not-allowed disabled:opacity-50"
         >
           {pending && <Loader2 className="animate-spin motion-reduce:animate-none" size={12} />}
-          {pending ? 'Starting' : action}
+          {pending ? '启动中' : action}
         </button>
       </div>
       {error && <p className="pb-2 pl-8 text-[12px] leading-5 text-muted-foreground" role="alert">{error}</p>}
@@ -118,7 +119,7 @@ export function LaunchPad({
   const { folds, toggle } = useLaunchFolds();
   const guideInstructions = useGuideInstructions(config.guide.available);
   return (
-    <section aria-label="Start a review" className="px-4 pt-2" data-launch-pad="">
+    <section aria-label="开始一次审查" className="px-4 pt-2" data-launch-pad="">
       {scope && (
         <p className="truncate pb-1 text-[12px] leading-5 text-muted-foreground" data-launch-scope="">
           {scope}
@@ -126,7 +127,7 @@ export function LaunchPad({
       )}
       {!config.guide.available && !config.review.available && (
         <p className="py-1.5 text-[12px] leading-5 text-muted-foreground" data-launch-none="">
-          No agent CLI on this machine. Install Claude Code, Codex, Cursor, OpenCode, Pi or Copilot to start reviews here.
+          本机没有智能体 CLI。请安装 Claude Code、Codex、Cursor、OpenCode、Pi 或 Copilot，以便在此开始审查。
         </p>
       )}
       {config.guide.available && (

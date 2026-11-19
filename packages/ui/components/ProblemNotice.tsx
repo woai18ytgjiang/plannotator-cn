@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * One problem, inline at the thing that failed (the errors system): an icon,
  * a bold line saying what happened, a muted line saying what it means, and
@@ -83,10 +84,10 @@ export function ProblemNotice({ problem, onRetry, retrying = false, touch = fals
               type="button"
               className={`${btn} flex-none rounded-md border border-border bg-background text-[11.5px] font-medium text-foreground hover:bg-muted`}
               onClick={() => void copy(action.value)}
-              aria-label={`Copy ${action.value}`}
+              aria-label={`复制 ${action.value}`}
               data-problem-copy=""
             >
-              {copied === 'yes' ? 'Copied' : copied === 'no' ? "Couldn't copy" : 'Copy'}
+              {copied === 'yes' ? '已复制' : copied === 'no' ? "复制失败" : '复制'}
             </button>
           </div>
         )}
@@ -106,7 +107,7 @@ export function ProblemNotice({ problem, onRetry, retrying = false, touch = fals
                 aria-busy={retrying || undefined}
                 data-problem-retry=""
               >
-                {retrying ? 'Trying again…' : 'Try again'}
+                {retrying ? '重试中…' : '重试'}
               </button>
             )}
           </div>

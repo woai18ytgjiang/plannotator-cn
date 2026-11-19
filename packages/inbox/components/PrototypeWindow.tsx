@@ -161,7 +161,7 @@ export function PrototypeWindow(props: {
     <button
       type="button"
       className="ib-pw-step"
-      aria-label={to !== undefined ? `${dir < 0 ? 'Previous' : 'Next'} option: ${options[to]!.label}` : `${dir < 0 ? 'Previous' : 'Next'} option: this is the ${dir < 0 ? 'first' : 'last'}`}
+      aria-label={to !== undefined ? `${dir < 0 ? '上一个' : '下一个'}选项：${options[to]!.label}` : `${dir < 0 ? '上一个' : '下一个'}选项：这是${dir < 0 ? '第一个' : '最后一个'}`}
       aria-disabled={to === undefined ? true : undefined}
       onClick={() => {
         if (to === undefined) return;
@@ -184,33 +184,33 @@ export function PrototypeWindow(props: {
         {!props.shared && pages.length > 1 && <span className="ib-pw-pill">{`Page ${place + 1} of ${pages.length}`}</span>}
         <span className="ib-pw-sp" />
         {page && (
-          <div className="ib-seg" role="radiogroup" aria-label="Clicks on the page">
-            <button type="button" role="radio" aria-checked={!armed} className="ib-seg-o" data-on={!armed ? '' : undefined} onClick={() => setArmed(false)} aria-label="Interact" data-prototype-interact="">
-              <Icon name="frame" size={13} /> <span className="ib-pw-segt">Interact</span>
+          <div className="ib-seg" role="radiogroup" aria-label="页面上的点击">
+            <button type="button" role="radio" aria-checked={!armed} className="ib-seg-o" data-on={!armed ? '' : undefined} onClick={() => setArmed(false)} aria-label="交互" data-prototype-interact="">
+              <Icon name="frame" size={13} /> <span className="ib-pw-segt">交互</span>
             </button>
             {web ? (
-              <button ref={commentRef} type="button" role="radio" aria-checked={armed} className="ib-seg-o" data-on={armed ? '' : undefined} onClick={() => setArmed(true)} aria-label="Comment" data-prototype-comment="">
-                <Icon name="comment" size={13} /> <span className="ib-pw-segt">Comment</span>
+              <button ref={commentRef} type="button" role="radio" aria-checked={armed} className="ib-seg-o" data-on={armed ? '' : undefined} onClick={() => setArmed(true)} aria-label="评论" data-prototype-comment="">
+                <Icon name="comment" size={13} /> <span className="ib-pw-segt">评论</span>
               </button>
             ) : (
-              <button type="button" role="radio" aria-checked={armed} className="ib-seg-o" data-on={armed ? '' : undefined} onClick={() => setArmed(true)} aria-label="Annotate" data-prototype-annotate="">
-                <Icon name="pen" size={13} /> <span className="ib-pw-segt">Annotate</span>
+              <button type="button" role="radio" aria-checked={armed} className="ib-seg-o" data-on={armed ? '' : undefined} onClick={() => setArmed(true)} aria-label="批注" data-prototype-annotate="">
+                <Icon name="pen" size={13} /> <span className="ib-pw-segt">批注</span>
               </button>
             )}
           </div>
         )}
         {web && (
-          <a className="ib-iconbtn" href={web.url} target="_blank" rel="noopener noreferrer" aria-label="Open in a new tab" title="Open in a new tab" data-prototype-open="">
+          <a className="ib-iconbtn" href={web.url} target="_blank" rel="noopener noreferrer" aria-label="在新标签页打开" title="在新标签页打开" data-prototype-open="">
             <Icon name="external" size={16} />
           </a>
         )}
-        <button type="button" className="ib-iconbtn" onClick={props.onClose} aria-label="Close the prototype" data-prototype-close="">
+        <button type="button" className="ib-iconbtn" onClick={props.onClose} aria-label="关闭原型" data-prototype-close="">
           <Icon name="x" size={16} />
         </button>
       </header>
       <div className="ib-pw-stage">
         {!page ? (
-          <p className="ib-pw-line">This option has no prototype.</p>
+          <p className="ib-pw-line">此选项没有原型。</p>
         ) : page.kind === 'web' ? (
           <WebPage
             key={pageKey(page)}
@@ -270,7 +270,7 @@ export function PrototypeWindow(props: {
             <b className="ib-pw-label" title={option.label}>
               {option.label}
             </b>
-            {option.recommended && <span className="ib-pw-rec">Recommended</span>}
+            {option.recommended && <span className="ib-pw-rec">推荐</span>}
           </span>
           {arrow(1, next)}
           {props.readOnly ? (
@@ -284,7 +284,7 @@ export function PrototypeWindow(props: {
               type="button"
               className="ib-pw-pick"
               aria-pressed={isPicked || justPicked}
-              aria-label={`${isPicked || justPicked ? 'Picked' : 'Pick'} ${option.label}`}
+              aria-label={`${isPicked || justPicked ? '已选' : '选择'} ${option.label}`}
               onClick={pick}
               data-prototype-pick=""
             >
@@ -293,7 +293,7 @@ export function PrototypeWindow(props: {
                   <Icon name="check" size={14} /> Picked
                 </>
               ) : (
-                'Pick'
+                '选择'
               )}
             </button>
           )}
@@ -333,7 +333,7 @@ function AppPage(props: PageProps & { threadId: string; siteId: string; url: str
       .catch((cause) => {
         if (gone) return;
         if (cause instanceof InboxApiError && cause.code === 'live_not_answering') setDown(true);
-        else setError(cause instanceof InboxApiError ? cause.message : 'The prototype did not open.');
+        else setError(cause instanceof InboxApiError ? cause.message : '原型未能打开。');
       });
     const ping = setInterval(() => void inboxApi.pingLiveSite(threadId, siteId).catch(() => {}), PING_MS);
     return () => {
@@ -354,7 +354,7 @@ function AppPage(props: PageProps & { threadId: string; siteId: string; url: str
       const answer = await inboxApi.saveLiveAnnotation(threadId, siteId, annotation);
       props.onSaved(answer.annotation);
     } catch (cause) {
-      setError(cause instanceof InboxApiError ? cause.message : 'The comment was not saved.');
+      setError(cause instanceof InboxApiError ? cause.message : '评论未能保存。');
     }
   };
 
@@ -449,7 +449,7 @@ function FilePage(
     source
       .view(attachment, 'sent')
       .then((next) => !gone && setView(next))
-      .catch((cause) => !gone && setError(cause instanceof InboxApiError ? cause.message : 'The prototype did not open.'));
+      .catch((cause) => !gone && setError(cause instanceof InboxApiError ? cause.message : '原型未能打开。'));
     return () => {
       gone = true;
     };
@@ -464,7 +464,7 @@ function FilePage(
     try {
       props.onSaved(await source.saveAnnotation(attachment, version, annotation));
     } catch (cause) {
-      setError(cause instanceof InboxApiError ? cause.message : 'The comment was not saved.');
+      setError(cause instanceof InboxApiError ? cause.message : '评论未能保存。');
     }
   };
 
@@ -513,7 +513,7 @@ export function TryPrototypeTab({ onOpen, pages = 1 }: { onOpen: () => void; pag
           <path d={foot} />
         </svg>
         <Icon name="play" size={13} />
-        <span>{pages > 1 ? 'Try prototypes' : 'Try prototype'}</span>
+        <span>{pages > 1 ? '试用原型' : '试用原型'}</span>
         <svg className="ib-qtab-foot r" viewBox="0 0 11 10" aria-hidden="true">
           <path d={foot} />
         </svg>

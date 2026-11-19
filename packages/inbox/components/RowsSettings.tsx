@@ -416,26 +416,26 @@ export function RowsSection({ phone, onGeneral, rows, projectNames, awayMachines
         const words = rowsChangeWords(before, after);
         broughtProjects.current = false;
         setSteps((all) => [...all, { look: before, words, whole: !changed.every((control) => FLASH_PARTS[control.id]) }]);
-        setLast({ words, undone: false, by: { host: by.host, name: INBOX_HOST_NAMES[by.host] ?? 'An agent' } });
+        setLast({ words, undone: false, by: { host: by.host, name: INBOX_HOST_NAMES[by.host] ?? '一个智能体' } });
         setFlash((was) => ({ ids: changed.map((control) => control.id), n: was.n + 1, tint: changed.every((control) => FLASH_PARTS[control.id]) }));
       }),
     [],
   );
 
   const step = steps.at(-1);
-  const line = last ? `${last.undone ? 'Undid' : last.by ? `${last.by.name} changed` : 'Changed'}: ${last.words.join(', ')}` : '';
+  const line = last ? `${last.undone ? '已撤销' : last.by ? `${last.by.name} 更改了` : '已更改'}：${last.words.join('，')}` : '';
   const controlRow = (control: RowsControl) => <ControlRow key={control.id} control={control} look={look} onChoice={choose} />;
   return (
     <div className="ib-rws" data-settings-rows="" data-rows-preset={preset ?? 'none'}>
       {/* Settings draws no lede of its own for Rows: this one has Undo and Reset beside it. */}
       <div className="ib-rws-head">
-        <p className="ib-lede">How each thread looks in your list. Changes show at once, everywhere you use the Inbox.</p>
+        <p className="ib-lede">每个话题在列表中的显示方式。更改会立即在你使用收件箱的所有地方生效。</p>
         <span className="ib-rws-acts">
-          <button type="button" className="ib-btn ib-ghost" data-rows-undo="" disabled={!step} title={step ? `Undo: ${step.words.join(', ')}` : undefined} onClick={undo}>
-            <Icon name="reply" size={14} /> Undo
+          <button type="button" className="ib-btn ib-ghost" data-rows-undo="" disabled={!step} title={step ? `撤销：${step.words.join('，')}` : undefined} onClick={undo}>
+            <Icon name="reply" size={14} /> 撤销
           </button>
           <button type="button" className="ib-btn" data-rows-reset="" disabled={isDefaultListLook(look)} onClick={() => whole(LIST_LOOK_DEFAULT)}>
-            Reset to default
+            恢复默认
           </button>
         </span>
       </div>
@@ -443,7 +443,7 @@ export function RowsSection({ phone, onGeneral, rows, projectNames, awayMachines
         <div ref={sentinel} className="ib-rws-sentinel" aria-hidden="true" />
         <div ref={pin} className="ib-rws-pv" data-rows-pinned={phone ? '' : undefined}>
           <div className="ib-rws-pvhead">
-            <h2 id="ib-rows-yours">Your list</h2>
+            <h2 id="ib-rows-yours">你的列表</h2>
             {/* What the last change was, said to a screen reader as it happens; Undo beside it while there is one. */}
             <span className="ib-rws-last" data-rows-last="">
               {last?.by && !last.undone && <HostMark host={last.by.host} />}
@@ -452,20 +452,20 @@ export function RowsSection({ phone, onGeneral, rows, projectNames, awayMachines
               </span>
               {last && !last.undone && step && (
                 <button type="button" className="ib-lnk" data-rows-undo-last="" onClick={undo}>
-                  <Icon name="reply" size={13} /> Undo
+                  <Icon name="reply" size={13} /> 撤销
                 </button>
               )}
             </span>
           </div>
           <div ref={frame} className="ib-rws-frame" inert data-rows-preview={phone ? 'phone' : 'narrow'} data-rows-source={own ? 'own' : 'examples'}>
-            {!own && !phone && <p className="ib-rws-empty">You have no threads yet. These examples show the look.</p>}
+            {!own && !phone && <p className="ib-rws-empty">你还没有任何话题。这些示例展示了外观。</p>}
             <LookList rows={shown} look={look} phone={phone} examples={!own} projectNames={projectNames} awayMachines={awayMachines} />
           </div>
-          {!own && phone && <p className="ib-rws-empty">You have no threads yet. These examples show the look.</p>}
+          {!own && phone && <p className="ib-rws-empty">你还没有任何话题。这些示例展示了外观。</p>}
           {!phone && <RowsAsk />}
         </div>
         <div className="ib-rws-ctl">
-          <h2 id="ib-rows-preset">Start from</h2>
+          <h2 id="ib-rows-preset">起始于</h2>
           {/* Buttons, not radios: a radio group's arrow keys choose as they move, so one stray key would wipe a look of
               the person's own. Tab reaches each, and only Enter, Space or a click applies one; the pressed one is the
               look's, and a look that matches none has none pressed. */}
@@ -485,16 +485,16 @@ export function RowsSection({ phone, onGeneral, rows, projectNames, awayMachines
               </div>
             ))}
           </div>
-          <h2 id="ib-rows-choices">Choices</h2>
+          <h2 id="ib-rows-choices">选项</h2>
           <div className="ib-card" role="group" aria-labelledby="ib-rows-choices">
             {ROWS_MAIN_CONTROLS.map(controlRow)}
           </div>
           <button type="button" className="ib-rws-fold" aria-expanded={more} aria-controls="ib-rows-more" data-rows-more="" onClick={() => setMore((open) => !open)}>
             <Icon name="chevR" size={14} />
-            More choices <span className="ib-rws-fold-n">· {ROWS_MORE_CONTROLS.length}</span>
+            更多选项 <span className="ib-rws-fold-n">· {ROWS_MORE_CONTROLS.length}</span>
           </button>
           <div id="ib-rows-more" hidden={!more}>
-            <div className="ib-card" role="group" aria-label="More choices">
+            <div className="ib-card" role="group" aria-label="更多选项">
               {ROWS_MORE_CONTROLS.map(controlRow)}
             </div>
           </div>
@@ -502,17 +502,17 @@ export function RowsSection({ phone, onGeneral, rows, projectNames, awayMachines
           <div className="ib-note ib-rws-note">
             <Icon name="info" />
             <span>
-              Full width keeps one line.{' '}
+              整行显示时保持单行。{' '}
               {onGeneral ? (
                 <>
-                  Text size is in{' '}
+                  文字大小在{' '}
                   <button type="button" className="ib-lnk" onClick={onGeneral}>
-                    General
+                    通用
                   </button>
-                  .
+                  。
                 </>
               ) : (
-                'Text size is in General.'
+                '文字大小在「通用」中。'
               )}
             </span>
           </div>

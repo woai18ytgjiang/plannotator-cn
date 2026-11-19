@@ -27,7 +27,7 @@ function Picture() {
           </span>
           <div className="ib-dtfoot">
             <span className="ib-vline">
-              <b>Listening</b>
+              <b>正在聆听</b>
               <span className="ib-vsp" />
               <span className="ib-vbars">
                 {BARS.map((level, index) => (
@@ -58,23 +58,23 @@ export function VoiceIntro({ phone, onTurnOn, onKeep }: { phone: boolean; onTurn
         </div>
       </div>
       <div className="ib-lo-text">
-        <h2 id="ib-vo-title">Talk instead of typing</h2>
-        <p id="ib-vo-desc">Hold the microphone in a reply box, or tap it, and speak. Your words land in the box, and nothing goes out until you press Send.</p>
-        <p className="ib-vo-route">Your audio goes to OpenAI through your ChatGPT login in Codex. This route isn’t an official OpenAI API, so it can stop working without notice.</p>
+        <h2 id="ib-vo-title">用说的，不用打字</h2>
+        <p id="ib-vo-desc">按住回复框中的麦克风（或点按它）然后说话。你的话语会落在输入框中，在你按发送之前不会发出。</p>
+        <p className="ib-vo-route">你的音频会通过 Codex 中的 ChatGPT 登录发送到 OpenAI。此途径并非 OpenAI 官方 API，可能随时停止工作，且不会有通知。</p>
       </div>
       <div className="ib-lo-sw">
         <label className="ib-lo-opt" htmlFor={base}>
-          <span id={`${base}-l`}>Phones only</span>
+          <span id={`${base}-l`}>仅手机</span>
           <button type="button" role="switch" id={base} className="ib-sw" aria-checked={phonesOnly} aria-labelledby={`${base}-l`} onClick={() => setPhonesOnly(!phonesOnly)} data-voice-intro-phones="" />
         </label>
       </div>
       <div className="ib-lo-acts">
         <button type="button" className="ib-btn ib-ghost" onClick={onKeep} data-voice-intro-keep="">
-          Not now
+          暂不
         </button>
         <span className="ib-bsp" />
         <button type="button" className="ib-btn ib-pri" onClick={() => onTurnOn(phonesOnly)} data-voice-intro-on="">
-          Turn on voice
+          开启语音
         </button>
       </div>
     </Modal>

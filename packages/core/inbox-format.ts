@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /** Small display helpers for the Inbox window. Pure. */
 
 import { inboxAgentName } from './inbox-types';
@@ -94,8 +95,8 @@ export function dayWords(iso: string, now: Date = new Date()): string {
   if (Number.isNaN(date.getTime())) return '';
   const start = (d: Date) => new Date(d.getFullYear(), d.getMonth(), d.getDate()).getTime();
   const days = Math.round((start(now) - start(date)) / 86_400_000);
-  if (days === 0) return 'today';
-  if (days === 1) return 'yesterday';
+  if (days === 0) return '今天';
+  if (days === 1) return '昨天';
   return dayOf(date, now);
 }
 
@@ -113,7 +114,7 @@ export function clockTime(iso: string): string {
 
 /** "2 questions" from two up (the count in plain words); nothing for one or none. */
 export function questionCount(open: number): string {
-  return open >= 2 ? `${formatCount(open)} questions` : '';
+  return open >= 2 ? `${formatCount(open)} 个问题` : '';
 }
 
 /**
@@ -126,9 +127,9 @@ export function waitCount(open: number, actions = 0): string {
   const todos = Math.min(Math.max(actions, 0), open);
   const questions = open - todos;
   if (todos === 0) return questionCount(questions);
-  const todoWords = `${formatCount(todos)} action item${todos === 1 ? '' : 's'}`;
+  const todoWords = `${formatCount(todos)} 个行动项`;
   if (questions === 0) return todoWords;
-  return `${formatCount(questions)} question${questions === 1 ? '' : 's'}, ${todoWords}`;
+  return `${formatCount(questions)} 个问题，${todoWords}`;
 }
 
 /** "1 thread", "1,284 threads". */

@@ -44,7 +44,7 @@ type Slot = ReminderSlot | 'guide';
 export function promptsSummary(prompts: InboxPromptsSettings): string {
   const rules = prompts.rules;
   const ruled = rules ? rules.shared !== null || INBOX_PROMPT_HOSTS.some((host) => rules.runtimes[host] !== null) : false;
-  return reminderCustom(prompts) || ruled || Boolean(prompts.guide?.text) ? 'Custom' : 'Default';
+  return reminderCustom(prompts) || ruled || Boolean(prompts.guide?.text) ? '自定义' : '默认';
 }
 
 function reminderCustom(prompts: InboxPromptsSettings): boolean {
@@ -53,7 +53,7 @@ function reminderCustom(prompts: InboxPromptsSettings): boolean {
 }
 
 function Chip({ custom }: { custom: boolean }) {
-  return <span className={`ib-chip${custom ? ' pm-custom' : ''}`}>{custom ? 'Custom' : 'Default'}</span>;
+  return <span className={`ib-chip${custom ? ' pm-custom' : ''}`}>{custom ? '自定义' : '默认'}</span>;
 }
 
 function Chevron() {
@@ -189,7 +189,7 @@ export function PromptsSection({
         />
         <div className="pm-acts">
           <button type="button" className="ib-btn ib-sm ib-pri" disabled={!can} onClick={submit} data-prompt-save={slot}>
-            {saving ? 'Saving…' : 'Save'}
+            {saving ? 'Saving…' : '保存'}
           </button>
           <button type="button" className="ib-btn ib-sm ib-ghost pm-ghost" onClick={() => cancel(slot)} data-prompt-cancel={slot}>
             Cancel
@@ -233,7 +233,7 @@ export function PromptsSection({
                 </button>
               </Tip>
             )}
-            <button type="button" className="ib-btn ib-sm" onClick={() => startEdit('shared')} data-prompt-edit="shared" aria-label="Edit the Inbox reminder">
+            <button type="button" className="ib-btn ib-sm" onClick={() => startEdit('shared')} data-prompt-edit="shared" aria-label="编辑收件箱提醒">
               Edit
             </button>
           </>
@@ -259,7 +259,7 @@ export function PromptsSection({
                 Show default
               </button>
               {showDefault && (
-                <p className="pm-text pm-faint" id={defaultId} aria-label="Default text" data-prompt-default="">
+                <p className="pm-text pm-faint" id={defaultId} aria-label="默认文本" data-prompt-default="">
                   {defaultText}
                 </p>
               )}
@@ -350,13 +350,13 @@ export function PromptsSection({
     <div ref={root} data-prompts-page="">
       {prompts.rules && <AgentRulesSection rules={prompts.rules} onPrompts={onPrompts} />}
       <section className={prompts.rules ? 'ib-sgroup' : 'ib-sgroup ib-sgroup-first'} aria-labelledby={`${id}-rem`}>
-        <h2 id={`${id}-rem`}>Inbox reminder</h2>
-        <p>Sent once, when a session starts.</p>
+        <h2 id={`${id}-rem`}>收件箱提醒</h2>
+        <p>在会话开始时发送一次。</p>
         <div className="ib-card">
           <button type="button" className="pm-fold" aria-expanded={reminderOpen} aria-controls={`${id}-rem-body`} onClick={() => setReminderOpen((open) => !open)} data-prompts-reminder-fold="">
             <Chevron />
             Reminder text
-            <span className="ib-mut">· {reminderCustom(prompts) ? 'Custom' : 'Default'}</span>
+            <span className="ib-mut">· {reminderCustom(prompts) ? '自定义' : '默认'}</span>
           </button>
           {reminderOpen && (
             <div id={`${id}-rem-body`} className="pm-rem-body" data-prompts-reminder="">
@@ -368,8 +368,8 @@ export function PromptsSection({
       </section>
       {guide && (
         <section className="ib-sgroup" aria-labelledby={`${id}-guide`}>
-          <h2 id={`${id}-guide`}>Guided reviews</h2>
-          <p>Added to every guided review, from the Inbox, the review page or VS Code.</p>
+          <h2 id={`${id}-guide`}>引导式审查</h2>
+          <p>会附加到每次引导式审查（来自收件箱、审查页面或 VS Code）。</p>
           <div className="ib-card">
             <div className="pm-shared" data-prompt-slot="guide">
               <div className="pm-head">
@@ -384,7 +384,7 @@ export function PromptsSection({
                         </button>
                       </Tip>
                     )}
-                    <button type="button" className="ib-btn ib-sm" onClick={() => startEdit('guide')} data-prompt-edit="guide" aria-label="Edit the guided review instructions">
+                    <button type="button" className="ib-btn ib-sm" onClick={() => startEdit('guide')} data-prompt-edit="guide" aria-label="编辑引导式审查说明">
                       Edit
                     </button>
                   </>
@@ -425,7 +425,7 @@ function OtherPrompts({ others, open, onToggle, configFile, home }: { others: In
     runtimes.map((runtime) => AGENT_NAME[runtime as InboxPromptHost] ?? runtime).join(', ');
   return (
     <section className="ib-sgroup" aria-labelledby={`${id}-h`}>
-      <h2 id={`${id}-h`}>Plan, review and annotate</h2>
+      <h2 id={`${id}-h`}>计划、审查与批注</h2>
       <p>
         Read-only here. Set them in{' '}
         {shown === configFile ? (

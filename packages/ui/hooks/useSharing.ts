@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Hook for URL-based state sharing in Plannotator
  *
@@ -390,14 +391,14 @@ export function useSharing(
       } else {
         shortShareUrlLifecycleRef.current = { _tag: 'failed', requestContext };
         setShortShareUrl('');
-        setShortUrlError('Short URL service unavailable');
+        setShortUrlError('短链接服务不可用');
         return null;
       }
     } catch (e) {
       if (latestShareRequestContextRef.current !== requestContext) return null;
       shortShareUrlLifecycleRef.current = { _tag: 'failed', requestContext };
       setShortShareUrl('');
-      setShortUrlError(e instanceof Error ? e.message : 'Failed to generate short URL');
+      setShortUrlError(e instanceof Error ? e.message : '生成短链接失败');
       return null;
     } finally {
       if (latestShareRequestContextRef.current === requestContext) setIsGeneratingShortUrl(false);
@@ -420,25 +421,25 @@ export function useSharing(
           : undefined;
         const loaded = await loadFromPasteId(pasteId, pasteFromFragment ?? pasteApiUrl, encryptionKey);
         if (!loaded) {
-          return { success: false, count: 0, planTitle: '', error: 'Failed to load from short URL — paste may have expired' };
+          return { success: false, count: 0, planTitle: '', error: '无法从短链接加载——粘贴内容可能已过期' };
         }
         payload = loaded;
       } else {
         // Fall back to hash-based URL
         const hashIndex = url.indexOf('#');
         if (hashIndex === -1) {
-          return { success: false, count: 0, planTitle: '', error: 'Invalid share URL: no hash fragment or short link found' };
+          return { success: false, count: 0, planTitle: '', error: '分享链接无效：未找到哈希片段或短链接' };
         }
         const hash = url.slice(hashIndex + 1);
         if (!hash) {
-          return { success: false, count: 0, planTitle: '', error: 'Invalid share URL: empty hash' };
+          return { success: false, count: 0, planTitle: '', error: '分享链接无效：哈希为空' };
         }
 
         payload = (await decompress(hash)) as SharePayload;
       }
 
       // Extract plan title from embedded plan text (or HTML <title>)
-      let planTitle = 'Unknown Plan';
+      let planTitle = '未知计划';
       if (payload.p) {
         const titleLine = payload.p.trim().split('\n').find(l => l.startsWith('#'));
         if (titleLine) planTitle = titleLine.replace(/^#+\s*/, '').trim();
@@ -451,7 +452,7 @@ export function useSharing(
       const importedAnnotations = fromShareable(payload.a, payload.d, payload.s);
 
       if (importedAnnotations.length === 0) {
-        return { success: true, count: 0, planTitle, error: 'No annotations found in share link' };
+        return { success: true, count: 0, planTitle, error: '分享链接中未找到批注' };
       }
 
       // Estimate count from current closure (may be slightly stale, but

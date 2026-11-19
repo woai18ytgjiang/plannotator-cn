@@ -180,7 +180,7 @@ export async function runRoutineCommand(argv: readonly string[], deps: CallComma
     return 0;
   }
   if (parsed.kind === "usage") {
-    err(`usage: ${parsed.error}\nRun 'plannotator routine ${parsed.op ? `${parsed.op} ` : ""}--help' for ${parsed.op ? "its options and examples" : "the commands"}.\n`);
+    err(`用法：${parsed.error}\n运行 'plannotator routine ${parsed.op ? `${parsed.op} ` : ""}--help' 查看${parsed.op ? "其选项和示例" : "可用命令"}。\n`);
     return 2;
   }
   const args = { ...parsed.args };

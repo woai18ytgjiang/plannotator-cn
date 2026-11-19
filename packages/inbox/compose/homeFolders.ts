@@ -212,10 +212,10 @@ const BAD_NAME = /[\\:]/;
 
 /** The browser's words for a refused read: the server's code, in the prototype's words. */
 export function folderRefusalWords(code: string | null, message: string): string {
-  if (code === 'folder_hidden') return "Hidden folders aren't offered.";
-  if (code === 'folder_system') return "System folders aren't offered.";
+  if (code === 'folder_hidden') return '不提供隐藏文件夹。';
+  if (code === 'folder_system') return '不提供系统文件夹。';
   // An older Inbox on a linked machine offers home only.
-  if (code === 'folder_outside_home') return 'Only folders inside your home folder.';
+  if (code === 'folder_outside_home') return '只能使用主目录内的文件夹。';
   return message;
 }
 
@@ -287,14 +287,14 @@ export function folderBrowserView(input: {
     const target = clone?.target;
     if (!target || target.into !== at) return;
     if (target.state === 'already') view.rows.push({ kind: 'cloneStart', path: target.path, name: target.name });
-    else if (!target.writable) view.note = `Can't clone into ${at}: no permission.`;
+    else if (!target.writable) view.note = `无法克隆到 ${at}：没有权限。`;
     else view.rows.push({ kind: 'cloneHere', path: target.path, name: target.name, repo: clone!.repo, taken: target.taken });
   };
   const path = normalizeFolderPath(input.typed);
   const { parent, tail } = splitFolderPath(path);
   // Any folder but a hidden or system one (approval "inbox-launch-any-folder"): a hidden one is said without a read;
   // a system one is the server's to say.
-  if ([...parent.split('/').slice(1), tail].some((segment) => segment.startsWith('.'))) return { ...view, note: "Hidden folders aren't offered." };
+  if ([...parent.split('/').slice(1), tail].some((segment) => segment.startsWith('.'))) return { ...view, note: '不提供隐藏文件夹。' };
   if (input.error) return { ...view, note: input.error };
   const read = input.read;
   if (!read) return view;
@@ -318,7 +318,7 @@ export function folderBrowserView(input: {
     const exact = read.folders.includes(tail) ? tail : null;
     const typedPath = child(parent, tail);
     if (exact) {
-      if (locked.has(exact)) view.note = `Can't open ${typedPath}: no permission.`;
+      if (locked.has(exact)) view.note = `无法打开 ${typedPath}：没有权限。`;
       else if (clone) cloneLead(typedPath);
       else if (!(read.nostart ?? []).includes(exact)) view.rows.push({ kind: 'start', path: typedPath, name: tail });
       view.rows.push(...names.map(row));
@@ -333,7 +333,7 @@ export function folderBrowserView(input: {
       return view;
     }
     if (named === 'locked') {
-      view.note = `Can't open ${typedPath}: no permission.`;
+      view.note = `无法打开 ${typedPath}：没有权限。`;
       return view;
     }
     if (named === null && input.nameRefused) {
@@ -347,18 +347,18 @@ export function folderBrowserView(input: {
       if (/\.\w+$/.test(tail) && parent !== '~' && read.start !== false && !clone) {
         view.note = `${tail} is a file.`;
         view.rows.push({ kind: 'start', path: parent, name: folderName(parent) });
-      } else view.note = `There's already a file named ${tail}. Pick another name.`;
+      } else view.note = `已存在名为 ${tail} 的文件。请换一个名称。`;
       view.rows.push(...near(NEAR_MAX));
       return view;
     }
     view.rows.push(...names.map(row));
     if (read.writable === false) {
-      view.note = clone ? `Can't clone into ${parent}: no permission.` : `Can't make a folder in ${parent}: no permission.`;
+      view.note = clone ? `无法克隆到 ${parent}：没有权限。` : `无法在 ${parent} 中创建文件夹：没有权限。`;
       if (names.length === 0) view.rows.push(...near(NEAR_MAX));
       return view;
     }
     if (BAD_NAME.test(tail)) {
-      view.note = "A folder name can't have \\ or :.";
+      view.note = '文件夹名称不能包含 \\ 或 :。';
       return view;
     }
     // Not checked yet: no Create row until the name is known not to be a file's.
@@ -370,11 +370,11 @@ export function folderBrowserView(input: {
     }
     const others = near(NEAR_MAX);
     view.rows.unshift(create);
-    if (others.length > 0 && !clone) view.after = { at: 1, text: "A new, empty folder. Or pick one that's there:" };
+    if (others.length > 0 && !clone) view.after = { at: 1, text: '新建的空文件夹。或选择一个已存在的：' };
     view.rows.push(...others);
     return view;
   }
-  if (state === 'locked') return { ...view, note: `Can't open ${parent}: no permission.` };
+  if (state === 'locked') return { ...view, note: `无法打开 ${parent}：没有权限。` };
   const nearest = read.nearest ?? null;
   const nearRows = (base: string, names: readonly string[], typedName: string, from = 0, n = NEAR_MAX): FolderRow[] =>
     closestFirst(names, typedName)
@@ -390,20 +390,20 @@ export function folderBrowserView(input: {
     return view;
   }
   // Missing.
-  if (read.blocked) return { ...view, note: read.blocked.state === 'file' ? `${read.blocked.path} is a file.` : `Can't open ${read.blocked.path}: no permission.` };
-  if (!nearest) return { ...view, note: `There's no ${parent}.` };
+  if (read.blocked) return { ...view, note: read.blocked.state === 'file' ? `${read.blocked.path} 是一个文件。` : `无法打开 ${read.blocked.path}：没有权限。` };
+  if (!nearest) return { ...view, note: `不存在 ${parent}。` };
   const wrong = nameBelow(parent, nearest.path);
   const bad = folderChild(nearest.path, wrong);
   const best = closestFirst(nearest.folders, wrong)[0];
   if (best && wrong && editDistance(best, wrong) <= FIX_MAX_EDITS) {
     // A typo one level up (A5): one Enter goes to the path as meant, then Enter again creates.
     const rest = parent.slice(bad.length);
-    view.note = `There's no ${bad}.`;
+    view.note = `不存在 ${bad}。`;
     view.rows.push({ kind: 'fix', path: `${folderChild(nearest.path, best)}${rest}/${tail}`, name: best, from: wrong });
     view.rows.push(...nearRows(nearest.path, nearest.folders, wrong, 1, NEAR_MAX - 1));
     return view;
   }
-  view.note = `There's no ${bad}. Only the last folder in a path can be made.`;
+  view.note = `不存在 ${bad}。只能创建路径中的最后一级文件夹。`;
   view.rows.push(...nearRows(nearest.path, nearest.folders, wrong));
   return view;
 }

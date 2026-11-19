@@ -73,10 +73,10 @@ export function OwnIconsBody({ face, onPick }: { face: AgentFace; onPick: (face:
   const current = isOwnFace(face) ? face.slice(4) : null;
   return (
     <div className="ib-agi-own" data-over={over ? '' : undefined} data-busy={busy ? '' : undefined}>
-      <button type="button" className="ib-agi-drop am-own-up" aria-label="Upload…" onClick={pick} disabled={busy}>
+      <button type="button" className="ib-agi-drop am-own-up" aria-label="上传…" onClick={pick} disabled={busy}>
         {busy ? <span className="ib-spin" aria-hidden="true" /> : <span className="am-own-add" aria-hidden="true" />}
-        <span className="ib-agi-drop-l">Drop or paste an image</span>
-        <span className="ib-agi-drop-b">Upload…</span>
+        <span className="ib-agi-drop-l">拖入或粘贴图片</span>
+        <span className="ib-agi-drop-b">上传…</span>
       </button>
       <div className="ib-agi-status" role="status">
         {refused}
@@ -89,7 +89,7 @@ export function OwnIconsBody({ face, onPick }: { face: AgentFace; onPick: (face:
                 type="button"
                 role="radio"
                 aria-checked={icon.id === current}
-                aria-label={`Picture ${icons.length - i}`}
+                aria-label={`图片 ${icons.length - i}`}
                 className="am-own-i"
                 data-own-icon={icon.id}
                 onClick={() => onPick(`own:${icon.id}`)}
@@ -99,8 +99,8 @@ export function OwnIconsBody({ face, onPick }: { face: AgentFace; onPick: (face:
               <button
                 type="button"
                 className="am-own-x"
-                aria-label="Remove"
-                title="Remove"
+                aria-label="移除"
+                title="移除"
                 data-own-remove={icon.id}
                 onClick={async () => {
                   const refusal = await removeOwnPicture(icon.id);

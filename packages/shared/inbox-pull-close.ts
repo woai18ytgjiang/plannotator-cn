@@ -93,8 +93,8 @@ async function writeState(run: RefRunner, pull: PullMergeTarget, to: "closed" | 
 export async function closePull(run: RefRunner, pull: PullMergeTarget): Promise<PullCloseResult> {
   const state = await readPullForgeState(run, pull);
   if (!state) return { ok: false, code: "pull_state_unknown", message: `Couldn’t ask ${forgeOf(pull)} whether it is still open. Try again.` };
-  if (state === "merged") return { ok: false, code: "pull_merged", message: "It is already merged." };
-  if (state === "closed") return { ok: false, code: "pull_closed", message: "It is already closed." };
+  if (state === "merged") return { ok: false, code: "pull_merged", message: "它已被合并。" };
+  if (state === "closed") return { ok: false, code: "pull_closed", message: "它已被关闭。" };
   return writeState(run, pull, "closed");
 }
 
@@ -102,7 +102,7 @@ export async function closePull(run: RefRunner, pull: PullMergeTarget): Promise<
 export async function reopenPull(run: RefRunner, pull: PullMergeTarget): Promise<PullCloseResult> {
   const state = await readPullForgeState(run, pull);
   if (!state) return { ok: false, code: "pull_state_unknown", message: `Couldn’t ask ${forgeOf(pull)} whether it is still closed. Try again.` };
-  if (state === "merged") return { ok: false, code: "pull_merged", message: "It was merged meanwhile." };
-  if (state === "open") return { ok: false, code: "pull_open", message: "It is already open." };
+  if (state === "merged") return { ok: false, code: "pull_merged", message: "它在此期间被合并了。" };
+  if (state === "open") return { ok: false, code: "pull_open", message: "它已经是打开状态。" };
   return writeState(run, pull, "open");
 }

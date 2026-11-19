@@ -263,16 +263,16 @@ export function PullThreadStart({
               >
                 {sending && <span className="ib-spin" aria-hidden="true" />}
                 {phone && <Icon name="arrowUp" size={20} className="ib-rsend-i" />}
-                <span className="ib-rsend-w">Send</span>
+                <span className="ib-rsend-w">发送</span>
               </button>
             }
             clip={null}
             skills={
-              <Tip content="Skills (or type / in the message)">
+              <Tip content="技能（或在消息中输入 /）">
                 <button
                   type="button"
                   className="ib-ricon"
-                  aria-label="Skills"
+                  aria-label="技能"
                   data-reply-skills=""
                   onClick={() => {
                     const field = textRef.current;
@@ -295,11 +295,11 @@ export function PullThreadStart({
             pill={pill}
             discard={
               phone ? null : (
-                <Tip content="Discard, back to the pull request">
+                <Tip content="放弃并返回 PR">
                   <button
                     type="button"
                     className="ib-ricon ib-rdiscard"
-                    aria-label="Discard, back to the pull request"
+                    aria-label="放弃并返回 PR"
                     data-reply-discard=""
                     onClick={() => {
                       keepUnsentPullWords(pr.key, '');

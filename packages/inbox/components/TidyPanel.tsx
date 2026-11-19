@@ -15,14 +15,13 @@ import type { TidyController } from './Tidy';
  */
 
 /** "Tidy · 3/4" while a run shows. */
-export const runLabel = (run: InboxTidyRun) => `Tidy · ${run.done}/${run.agents.length}`;
+export const runLabel = (run: InboxTidyRun) => `整理 · ${run.done}/${run.agents.length}`;
 
 /** What Tidy does whatever the person adds: one line under the field. */
-export const TIDY_DOES = 'Each agent updates its own threads: sends what it held back, answers you, closes questions that no longer apply.';
+export const TIDY_DOES = '每个智能体更新自己的话题：发送暂缓的内容、回复你、关闭不再适用的问题。';
 
 const agentKey = (agent: Pick<TidyAcrossAgent, 'machine' | 'session'>) => `${agent.machine ?? ''}|${agent.session}`;
 
-const plural = (n: number, one: string, many = `${one}s`) => `${formatCount(n)} ${n === 1 ? one : many}`;
 
 /** One suggestion per project the others go into, read by the name it will have: alone, nothing clashes. */
 function combineGroups(pairs: readonly InboxTidyCombine[]) {
@@ -61,7 +60,7 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
   const [key] = useState(() => new PressKeys('tidy'));
   // Two presses before the button greys out: the second does nothing.
   const pressed = useRef(false);
-  if (!plan) return <div className="ib-tidy-top"><b>Tidy</b></div>;
+  if (!plan) return <div className="ib-tidy-top"><b>整理</b></div>;
   const combine = plan.combine ?? [];
   const picking = tidy.picked !== undefined;
   const lines = whyNotAsked(plan);
@@ -71,10 +70,10 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
       <>
         {!below && (
           <div className="ib-tidy-top" data-tidy-empty="">
-            <b>Tidy</b>
+            <b>整理</b>
           </div>
         )}
-        {lines.length === 0 && <p className="ib-tidy-line">Nothing to ask: no agent of these threads can be reached.</p>}
+        {lines.length === 0 && <p className="ib-tidy-line">没有可询问的内容：这些话题的智能体均无法联系。</p>}
         {lines.map((line) => (
           <p key={line} className="ib-tidy-line">
             {line}
@@ -83,8 +82,8 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
       </>
     ) : (
       <div className="ib-tidy-top" data-tidy-empty="">
-        <b>Tidy</b>
-        <span>Nothing to ask</span>
+        <b>整理</b>
+        <span>没有可询问的内容</span>
       </div>
     );
   const agents = plan.agents;
@@ -103,8 +102,8 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
   return (
     <>
       <div className="ib-tidy-top" data-below={below ? '' : undefined}>
-        <b>Tidy</b>
-        <span>{picking ? `${formatCount(tidy.picked!)} selected` : plural(plan.count, allThreads ? 'thread' : 'item')}</span>
+        <b>整理</b>
+        <span>{picking ? `已选 ${formatCount(tidy.picked!)} 项` : `${formatCount(plan.count)} 个${allThreads ? '话题' : '项目'}`}</span>
       </div>
       {agents.length > 0 && (
         <ul className="ib-tidy-ags">
@@ -123,7 +122,7 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
       {combine.length > 0 && (
         <>
           <div className="ib-tidy-sub" data-below={agents.length > 0 ? '' : undefined}>
-            Combine projects
+            合并项目
           </div>
           <ul className="ib-tidy-ags">
             {combineGroups(combine).map((group) => {
@@ -137,7 +136,7 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
                       <span className="ib-tidy-nm">
                         <b dir="auto">{group.name}</b>
                         <small>
-                          {formatCount(group.pairs.length + 1)} folders, {group.pairs[0]!.why}
+                          {formatCount(group.pairs.length + 1)} 个文件夹，{group.pairs[0]!.why}
                         </small>
                       </span>
                     </Tip>
@@ -159,16 +158,16 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
             className="ib-tidy-words"
             rows={2}
             maxLength={500}
-            placeholder="Add instructions (optional)"
-            aria-label="Instructions for this Tidy (optional)"
+            placeholder="添加说明（可选）"
+            aria-label="本次整理的说明（可选）"
             value={words}
             onChange={(event) => setWords(event.target.value)}
             data-tidy-words=""
           />
           <p className="ib-tidy-line">{TIDY_DOES}</p>
           {words.trim() === '' && (plan.recent?.length ?? 0) > 0 && (
-            <div className="ib-tidy-recent" role="group" aria-label="Recent instructions">
-              <div className="ib-tidy-sub">Recent</div>
+            <div className="ib-tidy-recent" role="group" aria-label="最近的说明">
+              <div className="ib-tidy-sub">最近</div>
               {plan.recent!.map((said) => (
                 <button key={said} type="button" className="ib-tidy-said" onClick={() => setWords(said)} data-tidy-recent="">
                   <Icon name="clock" size={13} />
@@ -209,7 +208,7 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
             else onDone();
           }}
         >
-          Tidy
+          整理
         </button>
       </div>
     </>
@@ -220,15 +219,15 @@ function TidyPicker({ tidy, onDone, below }: { tidy: TidyController; onDone: () 
 function runState(agent: InboxTidyRunAgent): string {
   switch (agent.state) {
     case 'waiting':
-      return agent.reach === 'next_call' ? 'At its next Inbox call' : 'Waiting';
+      return agent.reach === 'next_call' ? '下次收件箱调用时' : '等待中';
     case 'delivered':
-      return 'Delivered';
+      return '已送达';
     case 'tidied':
-      return agent.updated > 0 ? `${plural(agent.updated, 'thread')} updated` : 'Updated';
+      return agent.updated > 0 ? `已更新 ${agent.updated} 个话题` : '已更新';
     case 'nothing':
-      return 'Nothing to change';
+      return '无需更改';
     case 'ended':
-      return 'Session ended';
+      return '会话已结束';
   }
 }
 
@@ -238,7 +237,7 @@ function RunPanel({ run }: { run: InboxTidyRun }) {
     <>
       <div className="ib-tidy-top">
         <b>{runLabel(run)}</b>
-        {run.updated > 0 && <span>{plural(run.updated, 'thread')} updated</span>}
+        {run.updated > 0 && <span>已更新 {run.updated} 个话题</span>}
       </div>
       <ul className="ib-tidy-ags">
         {run.agents.map((agent) => (
@@ -250,7 +249,7 @@ function RunPanel({ run }: { run: InboxTidyRun }) {
           </li>
         ))}
       </ul>
-      {run.words && <p className="ib-tidy-line ib-tidy-added">You added: “{run.words}”</p>}
+      {run.words && <p className="ib-tidy-line ib-tidy-added">你添加了：“{run.words}”</p>}
     </>
   );
 }
@@ -260,10 +259,10 @@ function whyNotAsked(plan: NonNullable<TidyController['plan']>): string[] {
   const out: string[] = [];
   const ended = plan.unreached?.ended ?? 0;
   const asked = plan.unreached?.asked ?? 0;
-  if (ended === 1) out.push('1 thread has no agent to ask: its session ended.');
-  else if (ended > 1) out.push(`${formatCount(ended)} threads have no agent to ask.`);
-  if (asked === 1) out.push('1 thread’s agent was asked a moment ago.');
-  else if (asked > 1) out.push(`${formatCount(asked)} threads’ agents were asked a moment ago.`);
-  for (const machine of plan.unasked ?? []) out.push(machine.threads > 0 ? `${plural(machine.threads, 'thread')} on ${machine.name} can’t be asked now.` : `${machine.name} can’t be asked now.`);
+  if (ended === 1) out.push('1 个话题没有可询问的智能体：其会话已结束。');
+  else if (ended > 1) out.push(`${formatCount(ended)} 个话题没有可询问的智能体。`);
+  if (asked === 1) out.push('1 个话题的智能体刚刚被询问过。');
+  else if (asked > 1) out.push(`${formatCount(asked)} 个话题的智能体刚刚被询问过。`);
+  for (const machine of plan.unasked ?? []) out.push(machine.threads > 0 ? `${machine.name} 上的 ${machine.threads} 个话题目前无法询问。` : `${machine.name} 目前无法询问。`);
   return out;
 }

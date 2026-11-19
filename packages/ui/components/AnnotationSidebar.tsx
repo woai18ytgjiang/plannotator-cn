@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React from 'react';
 import { Annotation, AnnotationType, Block } from '../types';
 
@@ -26,7 +27,7 @@ export const AnnotationSidebar: React.FC<SidebarProps> = ({
   return (
     <div className="w-[min(22rem,32vw)] min-w-[16rem] border-l border-border/50 bg-card/50 backdrop-blur-sm h-full flex flex-col transition-colors">
       <div className="p-4 border-b border-border/50 flex items-center justify-between">
-        <h2 className="font-semibold text-foreground">Review Changes</h2>
+        <h2 className="font-semibold text-foreground">审查更改</h2>
         <span className="text-xs bg-muted text-muted-foreground px-2 py-1 rounded-full">
           {annotations.length}
         </span>
@@ -35,8 +36,8 @@ export const AnnotationSidebar: React.FC<SidebarProps> = ({
       <div className="flex-1 overflow-y-auto p-4 space-y-4">
         {sortedAnnotations.length === 0 ? (
           <div className="text-center text-muted-foreground mt-10 text-sm">
-            <p>No annotations yet.</p>
-            <p className="mt-2 text-xs">Select text in the document to add comments or suggest changes.</p>
+            <p>暂无批注。</p>
+            <p className="mt-2 text-xs">在文档中选择文本即可添加评论或建议修改。</p>
           </div>
         ) : (
           sortedAnnotations.map(ann => (
@@ -57,12 +58,12 @@ export const AnnotationSidebar: React.FC<SidebarProps> = ({
                   ${ann.type === AnnotationType.DELETION ? 'bg-destructive/20 text-destructive' :
                     'bg-accent/20 text-accent-text'}
                 `}>
-                  {ann.type}
+                  {ann.type === AnnotationType.DELETION ? '删除' : ann.type === AnnotationType.COMMENT ? '评论' : '全局'}
                 </span>
                 <button
                   onClick={(e) => { e.stopPropagation(); onDelete(ann.id); }}
                   className="opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 text-muted-foreground hover:text-destructive transition-all p-1 rounded hover:bg-destructive/10 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
-                  title="Remove Annotation"
+                  title="移除批注"
                 >
                   <svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
                 </button>

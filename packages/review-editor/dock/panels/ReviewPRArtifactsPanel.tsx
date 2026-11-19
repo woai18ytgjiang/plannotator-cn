@@ -65,13 +65,13 @@ function isResolvedArtifact(artifact: PRArtifact): boolean {
 function artifactSourceLabel(artifact: PRArtifact): string {
   switch (artifact.provenance.surface) {
     case 'description':
-      return 'PR description';
+      return 'PR 描述';
     case 'comment':
-      return 'Comment';
+      return '评论';
     case 'review':
-      return 'Review';
+      return '审查';
     case 'review-thread':
-      return 'Review thread';
+      return '审查话题';
   }
 }
 
@@ -86,7 +86,7 @@ function artifactGroups(artifacts: readonly PRArtifact[]): readonly ArtifactGrou
   return [
     {
       key: 'description',
-      label: 'PR description',
+      label: 'PR 描述',
       artifacts: artifacts.filter((artifact) => artifact.provenance.surface === 'description'),
     },
     {
@@ -153,7 +153,7 @@ function ImageArtifactStage({
     return (
       <ExternalArtifactState
         artifact={artifact}
-        message="This image could not be loaded inline. It may require GitHub authentication."
+        message="此图片无法内联加载，可能需要 GitHub 身份验证。"
       />
     );
   }
@@ -165,7 +165,7 @@ function ImageArtifactStage({
     <div className="flex h-full min-h-0 items-center justify-center overflow-auto p-5">
       <div
         className="relative inline-flex max-h-full max-w-full cursor-crosshair touch-manipulation"
-        title="Click the image to comment at that point"
+        title="点击图片可在该位置评论"
         onClick={(event) => {
           const box = event.currentTarget.getBoundingClientRect();
           if (box.width <= 0 || box.height <= 0) return;
@@ -235,7 +235,7 @@ function VideoArtifactStage({
     return (
       <ExternalArtifactState
         artifact={artifact}
-        message="This video could not be loaded inline. It may require GitHub authentication."
+        message="此视频无法内联加载，可能需要 GitHub 身份验证。"
       />
     );
   }
@@ -267,7 +267,7 @@ function VideoArtifactStage({
           <MessageSquarePlus className="h-4 w-4" aria-hidden="true" />
           Comment at {formatArtifactTimestamp(currentTime)}
         </button>
-        <div className="relative h-11 min-w-0 flex-1" aria-label="Video annotation timeline">
+        <div className="relative h-11 min-w-0 flex-1" aria-label="视频批注时间轴">
           <span className="absolute left-0 right-0 top-1/2 h-px bg-border" aria-hidden="true" />
           {timestampNotes.map((note, index) => {
             const anchor = note.meta.anchor;
@@ -355,7 +355,7 @@ function AnnotatableMarkdownStage({
           onAskAI={onAskAI}
           askAIContext={{
             kind: 'selection',
-            label: 'Artifact document',
+            label: '附件文档',
             text: hook.commentPopover.selectedText ?? hook.commentPopover.contextText,
           }}
         />,
@@ -384,13 +384,13 @@ function MarkdownArtifactStage({
 }): React.JSX.Element {
   const state = useRemoteArtifactDocument(artifact.url);
   if (state.status === 'loading') {
-    return <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Loading document…</div>;
+    return <div className="flex h-full items-center justify-center text-sm text-muted-foreground">正在加载文档…</div>;
   }
   if (state.status === 'error') {
     return (
       <ExternalArtifactState
         artifact={artifact}
-        message="This Markdown document could not be loaded inline. It may have moved or require different access."
+        message="此 Markdown 文档无法内联加载，它可能已被移动或需要不同的访问权限。"
       />
     );
   }
@@ -427,13 +427,13 @@ function HtmlArtifactStage({
 }): React.JSX.Element {
   const state = useRemoteArtifactDocument(artifact.url);
   if (state.status === 'loading') {
-    return <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Loading HTML…</div>;
+    return <div className="flex h-full items-center justify-center text-sm text-muted-foreground">正在加载 HTML…</div>;
   }
   if (state.status === 'error') {
     return (
       <ExternalArtifactState
         artifact={artifact}
-        message="This HTML document could not be loaded inline. It may have moved or require different access."
+        message="此 HTML 文档无法内联加载，它可能已被移动或需要不同的访问权限。"
       />
     );
   }
@@ -678,20 +678,20 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
   if (prMetadata === null) {
     return (
       <div className="flex h-full items-center justify-center p-8 text-center text-sm text-muted-foreground">
-        Artifacts are available for hosted pull requests and merge requests.
+        附件适用于托管的拉取请求和合并请求。
       </div>
     );
   }
   const changeRequestLabel = prMetadata.platform === 'gitlab' ? 'MR' : 'PR';
   if (isPRContextLoading && prArtifacts.length === 0) {
-    return <div className="flex h-full items-center justify-center text-sm text-muted-foreground">Loading PR artifacts…</div>;
+    return <div className="flex h-full items-center justify-center text-sm text-muted-foreground">正在加载 PR 附件…</div>;
   }
   if (prContextError && prArtifacts.length === 0) {
     return (
       <div className="flex h-full flex-col items-center justify-center gap-3 p-8 text-center">
         <p className="text-sm text-destructive">{prContextError}</p>
         <button type="button" onClick={fetchPRContext} className="min-h-10 rounded-md bg-muted px-3 text-xs font-medium hover:bg-muted/80">
-          Retry
+          重试
         </button>
       </div>
     );
@@ -819,7 +819,7 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
             {hasResolved && (
               <label className="flex min-h-9 cursor-pointer items-center gap-1.5 rounded-md px-2 text-xs text-muted-foreground hover:bg-muted">
                 <input type="checkbox" checked={hideResolved} onChange={(event) => setHideResolved(event.target.checked)} className="h-3 w-3 accent-primary" />
-                Hide resolved
+                隐藏已解决
               </label>
             )}
           </div>
@@ -834,7 +834,7 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
             <span className="flex h-7 w-7 items-center justify-center">
               <LayoutGrid className="h-4 w-4" aria-hidden="true" />
             </span>
-            <span className="min-w-0 flex-1 max-sm:sr-only">Gallery</span>
+            <span className="min-w-0 flex-1 max-sm:sr-only">图库</span>
             <span className="rounded bg-muted max-sm:hidden px-1.5 py-0.5 font-mono text-xs tabular-nums text-muted-foreground">
               {visibleArtifacts.length}
             </span>
@@ -866,7 +866,7 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
                       <span className="min-w-0 flex-1 py-1.5 max-sm:sr-only">
                         <span className="flex items-center gap-1 truncate text-xs font-medium">
                           <span className="truncate">{artifact.name}</span>
-                          {resolved && <span className="text-[8px] text-muted-foreground">resolved</span>}
+                          {resolved && <span className="text-[8px] text-muted-foreground">已解决</span>}
                         </span>
                         <span className="mt-0.5 flex min-w-0 items-center gap-1.5 truncate text-xs opacity-70">
                           <span className="truncate">@{artifact.provenance.authorLogin}</span>
@@ -878,7 +878,7 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
                     <button
                       type="button"
                       aria-label={`Hide ${artifact.name}`}
-                      title="Hide artifact"
+                      title="隐藏附件"
                       className={`flex min-h-11 w-11 shrink-0 items-center justify-center rounded-r-md text-muted-foreground/55 transition-opacity duration-150 hover:bg-muted hover:text-foreground focus-visible:z-10 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring motion-reduce:transition-none ${active ? 'opacity-70' : 'opacity-0 group-hover:opacity-55 group-focus-within:opacity-55 [@media(hover:none)]:opacity-55'}`}
                       onClick={() => setHidden((ids) => {
                         ids.add(artifact.id);
@@ -894,10 +894,10 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
           ))}
           {visibleArtifacts.length === 0 && (
             <div className="px-3 py-8 text-center text-xs text-muted-foreground">
-              <p>No visible artifacts.</p>
+              <p>没有可见的附件。</p>
               {hiddenCatalogCount > 0 && (
                 <button type="button" className="mt-2 min-h-10 rounded-md px-3 text-foreground hover:bg-muted" onClick={() => setHidden(() => new Set())}>
-                  Restore hidden artifacts
+                  恢复隐藏的附件
                 </button>
               )}
             </div>
@@ -915,7 +915,7 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
           <>
             <header className="flex min-h-[var(--panel-header-h)] shrink-0 items-center gap-2 border-b border-border/50 px-3">
               <LayoutGrid className="h-4 w-4 text-muted-foreground" aria-hidden="true" />
-              <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">Gallery</span>
+              <span className="min-w-0 flex-1 truncate text-xs font-medium text-foreground">图库</span>
             </header>
             <div className="min-h-0 flex-1 bg-muted/10">
               <PRArtifactGallery
@@ -938,13 +938,13 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
                 className="inline-flex min-h-9 items-center gap-1.5 rounded-md bg-muted/55 px-2.5 text-xs font-medium text-foreground hover:bg-muted focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring"
                 onClick={(event) => setPendingComment({ artifactId: selected.id, anchorEl: event.currentTarget, anchor: { kind: 'page' } })}
               >
-                <MessageSquarePlus className="h-3.5 w-3.5" aria-hidden="true" /> <span className="max-sm:sr-only">Add note</span>
+                <MessageSquarePlus className="h-3.5 w-3.5" aria-hidden="true" /> <span className="max-sm:sr-only">添加备注</span>
               </button>
-              <a href={selected.provenance.sourceUrl} title="Source" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                <span className="max-sm:sr-only">Source</span> <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              <a href={selected.provenance.sourceUrl} title="源码" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <span className="max-sm:sr-only">源码</span> <ExternalLink className="h-3 w-3" aria-hidden="true" />
               </a>
-              <a href={selected.url} title="Open" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
-                <span className="max-sm:sr-only">Open</span> <ExternalLink className="h-3 w-3" aria-hidden="true" />
+              <a href={selected.url} title="打开" target="_blank" rel="noopener noreferrer" className="inline-flex min-h-9 items-center gap-1 rounded-md px-2 text-xs font-medium text-muted-foreground hover:bg-muted hover:text-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring">
+                <span className="max-sm:sr-only">打开</span> <ExternalLink className="h-3 w-3" aria-hidden="true" />
               </a>
             </header>
             <div className="min-h-0 flex-1 bg-muted/10">
@@ -966,12 +966,12 @@ export const ReviewPRArtifactsPanel: React.FC<IDockviewPanelProps> = () => {
               From <span className="font-medium text-foreground/80">{artifactSourceLabel(selected)}</span>
               {' by '}@{selected.provenance.authorLogin}
               {selectedTimestamp ? ` · ${selectedTimestamp}` : ''}
-              {isResolvedArtifact(selected) ? ' · resolved thread' : ''}
+              {isResolvedArtifact(selected) ? ' · 已解决的话题' : ''}
               {selected.kind === 'image' || selected.kind === 'gif'
-                ? ' · click the image to annotate a point'
+                ? ' · 点击图片以标注一个点'
                 : selected.kind === 'video'
-                  ? ' · pause, then comment at the current time'
-                  : ' · select text to annotate'}
+                  ? ' · 暂停后在当前时间评论'
+                  : ' · 选择文本以添加批注'}
             </footer>
           </>
         )}

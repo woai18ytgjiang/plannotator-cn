@@ -281,7 +281,7 @@ export function resolveReviewTarget(
     directories.push(resolved);
   }
   if (directories.length + (parsed.prUrl ? 1 : 0) > 1) {
-    throw new Error("Review accepts only one directory or PR/MR URL. Quote paths containing spaces.");
+    throw new Error("审查只接受一个目录或一个 PR/MR URL。包含空格的路径请加引号。");
   }
   if (directories.length > 0 && parsed.patchFile !== undefined) {
     throw new Error("--patch-file cannot be combined with a review directory");

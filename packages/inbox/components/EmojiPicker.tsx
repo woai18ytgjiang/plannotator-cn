@@ -197,8 +197,8 @@ function PickerBody({ onPick, phone, says, idle, onClose }: { onPick: (row: Emoj
           aria-controls="ib-emo-list"
           aria-activedescendant={activeId}
           aria-autocomplete="list"
-          aria-label="Search emoji"
-          placeholder="Search emoji"
+          aria-label="搜索表情"
+          placeholder="搜索表情"
           autoComplete="off"
           spellCheck={false}
           value={query}
@@ -208,7 +208,7 @@ function PickerBody({ onPick, phone, says, idle, onClose }: { onPick: (row: Emoj
         />
       </div>
       {!query && (
-        <div className="ib-emo-tabs" role="toolbar" aria-label="Emoji categories">
+        <div className="ib-emo-tabs" role="toolbar" aria-label="表情分类">
           {tabs.map((t) => (
             <button key={t.id} type="button" className="ib-emo-tab" aria-label={t.label} aria-current={current === t.id ? 'true' : undefined} onClick={() => jump(t.id)} data-emo-tab={t.id}>
               {t.glyph ? <span aria-hidden="true">{t.glyph}</span> : <Icon name="clock" size={14} />}
@@ -216,7 +216,7 @@ function PickerBody({ onPick, phone, says, idle, onClose }: { onPick: (row: Emoj
           ))}
         </div>
       )}
-      <div className="ib-emo-body" ref={body} onScroll={onScroll} id="ib-emo-list" role="listbox" aria-label="Emoji">
+      <div className="ib-emo-body" ref={body} onScroll={onScroll} id="ib-emo-list" role="listbox" aria-label="表情">
         {sections.map((s) => (
           <div key={s.id} role="group" aria-label={s.label || 'Results'} data-emo-sec={s.id}>
             {s.label && (
@@ -263,12 +263,12 @@ function PickerBody({ onPick, phone, says, idle, onClose }: { onPick: (row: Emoj
           </>
         ) : (
           <span className="ib-emo-say ib-emo-hint">
-            <b>Any emoji</b>
+            <b>任意表情</b>
             <span>{idle}</span>
           </span>
         )}
         {phone && (
-          <button type="button" className="ib-emo-close" aria-label="Close" onClick={onClose}>
+          <button type="button" className="ib-emo-close" aria-label="关闭" onClick={onClose}>
             <Icon name="x" size={16} />
           </button>
         )}

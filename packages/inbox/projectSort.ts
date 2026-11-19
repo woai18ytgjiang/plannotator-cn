@@ -22,11 +22,11 @@ export type ProjectSort = 'added' | 'name' | 'recent';
 export type ChosenProjectSort = Exclude<ProjectSort, 'added'>;
 
 const SORTS: Readonly<Record<ProjectSort, { icon: IconName; now: string; next: ChosenProjectSort }>> = {
-  added: { icon: 'sortList', now: 'Sorted by when added', next: 'name' },
-  name: { icon: 'sortAZ', now: 'Sorted A to Z', next: 'recent' },
-  recent: { icon: 'sortRecent', now: 'Sorted by most recent', next: 'name' },
+  added: { icon: 'sortList', now: '按添加时间排序', next: 'name' },
+  name: { icon: 'sortAZ', now: '按 A–Z 排序', next: 'recent' },
+  recent: { icon: 'sortRecent', now: '按最近活动排序', next: 'name' },
 };
-const PRESS: Readonly<Record<ChosenProjectSort, string>> = { name: 'Sort A to Z', recent: 'Sort by most recent' };
+const PRESS: Readonly<Record<ChosenProjectSort, string>> = { name: '按 A–Z 排序', recent: '按最近活动排序' };
 
 /** The toggle: its icon (the order on screen), its name and tooltip (that order, then what a press does), the next order and what a press says. */
 export function projectSortControl(sort: ProjectSort): { icon: IconName; label: string; next: ChosenProjectSort; said: string } {

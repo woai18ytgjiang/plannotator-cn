@@ -8,7 +8,7 @@
  *
  * While it follows the message its words are muted and a small "auto"
  * follows them; a screen reader hears the same through aria-describedby.
- * Nothing to suggest yet: an empty dashed chip saying "Name this thread".
+ * Nothing to suggest yet: an empty dashed chip saying "为此话题命名".
  * `error` (the name is taken, or not a valid name) is said beside it, and
  * `action` (the name is another open thread's: send there instead) is a
  * button after those words, outside them so it is read once, with the
@@ -36,7 +36,7 @@ export function capThreadName(value: string): string {
   return points.length > INBOX_THREAD_NAME_MAX ? points.slice(0, INBOX_THREAD_NAME_MAX).join('') : value;
 }
 
-export const THREAD_NAME_PLACEHOLDER = 'Name this thread';
+export const THREAD_NAME_PLACEHOLDER = '为此话题命名';
 
 /** Columns of monospace text: CJK, Hangul and emoji take two. */
 function widthOf(text: string): number {
@@ -63,9 +63,9 @@ export function pasteOverflows(current: string, pasted: string): boolean {
   );
 }
 
-export const THREAD_NAME_OVERFLOW_NOTE = 'Too long for a name, so it went into your message.';
+export const THREAD_NAME_OVERFLOW_NOTE = '作为名称太长，已放入你的消息中。';
 /** A paste of 32 KB or more into the chip goes to the message as a pasted text tile (approval "inbox-paste-attachment"). */
-export const THREAD_NAME_ATTACHED_NOTE = 'Too long for a name, so it was attached to your message.';
+export const THREAD_NAME_ATTACHED_NOTE = '作为名称太长，已附加到你的消息中。';
 
 export function ThreadNameChip(props: {
   state: ThreadNameState;
@@ -114,7 +114,7 @@ export function ThreadNameChip(props: {
           ref={inputRef}
           type="text"
           className="ib-cp-tname-in"
-          aria-label="Thread name"
+          aria-label="话题名称"
           aria-describedby={[error ? errorId : null, hintId, note ? noteId : null].filter(Boolean).join(' ')}
           aria-invalid={error && !action ? true : undefined}
           placeholder={THREAD_NAME_PLACEHOLDER}
@@ -154,7 +154,7 @@ export function ThreadNameChip(props: {
         )}
       </span>
       <span id={hintId} className="ib-sr">
-        {state.edited ? 'Your name for the thread.' : (hint ?? 'Named from your message until you type here.')}
+        {state.edited ? '你为此话题起的名称。' : (hint ?? '在你在此输入之前，名称取自你的消息。')}
       </span>
       {note && !error && (
         <span className="ib-cp-tname-note" id={noteId} role="status" data-compose-thread-name-note="">

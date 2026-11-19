@@ -61,13 +61,13 @@ export const liveCount = (m: ToMachine): number => m.groups.reduce((n, g) => n +
 export const toStartKey = (machine: string | null, agent: string, project: string): string => `start:${machine ?? HERE}:${agent}:${project}`;
 
 /** "Atlas asleep since 9:10 AM" and the "N more" list's "asleep since 9:10 AM". */
-export const asleepSince = (m: Pick<ToMachine, 'since'>): string => (m.since ? `asleep since ${whenTime(m.since)}` : 'asleep');
+export const asleepSince = (m: Pick<ToMachine, 'since'>): string => (m.since ? `自 ${whenTime(m.since)} 起休眠` : '休眠中');
 
 /** What the "N more" list says under a machine's name. */
 export function machineSub(m: ToMachine): string {
   if (m.asleep) return asleepSince(m);
   const n = liveCount(m);
-  return n ? `${n} running` : 'Nothing running';
+  return n ? `${n} 个运行中` : '没有运行中的会话';
 }
 
 /** Every agent kind any machine can start, first seen first: a machine without one shows it as "Not on <machine>". */
@@ -160,11 +160,11 @@ export function toItems(input: {
       if (rows.length === 0 && starts.length === 0) continue;
       if (many) out.push({ type: 'head', key: `head:${m.key}`, machine: m });
       if (rows.length) {
-        if (parts) out.push({ type: 'cap', key: `cap:run:${m.key}`, words: 'Running' });
+        if (parts) out.push({ type: 'cap', key: `cap:run:${m.key}`, words: '运行中' });
         for (const row of rows) out.push({ type: 'session', key: row.target.session, row, machine: m });
       }
       if (starts.length) {
-        out.push({ type: 'cap', key: `cap:start:${m.key}`, words: 'Start new' });
+        out.push({ type: 'cap', key: `cap:start:${m.key}`, words: '新建' });
         out.push(...starts);
       }
     }
@@ -177,15 +177,15 @@ export function toItems(input: {
   if (!parts) return rows.map((row) => ({ type: 'session' as const, key: row.target.session, row, machine: m }));
   const out: ToItem[] = [];
   if (m.asleep) out.push({ type: 'cap', key: `cap:asleep:${m.key}`, words: `${m.name} ${asleepSince(m)}` });
-  else if (rows.length === 0) out.push({ type: 'cap', key: `cap:none:${m.key}`, words: 'Nothing running' });
+  else if (rows.length === 0) out.push({ type: 'cap', key: `cap:none:${m.key}`, words: '没有运行中的会话' });
   if (rows.length) {
-    out.push({ type: 'cap', key: `cap:run:${m.key}`, words: 'Running' });
+    out.push({ type: 'cap', key: `cap:run:${m.key}`, words: '运行中' });
     const open = expanded.has(m.key);
     for (const row of open ? rows : rows.slice(0, RUNNING_SHOWN)) out.push({ type: 'session', key: row.target.session, row, machine: m });
     if (!open && rows.length > RUNNING_SHOWN) out.push({ type: 'more', key: `more:${m.key}`, machine: m, count: rows.length - RUNNING_SHOWN });
   }
   if (startsThere(m)) {
-    out.push({ type: 'cap', key: `cap:start:${m.key}`, words: 'Start new' });
+    out.push({ type: 'cap', key: `cap:start:${m.key}`, words: '新建' });
     if (m.notice) out.push({ type: 'notice', key: `notice:${m.key}`, words: m.notice });
     else out.push(...startRows(m, kinds, current));
   }

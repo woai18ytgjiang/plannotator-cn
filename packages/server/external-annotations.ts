@@ -167,7 +167,7 @@ export function createExternalAnnotationHandler(
             { status: 201 },
           );
         } catch {
-          return Response.json({ error: "Invalid JSON" }, { status: 400 });
+          return Response.json({ error: "JSON 无效" }, { status: 400 });
         }
       }
 
@@ -175,13 +175,13 @@ export function createExternalAnnotationHandler(
       if (url.pathname === BASE && req.method === "PATCH") {
         const id = url.searchParams.get("id");
         if (!id) {
-          return Response.json({ error: "Missing ?id parameter" }, { status: 400 });
+          return Response.json({ error: "缺少 ?id 参数" }, { status: 400 });
         }
         let body: unknown;
         try {
           body = await req.json();
         } catch {
-          return Response.json({ error: "Invalid JSON" }, { status: 400 });
+          return Response.json({ error: "JSON 无效" }, { status: 400 });
         }
         // Field-level validation with the same validators POST applies:
         // unknown keys are dropped and a malformed structured value is a 400,
@@ -201,7 +201,7 @@ export function createExternalAnnotationHandler(
         }
         const updated = store.update(id, patch.fields as Partial<StorableAnnotation>);
         if (!updated) {
-          return Response.json({ error: "Not found" }, { status: 404 });
+          return Response.json({ error: "未找到" }, { status: 404 });
         }
         return Response.json({ annotation: updated });
       }

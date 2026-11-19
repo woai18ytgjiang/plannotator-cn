@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 /**
  * Pure state→spec mapping for the unified header decision control.
  *
@@ -173,10 +174,10 @@ export interface DecisionPlatformInput {
   selfRequestChangesBlocked?: boolean;
 }
 
-export const DECISION_NOTE_PLACEHOLDER = 'Add a note...';
+export const DECISION_NOTE_PLACEHOLDER = '添加备注…';
 
-function annotationNoun(count: number): string {
-  return count === 1 ? 'annotation' : 'annotations';
+function annotationNoun(): string {
+  return '条批注';
 }
 
 /**
@@ -195,13 +196,13 @@ function buildEmptySpec(input: DecisionSpecInput, approvalFlow: boolean): Decisi
   const positive: DecisionMenuItem | null = approvalFlow && input.approvalNotesSupported
     ? {
         id: 'note-with-approval',
-        label: 'Approve with a note…',
-        subtitle: 'Approve and send a short note with it',
+        label: '附言批准…',
+        subtitle: '批准，并附上一条简短备注',
         tone: 'success',
         icon: 'check',
         composer: {
-          title: 'Approve with a note',
-          actionLabel: 'Approve and send note',
+          title: '附言批准',
+          actionLabel: '批准并发送备注',
           tone: 'success',
           icon: 'check',
           placeholder: DECISION_NOTE_PLACEHOLDER,
@@ -213,14 +214,14 @@ function buildEmptySpec(input: DecisionSpecInput, approvalFlow: boolean): Decisi
     ? {
         id: 'request-changes',
         // Frozen copy (maintainer-approved): 'Request changes…'.
-        label: 'Request changes…',
-        subtitle: 'Write overall feedback, sent as a change request',
+        label: '请求修改…',
+        subtitle: '填写整体反馈，作为修改请求发送',
         tone: 'primary',
         icon: 'send',
         dividerBefore: positive !== null,
         composer: {
-          title: 'Request changes',
-          actionLabel: 'Send as feedback',
+          title: '请求修改',
+          actionLabel: '作为反馈发送',
           tone: 'primary',
           icon: 'send',
           placeholder: DECISION_NOTE_PLACEHOLDER,
@@ -231,14 +232,14 @@ function buildEmptySpec(input: DecisionSpecInput, approvalFlow: boolean): Decisi
         // Same id and route as the old change request (plain /api/feedback,
         // no approval framing) — only the copy is new. Free prose, NOT frozen.
         id: 'request-changes',
-        label: 'Send a note…',
-        subtitle: 'Write a note and send it as feedback',
+        label: '发送备注…',
+        subtitle: '写一条备注并作为反馈发送',
         tone: 'primary',
         icon: 'send',
         dividerBefore: false,
         composer: {
-          title: 'Send a note',
-          actionLabel: 'Send as feedback',
+          title: '发送备注',
+          actionLabel: '作为反馈发送',
           tone: 'primary',
           icon: 'send',
           placeholder: DECISION_NOTE_PLACEHOLDER,
@@ -250,22 +251,22 @@ function buildEmptySpec(input: DecisionSpecInput, approvalFlow: boolean): Decisi
       ? {
           id: 'primary',
           // Frozen copy (maintainer-approved): 'Approve'.
-          label: 'Approve',
-          title: 'Approve: no changes requested',
+          label: '批准',
+          title: '批准：未请求任何修改',
           tone: 'success',
           icon: 'check',
         }
       : {
           id: 'primary',
           // Frozen copy (maintainer-approved): 'Done'.
-          label: 'Done',
+          label: '完成',
           // M1 ruling: in the agent-terminal delivered state the transport is
           // unchanged (the full payload still posts, because the outer agent
           // on stdout may never have seen the terminal delivery), so the
           // tooltip must not claim "no feedback". Free prose, NOT frozen.
           title: input.feedbackDelivered
-            ? 'Finish: sends the session record (feedback already shared in the terminal)'
-            : 'Finish: records that you reviewed with no feedback',
+            ? '完成：发送会话记录（反馈已在终端中分享）'
+            : '完成：记录你已完成审查，且没有反馈',
           // Maintainer ruling (post-demo): Done without a gate is a positive
           // finish, NOT an approval — no success tone, no check icon, so it
           // can never be mistaken for the gate/review Approve.
@@ -281,21 +282,21 @@ function buildEmptySpec(input: DecisionSpecInput, approvalFlow: boolean): Decisi
  */
 function buildFeedbackSpec(input: DecisionSpecInput, approvalFlow: boolean): DecisionSpec {
   const { count } = input;
-  const noun = annotationNoun(count);
+  const noun = annotationNoun();
 
   const items: DecisionMenuItem[] = [
     {
       id: 'note-with-feedback',
-      label: 'Send with a note…',
+      label: '附言发送…',
       subtitle:
         count > 0
-          ? `Add an overall note on top of your ${count} ${noun}`
-          : 'Add an overall note on top of your feedback',
+          ? `在你的 ${count} ${noun}之上添加整体备注`
+          : '在你的反馈之上添加整体备注',
       tone: 'primary',
       icon: 'send',
       composer: {
-        title: 'Send with a note',
-        actionLabel: 'Send feedback with note',
+        title: '附言发送',
+        actionLabel: '带备注发送反馈',
         tone: 'primary',
         icon: 'send',
         placeholder: DECISION_NOTE_PLACEHOLDER,
@@ -315,11 +316,11 @@ function buildFeedbackSpec(input: DecisionSpecInput, approvalFlow: boolean): Dec
     items.push({
       id: 'approve-with-notes',
       // Frozen copy (maintainer-approved): 'Approve with notes'.
-      label: 'Approve with notes',
+      label: '批准并附带批注',
       subtitle:
         count > 0
-          ? `Approve; your ${count} ${noun} ride along as non-blocking guidance`
-          : 'Approve; your edits and attachments ride along as non-blocking guidance',
+          ? `批准；你的 ${count} ${noun}将作为非阻塞指引一并发送`
+          : '批准；你的编辑和附件将作为非阻塞指引一并发送',
       tone: 'success',
       icon: 'check',
       dividerBefore: dividerPending,
@@ -334,9 +335,9 @@ function buildFeedbackSpec(input: DecisionSpecInput, approvalFlow: boolean): Dec
     items.push({
       id: 'discard-and-finish',
       label: approvalFlow
-        ? `Approve, discard ${count} ${noun}…`
-        : `Done, discard ${count} ${noun}…`,
-      subtitle: 'Asks to confirm: the annotations are not sent',
+        ? `批准，丢弃 ${count} ${noun}…`
+        : `完成，丢弃 ${count} ${noun}…`,
+      subtitle: '会请求确认：批注不会发送',
       tone: 'destructive',
       icon: 'check',
       dividerBefore: dividerPending,
@@ -345,18 +346,18 @@ function buildFeedbackSpec(input: DecisionSpecInput, approvalFlow: boolean): Dec
       // Free prose, NOT frozen.
       confirm: approvalFlow
         ? {
-            title: `Discard ${count} ${noun} and approve?`,
+            title: `丢弃 ${count} ${noun}并批准？`,
             message:
-              'These annotations are change requests, including any from other tools. Approving without them tells the agent no changes are needed.',
+              '这些批注是修改请求，包括来自其他工具的批注。不带它们批准，等于告诉智能体无需修改。',
             // Frozen copy (maintainer-approved): 'Discard & approve'.
-            confirmText: 'Discard & approve',
+            confirmText: '丢弃并批准',
           }
         : {
-            title: `Discard ${count} ${noun} and finish?`,
+            title: `丢弃 ${count} ${noun}并完成？`,
             message:
-              'These annotations are change requests, including any from other tools. Finishing without them sends a positive review record; any direct edits still ride along.',
+              '这些批注是修改请求，包括来自其他工具的批注。不带它们完成，会发送一份正面审查记录；直接编辑仍会一并发送。',
             // Frozen copy (maintainer-approved): 'Discard & finish'.
-            confirmText: 'Discard & finish',
+            confirmText: '丢弃并完成',
           },
     });
   }
@@ -365,10 +366,10 @@ function buildFeedbackSpec(input: DecisionSpecInput, approvalFlow: boolean): Dec
     primary: {
       id: 'primary',
       // Frozen copy (maintainer-approved): 'Send Feedback'.
-      label: 'Send Feedback',
-      shortLabel: 'Send',
-      mobileLabel: 'Send feedback',
-      title: 'Send your feedback to the agent',
+      label: '发送反馈',
+      shortLabel: '发送',
+      mobileLabel: '发送反馈',
+      title: '把你的反馈发送给智能体',
       tone: 'primary',
       icon: 'send',
     },
@@ -385,25 +386,25 @@ function buildFeedbackSpec(input: DecisionSpecInput, approvalFlow: boolean): Dec
  */
 function buildPlatformSpec(input: DecisionSpecInput, platform: DecisionPlatformInput): DecisionSpec {
   const { selfAuthored } = platform;
-  const noun = platform.mrLabel === 'MR' ? 'merge request' : 'pull request';
+  const noun = platform.mrLabel === 'MR' ? 'MR' : 'PR';
   // Frozen copy (maintainer-approved): the self-approval mute reason.
-  const selfReason = `You can't approve your own ${noun} on ${platform.label}.`;
-  const selfReasonShort = `You can't approve your own ${platform.mrLabel}`;
+  const selfReason = `你无法在 ${platform.label} 上批准自己的 ${noun}。`;
+  const selfReasonShort = `你无法批准自己的 ${platform.mrLabel}`;
   const requestChangesUnsupported = platform.requestChangesSupported === false;
   // GitHub refuses REQUEST_CHANGES on your own PR, exactly like APPROVE.
   const requestChangesMuted = selfAuthored
     && platform.requestChangesSupported === true
     && platform.selfRequestChangesBlocked !== false;
-  const selfRequestChangesShort = `You can't request changes on your own ${platform.mrLabel}`;
-  const postsAsComment = `Posts as a comment; ${platform.label} has no request-changes review`;
+  const selfRequestChangesShort = `你无法对自己创建的 ${platform.mrLabel} 请求修改`;
+  const postsAsComment = `将作为评论发布；${platform.label} 没有「请求修改」审查`;
 
   if (!input.hasFeedback) {
     return {
       primary: {
         id: 'primary',
         // Frozen copy (maintainer-approved): 'Approve'.
-        label: 'Approve',
-        title: selfAuthored ? selfReason : 'Approve: no changes needed',
+        label: '批准',
+        title: selfAuthored ? selfReason : '批准：无需修改',
         tone: 'success',
         icon: 'check',
         ...(selfAuthored ? { muted: true } : {}),
@@ -413,10 +414,10 @@ function buildPlatformSpec(input: DecisionSpecInput, platform: DecisionPlatformI
           id: 'note-with-approval',
           // Approved design (PR6 detail confirmed): the empty-state platform
           // menu is "Approve with a comment…" + "Request changes…".
-          label: 'Approve with a comment…',
+          label: '附评论批准…',
           subtitle: selfAuthored
             ? selfReasonShort
-            : 'Opens the submission dialog; the comment rides the review body',
+            : '打开提交对话框；评论会随审查正文一起发布',
           tone: 'success',
           icon: 'check',
           ...(selfAuthored ? { muted: true } : {}),
@@ -424,12 +425,12 @@ function buildPlatformSpec(input: DecisionSpecInput, platform: DecisionPlatformI
         {
           id: 'request-changes',
           // Frozen copy (maintainer-approved): 'Request changes…'.
-          label: 'Request changes…',
+          label: '请求修改…',
           subtitle: requestChangesMuted
             ? selfRequestChangesShort
             : requestChangesUnsupported
               ? postsAsComment
-              : 'Overall feedback, zero line comments, via the dialog',
+              : '通过对话框提交整体反馈，不含行内评论',
           tone: 'primary',
           icon: 'send',
           dividerBefore: true,
@@ -440,8 +441,8 @@ function buildPlatformSpec(input: DecisionSpecInput, platform: DecisionPlatformI
         ...(requestChangesMuted
           ? [{
               id: 'note-with-feedback' as const,
-              label: 'Comment…',
-              subtitle: 'Overall feedback as a neutral comment, via the dialog',
+              label: '评论…',
+              subtitle: '通过对话框将整体反馈作为中立评论提交',
               tone: 'primary' as const,
               icon: 'send' as const,
             }]
@@ -454,30 +455,30 @@ function buildPlatformSpec(input: DecisionSpecInput, platform: DecisionPlatformI
     primary: {
       id: 'primary',
       // Frozen copy (maintainer-approved): 'Post Comments'.
-      label: 'Post Comments',
-      shortLabel: 'Post',
-      mobileLabel: 'Post comments',
-      title: `Post review to ${platform.label}`,
+      label: '发布评论',
+      shortLabel: '发布',
+      mobileLabel: '发布评论',
+      title: `将审查发布到 ${platform.label}`,
       tone: 'primary',
       icon: 'send',
     },
     items: [
       {
         id: 'approve-with-notes',
-        label: 'Approve with comments…',
-        subtitle: selfAuthored ? selfReasonShort : 'Submission dialog in approve mode',
+        label: '附评论批准…',
+        subtitle: selfAuthored ? selfReasonShort : '以批准模式打开提交对话框',
         tone: 'success',
         icon: 'check',
         ...(selfAuthored ? { muted: true } : {}),
       },
       {
         id: 'note-with-feedback',
-        label: 'Post comments, then…',
+        label: '发布评论，然后…',
         subtitle: requestChangesUnsupported
           ? postsAsComment
           : requestChangesMuted
-            ? `Posts as a neutral comment; you can't request changes on your own ${platform.mrLabel}`
-            : 'Request changes or stay neutral, chosen in the dialog',
+            ? `将作为中立评论发布；你无法对自己创建的 ${platform.mrLabel} 请求修改`
+            : '在对话框中选择「请求修改」或保持中立',
         tone: 'primary',
         icon: 'send',
         dividerBefore: true,
@@ -487,7 +488,7 @@ function buildPlatformSpec(input: DecisionSpecInput, platform: DecisionPlatformI
 }
 
 /** Frozen label (owner-approved mock): the plan primary when only answers are ready. */
-const SEND_ANSWERS = 'Send answers';
+const SEND_ANSWERS = '发送回答';
 /** The longest agent name the Approve primary carries before it is cut. */
 const APPROVE_TARGET_MAX = 24;
 
@@ -508,14 +509,14 @@ function planFeedbackPhrase(count: number, plan: DecisionPlanInput): { text: str
   const answers = Math.min(Math.max(plan.answers, 0), Math.max(count, 0));
   const others = Math.max(count, 0) - answers;
   const parts = [
-    answers > 0 ? `${answers} answer${answers === 1 ? '' : 's'}` : '',
-    others > 0 ? `${others} ${annotationNoun(others)}` : '',
-    plan.directEdits ? 'direct edits' : '',
+    answers > 0 ? `${answers} 个回答` : '',
+    others > 0 ? `${others} ${annotationNoun()}` : '',
+    plan.directEdits ? '直接编辑' : '',
   ].filter(Boolean);
-  if (parts.length === 0) return { text: 'feedback', plural: false };
+  if (parts.length === 0) return { text: '反馈', plural: false };
   const text = parts.length === 1
     ? parts[0]
-    : `${parts.slice(0, -1).join(', ')} and ${parts[parts.length - 1]}`;
+    : `${parts.slice(0, -1).join('、')}和${parts[parts.length - 1]}`;
   return { text, plural: parts.length > 1 || answers + others > 1 || plan.directEdits };
 }
 
@@ -534,7 +535,7 @@ function buildPlanSpec(input: DecisionSpecInput): DecisionSpec {
     answers: 0,
     directEdits: false,
     answersOnly: false,
-    agentName: 'The agent',
+    agentName: '智能体',
   };
   const target = approveTargetSuffix(plan.approveTarget);
 
@@ -547,17 +548,17 @@ function buildPlanSpec(input: DecisionSpecInput): DecisionSpec {
   }
 
   const { text: what, plural } = planFeedbackPhrase(input.count, plan);
-  const sendLabel = plan.answersOnly ? SEND_ANSWERS : 'Send Feedback';
+  const sendLabel = plan.answersOnly ? SEND_ANSWERS : '发送反馈';
   const items: DecisionMenuItem[] = [
     {
       id: 'note-with-feedback',
-      label: plan.answersOnly ? 'Send answers with a note…' : 'Send with a note…',
-      subtitle: `Add an overall note on top of your ${what}`,
+      label: plan.answersOnly ? '附言发送回答…' : '附言发送…',
+      subtitle: `在你的${what}之上添加整体备注`,
       tone: 'primary',
       icon: 'send',
       composer: {
-        title: 'Send with a note',
-        actionLabel: plan.answersOnly ? 'Send answers with note' : 'Send feedback with note',
+        title: '附言发送',
+        actionLabel: plan.answersOnly ? '带备注发送回答' : '带备注发送反馈',
         tone: 'primary',
         icon: 'send',
         placeholder: DECISION_NOTE_PLACEHOLDER,
@@ -569,50 +570,50 @@ function buildPlanSpec(input: DecisionSpecInput): DecisionSpec {
     items.push({
       id: 'approve-with-notes',
       // Frozen copy (maintainer-approved): 'Approve with notes'.
-      label: `Approve with notes${target}`,
-      subtitle: `Approve; your ${what} ${plural ? 'ride' : 'rides'} along as non-blocking guidance`,
+      label: `批准并附带批注${target}`,
+      subtitle: `批准；你的${what}将作为非阻塞指引一并发送`,
       tone: 'success',
       icon: 'check',
       dividerBefore: true,
     });
   }
 
-  const pronoun = plural ? 'them' : 'it';
+  const pronoun = plural ? '它们' : '它';
   if (plan.savedFilesOnly) {
     // Nothing is lost on approval: the changes stay on disk. Same confirm
     // (one click away from a plain Approve would hide that the agent is not
     // told), different words.
     items.push({
       id: 'discard-and-finish',
-      label: 'Approve without telling the agent…',
-      subtitle: "Already on disk; the agent isn't told. Asks to confirm",
+      label: '批准但不告知智能体…',
+      subtitle: '已保存到磁盘；不会告知智能体。会请求确认',
       tone: 'destructive',
       icon: 'check',
       dividerBefore: !input.approvalNotesSupported,
       confirm: {
-        title: 'Approve without telling the agent?',
+        title: '批准但不告知智能体？',
         message: plan.savedFilesOnly,
         // Frozen copy (maintainer-approved): 'Discard & approve' is the
         // discard confirm's; this one discards nothing.
-        confirmText: 'Approve',
+        confirmText: '批准',
       },
     });
   } else items.push({
     id: 'discard-and-finish',
-    label: `Approve, discard ${what}…`,
+    label: `批准，丢弃${what}…`,
     subtitle: input.approvalNotesSupported
-      ? 'Asks to confirm: nothing is sent'
-      : `${plan.agentName} can't take notes on approval; asks to confirm`,
+      ? '会请求确认：不会发送任何内容'
+      : `${plan.agentName}在批准时不接收备注；会请求确认`,
     tone: 'destructive',
     icon: 'check',
     dividerBefore: !input.approvalNotesSupported,
     confirm: {
-      title: `Discard ${what} and approve?`,
+      title: `丢弃${what}并批准？`,
       message: input.approvalNotesSupported
-        ? `Approving without ${pronoun} tells the agent no changes are needed.`
-        : `${plan.agentName} doesn't take feedback on approval, so your ${what} would be lost. To send ${pronoun}, use ${sendLabel}.`,
+        ? `不带${pronoun}批准，等于告诉智能体无需修改。`
+        : `${plan.agentName}在批准时不接收反馈，你的${what}将会丢失。如需发送${pronoun}，请使用「${sendLabel}」。`,
       // Frozen copy (maintainer-approved): 'Discard & approve'.
-      confirmText: 'Discard & approve',
+      confirmText: '丢弃并批准',
     },
   });
 
@@ -623,17 +624,17 @@ function buildPlanSpec(input: DecisionSpecInput): DecisionSpec {
           // Frozen copy (owner-approved mock): 'Send answers'.
           label: SEND_ANSWERS,
           mobileLabel: SEND_ANSWERS,
-          title: 'Send your answers to the agent',
+          title: '把你的回答发送给智能体',
           tone: 'primary',
           icon: 'send',
         }
       : {
           id: 'primary',
           // Frozen copy (maintainer-approved): 'Send Feedback'.
-          label: 'Send Feedback',
-          shortLabel: 'Send',
-          mobileLabel: 'Send feedback',
-          title: 'Send your feedback to the agent',
+          label: '发送反馈',
+          shortLabel: '发送',
+          mobileLabel: '发送反馈',
+          title: '把你的反馈发送给智能体',
           tone: 'primary',
           icon: 'send',
         },

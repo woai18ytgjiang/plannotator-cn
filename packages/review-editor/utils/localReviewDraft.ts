@@ -31,7 +31,7 @@ export function localReviewDraftTransport(target: string, clientId: string): Dra
       // Generation conflicts also use 409; those are not a target switch.
       if (conflict?.code === 'draft_target_changed') throw new DraftTargetChangedError();
     }
-    if (!response.ok) throw new Error('Could not persist review draft; the review target may have changed.');
+    if (!response.ok) throw new Error('无法保存审查草稿；审查目标可能已变更。');
     return response;
   };
   return {

@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 // The scene player: plays a scene the agent drew (`@plannotator/core/shape-scene`).
 // The drawing is the agent's own SVG in the slot, above this player; this
 // player adds the caption, the code line, a colour key and the controls under
@@ -333,7 +334,7 @@ export default function ScenePlayer({ scene, reduce = false, at, fitView = true,
         </div>
       )}
       {scene.code && (
-        <div className="ssc-code" ref={codeRef} role="region" aria-label="Code" tabIndex={0}>
+        <div className="ssc-code" ref={codeRef} role="region" aria-label="代码" tabIndex={0}>
           <ol>
             {scene.code.lines.map((l, i) => (
               <li key={i} aria-current={beat.line === i + 1 ? 'step' : undefined}>
@@ -346,7 +347,7 @@ export default function ScenePlayer({ scene, reduce = false, at, fitView = true,
       {missing.length > 0 && <p className="ssc-warn">Not in the drawing: {missing.map((m) => `data-part="${m}"`).join(', ')}</p>}
       <div className="ssc-bar">
         {/* At an end the button stays focusable (aria-disabled), so a keyboard user's focus is not dropped to the page. */}
-        <button type="button" className="icon" onClick={() => !atStart && back()} aria-disabled={atStart} aria-label="Back one beat">
+        <button type="button" className="icon" onClick={() => !atStart && back()} aria-disabled={atStart} aria-label="上一个节拍">
           <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M3 2v10M11.5 2.6v8.8a.5.5 0 0 1-.8.4L5 7.4a.5.5 0 0 1 0-.8l5.7-4.4a.5.5 0 0 1 .8.4Z" fill="currentColor" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
         </button>
         <button type="button" className="icon play" onClick={() => play(!playing)} aria-label={playing ? 'Pause' : 'Play'}>
@@ -356,17 +357,17 @@ export default function ScenePlayer({ scene, reduce = false, at, fitView = true,
             <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M4 2.2v9.6a.6.6 0 0 0 .9.5l7.6-4.8a.6.6 0 0 0 0-1L4.9 1.7a.6.6 0 0 0-.9.5Z" fill="currentColor" /></svg>
           )}
         </button>
-        <button type="button" className="icon" onClick={() => !atEnd && toBeat(nextIdx, true)} aria-disabled={atEnd} aria-label="Next beat">
+        <button type="button" className="icon" onClick={() => !atEnd && toBeat(nextIdx, true)} aria-disabled={atEnd} aria-label="下一个节拍">
           <svg viewBox="0 0 14 14" aria-hidden="true"><path d="M11 2v10M2.5 2.6v8.8a.5.5 0 0 0 .8.4L9 7.4a.5.5 0 0 0 0-.8L3.3 2.2a.5.5 0 0 0-.8.4Z" fill="currentColor" stroke="currentColor" strokeWidth="1.4" strokeLinecap="round" /></svg>
         </button>
         <span className="ticks">
-          <input type="range" min={0} max={scene.end} step="any" value={t} aria-label="Time" aria-valuetext={words(bi)} onChange={(e) => scrub(Number(e.target.value))} onKeyDown={reduce ? beatKeys : undefined} />
+          <input type="range" min={0} max={scene.end} step="any" value={t} aria-label="时间" aria-valuetext={words(bi)} onChange={(e) => scrub(Number(e.target.value))} onKeyDown={reduce ? beatKeys : undefined} />
           {beats.map((b, i) => (
             <span key={i} style={{ left: `${(b.at / scene.end) * 100}%` }} />
           ))}
         </span>
         <span className="n" aria-hidden="true">{beatCount(scene, t)}</span>
-        <span className="seg" role="group" aria-label="Speed">
+        <span className="seg" role="group" aria-label="速度">
           {SPEEDS.map((s) => (
             <button key={s} type="button" aria-pressed={speed === s} onClick={() => setSpeed(s)} aria-label={`${s === 0.5 ? 'Half' : s === 1 ? 'Normal' : 'Double'} speed`}>
               {s === 0.5 ? '½×' : `${s}×`}

@@ -119,7 +119,7 @@ export function FilePeek(props: {
           data-peek-step-prev=""
         >
           <Icon name="chevL" size={18} />
-          <span>Previous</span>
+          <span>上一个</span>
         </button>
         <span className="ib-peekstep-n" aria-hidden="true">
           {stepping.index + 1} of {stepping.steps.length}
@@ -132,7 +132,7 @@ export function FilePeek(props: {
           onClick={() => onStep(1)}
           data-peek-step-next=""
         >
-          <span>Next</span>
+          <span>下一个</span>
           <Icon name="chevR" size={18} />
         </button>
       </div>
@@ -142,7 +142,7 @@ export function FilePeek(props: {
       id={props.id}
       rows={rows}
       current={steps[index]?.attachment.id ?? null}
-      label="Files in this thread"
+      label="此话题中的文件"
       variant={phone ? 'sheet' : 'popover'}
       onClose={props.onClose}
       onPick={(key) => {
@@ -230,7 +230,7 @@ export function AttachmentStepper(props: AttachmentStepperProps) {
   );
 
   return (
-    <nav className="ib-stepper" aria-label="Files in this thread" data-attachment-stepper="">
+    <nav className="ib-stepper" aria-label="此话题中的文件" data-attachment-stepper="">
       <span className="ib-stepbox">
         <StepTip text={prev ? `Previous: ${prev.attachment.name}` : 'This is the first file'} action="previous">
           <button type="button" className="ib-stepbtn" aria-label={prevLabel} aria-disabled={prev ? undefined : 'true'} onClick={() => props.onStep(-1, 'button')} data-step-prev="">

@@ -137,7 +137,7 @@ const SuggestionPreview: React.FC<{ code: string; originalCode?: string; languag
         <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
           <path strokeLinecap="round" strokeLinejoin="round" d="M4 6h16M4 12h16m-7 6h7" />
         </svg>
-        Suggestion
+        建议
         {diffStats && (
           <span className="ml-auto text-xs font-mono">
             <span style={{ color: 'var(--success)' }}>+{diffStats.added}</span>
@@ -216,10 +216,10 @@ const GeneralCommentComposer: React.FC<{
         onClick={() => onOpenChange(!open)}
         aria-expanded={open}
         aria-haspopup="dialog"
-        title="Add global comment"
+        title="添加全局评论"
         className="inline-flex items-center whitespace-nowrap rounded px-1.5 py-0.5 text-xs font-medium text-muted-foreground transition-colors hover:bg-muted hover:text-foreground"
       >
-        + Global comment
+        + 全局评论
       </button>
       {open && (
         <div
@@ -233,12 +233,12 @@ const GeneralCommentComposer: React.FC<{
             onTextChange={onTextChange}
             onSubmit={submit}
             onCancel={() => onOpenChange(false)}
-            placeholder="Add a global comment..."
+            placeholder="添加全局评论…"
             enterSubmits={enterSavesComment}
           />
           <div className="mt-2 flex items-center justify-end gap-2">
-            <Button size="xs" data-general-comment-add onClick={submit} title="Add the comment to this review">
-              Add comment
+            <Button size="xs" data-general-comment-add onClick={submit} title="将评论添加到本次审查">
+              添加评论
             </Button>
           </div>
         </div>
@@ -432,11 +432,11 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
           leading={
             isGeneralScope && annotation.callFlowTargets?.length ? (
               <span className="text-xs font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary">
-                flow · {annotation.callFlowTargets.length} {annotation.callFlowTargets.length === 1 ? 'step' : 'steps'}
+                flow · {annotation.callFlowTargets.length} {annotation.callFlowTargets.length === 1 ? '步' : '步'}
               </span>
             ) : isGeneralScope ? (
               <span className="text-xs font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary">
-                global
+                全局
               </span>
             ) : isFileScope ? (
               <span className="inline-flex items-center gap-1.5">
@@ -445,14 +445,14 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                   <span
                     data-annotation-markdown-preview=""
                     className="text-xs font-semibold px-1.5 py-0.5 rounded bg-primary/10 text-primary"
-                    title="Made in the rendered Markdown (Changes or Read)"
+                    title="在渲染后的 Markdown 中添加（更改或阅读视图）"
                   >
-                    rendered
+                    已渲染
                   </span>
                 )}
                 {annotation.callFlowTargets?.length ? (
                   <span className="text-xs text-primary/80">
-                    flow · {annotation.callFlowTargets.length} {annotation.callFlowTargets.length === 1 ? 'step' : 'steps'}
+                    flow · {annotation.callFlowTargets.length} {annotation.callFlowTargets.length === 1 ? '步' : '步'}
                   </span>
                 ) : null}
               </span>
@@ -460,7 +460,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
               <span className="text-xs font-mono text-muted-foreground">
                 {annotation.callFlowTargets?.length ? (
                   <span className="mr-1 text-primary/80">
-                    flow · {annotation.callFlowTargets.length} {annotation.callFlowTargets.length === 1 ? 'step' : 'steps'} ·
+                    flow · {annotation.callFlowTargets.length} {annotation.callFlowTargets.length === 1 ? '步' : '步'} ·
                   </span>
                 ) : null}
                 {annotation.lineStart === annotation.lineEnd
@@ -473,18 +473,18 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                   <span
                     data-annotation-outdated="true"
                     className="ml-1.5 font-sans text-xs px-1.5 py-0.5 rounded font-medium bg-muted text-muted-foreground"
-                    title="The code changed after this comment was written; its line numbers refer to an earlier version"
+                    title="此评论写入后代码已变更，其行号指向较早的版本"
                   >
-                    Outdated
+                    已过时
                   </span>
                 )}
                 {annotation.outsideDiff && (
                   <span
                     data-annotation-outside-diff="true"
                     className="ml-1.5 font-sans text-xs px-1.5 py-0.5 rounded font-medium whitespace-nowrap bg-warning/15 text-warning"
-                    title="To the agent: sent with the file, lines and code. On a PR: goes in the review's main comment with the code quoted and a link, since the platform cannot post a comment outside the diff."
+                    title="发给智能体：随文件、行号和代码一起发送。在 PR 上：由于平台无法在差异之外发表评论，会附上代码引用和链接放在审查的主评论中。"
                   >
-                    not in the diff
+                    不在差异中
                   </span>
                 )}
               </span>
@@ -506,7 +506,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
           <div className="mt-1" onClick={(e) => e.stopPropagation()}>
             <textarea
               autoFocus
-              aria-label="Edit comment"
+              aria-label="编辑评论"
               value={editingOutdated.draft}
               onChange={(e) => setEditingOutdated({ id: annotation.id, draft: e.target.value })}
               onKeyDown={(e) => {
@@ -517,10 +517,10 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
             />
             <div className="mt-1 flex items-center justify-end gap-2">
               <button className="text-xs px-2 py-1 rounded text-muted-foreground hover:text-foreground hover:bg-muted" onClick={() => setEditingOutdated(null)}>
-                Cancel
+                取消
               </button>
               <button className="text-xs px-2 py-1 rounded bg-primary/15 text-primary hover:bg-primary/25" onClick={saveOutdatedEdit}>
-                Save
+                保存
               </button>
             </div>
           </div>
@@ -608,7 +608,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
     id: annotation.id,
     label: annotation.artifact
       ? `${annotation.artifact.artifactKind} · ${artifactAnchorLabel(annotation.artifact.anchor)}`
-      : 'PR description',
+      : 'PR 描述',
     quote: annotation.artifact ? artifactAnnotationQuote(annotation.artifact) : annotation.originalText,
     quoteClamp: 'line-clamp-1',
     note: annotation.text,
@@ -624,7 +624,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
     id: annotation.id,
     label: annotation.artifact
       ? `${annotation.artifact.artifactKind} · ${artifactAnchorLabel(annotation.artifact.anchor)}`
-      : 'PR comment',
+      : 'PR 评论',
     quote: annotation.artifact ? artifactAnnotationQuote(annotation.artifact) : annotation.commentBody,
     note: annotation.text,
     author: annotation.commentAuthor,
@@ -638,7 +638,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
     <aside
       data-pn-review-transient-overlay={presentation === 'overlay' || undefined}
       role={presentation === 'overlay' ? 'dialog' : undefined}
-      aria-label={presentation === 'overlay' ? 'Review sidebar' : undefined}
+      aria-label={presentation === 'overlay' ? '审查侧边栏' : undefined}
       className={presentation === 'overlay'
         ? 'absolute inset-0 z-40 flex min-w-0 flex-col bg-background'
         : 'border-l border-border bg-card/30 flex flex-col flex-shrink-0 min-w-0 overflow-hidden'
@@ -655,9 +655,9 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
               active={activeTab}
               onSelect={(tab) => onSelectTab?.(tab)}
               tabs={[
-                { id: 'annotations', label: 'Comments', count: totalCount },
+                { id: 'annotations', label: '评论', count: totalCount },
                 ...(aiAvailable ? [{ id: 'ai' as const, label: 'AI', attention: aiMessages.length > 0 }] : []),
-                ...(agentCapabilities?.available ? [{ id: 'agents' as const, label: 'Agents', count: agentJobs?.length ?? 0, attention: (agentJobs ?? []).some((job) => job.status === 'running' || job.status === 'starting') }] : []),
+                ...(agentCapabilities?.available ? [{ id: 'agents' as const, label: '智能体', count: agentJobs?.length ?? 0, attention: (agentJobs ?? []).some((job) => job.status === 'running' || job.status === 'starting') }] : []),
                 ...extraTabs.map(({ id, label, title, count, attention }) => ({ id, label, title, count, attention })),
               ]}
             />
@@ -669,7 +669,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                 type="button"
                 onClick={onClose}
                 className="ml-auto inline-flex shrink-0 items-center justify-center rounded-md text-muted-foreground hover:bg-muted hover:text-foreground"
-                aria-label="Close review sidebar"
+                aria-label="关闭审查侧边栏"
               >
                 <svg className="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.25}>
                   <path strokeLinecap="round" strokeLinejoin="round" d="M6 18L18 6M6 6l12 12" />
@@ -687,7 +687,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
               {totalCount === 0 ? (
                 <PanelEmptyState>
                   <p>
-                    {presentation === 'overlay' ? 'No comments yet. Tap a line to comment on it.' : 'No comments yet. Click a line, or drag across lines, to comment on them.'}
+                    {presentation === 'overlay' ? '还没有评论。点按一行即可评论。' : '还没有评论。点击一行，或跨行拖动，即可评论。'}
                   </p>
                   {onAddGeneralComment && (
                     <div className="mt-2">
@@ -712,7 +712,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                           anchored composer popover is never painted under a
                           later section's header. */}
                       <div className="sticky top-0 z-[25] bg-background/95 backdrop-blur-sm px-2 py-1 flex items-center justify-between gap-2">
-                        <span className="flex-none whitespace-nowrap text-xs font-medium text-muted-foreground">Global comments</span>
+                        <span className="flex-none whitespace-nowrap text-xs font-medium text-muted-foreground">全局评论</span>
                         {onAddGeneralComment && (
                           <GeneralCommentComposer
                             onAdd={onAddGeneralComment}
@@ -736,7 +736,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                   {isMultiPR && prGroups ? (
                     Array.from(prGroups.entries()).map(([prUrl, fileMap]) => {
                       const sample = fileMap.values().next().value?.[0];
-                      const prLabel = prUrl === '_none' ? 'Local Changes' :
+                      const prLabel = prUrl === '_none' ? '本地更改' :
                         `${sample?.prRepo ? `${sample.prRepo}` : ''}#${sample?.prNumber ?? '?'} ${sample?.prTitle ?? ''}`;
                       return (
                         <div key={prUrl}>
@@ -779,7 +779,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                   {annotations.length > 0 && (
                     <div className="flex items-center gap-2 pt-2 pb-1">
                       <div className="flex-1 border-t border-border/30" />
-                      <span className="text-xs font-semibold text-muted-foreground/60">Editor</span>
+                      <span className="text-xs font-semibold text-muted-foreground/60">编辑器</span>
                       <div className="flex-1 border-t border-border/30" />
                     </div>
                   )}
@@ -800,7 +800,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                   {(annotations.length > 0 || (editorAnnotations?.length ?? 0) > 0) && (
                     <div className="flex items-center gap-2 pt-2 pb-1">
                       <div className="flex-1 border-t border-border/30" />
-                      <span className="text-xs font-semibold text-muted-foreground/60">PR description</span>
+                      <span className="text-xs font-semibold text-muted-foreground/60">PR 描述</span>
                       <div className="flex-1 border-t border-border/30" />
                     </div>
                   )}
@@ -816,7 +816,7 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                   {(annotations.length > 0 || (editorAnnotations?.length ?? 0) > 0 || (descriptionAnnotations?.length ?? 0) > 0) && (
                     <div className="flex items-center gap-2 pt-2 pb-1">
                       <div className="flex-1 border-t border-border/30" />
-                      <span className="text-xs font-semibold text-muted-foreground/60">PR comments</span>
+                      <span className="text-xs font-semibold text-muted-foreground/60">PR 评论</span>
                       <div className="flex-1 border-t border-border/30" />
                     </div>
                   )}
@@ -887,14 +887,14 @@ export const ReviewSidebar: React.FC<ReviewSidebarProps> = /* React.memo */({
                   <svg className="w-3.5 h-3.5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                   </svg>
-                  Copied
+                  已复制
                 </>
               ) : (
                 <>
                   <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
                   </svg>
-                  Copy Feedback
+                  复制反馈
                 </>
               )}
             </button>

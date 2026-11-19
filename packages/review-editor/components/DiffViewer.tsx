@@ -323,7 +323,7 @@ interface DiffViewerProps {
 const MarkdownPreviewPending: React.FC = () => (
   <div className="min-h-full px-4 py-4 sm:px-6" data-markdown-preview="" data-markdown-preview-view="pending">
     <div role="status" data-markdown-preview-state="loading" className="mx-auto max-w-3xl rounded-md border border-border/60 bg-muted/20 p-4 text-sm text-muted-foreground">
-      Loading the full Markdown file…
+      正在加载完整的 Markdown 文件…
     </div>
   </div>
 );

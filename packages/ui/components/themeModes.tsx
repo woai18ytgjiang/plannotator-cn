@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import type { FC } from 'react';
 import { MoonIcon, SunIcon, SystemIcon, type IconProps } from './icons/themeIcons';
 
@@ -9,9 +10,9 @@ interface ThemeMode {
 
 /** The shared catalog rendered by every Light/Dark/System picker. */
 export const THEME_MODES = [
-  { id: 'light', label: 'Light', Icon: SunIcon },
-  { id: 'dark', label: 'Dark', Icon: MoonIcon },
-  { id: 'system', label: 'System', Icon: SystemIcon },
+  { id: 'light', label: '浅色', Icon: SunIcon },
+  { id: 'dark', label: '深色', Icon: MoonIcon },
+  { id: 'system', label: '跟随系统', Icon: SystemIcon },
 ] as const satisfies readonly ThemeMode[];
 
 /** A persisted theme-mode preference. */

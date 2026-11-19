@@ -187,7 +187,7 @@ export async function setPlanPin(id: string, pinned: boolean, index: number | nu
     emit({ pins: answer.pins });
   } catch (error) {
     emit({ pins: before });
-    plansWriteFailed(error, !pinned ? 'The space was not unpinned.' : before.includes(id) ? 'The space was not moved.' : 'The space was not pinned.');
+    plansWriteFailed(error, !pinned ? '未能取消置顶该 Space。' : before.includes(id) ? '未能移动该 Space。' : '未能置顶该 Space。');
   } finally {
     pinWrites--;
   }

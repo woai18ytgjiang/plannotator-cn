@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import React, { useMemo, useCallback } from 'react';
 import { basenameFromPath } from '@plannotator/core/source-save';
 import type { Block, Annotation } from '../types';
@@ -126,14 +127,14 @@ export function TableOfContents({
       // managing my own container styling" (e.g. SidebarContainer wrapping
       // us in an OverlayScrollArea), which should NOT trigger the default.
       className={className ?? 'bg-card/50 backdrop-blur-sm border-r border-border overflow-y-auto'}
-      aria-label="Table of contents"
+      aria-label="目录"
       style={style}
     >
       <div className="p-1.5">
         {linkedDocFilepath && (
           <div className="mb-2 px-0.5 pb-1.5 border-b border-border/50">
             <div className="flex items-center justify-between">
-              <span className="text-[10px] font-medium text-primary/80">Viewing</span>
+              <span className="text-[10px] font-medium text-primary/80">正在查看</span>
               {onLinkedDocBack && (
                 <button
                   onClick={onLinkedDocBack}
@@ -142,7 +143,7 @@ export function TableOfContents({
                   <svg className="w-2.5 h-2.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2.5}>
                     <path strokeLinecap="round" strokeLinejoin="round" d="M10.5 19.5L3 12m0 0l7.5-7.5M3 12h18" />
                   </svg>
-                  Back to {backLabel || 'plan'}
+                  返回 {backLabel || '计划'}
                 </button>
               )}
             </div>

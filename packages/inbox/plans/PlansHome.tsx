@@ -11,9 +11,9 @@ import type { SpacesScopeProject } from './spacesModel';
 
 export function PlansHome({ showStart, scope = { kind: 'home' }, projects = [] }: { showStart: boolean; scope?: SpacesScope; projects?: readonly SpacesScopeProject[] }) {
   const snap = usePlansPage();
-  if (snap.off) return <PlansMessage title="Spaces is off" body="Its plans stay on this computer." onBack={() => writeRoute({ page: 'inbox', project: null, thread: null })} backLabel="Inbox" />;
+  if (snap.off) return <PlansMessage title="Spaces 已关闭" body="Its plans stay on this computer." onBack={() => writeRoute({ page: 'inbox', project: null, thread: null })} backLabel="Inbox" />;
   if (!snap.plans) {
-    if (snap.error) return <PlansMessage title="Spaces could not be read" body={snap.error} onRetry={() => void readPlans()} />;
+    if (snap.error) return <PlansMessage title="无法读取 Spaces" body={snap.error} onRetry={() => void readPlans()} />;
     return <PlansMessage busy title="Spaces" body="Loading plans…" />;
   }
   if (snap.plans.length === 0 || showStart) {

@@ -361,7 +361,7 @@ export async function listJjCommitHistory(
   if (result.exitCode !== 0) {
     // jj < 0.33 has no first_ancestors(); anything else is a real failure.
     if (/Function `?first_ancestors`? doesn't exist/.test(result.stderr)) {
-      throw new Error("The Commits view needs Jujutsu 0.33 or newer.");
+      throw new Error("提交视图需要 Jujutsu 0.33 或更高版本。");
     }
     return before ? emptyPage : null;
   }

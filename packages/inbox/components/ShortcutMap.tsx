@@ -57,17 +57,17 @@ export function ShortcutMap({ onClose, onSettings }: { onClose: () => void; onSe
         }}
       >
         <div className="ib-dlg-head ib-map-head">
-          <h2 id="ib-map-title">Keyboard shortcuts</h2>
-          <button type="button" className="ib-map-x" aria-label="Close" onClick={onClose} data-map-close="">
+          <h2 id="ib-map-title">键盘快捷键</h2>
+          <button type="button" className="ib-map-x" aria-label="关闭" onClick={onClose} data-map-close="">
             <Icon name="x" size={16} />
           </button>
         </div>
         <p className="ib-sub" id="ib-map-sub">
           {touchPhone
-            ? 'On this device only ? and the keys with ⌘, Ctrl, Esc, Enter and the arrows work. Esc closes this.'
+            ? '在此设备上，只有 ? 以及带 ⌘、Ctrl、Esc、Enter 和方向键的按键有效。Esc 可关闭此窗口。'
             : prefs.singleKeys
-              ? 'Single keys work when you are not typing. Esc closes this.'
-              : 'Single-key shortcuts are off: only the keys with ⌘, Ctrl, Esc, Enter and the arrows work. Esc closes this.'}
+              ? '当你不输入文字时，单键快捷键有效。Esc 可关闭此窗口。'
+              : '单键快捷键已关闭：只有带 ⌘、Ctrl、Esc、Enter 和方向键的按键有效。Esc 可关闭此窗口。'}
         </p>
         <div className="ib-map-cols">
           {columns.map((groups, c) => (
@@ -86,7 +86,7 @@ export function ShortcutMap({ onClose, onSettings }: { onClose: () => void; onSe
                           <dd>
                             {bindings.map((binding, i) => (
                               <span key={binding} className="ib-mapkeys">
-                                {i > 0 && joined && <span className="ib-mapor">or</span>}
+                                {i > 0 && joined && <span className="ib-mapor">或</span>}
                                 <MapKeys binding={binding} />
                               </span>
                             ))}
@@ -104,10 +104,10 @@ export function ShortcutMap({ onClose, onSettings }: { onClose: () => void; onSe
         <div className="ib-map-foot">
           <label className="ib-map-hints">
             <button type="button" role="switch" className="ib-sw" aria-checked={prefs.hints} aria-labelledby="ib-map-hints-l" onClick={() => setKeyHints(!prefs.hints)} data-map-hints="" />
-            <span id="ib-map-hints-l">Show keys on buttons</span>
+            <span id="ib-map-hints-l">在按钮上显示按键</span>
           </label>
           <button type="button" className="ib-lnk ib-map-set" onClick={onSettings} data-map-settings="">
-            {prefs.singleKeys ? 'Turn single keys off in Settings → General' : 'Turn single keys on in Settings → General'}
+            {prefs.singleKeys ? '在 设置 → 通用 中关闭单键快捷键' : '在 设置 → 通用 中开启单键快捷键'}
           </button>
         </div>
         )}

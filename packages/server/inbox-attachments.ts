@@ -127,7 +127,7 @@ async function inboxPagePictureResponse(path: string, req: Request): Promise<Res
   const read = INBOX_PAGE_PICTURE_RE.test(path) ? await readInboxPictureAsync(path, inboxRefusesAssetPath) : null;
   if (!read?.ok) {
     // A refused picture reads as missing: the page learns nothing about the file.
-    return Response.json({ error: "Not found" }, { status: 404, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
+    return Response.json({ error: "未找到" }, { status: 404, headers: { "Cache-Control": "no-store", "X-Content-Type-Options": "nosniff" } });
   }
   return new Response(req.method === "HEAD" ? null : new Uint8Array(read.bytes), { headers: htmlAssetHeaders(read.contentType) });
 }

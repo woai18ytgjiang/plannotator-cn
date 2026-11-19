@@ -78,7 +78,7 @@ const MENU_ITEM =
   "flex w-full items-center gap-2 h-7 px-2 rounded-md text-[13px] text-foreground outline-none cursor-default select-none data-[highlighted]:bg-muted data-[disabled]:opacity-40 data-[disabled]:cursor-not-allowed";
 
 export function copyDiffLabel(status: PanelControlsProps["copyRawDiffStatus"]): string {
-  return status === "success" ? "Copied all diffs" : status === "error" ? "Could not copy all diffs" : "Copy all diffs";
+  return status === "success" ? "已复制所有差异" : status === "error" ? "无法复制所有差异" : "复制所有差异";
 }
 
 /** A one-click icon tool with its name as a tooltip. `pressed` makes it a
@@ -185,8 +185,8 @@ function ListOptionsMenu({
   );
   return (
     <Menu.Root>
-      <Tooltip content="List options" side="bottom">
-        <Menu.Trigger className={`${TOOL} data-[popup-open]:bg-[var(--sidebar-fill-strong)] data-[popup-open]:text-foreground`} aria-label="List options">
+      <Tooltip content="列表选项" side="bottom">
+        <Menu.Trigger className={`${TOOL} data-[popup-open]:bg-[var(--sidebar-fill-strong)] data-[popup-open]:text-foreground`} aria-label="列表选项">
           <Ellipsis className="w-4 h-4" aria-hidden="true" />
         </Menu.Trigger>
       </Tooltip>
@@ -203,7 +203,7 @@ function ListOptionsMenu({
                 ) : (
                   <ChevronsUpDown className="w-3.5 h-3.5 text-muted-foreground" aria-hidden="true" />
                 )}
-                {areAllFoldersExpanded ? "Collapse all folders" : "Expand all folders"}
+                {areAllFoldersExpanded ? "折叠所有文件夹" : "展开所有文件夹"}
               </Menu.Item>
             )}
             {onToggleAllFolders && onCopyRawDiff && <Menu.Separator className="my-1 h-px bg-border/70" />}
@@ -228,19 +228,19 @@ function ListOptionsMenu({
                 closeOnClick={false}
                 data-review-auto-viewed-toggle=""
               >
-                Auto-mark viewed
+                自动标记为已查看
                 {check(autoViewed)}
               </Menu.CheckboxItem>
             )}
             {onSelectGroupBy && groupBy && (
               <Menu.Group>
                 <Menu.Separator className="my-1 h-px bg-border/70" />
-                <Menu.GroupLabel className="px-2 pt-1 pb-0.5 text-[12px] font-medium text-muted-foreground">Group files</Menu.GroupLabel>
+                <Menu.GroupLabel className="px-2 pt-1 pb-0.5 text-[12px] font-medium text-muted-foreground">分组文件</Menu.GroupLabel>
                 <Menu.RadioGroup value={groupBy} onValueChange={(value) => onSelectGroupBy(value as "none" | "kind" | "status")}>
                   {([
-                    ["none", "No groups"],
-                    ["kind", "By kind"],
-                    ...(statusGroupingAvailable ? [["status", "By git status"]] : []),
+                    ["none", "不分组"],
+                    ["kind", "按类型"],
+                    ...(statusGroupingAvailable ? [["status", "按 Git 状态"]] : []),
                   ] as [string, string][]).map(([value, label]) => (
                     <Menu.RadioItem key={value} value={value} className={MENU_ITEM} closeOnClick={false} data-review-group-by={value}>
                       {label}
@@ -258,14 +258,14 @@ function ListOptionsMenu({
                 closeOnClick={false}
                 data-review-group-by-kind-toggle=""
               >
-                Group by kind
+                按类型分组
                 {check(groupByKind)}
               </Menu.CheckboxItem>
             )}
             {perFile && (
               <Menu.Group>
                 {(onCopyRawDiff || settings) && <Menu.Separator className="my-1 h-px bg-border/70" />}
-                <Menu.GroupLabel className="px-2 pt-1 pb-0.5 text-xs font-medium text-muted-foreground">On each file</Menu.GroupLabel>
+                <Menu.GroupLabel className="px-2 pt-1 pb-0.5 text-xs font-medium text-muted-foreground">对每个文件</Menu.GroupLabel>
                 <Menu.CheckboxItem
                   className={MENU_ITEM}
                   checked={showViewedControls}
@@ -278,7 +278,7 @@ function ListOptionsMenu({
                   closeOnClick={false}
                   data-review-viewed-controls-toggle=""
                 >
-                  Viewed button
+                  「已查看」按钮
                   {check(showViewedControls)}
                 </Menu.CheckboxItem>
                 <Menu.CheckboxItem
@@ -288,7 +288,7 @@ function ListOptionsMenu({
                   closeOnClick={false}
                   data-review-stage-controls-toggle=""
                 >
-                  Git add button
+                  「git add」按钮
                   {check(showStageControls)}
                 </Menu.CheckboxItem>
               </Menu.Group>
@@ -321,13 +321,13 @@ export function PanelControlsRow(props: PanelControlsProps) {
         className="flex flex-wrap items-center min-h-7 gap-y-1"
         data-panel-controls-row=""
       >
-        {scope ?? <span className="px-2 text-[13px] font-medium text-muted-foreground">Files</span>}
+        {scope ?? <span className="px-2 text-[13px] font-medium text-muted-foreground">文件</span>}
         <div className="ml-auto flex flex-shrink-0 items-center" data-panel-tools="">
           {onToggleFilesCollapsed && (
             <button
               type="button"
               onClick={onToggleFilesCollapsed}
-              aria-label={filesCollapsed ? "Expand all files" : "Collapse all files"}
+              aria-label={filesCollapsed ? "展开所有文件" : "折叠所有文件"}
               data-tree-collapse-all-files={filesCollapsed ? "collapsed" : "open"}
               className={TOOL}
             >
@@ -335,14 +335,14 @@ export function PanelControlsRow(props: PanelControlsProps) {
             </button>
           )}
           {showViewedControls && onToggleHideViewed && (
-            <ToolButton label="Hide viewed files" onClick={onToggleHideViewed} pressed={hideViewedFiles}>
+            <ToolButton label="隐藏已查看的文件" onClick={onToggleHideViewed} pressed={hideViewedFiles}>
               {hideViewedFiles ? <EyeOff className="w-3.5 h-3.5" aria-hidden="true" /> : <Eye className="w-3.5 h-3.5" aria-hidden="true" />}
             </ToolButton>
           )}
           {onOpenSearch && (
             <ToolButton
-              label="Search in diff"
-              tooltip={searchToggles && isSearchVisible ? "Close search in diff" : "Search in diff (Cmd/Ctrl+F)"}
+              label="在差异中搜索"
+              tooltip={searchToggles && isSearchVisible ? "关闭差异搜索" : "在差异中搜索（Cmd/Ctrl+F）"}
               onClick={searchToggles && isSearchVisible ? onCloseSearch! : onOpenSearch}
               pressed={searchToggles ? isSearchVisible : undefined}
             >
@@ -352,7 +352,7 @@ export function PanelControlsRow(props: PanelControlsProps) {
           <ListOptionsMenu {...props} />
         </div>
         <span className="sr-only" aria-live="polite">
-          {copyRawDiffStatus === "success" ? "All diffs copied" : copyRawDiffStatus === "error" ? "Copy failed" : ""}
+          {copyRawDiffStatus === "success" ? "所有差异已复制" : copyRawDiffStatus === "error" ? "复制失败" : ""}
         </span>
       </div>
       {notice}
@@ -380,7 +380,7 @@ export function PanelSearchField({
   onClose?: () => void;
 }) {
   const hasQuery = !!query.trim();
-  const actionLabel = hasQuery ? "Clear search" : "Close search";
+  const actionLabel = hasQuery ? "清除搜索" : "关闭搜索";
 
   return (
     <div
@@ -409,8 +409,8 @@ export function PanelSearchField({
           value={query}
           onChange={(event) => onChange(event.target.value)}
           onKeyDown={onKeyDown}
-          placeholder="Search diff..."
-          aria-label="Search diff"
+          placeholder="搜索差异…"
+          aria-label="搜索差异"
           autoComplete="off"
           spellCheck={false}
           className="w-full rounded bg-muted py-1.5 pl-7 pr-7 text-xs text-foreground placeholder:text-muted-foreground/50 focus:outline-none focus:ring-1 focus:ring-primary/50"

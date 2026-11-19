@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { generateId } from '../utils/generateId';
 import React, { useRef, useState, useEffect, useLayoutEffect, useMemo, forwardRef, useImperativeHandle, useCallback, lazy, Suspense } from 'react';
 import { createPortal } from 'react-dom';
@@ -1767,11 +1768,11 @@ export const Viewer = forwardRef<ViewerHandle, ViewerProps>(({
         <button
           onClick={messagePickerInfo.onOpen}
           className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted rounded-md transition-colors"
-          title="Pick a different message to annotate"
+          title="选择其他消息进行批注"
         >
           <MessagesIcon />
           {actionsLabelMode === 'full' && (
-            <span>Message {messagePickerInfo.current} of {messagePickerInfo.total}</span>
+            <span>消息 {messagePickerInfo.current} / {messagePickerInfo.total}</span>
           )}
           {actionsLabelMode === 'short' && (
             <span>{messagePickerInfo.current}/{messagePickerInfo.total}</span>
@@ -1802,35 +1803,35 @@ export const Viewer = forwardRef<ViewerHandle, ViewerProps>(({
             });
           }}
           className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted rounded-md transition-colors"
-          title="Add global comment"
+          title="添加全局评论"
         >
           <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
             <path strokeLinecap="round" strokeLinejoin="round" d="M12 21a9.004 9.004 0 008.716-6.747M12 21a9.004 9.004 0 01-8.716-6.747M12 21c2.485 0 4.5-4.03 4.5-9S14.485 3 12 3m0 18c-2.485 0-4.5-4.03-4.5-9S9.515 3 12 3m0 0a8.997 8.997 0 017.843 4.582M12 3a8.997 8.997 0 00-7.843 4.582m15.686 0A11.953 11.953 0 0112 10.5c-2.998 0-5.74-1.1-7.843-2.918m15.686 0A8.959 8.959 0 0121 12c0 .778-.099 1.533-.284 2.253m0 0A17.919 17.919 0 0112 16.5c-3.162 0-6.133-.815-8.716-2.247m0 0A9.015 9.015 0 013 12c0-1.605.42-3.113 1.157-4.418" />
           </svg>
-          {actionsLabelMode === 'full' && <span>Global comment</span>}
-          {actionsLabelMode === 'short' && <span>Comment</span>}
+          {actionsLabelMode === 'full' && <span>全局评论</span>}
+          {actionsLabelMode === 'short' && <span>评论</span>}
         </button>
       )}
 
       <button
         onClick={handleCopyPlan}
         className="flex items-center gap-1.5 px-2.5 py-1.5 text-xs font-medium text-muted-foreground hover:text-foreground bg-muted/50 hover:bg-muted rounded-md transition-colors"
-        title={copied ? 'Copied!' : copyLabel || (linkedDocInfo ? 'Copy file' : 'Copy plan')}
+        title={copied ? '已复制' : copyLabel || (linkedDocInfo ? '复制文件' : '复制计划')}
       >
         {copied ? (
           <>
             <svg className="w-3.5 h-3.5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
-            Copied!
+            已复制
           </>
         ) : (
           <>
             <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M8 16H6a2 2 0 01-2-2V6a2 2 0 012-2h8a2 2 0 012 2v2m-6 12h8a2 2 0 002-2v-8a2 2 0 00-2-2h-8a2 2 0 00-2 2v8a2 2 0 002 2z" />
             </svg>
-            {actionsLabelMode === 'full' && <span>{copyLabel || (linkedDocInfo ? 'Copy file' : 'Copy plan')}</span>}
-            {actionsLabelMode === 'short' && <span>Copy</span>}
+            {actionsLabelMode === 'full' && <span>{copyLabel || (linkedDocInfo ? '复制文件' : '复制计划')}</span>}
+            {actionsLabelMode === 'short' && <span>复制</span>}
           </>
         )}
       </button>
@@ -2426,7 +2427,7 @@ export const Viewer = forwardRef<ViewerHandle, ViewerProps>(({
               onAskAI={onAskAI}
               askAIContext={{
                 kind: 'selection',
-                label: 'Selected text',
+                label: '所选文本',
                 text: hookCommentPopover.selectedText ?? hookCommentPopover.contextText,
                 sourcePath: linkedDocInfo?.filepath ?? sourceInfo,
                 ...selectionSourceLines(
@@ -2457,7 +2458,7 @@ export const Viewer = forwardRef<ViewerHandle, ViewerProps>(({
             onAskAI={onAskAI}
             askAIContext={{
               kind: viewerCommentPopover.isGlobal ? 'general' : 'selection',
-              label: viewerCommentPopover.isGlobal ? 'Document' : 'Code block',
+              label: viewerCommentPopover.isGlobal ? '文档' : '代码块',
               text: viewerCommentPopover.selectedText,
               sourcePath: linkedDocInfo?.filepath ?? sourceInfo,
               ...(!viewerCommentPopover.isGlobal && viewerCommentPopover.codeBlock

@@ -255,7 +255,7 @@ export function reconcileEditableDocumentDiskSnapshot(
   record.missingOnDisk = undefined;
   record.diskConflict = { text: normalized, sourceSave: input.sourceSave };
   record.saveStatus = 'conflict';
-  record.error = 'The file changed on disk while you were editing.';
+  record.error = '编辑期间该文件在磁盘上发生了变化。';
   return { type: 'conflict', record };
 }
 
@@ -270,7 +270,7 @@ export function markEditableDocumentFileMissing(
   record.diskConflict = undefined;
   record.missingOnDisk = true;
   record.saveStatus = 'missing';
-  record.error = 'The file no longer exists on disk.';
+  record.error = '该文件已不在磁盘上。';
   return { type: 'file-missing', record, clearedSavedChange, alreadyMissing };
 }
 

@@ -346,7 +346,7 @@ function orderFilesBySections(files: DiffFile[], sections?: SinceBaseSections | 
 }
 
 /** Hint shown following the cursor while hovering a sidebar/panel resize handle. */
-const RESIZE_HANDLE_TOOLTIP = 'Click to close · Drag to resize';
+const RESIZE_HANDLE_TOOLTIP = '点击关闭 · 拖动调整大小';
 
 type ReviewHistoryAction =
   | {
@@ -416,7 +416,7 @@ function ReviewNavigatorContainer({
 }: ReviewNavigatorContainerProps) {
   if (isCompactTouchLayout) {
     return (
-      <CompactReviewOverlay title="Review navigation" context={context}>
+      <CompactReviewOverlay title="审查导航" context={context}>
         {children}
       </CompactReviewOverlay>
     );
@@ -905,7 +905,7 @@ const ReviewApp: React.FC = () => {
   const repoName = repoInfo ? repoLabel(repoInfo.display, hideRepoOwner) : null;
 
   useEffect(() => {
-    document.title = sessionTitle ?? (repoName ? `${repoName} · Code Review` : "Code Review");
+    document.title = sessionTitle ?? (repoName ? `${repoName} · 代码审查` : "代码审查");
   }, [repoName, sessionTitle]);
 
   const { prMetadata, prStackInfo, prStackTree, prDiffScope, prDiffScopeOptions, prPatchIncomplete, prPatchUpgradeAvailable, updatePRSession } = usePRSession();
@@ -1038,9 +1038,9 @@ const ReviewApp: React.FC = () => {
   // GitHub refuses request changes on your own PR, like approve. GitLab accepts it.
   const selfRequestChangesBlocked = prCapabilities?.selfRequestChangesBlocked !== false;
   const requestChangesUnavailableReason = !requestChangesSupported
-    ? `${platformLabel} has no request-changes review; this posts as a comment.`
+    ? `${platformLabel} 不支持请求修改式审查；本次将作为评论发布。`
     : isOwnPR && selfRequestChangesBlocked
-      ? `You can't request changes on your own ${mrLabel === 'MR' ? 'merge request' : 'pull request'} on ${platformLabel}.`
+      ? `你不能在 ${platformLabel} 上对自己创建的${mrLabel === 'MR' ? '合并请求' : '拉取请求'}请求修改。`
       : undefined;
   const appVersion = typeof __APP_VERSION__ !== 'undefined' ? __APP_VERSION__ : '0.0.0';
   // The server's update advert (the machine's once-a-day check): the Options
@@ -1068,7 +1068,7 @@ const ReviewApp: React.FC = () => {
         description,
         duration: autoUpdateNotice.kind === 'failed' ? 10000 : 6000,
         position: 'top-right',
-        action: { label: 'Release notes', onClick: () => window.open(autoUpdateNotice.releaseUrl, '_blank', 'noopener,noreferrer') },
+        action: { label: '发行说明', onClick: () => window.open(autoUpdateNotice.releaseUrl, '_blank', 'noopener,noreferrer') },
         // The failed notice names the update log's path: keep that line selectable
         // so it can be copied (every other toast is select-none, see <Toaster>).
         classNames: { toast: '!w-auto', description: autoUpdateNotice.kind === 'failed' ? '!text-foreground/70 select-text' : '!text-foreground/70' },
@@ -1437,7 +1437,7 @@ const ReviewApp: React.FC = () => {
     if (items.descriptionAnnotations.length > 0) setDescriptionAnnotations((prev) => [...prev, ...items.descriptionAnnotations]);
     if (items.commentAnnotations.length > 0) setCommentAnnotations((prev) => [...prev, ...items.commentAnnotations]);
     const count = merged.length + items.descriptionAnnotations.length + items.commentAnnotations.length;
-    toast.success(`Restored ${count} unsent comment${count === 1 ? '' : 's'} for this ${prMetadata ? mrLabel : 'review'}`);
+    toast.success(`已恢复 ${count} 条未发送的评论，用于本次${prMetadata ? mrLabel : '审查'}`);
   };
 
   const handleRestoreDraft = useCallback(() => {
@@ -1494,9 +1494,9 @@ const ReviewApp: React.FC = () => {
   const handleCopyAgentInstructions = useCallback(async () => {
     const payload = buildReviewAgentInstructions(window.location.origin);
     if (await copyTextToClipboard(payload)) {
-      toast.success('Agent instructions copied');
+      toast.success('已复制智能体指令');
     } else {
-      toast.error('Failed to copy');
+      toast.error('复制失败');
     }
   }, []);
 
@@ -1609,8 +1609,8 @@ const ReviewApp: React.FC = () => {
     // click during the dwell never resolves into a card behind the panel.
     closeTokenHover();
     if (!gitContext && !agentCwd) {
-      toast('Code navigation requires a local checkout', {
-        description: 'Re-run with --local for PR reviews',
+      toast('代码导航需要本地检出的仓库', {
+        description: '审查 PR 时请加 --local 重新运行',
         duration: 4000,
       });
       return;
@@ -2125,8 +2125,8 @@ const ReviewApp: React.FC = () => {
   }, [currentNavLocation, goToNavLocation, navHistory]);
 
   const needsCheckoutToast = useCallback(() => {
-    toast('Code navigation requires a local checkout', {
-      description: 'Re-run with --local for PR reviews',
+    toast('代码导航需要本地检出的仓库', {
+      description: '审查 PR 时请加 --local 重新运行',
       duration: 4000,
     });
   }, []);
@@ -2304,7 +2304,7 @@ const ReviewApp: React.FC = () => {
     const index = location?.path != null ? files.findIndex((file) => file.path === location.path) : -1;
     const next = index === -1 ? undefined : files[index + direction];
     if (!next) {
-      toast(direction === 1 ? 'No more changes' : 'No earlier changes', { duration: 1800 });
+      toast(direction === 1 ? '没有更多更改' : '没有更早的更改', { duration: 1800 });
       return;
     }
     openRepoFile(next.path, { pin: false });
@@ -2441,7 +2441,7 @@ const ReviewApp: React.FC = () => {
     api.addPanel({
       id: REVIEW_PR_OVERVIEW_PANEL_ID,
       component: REVIEW_PANEL_TYPES.PR_OVERVIEW,
-      title: 'PR Overview',
+      title: 'PR 概览',
     });
   }, [dockApi]);
 
@@ -2457,7 +2457,7 @@ const ReviewApp: React.FC = () => {
     api.addPanel({
       id: REVIEW_PR_ARTIFACTS_PANEL_ID,
       component: REVIEW_PANEL_TYPES.PR_ARTIFACTS,
-      title: `${getMRLabel(prMetadata)} Artifacts`,
+      title: `${getMRLabel(prMetadata)} 附件`,
     });
   }, [dockApi, prMetadata]);
 
@@ -2495,7 +2495,7 @@ const ReviewApp: React.FC = () => {
     dockApi.addPanel({
       id: REVIEW_ALL_FILES_PANEL_ID,
       component: REVIEW_PANEL_TYPES.ALL_FILES,
-      title: 'All changes',
+      title: '所有更改',
     });
   }, [dockApi]);
 
@@ -2514,7 +2514,7 @@ const ReviewApp: React.FC = () => {
     dockApi.addPanel({
       id: REVIEW_SEMANTIC_DIFF_PANEL_ID,
       component: REVIEW_PANEL_TYPES.SEMANTIC_DIFF,
-      title: 'Semantic diff',
+      title: '语义差异',
     });
   }, [dockApi, openAllFilesPanel, semanticDiffUsable]);
 
@@ -2548,7 +2548,7 @@ const ReviewApp: React.FC = () => {
     dockApi.addPanel({
       id: REVIEW_CALL_FLOW_PANEL_ID,
       component: REVIEW_PANEL_TYPES.CALL_FLOW,
-      title: 'Call flow',
+      title: '调用流程',
     });
   }, [callFlowEnabled, dockApi]);
 
@@ -2579,14 +2579,14 @@ const ReviewApp: React.FC = () => {
   // from superseding a concurrent toggle write.
   const refreshAnalysisAdverts = useCallback(async (): Promise<void> => {
     const response = await fetch('/api/review-analysis', { method: 'GET' });
-    if (!response.ok) throw new Error('Analysis capabilities could not be refreshed.');
+    if (!response.ok) throw new Error('无法刷新分析能力。');
     const data = await response.json() as {
       callFlow?: CallFlowAdvert;
       superseded?: boolean;
     };
-    if (data.superseded) throw new Error('The review changed while capabilities were refreshed.');
+    if (data.superseded) throw new Error('刷新分析能力时审查内容已变更。');
     if (data.callFlow?.state === 'unavailable' && data.callFlow.installable) {
-      throw new Error(data.callFlow.message ?? 'The Call flow install is not visible yet.');
+      throw new Error(data.callFlow.message ?? '暂未检测到调用流程功能的安装。');
     }
     applyCallFlowAdvert(data.callFlow);
     retryCallFlowAnalysis();
@@ -2651,7 +2651,7 @@ const ReviewApp: React.FC = () => {
       signal: controller.signal,
     })
       .then(async (response) => {
-        if (!response.ok) throw new Error('Analysis settings could not be applied.');
+        if (!response.ok) throw new Error('无法应用分析设置。');
         return response.json() as Promise<{
           callFlow?: CallFlowAdvert;
           superseded?: boolean;
@@ -2668,7 +2668,7 @@ const ReviewApp: React.FC = () => {
         if (configStore.get('callFlowEnabled') !== previous.callFlow) {
           configStore.set('callFlowEnabled', previous.callFlow);
         }
-        toast.error(error instanceof Error ? error.message : 'Analysis settings could not be applied.');
+        toast.error(error instanceof Error ? error.message : '无法应用分析设置。');
       });
     return () => controller.abort();
   }, [applyCallFlowAdvert, callFlowEnabled, isLoading]);
@@ -2959,7 +2959,7 @@ const ReviewApp: React.FC = () => {
           state: 'unsupported',
           provider: 'calldiff',
           reason: 'demo-mode',
-          message: 'Call flow requires a live Git review session.',
+          message: '调用流程需要实时的 Git 审查会话。',
         });
         setIsLoading(false);
       })
@@ -3131,7 +3131,7 @@ const ReviewApp: React.FC = () => {
         side: 'new' as const,
         // A fully-emptied file derives an empty suggestion; the export
         // template skips falsy suggestedCode, so describe it in text instead.
-        text: hunk.suggestedCode === '' ? 'Suggested change: remove these lines.' : undefined,
+        text: hunk.suggestedCode === '' ? '建议更改：删除这些行。' : undefined,
         suggestedCode: hunk.suggestedCode === '' ? undefined : hunk.suggestedCode,
         originalCode: hunk.originalCode === '' ? undefined : hunk.originalCode,
         createdAt: now,
@@ -3293,7 +3293,7 @@ const ReviewApp: React.FC = () => {
   const handleAskAIForMarkdownPreview = useCallback<CommentAskAIHandler>((question, context) => {
     askAI({
       prompt: question,
-      scope: { kind: 'selection', label: context.label ?? 'Markdown preview', text: context.text },
+      scope: { kind: 'selection', label: context.label ?? 'Markdown 预览', text: context.text },
     });
   }, [askAI]);
 
@@ -3786,7 +3786,7 @@ const ReviewApp: React.FC = () => {
         }),
       });
 
-      if (!res.ok) throw new Error('Failed to switch diff');
+      if (!res.ok) throw new Error('切换差异失败');
 
       const data = await res.json() as {
         rawPatch: string;
@@ -3959,7 +3959,7 @@ const ReviewApp: React.FC = () => {
       if (switchSeq !== diffSwitchSeqRef.current) return true;
       console.error('Failed to switch diff:', err);
       if (localDraftTarget) adoptDraftTarget(undefined);
-      setDiffError(err instanceof Error ? err.message : 'Failed to switch diff');
+      setDiffError(err instanceof Error ? err.message : '切换差异失败');
       return false;
     } finally {
       if (switchSeq === diffSwitchSeqRef.current) setIsLoadingDiff(false);
@@ -4384,7 +4384,7 @@ const ReviewApp: React.FC = () => {
   const handleAskAIForDescription = useCallback<CommentAskAIHandler>((question, context) => {
     askAI({
       prompt: question,
-      scope: { kind: 'selection', label: context.label ?? 'PR description', text: context.text },
+      scope: { kind: 'selection', label: context.label ?? 'PR 描述', text: context.text },
     });
   }, [askAI]);
 
@@ -4455,7 +4455,7 @@ const ReviewApp: React.FC = () => {
   const handleAskAIForComment = useCallback<CommentAskAIHandler>((question, context) => {
     askAI({
       prompt: question,
-      scope: { kind: 'selection', label: context.label ?? 'PR comment', text: context.text },
+      scope: { kind: 'selection', label: context.label ?? 'PR 评论', text: context.text },
     });
   }, [askAI]);
 
@@ -4580,9 +4580,9 @@ const ReviewApp: React.FC = () => {
   const prReviewScopeLabel = useMemo(() => {
     if (!prMetadata || !prStackInfo) return undefined;
     if (prDiffScope === 'full-stack') {
-      return `Diff vs \`${prMetadata.defaultBranch ?? 'default branch'}\``;
+      return `相对 \`${prMetadata.defaultBranch ?? '默认分支'}\` 的差异`;
     }
-    return `Diff vs \`${prMetadata.baseBranch}\``;
+    return `相对 \`${prMetadata.baseBranch}\` 的差异`;
   }, [prMetadata, prStackInfo, prDiffScope]);
 
   // Build ReviewState value for dock panel context
@@ -4869,12 +4869,12 @@ const ReviewApp: React.FC = () => {
     if (await copyTextToClipboard(feedbackMarkdown)) {
       setCopyFeedback('Feedback copied!');
       setTimeout(() => setCopyFeedback(null), 2000);
-      toast.success('Feedback copied');
+      toast.success('已复制反馈');
     } else {
       console.error('Failed to copy');
       setCopyFeedback('Failed to copy');
       setTimeout(() => setCopyFeedback(null), 2000);
-      toast.error('Failed to copy');
+      toast.error('复制失败');
     }
   }, [totalAnnotationCount, feedbackMarkdown]);
 
@@ -4940,7 +4940,7 @@ const ReviewApp: React.FC = () => {
       if (res.ok) {
         setSubmitted('exited');
       } else {
-        throw new Error('Failed to exit');
+        throw new Error('退出失败');
       }
     } catch (error) {
       console.error('Failed to exit review:', error);
@@ -5200,9 +5200,9 @@ const ReviewApp: React.FC = () => {
     setPlatformActionError(null);
 
     try {
-      if (!prMetadata) throw new Error('PR metadata unavailable');
+      if (!prMetadata) throw new Error('PR 元数据不可用');
       if (plan.targets.some(target => target.status === 'blocked')) {
-        throw new Error(`Automatic retry is blocked until the ${mrLabel} is inspected.`);
+        throw new Error(`在检查 ${mrLabel} 之前，自动重试已被阻止。`);
       }
 
       const bodyForTarget = (target: SubmissionTarget) => buildPlatformReviewBody(
@@ -5273,11 +5273,11 @@ const ReviewApp: React.FC = () => {
       const effectiveAgent = getEffectiveAgentName(agentSwitchSettings);
       const prLinks = openUrls.join(', ');
       const statusMessage = action === 'approve'
-        ? `${mrLabel === 'MR' ? 'Merge request' : 'Pull request'} approved on ${platformLabel}${prLinks ? ': ' + prLinks : ''}`
+        ? `${mrLabel === 'MR' ? '合并请求' : '拉取请求'}已在 ${platformLabel} 上获批${prLinks ? '：' + prLinks : ''}`
         // What went, not the button pressed: an older GitLab posts a request for changes as a comment.
         : action === 'request_changes' && attempt.postedAs !== 'comment'
-          ? `Changes requested on ${platformLabel}${prLinks ? ': ' + prLinks : ''}`
-          : `${mrLabel === 'MR' ? 'Merge request' : 'Pull request'} reviewed on ${platformLabel}${prLinks ? ': ' + prLinks : ''}`;
+          ? `已在 ${platformLabel} 上请求修改${prLinks ? '：' + prLinks : ''}`
+          : `${mrLabel === 'MR' ? '合并请求' : '拉取请求'}已在 ${platformLabel} 上完成审查${prLinks ? '：' + prLinks : ''}`;
       await flushReviewProgress();
       fetch('/api/feedback', {
         method: 'POST',
@@ -5302,7 +5302,7 @@ const ReviewApp: React.FC = () => {
       }).catch(() => {});
     } catch (err) {
       closePendingTab(pendingTab);
-      setPlatformActionError(err instanceof Error ? err.message : 'Failed to submit review');
+      setPlatformActionError(err instanceof Error ? err.message : '提交审查失败');
     } finally {
       setIsPlatformActioning(false);
     }
@@ -5678,7 +5678,7 @@ const ReviewApp: React.FC = () => {
   const staticPatchSource = (diffData?.gitRef ?? '').trim();
   const staticPatchLabel = staticPatchSource
     ? staticPatchSource.split(/[\\/]/).pop() || staticPatchSource
-    : 'Patch';
+    : '补丁';
   // Distinguishes "valid patch, nothing in it" from "these bytes are not a
   // unified diff" for the empty state. The server already refuses a
   // whitespace-only patch at startup, so anything reaching here has content.
@@ -5688,7 +5688,7 @@ const ReviewApp: React.FC = () => {
     : !origin
       ? [{
           id: 'copy',
-          label: copyFeedback === 'Feedback copied!' ? 'Feedback copied' : 'Copy feedback',
+          label: copyFeedback === 'Feedback copied!' ? '已复制反馈' : '复制反馈',
           onSelect: handleCopyFeedback,
         }]
       : platformMode
@@ -5699,7 +5699,7 @@ const ReviewApp: React.FC = () => {
             // self-approval reason as their subtitle.
             {
               id: 'exit',
-              label: 'Exit review',
+              label: '退出审查',
               onSelect: () => totalAnnotationCount > 0 ? setShowExitWarning(true) : handleExit(),
               disabled: compactActionBusy,
             },
@@ -5728,7 +5728,7 @@ const ReviewApp: React.FC = () => {
             // spec §3.2 / E16-review).
             {
               id: 'exit',
-              label: 'Exit review',
+              label: '退出审查',
               onSelect: () => totalAnnotationCount > 0 ? setShowExitWarning(true) : handleExit(),
               disabled: compactActionBusy,
             },
@@ -5859,7 +5859,7 @@ const ReviewApp: React.FC = () => {
     return (
       <ThemeProvider defaultTheme="dark" manageFavicon>
         <div className="pn-app-viewport flex items-center justify-center bg-background">
-          <div className="text-muted-foreground text-sm">Loading diff...</div>
+          <div className="text-muted-foreground text-sm">正在加载差异…</div>
         </div>
       </ThemeProvider>
     );
@@ -5900,8 +5900,8 @@ const ReviewApp: React.FC = () => {
                       ? `text-primary${isCompactTouchLayout ? ' bg-muted' : ''}`
                       : 'text-muted-foreground hover:text-foreground hover:bg-muted'
                   }`}
-                  title={isNavigatorOpen ? 'Close review navigation' : 'Open review navigation'}
-                  aria-label={isNavigatorOpen ? 'Close review navigation' : 'Open review navigation'}
+                  title={isNavigatorOpen ? '关闭审查导航' : '打开审查导航'}
+                  aria-label={isNavigatorOpen ? '关闭审查导航' : '打开审查导航'}
                   aria-expanded={isNavigatorOpen}
                 >
                   <FolderTree className="w-3.5 h-3.5" />
@@ -5923,10 +5923,10 @@ const ReviewApp: React.FC = () => {
                   className={`relative flex h-7 shrink-0 items-center gap-1 px-2 rounded-md text-xs font-medium transition-colors ${
                     guideOpen ? 'bg-primary/15 text-primary' : 'bg-muted text-foreground hover:bg-muted/80'
                   }`}
-                  title={guideOpen ? 'Back to the diff workspace' : 'Open guided review'}
+                  title={guideOpen ? '返回差异工作区' : '打开引导式审查'}
                   data-guide-button=""
                 >
-                  {guideOpen ? 'Go back' : 'Guide'}
+                  {guideOpen ? '返回' : '引导'}
                   {guideHintActive && !guideOpen && <span data-guide-hint-dot="" className="absolute -top-0.5 -right-0.5 w-1.5 h-1.5 rounded-full bg-primary" />}
                 </button>
                 <div className="w-px h-5 bg-border mx-1 hidden lg:block" />
@@ -5981,18 +5981,18 @@ const ReviewApp: React.FC = () => {
               }>
                 <span
                   className="text-xs font-mono text-foreground truncate max-w-[220px]"
-                  title={staticPatchSource || 'Static patch review'}
+                  title={staticPatchSource || '静态补丁审查'}
                   data-testid="static-patch-label"
                 >
                   {staticPatchLabel}
                 </span>
-                <span className="text-xs text-muted-foreground/60 hidden sm:inline">Patch</span>
+                <span className="text-xs text-muted-foreground/60 hidden sm:inline">补丁</span>
               </div>
             ) : (
               <span className={isCompactTouchLayout
                 ? 'min-w-0 text-center text-xs text-muted-foreground/70'
                 : 'text-xs text-muted-foreground/70'
-              }>Review</span>
+              }>审查</span>
             )}
             </div>
             {isCompactTouchLayout && !guideVisible && <CompactPrimaryAction action={compactPrimaryAction(compactReviewActions)} />}
@@ -6028,14 +6028,14 @@ const ReviewApp: React.FC = () => {
                                         setShowDestinationMenu(prev => !prev);
                       }}
                       className="flex h-7 items-center gap-1 px-2 rounded-md text-xs font-medium bg-muted hover:bg-muted/80 transition-colors"
-                      title={reviewDestination === 'platform' ? `Posting to ${platformLabel} ${mrLabel}` : 'Sending to agent session'}
+                      title={reviewDestination === 'platform' ? `发布到 ${platformLabel} ${mrLabel}` : '发送到智能体会话'}
                     >
                       {reviewDestination === 'platform' ? (
                         <>
                           <PRPlatformIcon platform={prMetadata?.platform ?? 'github'} className="w-3.5 h-3.5" />
                           <span className="hidden lg:inline">{platformLabel}</span>
                         </>
-                      ) : 'Agent'}
+                      ) : '智能体'}
                       <svg className="w-3 h-3 opacity-60" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                         <path strokeLinecap="round" strokeLinejoin="round" d="M19 9l-7 7-7-7" />
                       </svg>
@@ -6059,7 +6059,7 @@ const ReviewApp: React.FC = () => {
                             }`}
                           >
                             <div className="font-medium">{platformLabel}</div>
-                            <div className="text-muted-foreground/60">Post to {mrLabel}</div>
+                            <div className="text-muted-foreground/60">发布到 {mrLabel}</div>
                           </button>
                           <button
                             data-pn-touch-target={isCompactTouchLayout || undefined}
@@ -6075,14 +6075,14 @@ const ReviewApp: React.FC = () => {
                                 : 'text-muted-foreground hover:text-foreground hover:bg-muted/30'
                             }`}
                           >
-                            <div className="font-medium">Agent</div>
-                            <div className="text-muted-foreground/60">Send to session</div>
+                            <div className="font-medium">智能体</div>
+                            <div className="text-muted-foreground/60">发送到会话</div>
                           </button>
                           {!isCompactTouchLayout && <div className="border-t border-border/50 mt-1 pt-1 px-3 py-1">
                             <span className="text-xs text-muted-foreground/40">
                               <kbd className="inline-flex items-center justify-center min-w-[18px] h-[16px] px-1 rounded bg-muted border border-border/60 border-b-[2px] text-xs font-mono leading-none text-foreground/60 shadow-sm">{altKey}</kbd>
                               <kbd className="inline-flex items-center justify-center min-w-[18px] h-[16px] px-1 rounded bg-muted border border-border/60 border-b-[2px] text-xs font-mono leading-none text-foreground/60 shadow-sm ml-0.5">{altKey}</kbd>
-                              <span className="ml-1.5">to toggle</span>
+                              <span className="ml-1.5">以切换</span>
                             </span>
                           </div>}
                         </div>
@@ -6112,7 +6112,7 @@ const ReviewApp: React.FC = () => {
                       onClick={() => totalAnnotationCount > 0 ? setShowExitWarning(true) : handleExit()}
                       disabled={busyWithDecision}
                       isLoading={isExiting}
-                      title="Close review without feedback"
+                      title="关闭审查且不发送反馈"
                     />
                     <DecisionControl
                       spec={reviewDecisionSpec}
@@ -6138,7 +6138,7 @@ const ReviewApp: React.FC = () => {
                       onClick={() => totalAnnotationCount > 0 ? setShowExitWarning(true) : handleExit()}
                       disabled={busyWithPlatformDecision}
                       isLoading={isExiting}
-                      title="Close review without feedback"
+                      title="关闭审查且不发送反馈"
                     />
                     <DecisionControl
                       spec={platformDecisionSpec}
@@ -6156,21 +6156,21 @@ const ReviewApp: React.FC = () => {
                 data-pn-touch-target-icon={isCompactTouchLayout || undefined}
                 onClick={handleCopyFeedback}
                 className="px-2 py-1 md:px-2.5 rounded-md text-xs font-medium bg-muted hover:bg-muted/80 transition-colors flex items-center gap-1.5"
-                title="Copy feedback for LLM"
+                title="复制反馈给 LLM"
               >
                 {copyFeedback === 'Feedback copied!' ? (
                   <>
                     <svg className="w-3.5 h-3.5 text-success" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
                     </svg>
-                    <span className="hidden md:inline">Copied!</span>
+                    <span className="hidden md:inline">已复制！</span>
                   </>
                 ) : (
                   <>
                     <svg className="w-3.5 h-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                       <path strokeLinecap="round" strokeLinejoin="round" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
                     </svg>
-                    <span className="hidden md:inline">Copy Feedback</span>
+                    <span className="hidden md:inline">复制反馈</span>
                   </>
                 )}
               </button>
@@ -6233,9 +6233,9 @@ const ReviewApp: React.FC = () => {
 
         {draftTargetChanged && (
           <div role="status" className="shrink-0 flex items-center justify-between gap-3 border-b border-warning/20 bg-warning/10 px-3 py-2 text-xs text-warning">
-            <span>Draft saving paused because the review target changed. Your comments are still in this tab.</span>
+            <span>草稿保存已暂停，因为审查目标已变更。你的评论仍保留在此标签页中。</span>
             <button data-pn-touch-target type="button" onClick={handleRefreshStaleDiff} disabled={isLoadingDiff} className="shrink-0 font-medium underline underline-offset-2 disabled:opacity-60">
-              {isLoadingDiff ? 'Refreshing…' : 'Refresh review'}
+              {isLoadingDiff ? '刷新中…' : '刷新审查'}
             </button>
           </div>
         )}
@@ -6432,7 +6432,7 @@ const ReviewApp: React.FC = () => {
                     <circle className="opacity-25" cx="12" cy="12" r="10" stroke="currentColor" strokeWidth="4" />
                     <path className="opacity-75" fill="currentColor" d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4z" />
                   </svg>
-                  Loading commit…
+                  正在加载提交…
                 </div>
               </div>
             )}
@@ -6441,15 +6441,15 @@ const ReviewApp: React.FC = () => {
               isOpen={!!draftBanner}
               onClose={dismissDraft}
               onConfirm={handleRestoreDraft}
-              title="Draft Recovered"
+              title="已恢复草稿"
               message={draftBanner ? (() => {
                 const parts: string[] = [];
-                if (draftBanner.count > 0) parts.push(`${draftBanner.count} annotation${draftBanner.count !== 1 ? 's' : ''}`);
-                if (draftBanner.viewedCount > 0) parts.push(`${draftBanner.viewedCount} viewed file${draftBanner.viewedCount !== 1 ? 's' : ''}`);
-                return `Found ${parts.join(' and ')} from ${draftBanner.timeAgo}. Would you like to restore them?`;
+                if (draftBanner.count > 0) parts.push(`${draftBanner.count} 条批注`);
+                if (draftBanner.viewedCount > 0) parts.push(`${draftBanner.viewedCount} 个已查看文件`);
+                return `发现来自 ${draftBanner.timeAgo} 的${parts.join('和')}。要恢复吗？`;
               })() : ''}
-              confirmText="Restore"
-              cancelText="Dismiss"
+              confirmText="恢复"
+              cancelText="忽略"
               showCancel
             />
             {files.length > 0 ? (
@@ -6471,45 +6471,45 @@ const ReviewApp: React.FC = () => {
                   <div>
                     {diffError ? (
                       <>
-                        <h3 className="text-sm font-medium text-destructive">Failed to load diff</h3>
+                        <h3 className="text-sm font-medium text-destructive">加载差异失败</h3>
                         <p className="text-xs text-muted-foreground mt-1 max-w-sm break-words line-clamp-3">{diffError}</p>
                       </>
                     ) : (
                       <>
-                        <h3 className="text-sm font-medium text-foreground">No changes</h3>
+                        <h3 className="text-sm font-medium text-foreground">没有更改</h3>
                         <p className="text-xs text-muted-foreground mt-1">
-                          {activeDiffBase === 'since-base' && `No changes since ${selectedBase || gitContext?.defaultBranch || 'main'}${activeWorktreePath ? ' in this worktree' : ''} — committed, uncommitted, or untracked.`}
-                          {showsLocalVsRemoteEmptyState && `Your local branch matches its remote-tracking branch${activeWorktreePath ? ' in this worktree' : ''}.`}
-                          {commitShaFromMode(activeDiffBase) && 'This commit has no changes.'}
-                          {activeDiffBase === 'uncommitted' && `No uncommitted changes${activeWorktreePath ? ' in this worktree' : ' to review'}.`}
-                          {activeDiffBase === 'staged' && "No staged changes. Stage some files with git add."}
-                          {activeDiffBase === 'unstaged' && "No unstaged changes. All changes are staged."}
-                          {activeDiffBase === 'last-commit' && `No changes in the last commit${activeWorktreePath ? ' in this worktree' : ''}.`}
-                          {activeDiffBase === 'jj-current' && "No changes in the current jj change."}
-                          {activeDiffBase === 'jj-last' && "No changes in the last jj change."}
-                          {activeDiffBase === 'workspace-current' && "No current changes in the workspace repositories."}
-                          {activeDiffBase === 'workspace-staged' && "No staged changes in the workspace repositories."}
-                          {activeDiffBase === 'workspace-unstaged' && "No unstaged changes in the workspace repositories."}
-                          {activeDiffBase === 'workspace-last' && "No changes in the last change across workspace repositories."}
-                          {activeDiffBase === 'jj-line' && `No changes in your line of work vs ${selectedBase || gitContext?.defaultBranch || '@-'}.`}
-                          {activeDiffBase === 'jj-evolog' && `No changes since evolution ${selectedBase ? selectedBase.slice(0, 8) : 'previous'} — the change looks the same as before.`}
-                          {activeDiffBase === 'jj-all' && "No files at the current jj change."}
-                          {activeDiffBase === 'gitbutler:workspace' && "No applied GitButler workspace changes."}
-                          {activeDiffBase.startsWith('gitbutler:stack:') && "No committed changes in this GitButler stack."}
-                          {activeDiffBase.startsWith('gitbutler:branch:') && "No committed changes in this GitButler branch."}
-                          {activeDiffBase === 'branch' && `No changes vs ${selectedBase || gitContext?.defaultBranch || 'main'}${activeWorktreePath ? ' in this worktree' : ''}.`}
-                          {activeDiffBase === 'merge-base' && `No changes vs ${selectedBase || gitContext?.defaultBranch || 'main'}${activeWorktreePath ? ' in this worktree' : ''}.`}
-                          {activeDiffBase === 'all' && `No tracked files${activeWorktreePath ? ' in this worktree' : ' in this repository'}.`}
+                          {activeDiffBase === 'since-base' && `自 ${selectedBase || gitContext?.defaultBranch || 'main'} 起没有更改${activeWorktreePath ? '（此工作树）' : ''}——已提交、未提交或未跟踪的更改都没有。`}
+                          {showsLocalVsRemoteEmptyState && `你的本地分支与远程跟踪分支一致${activeWorktreePath ? '（此工作树）' : ''}。`}
+                          {commitShaFromMode(activeDiffBase) && '此提交没有更改。'}
+                          {activeDiffBase === 'uncommitted' && `没有未提交的更改${activeWorktreePath ? '（此工作树）' : '可供审查'}。`}
+                          {activeDiffBase === 'staged' && "没有已暂存的更改。请用 git add 暂存一些文件。"}
+                          {activeDiffBase === 'unstaged' && "没有未暂存的更改。所有更改均已暂存。"}
+                          {activeDiffBase === 'last-commit' && `上一次提交中没有更改${activeWorktreePath ? '（此工作树）' : ''}。`}
+                          {activeDiffBase === 'jj-current' && "当前 jj 变更中没有更改。"}
+                          {activeDiffBase === 'jj-last' && "上一个 jj 变更中没有更改。"}
+                          {activeDiffBase === 'workspace-current' && "工作区仓库中没有当前更改。"}
+                          {activeDiffBase === 'workspace-staged' && "工作区仓库中没有已暂存的更改。"}
+                          {activeDiffBase === 'workspace-unstaged' && "工作区仓库中没有未暂存的更改。"}
+                          {activeDiffBase === 'workspace-last' && "各工作区仓库的上一次变更中没有更改。"}
+                          {activeDiffBase === 'jj-line' && `你的工作线相对 ${selectedBase || gitContext?.defaultBranch || '@-'} 没有更改。`}
+                          {activeDiffBase === 'jj-evolog' && `自演进 ${selectedBase ? selectedBase.slice(0, 8) : '前一版本'} 以来没有更改——该变更与之前看起来相同。`}
+                          {activeDiffBase === 'jj-all' && "当前 jj 变更处没有文件。"}
+                          {activeDiffBase === 'gitbutler:workspace' && "没有已应用的 GitButler 工作区更改。"}
+                          {activeDiffBase.startsWith('gitbutler:stack:') && "此 GitButler 堆栈中没有已提交的更改。"}
+                          {activeDiffBase.startsWith('gitbutler:branch:') && "此 GitButler 分支中没有已提交的更改。"}
+                          {activeDiffBase === 'branch' && `相对 ${selectedBase || gitContext?.defaultBranch || 'main'} 没有更改${activeWorktreePath ? '（此工作树）' : ''}。`}
+                          {activeDiffBase === 'merge-base' && `相对 ${selectedBase || gitContext?.defaultBranch || 'main'} 没有更改${activeWorktreePath ? '（此工作树）' : ''}。`}
+                          {activeDiffBase === 'all' && `没有受跟踪的文件${activeWorktreePath ? '（此工作树）' : '（此仓库）'}。`}
                           {isStaticPatch && (patchHasDiffHeaders
-                            ? 'The patch contains no changes.'
-                            : 'The patch could not be parsed as a unified diff.')}
+                            ? '该补丁不含任何更改。'
+                            : '无法将该补丁解析为统一差异格式。')}
                         </p>
                       </>
                     )}
                   </div>
                   {((reviewMode === 'workspace' ? workspaceDiffOptions : gitContext?.diffOptions)?.length ?? 0) > 1 && (
                     <p className="text-xs text-muted-foreground/60">
-                      Try selecting a different view from the dropdown.
+                      试试从下拉菜单中选择其他视图。
                     </p>
                   )}
                 </div>
@@ -6596,7 +6596,7 @@ const ReviewApp: React.FC = () => {
           <div className="fixed inset-0 z-50 flex items-center justify-center bg-background/80 backdrop-blur-sm p-4">
             <div className="bg-card border border-border rounded-xl w-full max-w-2xl flex flex-col max-h-[80vh] shadow-2xl">
               <div className="p-4 border-b border-border flex justify-between items-center">
-                <h3 className="font-semibold text-sm">Export Review Feedback</h3>
+                <h3 className="font-semibold text-sm">导出审查反馈</h3>
                 <button
                   onClick={() => setShowExportModal(false)}
                   className="p-1.5 rounded-md hover:bg-muted text-muted-foreground hover:text-foreground transition-colors"
@@ -6608,7 +6608,7 @@ const ReviewApp: React.FC = () => {
               </div>
               <div className="flex-1 overflow-auto p-4">
                 <div className="text-xs text-muted-foreground mb-2">
-                  {allAnnotations.length} annotation{allAnnotations.length !== 1 ? 's' : ''}
+                  {allAnnotations.length} 条批注
                 </div>
                 <pre className="export-code-block whitespace-pre-wrap">
                   {feedbackMarkdown}
@@ -6621,7 +6621,7 @@ const ReviewApp: React.FC = () => {
                   }}
                   className="px-3 py-1.5 rounded-md text-xs font-medium bg-primary text-primary-foreground hover:opacity-90 transition-colors"
                 >
-                  Copy to Clipboard
+                  复制到剪贴板
                 </button>
               </div>
             </div>
@@ -6666,8 +6666,8 @@ const ReviewApp: React.FC = () => {
         <ConfirmDialog
           isOpen={showNoAnnotationsDialog}
           onClose={() => setShowNoAnnotationsDialog(false)}
-          title="No Annotations"
-          message="You haven't made any annotations yet. There's nothing to copy."
+          title="没有批注"
+          message="你还没有添加任何批注，没有可复制的内容。"
           variant="info"
         />
 
@@ -6701,7 +6701,7 @@ const ReviewApp: React.FC = () => {
             title={compactConfirmItem.confirm.title}
             message={compactConfirmItem.confirm.message}
             confirmText={compactConfirmItem.confirm.confirmText}
-            cancelText="Cancel"
+            cancelText="取消"
             variant="warning"
             showCancel
           />
@@ -6714,11 +6714,11 @@ const ReviewApp: React.FC = () => {
             setShowExitWarning(false);
             handleExit();
           }}
-          title="Annotations Won't Be Sent"
-          message={<>You have {totalAnnotationCount} annotation{totalAnnotationCount !== 1 ? 's' : ''} that will be lost if you close.</>}
-          subMessage="To send your feedback, use Send Feedback instead."
-          confirmText="Close Anyway"
-          cancelText="Cancel"
+          title="批注不会被发送"
+          message={<>你有 {totalAnnotationCount} 条批注，关闭后会丢失。</>}
+          subMessage="如需发送反馈，请改用「发送反馈」。"
+          confirmText="仍然关闭"
+          cancelText="取消"
           variant="warning"
           showCancel
         />
@@ -6727,23 +6727,23 @@ const ReviewApp: React.FC = () => {
         <CompletionOverlay
           submitted={submitted}
           title={
-            submitted === 'approved' ? 'Changes Approved'
+            submitted === 'approved' ? '更改已批准'
             : submitted === 'exited' && agentClosed ? AGENT_CLOSED_TITLE
-            : submitted === 'exited' ? 'Session Closed'
-            : 'Feedback Sent'
+            : submitted === 'exited' ? '会话已关闭'
+            : '反馈已发送'
           }
           subtitle={
             submitted === 'exited' && agentClosed
               ? agentClosedSubtitle(agentClosed.unsentAnnotations, 'changes')
             : submitted === 'exited'
-              ? 'Review session closed without feedback.'
+              ? '审查会话已关闭，未发送反馈。'
               : platformMode
                 ? submitted === 'approved'
-                  ? `Your approval was submitted to ${platformLabel}.`
-                  : `Your feedback was submitted to ${platformLabel}.`
+                  ? `你的批准已提交到 ${platformLabel}。`
+                  : `你的反馈已提交到 ${platformLabel}。`
                 : submitted === 'approved'
-                  ? `${getAgentName(origin)} will proceed with the changes.`
-                  : `${getAgentName(origin)} will address your review feedback.`
+                  ? `${getAgentName(origin)} 将按这些更改继续。`
+                  : `${getAgentName(origin)} 将根据你的审查反馈进行处理。`
           }
           agentLabel={getAgentName(origin)}
           footer={starAskFooter}
@@ -6751,8 +6751,8 @@ const ReviewApp: React.FC = () => {
             ? platformPostedUrls.map((href) => ({
               href,
               label: platformPostedUrls.length > 1
-                ? `View ${href.replace(/^https?:\/\//, '')}`
-                : `View on ${platformLabel}`,
+                ? `查看 ${href.replace(/^https?:\/\//, '')}`
+                : `在 ${platformLabel} 上查看`,
             }))
             : undefined}
         />

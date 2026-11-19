@@ -23,7 +23,7 @@ export const PRSummaryTab: React.FC<PRSummaryTabProps> = React.memo(({ context, 
                   ? 'bg-muted text-muted-foreground'
                   : 'bg-success/15 text-success'
           }`}>
-            {context.isDraft ? 'Draft' : context.state}
+            {context.isDraft ? '草稿' : context.state}
           </span>
           <a
             href={metadata.url}
@@ -40,7 +40,7 @@ export const PRSummaryTab: React.FC<PRSummaryTabProps> = React.memo(({ context, 
         </div>
         {metadata.defaultBranch && metadata.baseBranch !== metadata.defaultBranch && (
           <div className="inline-flex items-center gap-1.5 rounded border border-accent/20 bg-accent/10 px-2 py-1 text-xs text-accent-text">
-            <span className="font-medium">Stacked</span>
+            <span className="font-medium">堆叠</span>
             <span className="text-accent-text/80">
               Diffs against <code className="font-mono">{metadata.baseBranch}</code>, default branch is <code className="font-mono">{metadata.defaultBranch}</code>
             </span>
@@ -70,7 +70,7 @@ export const PRSummaryTab: React.FC<PRSummaryTabProps> = React.memo(({ context, 
       {context.linkedIssues.length > 0 && (
         <div className="space-y-1">
           <h3 className="text-xs font-semibold text-muted-foreground">
-            Linked issues
+            关联问题
           </h3>
           {context.linkedIssues.map((issue) => (
             <a
@@ -94,7 +94,7 @@ export const PRSummaryTab: React.FC<PRSummaryTabProps> = React.memo(({ context, 
       {context.body ? (
         <div className="space-y-1">
           <h3 className="text-xs font-semibold text-muted-foreground">
-            Description
+            描述
           </h3>
           <AnnotatableDescription markdown={context.body} className="md-compact" />
         </div>

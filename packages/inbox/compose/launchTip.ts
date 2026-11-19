@@ -17,10 +17,10 @@
 import type { SettingsModel } from '../api';
 
 export const LAUNCH_TIP_WORDS = {
-  eyebrow: 'New',
-  title: 'You can now start agents',
-  line: 'Choose an agent in To and the folder it works in. A pasted path or git URL works too.',
-  ok: 'Got it',
+  eyebrow: '新功能',
+  title: '你现在可以启动智能体了',
+  line: '在「收件人」中选择智能体及其工作文件夹。粘贴路径或 Git URL 也可以。',
+  ok: '知道了',
 } as const;
 
 /** What a screen reader hears once, through compose's polite region. */

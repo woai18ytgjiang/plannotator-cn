@@ -25,7 +25,7 @@ export function setSemanticDiffSource(next: Source | null): void {
 }
 
 export async function loadReviewSemanticDiff(signal?: AbortSignal): Promise<SemanticDiffResponse> {
-  if (!source) throw new Error('Semantic diff is not available');
+  if (!source) throw new Error('语义差异不可用');
   return source(signal);
 }
 

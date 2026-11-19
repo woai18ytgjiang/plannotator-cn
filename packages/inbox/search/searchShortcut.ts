@@ -16,14 +16,14 @@ import { bareKeyAllowed } from '../shortcuts/guards';
 export function buildInboxSearchShortcuts(extras: InboxShortcutExtras = INBOX_SHORTCUT_EXTRAS) {
   return defineShortcutScope({
     id: 'inbox-search',
-    title: 'Inbox',
+    title: '收件箱',
     lettersByCode: true,
     shortcuts: {
       openSearch: {
-        description: 'Search',
+        description: '搜索',
         // ⌘K first: the chord the Search entry's keycap shows, and the one that works from inside a field.
         bindings: extras.slashSearch ? ['Mod+K', '/'] : ['Mod+K'],
-        section: 'Everywhere',
+        section: '全局',
         hint: extras.slashSearch ? '/ only where you are not typing.' : undefined,
         preventDefault: true,
         displayOrder: 0,

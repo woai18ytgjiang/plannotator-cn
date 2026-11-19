@@ -25,7 +25,7 @@ import { inboxAgentsFlat, inboxAgentsNow, onInboxAgentsSet } from '../agentsList
 import { onSessionProjects, sessionProjectOf } from '../projectPictures';
 
 /** The picker's words for the face (its accessible name and tooltip). */
-export const PROJECT_FACE_LABEL = 'From the project name';
+export const PROJECT_FACE_LABEL = '来自项目名称';
 
 /** The face an agent shows: its kept one, with `projectDefault` (the Rows setting) deciding what none shows. */
 export function shownAgentFace(kept: AgentFace, projectDefault: boolean): AgentFace {

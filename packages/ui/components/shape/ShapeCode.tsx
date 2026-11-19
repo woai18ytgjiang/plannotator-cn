@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 // The Code view: the board's Guided Review (the host's guide component), and
 // over it the whole-file viewer ("Open at line N", a requirement's file:line,
 // a `code:` link): the real CodeFileView (Pierre), with code review's hover
@@ -200,9 +201,9 @@ function WholeFile({
       </div>
       <div className={`shp-codeview${phone ? ' phone' : ''}`}>
         {files.length > 1 && (
-          <nav className="shp-files" aria-label="Files">
+          <nav className="shp-files" aria-label="文件">
             {phone ? (
-              <select value={file.path} onChange={(e) => onFile(e.target.value)} aria-label="File">
+              <select value={file.path} onChange={(e) => onFile(e.target.value)} aria-label="文件">
                 {files.map((f) => <option key={f.path} value={f.path}>{f.path.split('/').pop()}</option>)}
               </select>
             ) : (
@@ -220,7 +221,7 @@ function WholeFile({
           {contents === undefined ? (
             <p className="shp-empty-note">Opening…</p>
           ) : contents === null ? (
-            <p className="shp-empty-note">This file could not be read.</p>
+            <p className="shp-empty-note">无法读取此文件。</p>
           ) : (
             <CodeFileView
               filepath={file.path}
@@ -231,7 +232,7 @@ function WholeFile({
               annotations={annotations.filter((a) => a.filePath === file.path)}
               onAddAnnotation={onComment}
               onAskAnnotation={onAsk}
-              commentSubmitLabel="Change it"
+              commentSubmitLabel="修改它"
               commentAskLabel="Ask"
               commentExtraAction={lineAction}
               revealLine={{ line: file.line, token: file.token }}

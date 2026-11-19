@@ -1,3 +1,4 @@
+// Modified 2026-11-19 for the unofficial Plannotator Simplified Chinese localization fork; see ATTRIBUTION.md at the repository root.
 import { cloneElement, type HTMLAttributes, type ReactElement, type ReactNode, type Ref } from "react";
 import { ChevronDown, ChevronRight, Search } from "lucide-react";
 
@@ -43,9 +44,9 @@ export function FilesRailHeading({
         {onToggleFilter !== undefined && (
           <button
             type="button"
-            aria-label="Filter files"
+            aria-label="筛选文件"
             aria-expanded={filterVisible}
-            title="Filter files"
+            title="筛选文件"
             onClick={onToggleFilter}
             className={cn(
               "inline-flex size-7 items-center justify-center rounded-frame-control text-frame-tertiary transition-colors hover:text-foreground",

@@ -42,12 +42,12 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text, className = '', va
         type="button"
         onClick={handleCopy}
         className={`flex items-center gap-1 p-0.5 rounded text-muted-foreground hover:text-foreground hover:bg-muted transition-colors ${className}`}
-        title={copied ? 'Copied!' : 'Copy'}
+        title={copied ? '已复制！' : '复制'}
       >
         {copied ? <CheckIcon /> : <CopyIcon />}
         {label && (
           <span className="text-xs">
-            {copied ? 'Copied' : label}
+            {copied ? '已复制' : label}
           </span>
         )}
       </button>
@@ -59,7 +59,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({ text, className = '', va
       type="button"
       onClick={handleCopy}
       className={`absolute top-1.5 right-1.5 p-1 rounded-md opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 [@media(hover:none)]:opacity-100 transition-opacity text-muted-foreground hover:text-foreground hover:bg-muted ${className}`}
-      title={copied ? 'Copied!' : 'Copy'}
+      title={copied ? '已复制！' : '复制'}
     >
       {copied ? <CheckIcon /> : <CopyIcon />}
     </button>

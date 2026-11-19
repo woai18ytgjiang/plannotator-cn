@@ -1,6 +1,7 @@
 export type AnnotateFeedbackTarget = {
-  /** "Files" names every file of a review of several files. */
-  fileHeader: "File" | "Folder" | "Files";
+  /** Header that names the target (a file, a folder, or every file of a
+   *  multi-file review); localized, so it is a free-form string. */
+  fileHeader: string;
   filePath: string;
 };
 
