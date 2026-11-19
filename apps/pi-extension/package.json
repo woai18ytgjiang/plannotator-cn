@@ -72,7 +72,7 @@
     "@pierre/diffs": "1.7.0-beta.3",
     "@plannotator/webtui": "0.1.0",
     "chokidar": "^5.0.0",
-    "diff": "^8.0.4",
+    "diff": "^9.0.0",
     "parse5": "^7.3.0",
     "turndown": "^7.2.4"
   },
